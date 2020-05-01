@@ -1,0 +1,37 @@
+{
+  "displayName": "Cloud DNS Monitoring",
+  "gridLayout": {
+    "columns": "2",
+    "widgets": [
+      {
+        "title": "Private DNS response counts",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"dns.googleapis.com/query/response_count\" resource.type=\"dns_query\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "{requests}"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      }
+    ]
+  },
+}

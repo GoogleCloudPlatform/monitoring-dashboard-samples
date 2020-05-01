@@ -1,0 +1,124 @@
+{
+  "displayName": "Datastore Monitoring",
+  "gridLayout": {
+    "columns": "2",
+    "widgets": [
+      {
+        "title": "Index writes",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"datastore.googleapis.com/index/write_count\" resource.type=\"datastore_request\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Datastore Requests",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"datastore.googleapis.com/api/request_count\" resource.type=\"datastore_request\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Sizes of read entities",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_PERCENTILE_99"
+                  },
+                  "filter": "metric.type=\"datastore.googleapis.com/entity/read_sizes\" resource.type=\"datastore_request\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Sizes of written entities",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_PERCENTILE_99"
+                  },
+                  "filter": "metric.type=\"datastore.googleapis.com/entity/write_sizes\" resource.type=\"datastore_request\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      }
+    ]
+  },
+}

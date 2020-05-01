@@ -1,0 +1,124 @@
+{
+  "displayName": "Cloud Tasks Monitoring",
+  "gridLayout": {
+    "columns": "2",
+    "widgets": [
+      {
+        "title": "Cloud Tasks Queue - API requests",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"cloudtasks.googleapis.com/api/request_count\" resource.type=\"cloud_tasks_queue\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Queue depth",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"cloudtasks.googleapis.com/queue/depth\" resource.type=\"cloud_tasks_queue\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Task attempt count",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"cloudtasks.googleapis.com/queue/task_attempt_count\" resource.type=\"cloud_tasks_queue\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Task attempt delays",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_PERCENTILE_99"
+                  },
+                  "filter": "metric.type=\"cloudtasks.googleapis.com/queue/task_attempt_delays\" resource.type=\"cloud_tasks_queue\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "ms"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      }
+    ]
+  },
+}

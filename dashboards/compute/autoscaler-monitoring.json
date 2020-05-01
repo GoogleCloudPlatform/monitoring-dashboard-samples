@@ -1,0 +1,66 @@
+{
+  "displayName": "Autoscaler Monitoring",
+  "gridLayout": {
+    "columns": "2",
+    "widgets": [
+      {
+        "title": "Current Autoscaler utilization",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"autoscaler.googleapis.com/current_utilization\" resource.type=\"autoscaler\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Serving capacity",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"autoscaler.googleapis.com/capacity\" resource.type=\"autoscaler\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      }
+    ]
+  },
+}

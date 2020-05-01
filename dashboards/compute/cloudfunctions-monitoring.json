@@ -1,0 +1,246 @@
+{
+  "displayName": "Cloud Functions Monitoring",
+  "gridLayout": {
+    "columns": "2",
+    "widgets": [
+      {
+        "title": "Active instances",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"cloudfunctions.googleapis.com/function/active_instances\" resource.type=\"cloud_function\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Execution count",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"cloudfunctions.googleapis.com/function/execution_count\" resource.type=\"cloud_function\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Execution times",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                    "perSeriesAligner": "ALIGN_DELTA"
+                  },
+                  "filter": "metric.type=\"cloudfunctions.googleapis.com/function/execution_times\" resource.type=\"cloud_function\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "ns"
+              }
+            },
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                    "perSeriesAligner": "ALIGN_DELTA"
+                  },
+                  "filter": "metric.type=\"cloudfunctions.googleapis.com/function/execution_times\" resource.type=\"cloud_function\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "ns"
+              }
+            },
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_PERCENTILE_05",
+                    "perSeriesAligner": "ALIGN_DELTA"
+                  },
+                  "filter": "metric.type=\"cloudfunctions.googleapis.com/function/execution_times\" resource.type=\"cloud_function\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "ns"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Network egress",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_MAX",
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"cloudfunctions.googleapis.com/function/network_egress\" resource.type=\"cloud_function\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            },
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_MIN",
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"cloudfunctions.googleapis.com/function/network_egress\" resource.type=\"cloud_function\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            },
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_MEAN",
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"cloudfunctions.googleapis.com/function/network_egress\" resource.type=\"cloud_function\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Memory usage",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_MAX",
+                    "perSeriesAligner": "ALIGN_PERCENTILE_99"
+                  },
+                  "filter": "metric.type=\"cloudfunctions.googleapis.com/function/user_memory_bytes\" resource.type=\"cloud_function\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            },
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_MIN",
+                    "perSeriesAligner": "ALIGN_PERCENTILE_99"
+                  },
+                  "filter": "metric.type=\"cloudfunctions.googleapis.com/function/user_memory_bytes\" resource.type=\"cloud_function\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            },
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_MEAN",
+                    "perSeriesAligner": "ALIGN_DELTA"
+                  },
+                  "filter": "metric.type=\"cloudfunctions.googleapis.com/function/user_memory_bytes\" resource.type=\"cloud_function\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      }
+    ]
+  },
+}
