@@ -14,12 +14,12 @@ gcloud beta deployment-manager type-providers create monitoring-dashboardv1type 
 gcloud beta deployment-manager type-providers describe monitoring-dashboardv1type
 ```
 
-## Create dashboards
+## Create dashboard
 
 ### Replace [PROJECT-ID]
-Replace `[PROJECT-ID]` in `dashboard.yaml` with your GCP project id. 
+Replace `[PROJECT-ID]` in `dashboard.yaml` with your GCP project id.
 
-Replace `[JSON-FILE]` in `dashboard.yaml' with your json file.
+Replace `[JSON-FILE]` in `dashboard.yaml` with your json file.
 
 Run the following command:
 
@@ -30,7 +30,7 @@ gcloud deployment-manager deployments create example-dashboard --config dashboar
 ## Check dashboard
 https://console.cloud.google.com/monitoring/dashboards
 
-## Delete dashboard example
+## Delete dashboard
 ```bash
 gcloud deployment-manager deployments delete example-dashboard
 ```
