@@ -16,7 +16,6 @@ gcloud beta deployment-manager type-providers describe monitoring-dashboardv1typ
 
 ## Create dashboard
 
-### Replace [PROJECT-ID]
 Replace `[PROJECT-ID]` in `dashboard.yaml` with your GCP project id.
 
 Replace `[JSON-FILE]` in `dashboard.yaml` with your json file.
