@@ -1,0 +1,473 @@
+{
+  "displayName": "UseCase(payment) Monitoring",
+  "gridLayout": {
+    "columns": "2",
+    "widgets": [
+      {
+        "title": "Load Balancer Ingress - RTT latencies",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "STACKED_BAR",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "perSeriesAligner": "ALIGN_PERCENTILE_99"
+                  },
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/l3/external/rtt_latencies\" resource.type=\"tcp_lb_rule\" resource.label.\"load_balancer_name\"=\"afd16f301889611eaab8242010a80007\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "ms"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Load Balancer - Egress packets",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/l3/external/egress_packets_count\" resource.type=\"tcp_lb_rule\" resource.label.\"load_balancer_name\"=\"afd16f301889611eaab8242010a80007\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Client Request Count from Loadgenerator",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"istio.io/service/client/request_count\" resource.type=\"k8s_pod\" resource.label.\"cluster_name\"=\"demo\" metadata.user_labels.\"app\"=\"loadgenerator\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Client Roundtrip Latencies from Loadgenerator",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_PERCENTILE_99"
+                  },
+                  "filter": "metric.type=\"istio.io/service/client/roundtrip_latencies\" resource.type=\"k8s_pod\" resource.label.\"cluster_name\"=\"demo\" metadata.user_labels.\"app\"=\"loadgenerator\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "ms"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Server Request Count received by Frontend",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"istio.io/service/server/request_count\" resource.type=\"k8s_container\" resource.label.\"cluster_name\"=\"demo\" metadata.user_labels.\"app\"=\"frontend\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Server Response Latencies by Frontend",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_PERCENTILE_99"
+                  },
+                  "filter": "metric.type=\"istio.io/service/server/response_latencies\" resource.type=\"k8s_container\" resource.label.\"cluster_name\"=\"demo\" metadata.user_labels.\"app\"=\"frontend\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "ms"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Server Response Bytes by Frontend",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_PERCENTILE_99"
+                  },
+                  "filter": "metric.type=\"istio.io/service/server/response_bytes\" resource.type=\"k8s_container\" resource.label.\"cluster_name\"=\"demo\" metadata.user_labels.\"app\"=\"frontend\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Client Request Count from Frontend to CheckoutService",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"istio.io/service/client/request_count\" resource.type=\"k8s_pod\" resource.label.\"cluster_name\"=\"demo\" metadata.user_labels.\"app\"=\"frontend\" metric.label.\"destination_service_name\"=\"checkoutservice\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Server Request Count received by CheckoutService",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"istio.io/service/server/request_count\" resource.type=\"k8s_container\" resource.label.\"cluster_name\"=\"demo\" metadata.user_labels.\"app\"=\"checkoutservice\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Server Response Latencies by CheckoutService",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_PERCENTILE_99"
+                  },
+                  "filter": "metric.type=\"istio.io/service/server/response_latencies\" resource.type=\"k8s_container\" resource.label.\"cluster_name\"=\"demo\" metadata.user_labels.\"app\"=\"checkoutservice\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "ms"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Server Response Bytes by CheckoutService",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_PERCENTILE_99"
+                  },
+                  "filter": "metric.type=\"istio.io/service/server/response_bytes\" resource.type=\"k8s_container\" resource.label.\"cluster_name\"=\"demo\" metadata.user_labels.\"app\"=\"checkoutservice\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Client Request Count from CheckoutService to PaymentService",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"istio.io/service/client/request_count\" resource.type=\"k8s_pod\" resource.label.\"cluster_name\"=\"demo\" metadata.user_labels.\"app\"=\"checkoutservice\" metric.label.\"destination_service_name\"=\"paymentservice\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Server Request Count received by PaymentService",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"istio.io/service/server/request_count\" resource.type=\"k8s_container\" resource.label.\"cluster_name\"=\"demo\" metadata.user_labels.\"app\"=\"paymentservice\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Server Response Latencies by PaymentService",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_PERCENTILE_99"
+                  },
+                  "filter": "metric.type=\"istio.io/service/server/response_latencies\" resource.type=\"k8s_container\" resource.label.\"cluster_name\"=\"demo\" metadata.user_labels.\"app\"=\"paymentservice\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "ms"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Server Response Bytes by PaymentService",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_PERCENTILE_99"
+                  },
+                  "filter": "metric.type=\"istio.io/service/server/response_bytes\" resource.type=\"k8s_container\" resource.label.\"cluster_name\"=\"demo\" metadata.user_labels.\"app\"=\"paymentservice\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "logging/user/AppErrors for demo, paymentservice",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"logging.googleapis.com/user/AppErrors\" resource.type=\"k8s_container\" resource.label.\"cluster_name\"=\"demo\" metadata.user_labels.\"app\"=\"paymentservice\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      }
+    ]
+  }
+}

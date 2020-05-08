@@ -1,0 +1,502 @@
+{
+  "displayName": "Spanner Monitoring",
+  "gridLayout": {
+    "columns": "2",
+    "widgets": [
+      {
+        "title": "Count of queries by database",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "metric.label.\"database\""
+                    ],
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"spanner.googleapis.com/query_count\" resource.type=\"spanner_instance\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "API requests by method",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "metric.label.\"method\""
+                    ],
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"spanner.googleapis.com/api/api_request_count\" resource.type=\"spanner_instance\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "API request rate by method",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "metric.label.\"method\""
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"spanner.googleapis.com/api/request_count\" resource.type=\"spanner_instance\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1/s"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "API Request latencies [95/50/5 PERCENTILE]",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                    "groupByFields": [
+                      "metric.label.\"method\""
+                    ],
+                    "perSeriesAligner": "ALIGN_DELTA"
+                  },
+                  "filter": "metric.type=\"spanner.googleapis.com/api/request_latencies\" resource.type=\"spanner_instance\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "s"
+              }
+            },
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_PERCENTILE_05",
+                    "groupByFields": [
+                      "metric.label.\"method\""
+                    ],
+                    "perSeriesAligner": "ALIGN_DELTA"
+                  },
+                  "filter": "metric.type=\"spanner.googleapis.com/api/request_latencies\" resource.type=\"spanner_instance\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "s"
+              }
+            },
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                    "groupByFields": [
+                      "metric.label.\"method\""
+                    ],
+                    "perSeriesAligner": "ALIGN_DELTA"
+                  },
+                  "filter": "metric.type=\"spanner.googleapis.com/api/request_latencies\" resource.type=\"spanner_instance\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "s"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "API Bytes received by method",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "metric.label.\"method\""
+                    ],
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"spanner.googleapis.com/api/received_bytes_count\" resource.type=\"spanner_instance\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "API Bytes sent by method",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "metric.label.\"method\""
+                    ],
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"spanner.googleapis.com/api/sent_bytes_count\" resource.type=\"spanner_instance\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Cloud Spanner Instance - Nodes",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"spanner.googleapis.com/instance/node_count\" resource.type=\"spanner_instance\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Cloud Spanner Instance - Sessions by label.database [SUM]",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "metric.label.\"database\""
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"spanner.googleapis.com/instance/session_count\" resource.type=\"spanner_instance\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "CPU utilization by database",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "metric.label.\"database\""
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"spanner.googleapis.com/instance/cpu/utilization\" resource.type=\"spanner_instance\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "10^2.%"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "CPU utilization by priority by database",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "metric.label.\"database\""
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"spanner.googleapis.com/instance/cpu/utilization_by_priority\" resource.type=\"spanner_instance\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "10^2.%"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Storage limit by instance",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "resource.label.\"instance_id\""
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"spanner.googleapis.com/instance/storage/limit_bytes\" resource.type=\"spanner_instance\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Storage used by instance",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "resource.label.\"instance_id\""
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"spanner.googleapis.com/instance/storage/used_bytes\" resource.type=\"spanner_instance\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Storage utilization by instance",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "resource.label.\"instance_id\""
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"spanner.googleapis.com/instance/storage/utilization\" resource.type=\"spanner_instance\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "10^2.%"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Backup storage used by database",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "metric.label.\"database\""
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"spanner.googleapis.com/instance/backup/used_bytes\" resource.type=\"spanner_instance\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "displayName": "TCP/SSL Load Balancer Monitoring",
+  "gridLayout": {
+    "columns": "2",
+    "widgets": [
+      {
+        "title": "Frontend RTT [95/50/5 PERCENTILE]",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                    "groupByFields": [
+                      "resource.label.\"url_map_name\""
+                    ],
+                    "perSeriesAligner": "ALIGN_DELTA"
+                  },
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/tcp_ssl_proxy/frontend_tcp_rtt\" resource.type=\"tcp_ssl_proxy_rule\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "ms"
+              }
+            },
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_PERCENTILE_05",
+                    "perSeriesAligner": "ALIGN_DELTA"
+                  },
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/tcp_ssl_proxy/frontend_tcp_rtt\" resource.type=\"tcp_ssl_proxy_rule\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "ms"
+              }
+            },
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                    "perSeriesAligner": "ALIGN_DELTA"
+                  },
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/tcp_ssl_proxy/frontend_tcp_rtt\" resource.type=\"tcp_ssl_proxy_rule\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "ms"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Open Connections",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "resource.label.\"url_map_name\""
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/tcp_ssl_proxy/open_connections\" resource.type=\"tcp_ssl_proxy_rule\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "New connections opened",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "resource.label.\"url_map_name\""
+                    ],
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/tcp_ssl_proxy/new_connections\" resource.type=\"tcp_ssl_proxy_rule\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Closed connections",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "resource.label.\"url_map_name\""
+                    ],
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/tcp_ssl_proxy/closed_connections\" resource.type=\"tcp_ssl_proxy_rule\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Ingress bytes",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "resource.label.\"url_map_name\""
+                    ],
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/tcp_ssl_proxy/ingress_bytes_count\" resource.type=\"tcp_ssl_proxy_rule\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Egress bytes",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "resource.label.\"url_map_name\""
+                    ],
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/tcp_ssl_proxy/egress_bytes_count\" resource.type=\"tcp_ssl_proxy_rule\"",
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "By"
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      }
+    ]
+  }
+}
