@@ -1,13 +1,16 @@
 
 # Cloud Monitoring Dashboard Samples
 
-This repository contains a samples that may be used with the [Cloud Monitoring Dashboards API](https://cloud.google.com/monitoring/dashboards/api-dashboard).
+This repository contains samples that may be used with the [Cloud Monitoring Dashboards API](https://cloud.google.com/monitoring/dashboards/api-dashboard).
 
 ## How to use the samples
 
-1. Check it out from GitHub.
-    * There is no reason to fork it.
-1. Use the [gcloud monitoring dashboards create](https://cloud.google.com/sdk/gcloud/reference/monitoring/dashboards/create) command to create the dashboard.  Make sure you replace the __[file-name.json]__ in the command:
+1. Check it out from GitHub. For example, you can do it in Cloud Shell by clicking the button below:
+    
+    [![Open this project in Cloud
+Shell](http://gstatic.com/cloudssh/images/open-btn.png)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples.git)
+
+1. Use the [gcloud monitoring dashboards create](https://cloud.google.com/sdk/gcloud/reference/monitoring/dashboards/create) command to create a dashboard.  Make sure you replace the __[file-name.json]__ in the command:
 
 ```bash
 gcloud monitoring dashboards create --config-from-file=[file_name.json]
@@ -28,14 +31,14 @@ If you want to export a dashboard to a JSON file and share it, you can use the f
 
 1. Create the dashboard in the Monitoring UI (or even better, share one that you’ve already developed and used).
  
-1. Open the Dashboard and copy dashboard ID from the URL (the string is in the URL after the /monitoring/dashboards/custom/ ˆprefix). For example, __10768789961894600977__ is the dashboard ID in the URL below:
+1. Open the dashboard and copy the dashboard ID from the URL (the string is in the URL after the /monitoring/dashboards/custom/ ˆprefix). For example, __10768789961894600977__ is the dashboard ID in the URL below:
 
     https://console.cloud.google.com/monitoring/dashboards/custom/10768789961894600977?project=sd-uxr-001&timeDomain=1h
 
 
 1. Use these commands to export the JSON configuration for your dashboard.
 
-    Frist, set your environment variables, replacing the following values with your values:
+    First, set your environment variables, replacing the following values with your values:
 
     *  DASH_ID with the dashboard ID copied from step #2
     *  YOUR_PROJECT_ID with your project id that contains the dashboard
@@ -58,7 +61,7 @@ If you want to export a dashboard to a JSON file and share it, you can use the f
     --format=json
     ```
 
-1. Remove the etag / name fields. If you’re using a MAC, you’ll need to use the "MAC version of the sed commands”.
+1. Open the exported JSON file in an editor and remove the etag / name fields. Alternatively, you can use the `sed` command on a Linux or MAC terminal, for example:
 
     ```bash
     sed -i '/"name":/d' $FILE_NAME
