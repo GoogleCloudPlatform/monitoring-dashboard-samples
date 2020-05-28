@@ -20,7 +20,7 @@ Alternatively, you can run the following command via curl. Use the [projects.das
 Make sure you replace the __[project-id]__ and __[file-name.json]__ in the command:
 
 ```bash
-curl -X POST -H "Authorization: Bearer "$(gcloud auth application-default print-access-token) \
+curl -X POST -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" \
 -H "Content-Type: application/json; charset=utf-8" \
 https://monitoring.googleapis.com/v1/projects/[project-id]/dashboards -d @[file-name.json]
 ```
