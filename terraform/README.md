@@ -16,7 +16,8 @@ terraform apply
 You can also provide the arguments directly in the CLI, for example:
 
 ```bash
-terraform apply -var 'dashboard_json_file=../dashboards/storage/cloud-storage-monitoring.json'  -var 'project_id=[your_project_id]'
+terraform apply -var 'dashboard_json_file=../dashboards/storage/cloud-storage-monitoring.json' \
+ -var 'project_id=[your_project_id]'
 ```
 
 ## Inputs

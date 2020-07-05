@@ -6,7 +6,9 @@ Currently, the Google Cloud Deployment Manager does not support deploying Cloud 
 
 ### Add custom dashboard type
 ```bash
-gcloud beta deployment-manager type-providers create monitoring-dashboardv1type --api-options-file=options.yaml --descriptor-url='https://monitoring.googleapis.com/$discovery/rest?version=v1'
+gcloud beta deployment-manager type-providers create monitoring-dashboardv1type \
+  --api-options-file=options.yaml \
+  --descriptor-url='https://monitoring.googleapis.com/$discovery/rest?version=v1'
 ```
 
 ### Look up the new type
