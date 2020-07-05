@@ -33,3 +33,11 @@
 |:---------------------|
 |Filename: [gke-cluster-monitoring.json](gke-cluster-monitoring.json)|
 |This dashboard has 18 charts for the related [Kubernetes metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes), including metrics for the worker nodes such as total allocatable CPU cores and memory; metrics for containers such as CPU and memory request utilization; metrics for Pods such as network bytes received and transmitted.|
+
+&nbsp;
+
+|GKE Pod/Node Monitoring using Prometheus|
+|:---------------------|
+|Filename: [gke-prometheus-pod-node-monitoring.json](gke-prometheus-pod-node-monitoring.json)|
+|This dashboard has example charts for metrics exported by Prometheus, for example metrics from [Kubernetes pod metrics](https://github.com/kubernetes/kube-state-metrics/blob/master/docs/pod-metrics.md)|
+|Note: This dashboard needs [Prometheus](https://prometheus.io/) and the [Stackdriver Prometheus sidecar](https://github.com/Stackdriver/stackdriver-prometheus-sidecar) to be installed and configured on the cluster. [Here](https://medium.com/google-cloud/prometheus-and-stackdriver-fb8f7524ece0) is a good reference to read about how they work together. A quick way is to use the script [deploy.sh](https://github.com/Stackdriver/stackdriver-prometheus-sidecar/tree/master/kube/full) to deploy both Prometheus and the sidecar container.|
