@@ -57,8 +57,7 @@ If you want to export a dashboard to a JSON file and share it, you can use the f
 
     ```bash
     gcloud monitoring dashboards describe \
-    projects/$PROJECT_NUMBER/dashboards/$DASH_ID > $FILE_NAME \
-    --format=json
+    projects/$PROJECT_NUMBER/dashboards/$DASH_ID --format=json > $FILE_NAME   
     ```
 
 1. Open the exported JSON file in an editor and remove the etag / name fields. Alternatively, you can use the `sed` command on a Linux or MAC terminal, for example:
