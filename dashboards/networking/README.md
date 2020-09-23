@@ -1,6 +1,5 @@
 ### Dashboards for Networking
 
-
 |Cloud DNS Monitoring|
 |:-------------------|
 |Filename: [clouddns-monitoring.json](clouddns-monitoring.json)|
@@ -34,6 +33,16 @@
 |Filename: [https-loadbalancer-monitoring.json](https-loadbalancer-monitoring.json)|
 |This dashboard has 9 charts for the related [HTTP/s load balancer metrics](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-loadbalancing), including `Request Count`, `Total Latency`, `Request Bytes`, `Response Bytes`, `Frontend RTT`, `Backend Request Count`, `Backend Request Bytes`, and `Backend Response Bytes`.|
 
+&nbsp;
+
+|HTTP/S Load Balancer Backend Services Monitoring|
+|:-----------------------------------------------|
+|Filename: [https-lb-backend-services-monitoring.json](https-lb-backend-services-monitoring.json)|
+|This dashboard has 10 charts for the related [HTTP/s load balancer metrics](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-loadbalancing),
+including `Backend Request Count by Code Class`, `Backend Request Count by Path`, `Error Rate`, `Error Count by Path and Code`, `Backend Latency`, `Backend P50 Latency by Path`, `Backend Request Bytes`, `Backend Request Bytes by Path`,
+`Backend Response Bytes` and `Backend Response Bytes by Path` all grouped by
+`backend_target_name`. It is intended to be used with a dashboard-wide filter on
+`backend_target_name`.
 
 &nbsp;
 
@@ -48,7 +57,6 @@
 |:-----------------------------------|
 |Filename: [network-udp-loadbalancer-monitoring.json](network-udp-loadbalancer-monitoring.json)|
 |This dashboard has 4 charts for the related [network UDP load balancer metrics](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-loadbalancing), including `Ingress UDP packets`, `Ingress UDP bytes`, `Egress UDP packets`, and `Egress UDP bytes`.|
-
 
 &nbsp;
 
