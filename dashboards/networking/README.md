@@ -71,3 +71,10 @@ including `Backend Request Count by Code Class`, `Backend Request Count by Path`
 |:------------------------------|
 |Filename: [vpc-connector-access-monitoring.json](vpc-connector-access-monitoring.json)|
 |This dashboard has 4 charts for the related [VPC connector access metrics](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-vpc%20access), including `Bytes received delta`, `Bytes sent delta`, `Packets received delta`, and `Packets sent delta`.|
+
+&nbsp;
+
+|VPC Flow Logs Monitoring|
+|:------------------------------|
+|Filename: [vpc-flow-logs-monitoring.json](vpc-flow-logs-monitoring.json)|
+|This dashboard has 6 charts for the related [VPC flow logs metrics](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-networking), including `Ingested log volume`, `log counts`, estimated `VPC Flow logs` counts and volume.|
