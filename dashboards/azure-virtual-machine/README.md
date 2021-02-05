@@ -13,5 +13,3 @@ Note: These dashboards are built using [BindPlane](https://docs.bindplane.blueme
 |:-----------------------|
 |Filename: [overview.json](overview.json)|
 |This dashboard has 7 widgets for the related [BindPlate metrics for Azure Virtual Machines](https://docs.bindplane.bluemedora.com/docs/microsoft-azure-virtualmachines), including `CPU Credits Consumed`, `CPU Credits Remaining`, `Network Received`, `Disk Read/Writes`, `CPU Utilization`, and `Network Sent`.|
-
-&nbsp;
