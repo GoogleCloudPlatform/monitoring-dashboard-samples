@@ -1,0 +1,244 @@
+{
+    "displayName": "Azure Virtual Machines Overview",
+    "mosaicLayout": {
+        "columns": 12,
+        "tiles": [
+            {
+                "height": 3,
+                "widget": {
+                    "title": "CPU Credits Consumed",
+                    "xyChart": {
+                        "chartOptions": {
+                            "mode": "COLOR"
+                        },
+                        "dataSets": [
+                            {
+                                "minAlignmentPeriod": "60s",
+                                "plotType": "LINE",
+                                "timeSeriesQuery": {
+                                    "timeSeriesFilter": {
+                                        "aggregation": {
+                                            "perSeriesAligner": "ALIGN_RATE"
+                                        },
+                                        "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/microsoft_azure_virtualmachines/virtual_machine/cpu/credits_consumed\" resource.type=\"generic_node\"",
+                                        "secondaryAggregation": {
+                                            "perSeriesAligner": "ALIGN_MEAN"
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "timeshiftDuration": "0s",
+                        "yAxis": {
+                            "label": "y1Axis",
+                            "scale": "LINEAR"
+                        }
+                    }
+                },
+                "width": 6,
+                "yPos": 3
+            },
+            {
+                "height": 3,
+                "widget": {
+                    "title": "CPU Credits Remaining",
+                    "xyChart": {
+                        "chartOptions": {
+                            "mode": "COLOR"
+                        },
+                        "dataSets": [
+                            {
+                                "minAlignmentPeriod": "60s",
+                                "plotType": "LINE",
+                                "timeSeriesQuery": {
+                                    "timeSeriesFilter": {
+                                        "aggregation": {
+                                            "perSeriesAligner": "ALIGN_MEAN"
+                                        },
+                                        "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/microsoft_azure_virtualmachines/virtual_machine/cpu/credits_remaining\" resource.type=\"generic_node\"",
+                                        "secondaryAggregation": {}
+                                    }
+                                }
+                            }
+                        ],
+                        "timeshiftDuration": "0s",
+                        "yAxis": {
+                            "label": "y1Axis",
+                            "scale": "LINEAR"
+                        }
+                    }
+                },
+                "width": 6,
+                "xPos": 6,
+                "yPos": 3
+            },
+            {
+                "height": 3,
+                "widget": {
+                    "title": "Network Received",
+                    "xyChart": {
+                        "chartOptions": {
+                            "mode": "COLOR"
+                        },
+                        "dataSets": [
+                            {
+                                "minAlignmentPeriod": "60s",
+                                "plotType": "STACKED_AREA",
+                                "timeSeriesQuery": {
+                                    "timeSeriesFilter": {
+                                        "aggregation": {
+                                            "perSeriesAligner": "ALIGN_MEAN"
+                                        },
+                                        "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/microsoft_azure_virtualmachines/virtual_machine/network/received_data\" resource.type=\"generic_node\"",
+                                        "secondaryAggregation": {}
+                                    }
+                                }
+                            }
+                        ],
+                        "timeshiftDuration": "0s",
+                        "yAxis": {
+                            "label": "y1Axis",
+                            "scale": "LINEAR"
+                        }
+                    }
+                },
+                "width": 6,
+                "yPos": 9
+            },
+            {
+                "height": 3,
+                "widget": {
+                    "title": "Disk Read",
+                    "xyChart": {
+                        "chartOptions": {
+                            "mode": "COLOR"
+                        },
+                        "dataSets": [
+                            {
+                                "minAlignmentPeriod": "60s",
+                                "plotType": "STACKED_BAR",
+                                "timeSeriesQuery": {
+                                    "timeSeriesFilter": {
+                                        "aggregation": {
+                                            "perSeriesAligner": "ALIGN_MEAN"
+                                        },
+                                        "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/microsoft_azure_virtualmachines/virtual_machine/disk/read_data\" resource.type=\"generic_node\"",
+                                        "secondaryAggregation": {}
+                                    }
+                                }
+                            }
+                        ],
+                        "timeshiftDuration": "0s",
+                        "yAxis": {
+                            "label": "y1Axis",
+                            "scale": "LINEAR"
+                        }
+                    }
+                },
+                "width": 6,
+                "yPos": 6
+            },
+            {
+                "height": 3,
+                "widget": {
+                    "title": "Disk Write",
+                    "xyChart": {
+                        "chartOptions": {
+                            "mode": "COLOR"
+                        },
+                        "dataSets": [
+                            {
+                                "minAlignmentPeriod": "60s",
+                                "plotType": "STACKED_BAR",
+                                "timeSeriesQuery": {
+                                    "timeSeriesFilter": {
+                                        "aggregation": {
+                                            "perSeriesAligner": "ALIGN_MEAN"
+                                        },
+                                        "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/microsoft_azure_virtualmachines/virtual_machine/disk/write_data\" resource.type=\"generic_node\"",
+                                        "secondaryAggregation": {}
+                                    }
+                                }
+                            }
+                        ],
+                        "timeshiftDuration": "0s",
+                        "yAxis": {
+                            "label": "y1Axis",
+                            "scale": "LINEAR"
+                        }
+                    }
+                },
+                "width": 6,
+                "xPos": 6,
+                "yPos": 6
+            },
+            {
+                "height": 3,
+                "widget": {
+                    "scorecard": {
+                        "gaugeView": {
+                            "upperBound": 100
+                        },
+                        "thresholds": [
+                            {
+                                "color": "RED",
+                                "direction": "ABOVE",
+                                "value": 80
+                            },
+                            {
+                                "color": "YELLOW",
+                                "direction": "ABOVE",
+                                "value": 50
+                            }
+                        ],
+                        "timeSeriesQuery": {
+                            "timeSeriesFilter": {
+                                "aggregation": {
+                                    "crossSeriesReducer": "REDUCE_MEAN",
+                                    "perSeriesAligner": "ALIGN_MEAN"
+                                },
+                                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/microsoft_azure_virtualmachines/virtual_machine/cpu/utilization\" resource.type=\"generic_node\""
+                            }
+                        }
+                    },
+                    "title": "CPU utilization"
+                },
+                "width": 12
+            },
+            {
+                "height": 3,
+                "widget": {
+                    "title": "Network Sent",
+                    "xyChart": {
+                        "chartOptions": {
+                            "mode": "COLOR"
+                        },
+                        "dataSets": [
+                            {
+                                "minAlignmentPeriod": "60s",
+                                "plotType": "STACKED_AREA",
+                                "timeSeriesQuery": {
+                                    "timeSeriesFilter": {
+                                        "aggregation": {
+                                            "perSeriesAligner": "ALIGN_MEAN"
+                                        },
+                                        "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/microsoft_azure_virtualmachines/virtual_machine/network/sent_data\" resource.type=\"generic_node\"",
+                                        "secondaryAggregation": {}
+                                    }
+                                }
+                            }
+                        ],
+                        "timeshiftDuration": "0s",
+                        "yAxis": {
+                            "label": "y1Axis",
+                            "scale": "LINEAR"
+                        }
+                    }
+                },
+                "width": 6,
+                "xPos": 6,
+                "yPos": 9
+            }
+        ]
+    }
+}
