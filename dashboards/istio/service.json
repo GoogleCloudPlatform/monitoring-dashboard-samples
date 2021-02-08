@@ -1,0 +1,240 @@
+{
+  "displayName": "Istio Service Request Load",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 3,
+        "widget": {
+          "scorecard": {
+            "gaugeView": {
+              "upperBound": 100
+            },
+            "thresholds": [
+              {
+                "color": "RED",
+                "direction": "ABOVE",
+                "value": 75
+              },
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "value": 55
+              }
+            ],
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                  "perSeriesAligner": "ALIGN_DELTA"
+                },
+                "filter": "metric.type=\"istio.io/service/client/roundtrip_latencies\""
+              }
+            }
+          },
+          "title": "Client Roundtrip Latencies [95TH PERCENTILE]"
+        },
+        "width": 9,
+        "xPos": 3
+      },
+      {
+        "height": 3,
+        "widget": {
+          "text": {
+            "content": "# Yellow\nOutgoing Request roundtrip latency is rising\n\n# Red\nOutgoing Request roundtrip latency is too high. Investigate.\n",
+            "format": "MARKDOWN"
+          },
+          "title": "Signals"
+        },
+        "width": 3
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "Client Request Count [MEAN]",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_AREA",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"istio.io/service/client/request_count\"",
+                    "secondaryAggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 9,
+        "xPos": 3,
+        "yPos": 3
+      },
+      {
+        "height": 3,
+        "widget": {
+          "text": {
+            "content": "Use this chart to discover abnormailities in outgoing requests per second for a given Pod.",
+            "format": "RAW"
+          },
+          "title": "Average Client Requests"
+        },
+        "width": 3,
+        "yPos": 3
+      },
+      {
+        "height": 1,
+        "widget": {
+          "text": {
+            "format": "RAW"
+          },
+          "title": "Client Request Distribution broken down by Service"
+        },
+        "width": 12,
+        "yPos": 6
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "Client Request Bytes for adservice [95TH PERCENTILE]",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_BAR",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_PERCENTILE_95"
+                    },
+                    "filter": "metric.type=\"istio.io/service/client/request_bytes\" metric.label.\"destination_service_name\"=monitoring.regex.full_match(\"adservice\")"
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 12,
+        "yPos": 7
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "Client Request Bytes for cartservice [95TH PERCENTILE]",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_BAR",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_PERCENTILE_95"
+                    },
+                    "filter": "metric.type=\"istio.io/service/client/request_bytes\" metric.label.\"destination_service_name\"=monitoring.regex.full_match(\"cartservice\")"
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 12,
+        "yPos": 10
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "Client Request Bytes for shippingservice [95TH PERCENTILE]",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_BAR",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_PERCENTILE_95"
+                    },
+                    "filter": "metric.type=\"istio.io/service/client/request_bytes\" metric.label.\"destination_service_name\"=\"shippingservice\""
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 12,
+        "yPos": 13
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "Client Request Bytes for productcatalogservice [95TH PERCENTILE]",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_BAR",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_PERCENTILE_95"
+                    },
+                    "filter": "metric.type=\"istio.io/service/client/request_bytes\" metric.label.\"destination_service_name\"=\"productcatalogservice\""
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 12,
+        "yPos": 16
+      }
+    ]
+  }
+}
