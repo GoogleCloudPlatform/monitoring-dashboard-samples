@@ -1,0 +1,199 @@
+{
+  "displayName": "Azure Container Service - Managed Cluster Overview",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 4,
+        "widget": {
+          "title": "CPU Available",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/microsoft_azure_containerservice/managed_cluster/cpu/available\" resource.type=\"generic_node\""
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Memory Available",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_MAX"
+                    },
+                    "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/microsoft_azure_containerservice/managed_cluster/memory/available\" resource.type=\"generic_node\""
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6
+      },
+      {
+        "height": 1,
+        "widget": {
+          "text": {
+            "format": "RAW"
+          },
+          "title": "Pod Count by Status"
+        },
+        "width": 12,
+        "yPos": 4
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "crossSeriesReducer": "REDUCE_MAX",
+                  "perSeriesAligner": "ALIGN_MAX"
+                },
+                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/microsoft_azure_containerservice/managed_cluster/pod/count\" resource.type=\"generic_node\" metric.label.\"phase\"=\"running\""
+              }
+            }
+          },
+          "title": "Running"
+        },
+        "width": 6,
+        "yPos": 5
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "crossSeriesReducer": "REDUCE_MAX",
+                  "perSeriesAligner": "ALIGN_MAX"
+                },
+                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/microsoft_azure_containerservice/managed_cluster/pod/count\" resource.type=\"generic_node\" metric.label.\"phase\"=\"pending\""
+              }
+            }
+          },
+          "title": "Pending"
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 7
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "crossSeriesReducer": "REDUCE_MEAN",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/microsoft_azure_containerservice/managed_cluster/pod/count\" resource.type=\"generic_node\""
+              }
+            }
+          },
+          "title": "Ready"
+        },
+        "width": 6,
+        "yPos": 9
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "crossSeriesReducer": "REDUCE_MAX",
+                  "perSeriesAligner": "ALIGN_MAX"
+                },
+                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/microsoft_azure_containerservice/managed_cluster/pod/count\" resource.type=\"generic_node\" metric.label.\"phase\"=\"unknown\""
+              }
+            }
+          },
+          "title": "Unknown"
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 9
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "crossSeriesReducer": "REDUCE_MAX",
+                  "perSeriesAligner": "ALIGN_MAX"
+                },
+                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/microsoft_azure_containerservice/managed_cluster/pod/count\" resource.type=\"generic_node\" metric.label.\"phase\"=\"succeeded\""
+              }
+            }
+          },
+          "title": "Succeeded"
+        },
+        "width": 6,
+        "yPos": 7
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "crossSeriesReducer": "REDUCE_MAX",
+                  "perSeriesAligner": "ALIGN_MAX"
+                },
+                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/microsoft_azure_containerservice/managed_cluster/pod/count\" resource.type=\"generic_node\" metric.label.\"phase\"=\"failed\""
+              }
+            }
+          },
+          "title": "Failed"
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 5
+      }
+    ]
+  }
+}
