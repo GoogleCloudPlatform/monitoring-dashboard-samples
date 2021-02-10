@@ -1,0 +1,359 @@
+{
+  "displayName": "SAP HANA Performance",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 5,
+        "widget": {
+          "title": "Instance Memory",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/sap_hana/host/instance_memory/total_allocated_size\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/sap_hana/host/instance_memory/total_used_size\""
+                  }
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/sap_hana/host/instance_memory/total_peak_used_size\""
+                  },
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "yPos": 1
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Schema Read and Write Outliers",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/sap_hana/schema/read/total_count\" resource.type=\"gce_instance\"",
+                    "pickTimeSeriesFilter": {
+                      "direction": "TOP",
+                      "numTimeSeries": 3,
+                      "rankingMethod": "METHOD_MEAN"
+                    }
+                  },
+                  "unitOverride": "1"
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/sap_hana/schema/write/total_count\"",
+                    "pickTimeSeriesFilter": {
+                      "direction": "TOP",
+                      "numTimeSeries": 3,
+                      "rankingMethod": "METHOD_MEAN"
+                    }
+                  },
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "yPos": 7
+      },
+      {
+        "height": 1,
+        "widget": {
+          "text": {
+            "format": "RAW"
+          },
+          "title": "Schema Performance"
+        },
+        "width": 12,
+        "yPos": 6
+      },
+      {
+        "height": 1,
+        "widget": {
+          "text": {
+            "format": "RAW"
+          },
+          "title": "Memory Usage"
+        },
+        "width": 12
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Schema Record Count Outliers",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/sap_hana/schema/record/total\" resource.type=\"gce_instance\"",
+                    "pickTimeSeriesFilter": {
+                      "direction": "TOP",
+                      "numTimeSeries": 3,
+                      "rankingMethod": "METHOD_MEAN"
+                    }
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 7
+      },
+      {
+        "height": 5,
+        "widget": {
+          "title": "Service Total Memory Used",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/sap_hana/service/memory/total_used_size\" resource.type=\"gce_instance\""
+                  },
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 1
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Rowstore Memory Size",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/sap_hana/rowstore/memory/total_size\" resource.type=\"gce_instance\""
+                  },
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 16
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "System Idle and Running Connections",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/sap_hana/system/connection/total\" resource.type=\"gce_instance\""
+                  },
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "yPos": 16
+      },
+      {
+        "height": 1,
+        "widget": {
+          "text": {
+            "format": "RAW"
+          },
+          "title": "Connection and Rowstore Memory"
+        },
+        "width": 12,
+        "yPos": 15
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Schema Total Records",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_BAR",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/sap_hana/schema/record/total\" resource.type=\"gce_instance\"",
+                    "secondaryAggregation": {}
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "yPos": 11
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Schema Estimated Max Total Size",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_BAR",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/sap_hana/schema/memory/estimated_max_total_size\" resource.type=\"gce_instance\"",
+                    "secondaryAggregation": {}
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 11
+      }
+    ]
+  }
+}
