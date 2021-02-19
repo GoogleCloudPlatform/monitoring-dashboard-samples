@@ -1,0 +1,233 @@
+{
+  "displayName": "Redis Overview",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 4,
+        "widget": {
+          "title": "Hit Rate",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"node_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/redis/server/hit_rate\" resource.type=\"generic_node\"",
+                    "secondaryAggregation": {}
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "yPos": 6
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Memory Usage",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"node_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/redis/server/memory/used\" resource.type=\"generic_node\"",
+                    "secondaryAggregation": {}
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 1
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Client Count",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/redis/server/client/connected_count\" resource.type=\"generic_node\"",
+                    "secondaryAggregation": {}
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "yPos": 10
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Keys",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/redis/server/keys/count\" resource.type=\"generic_node\"",
+                    "secondaryAggregation": {}
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 10
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Average Execution Duration",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/redis/command/execution/average_duration\" resource.type=\"generic_node\"",
+                    "secondaryAggregation": {}
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 6
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "CPU Consumed",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch generic_node\n| metric 'external.googleapis.com/bluemedora/generic_node/redis/server/cpu/used'\n| align rate(1m)\n| every 1m\n| cast_units 'ms'"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "yPos": 1
+      },
+      {
+        "height": 1,
+        "widget": {
+          "text": {
+            "format": "RAW"
+          },
+          "title": "Server Resource Usage"
+        },
+        "width": 12
+      },
+      {
+        "height": 1,
+        "widget": {
+          "text": {
+            "format": "RAW"
+          },
+          "title": "Performance"
+        },
+        "width": 12,
+        "yPos": 5
+      }
+    ]
+  }
+}
