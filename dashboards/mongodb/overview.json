@@ -1,0 +1,426 @@
+{
+  "displayName": "MongoDB Overview",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 4,
+        "widget": {
+          "title": "Throughput",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch generic_node\n| metric\n    'external.googleapis.com/bluemedora/generic_node/mongodb/mongod/network/traffic_count'\n| align delta(1m)\n| every 1m\n| cast_units 'By'"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "yPos": 10
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Memory Usage",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/mongodb/memory_usage'\n| group_by 1m, [value_memory_usage_mean: mean(value.memory_usage)]\n| every 1m\n| cast_units 'MBy'"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "yPos": 2
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Cache Misses",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"agent.googleapis.com/mongodb/cache/misses\" resource.type=\"gce_instance\"",
+                    "secondaryAggregation": {
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "yPos": 18
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Storage Size",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric\n    'agent.googleapis.com/mongodb/database/collection/storage_size'\n| group_by 1m, [value_storage_size_mean: mean(value.storage_size)]\n| every 1m\n| cast_units 'By'"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 6
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Number of Objects",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"database_name\"",
+                        "resource.label.\"project_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"agent.googleapis.com/mongodb/objects\" resource.type=\"gce_instance\"",
+                    "secondaryAggregation": {}
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 10
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Assert Count",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_BAR",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "groupByFields": [
+                        "metric.label.\"type\""
+                      ],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/mongodb/mongod/assert/count\" resource.type=\"generic_node\"",
+                    "secondaryAggregation": {
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"type\""
+                      ],
+                      "perSeriesAligner": "ALIGN_SUM"
+                    }
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 14
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "crossSeriesReducer": "REDUCE_MEAN",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/mongodb/database/collection/total_indexes\" resource.type=\"generic_node\""
+              }
+            }
+          },
+          "title": "Indexes"
+        },
+        "width": 2
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "crossSeriesReducer": "REDUCE_MEAN",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/mongodb/mongod/connection/available_count\" resource.type=\"generic_node\""
+              }
+            }
+          },
+          "title": "Available Connections"
+        },
+        "width": 2,
+        "xPos": 2
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "crossSeriesReducer": "REDUCE_MEAN",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/mongodb/connections\" resource.type=\"generic_node\""
+              }
+            }
+          },
+          "title": "Active Server Connections"
+        },
+        "width": 2,
+        "xPos": 4
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "crossSeriesReducer": "REDUCE_SUM",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"agent.googleapis.com/mongodb/collections\" resource.type=\"gce_instance\""
+              }
+            }
+          },
+          "title": "Collections"
+        },
+        "width": 2,
+        "xPos": 8
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "crossSeriesReducer": "REDUCE_MEAN",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/mongodb/mongod/tickets\" resource.type=\"generic_node\""
+              }
+            }
+          },
+          "title": "Tickets"
+        },
+        "width": 2,
+        "xPos": 6
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Extents",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"database_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"agent.googleapis.com/mongodb/extents\" resource.type=\"gce_instance\"",
+                    "secondaryAggregation": {}
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 2
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Mongod Operation Count",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_BAR",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "groupByFields": [
+                        "metric.label.\"operation\""
+                      ],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/mongodb/mongod/documents/operation_count\" resource.type=\"generic_node\"",
+                    "secondaryAggregation": {
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"operation\""
+                      ],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    }
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "yPos": 14
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "perSeriesAligner": "ALIGN_RATE"
+                },
+                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/mongodb/mongod/page_faults\" resource.type=\"generic_node\"",
+                "secondaryAggregation": {
+                  "crossSeriesReducer": "REDUCE_SUM",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                }
+              }
+            }
+          },
+          "title": "Page Faults"
+        },
+        "width": 2,
+        "xPos": 10
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Database Data Size",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/mongodb/data_size'\n| group_by 1m, [value_data_size_mean: mean(value.data_size)]\n| every 1m\n| group_by [metric.database_name],\n    [value_data_size_mean_mean: mean(value_data_size_mean)]\n| cast_units 'By'"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "yPos": 6
+      }
+    ]
+  }
+}
