@@ -1,11 +1,11 @@
 # Dashboard Export / Import
 
-The script `dashbaord.sh` is a bash utility for exporting and
+The script `dashboard.sh` is a bash utility for exporting and
 importing Google Cloud Monitoring dashboard.
 
 ## Required utilities
 
-- [Gcloud SKD](https://cloud.google.com/sdk/docs/install)
+- [Gcloud SDK](https://cloud.google.com/sdk/docs/install)
 - [jq](https://stedolan.github.io/jq/)
 
 ## Usage
