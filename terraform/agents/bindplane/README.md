@@ -1,4 +1,4 @@
-# Deploying Cloud Opts Agent with Terraform
+# Deploying BindPlane Agent with Terraform
 
 This directory serves as an example on how to leverage Terraform's [template_file](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) to deploy the BindPlanbe Agent to Linux and Windows.
 
@@ -33,7 +33,7 @@ terraform apply \
 
 2. Test
 
-Log into both compute instances and check the status of the cloud ops agent. The BindPlane web interface will show both agents.
+Log into both compute instances and check the status of the BindPlane agent. The BindPlane web interface will show both agents.
 
 Linux
 ```
