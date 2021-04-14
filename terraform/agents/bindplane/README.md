@@ -33,7 +33,7 @@ terraform apply \
 
 2. Test
 
-Log into both compute instances and check the status of the BindPlane agent. The BindPlane web interface will show both agents.
+Log into both compute instances and check the status of the BindPlane agent. The BindPlane web interface will show both agents once they establish a connection.
 
 Linux
 ```
