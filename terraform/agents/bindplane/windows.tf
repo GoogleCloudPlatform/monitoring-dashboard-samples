@@ -32,7 +32,7 @@ instance type and ssd storage.
 resource "google_compute_instance" "windows2019" {
   project      = var.project
   name         = "windows-2019-bindplane-agent"
-  machine_type = "n1-standard-1"
+  machine_type = "n2-standard-2"
   zone         = "us-east1-b"
 
   boot_disk {
