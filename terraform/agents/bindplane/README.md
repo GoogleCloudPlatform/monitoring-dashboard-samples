@@ -9,7 +9,7 @@ This directory serves as an example on how to leverage Terraform's [template_fil
 - [BindPlane Account](https://bindplane.bluemedora.com/)
 - BindPlane secret key
   - Go to Univeral Agents, Add agent, Linux, Copy the "SECRET_KEY" value
-- [Gcloud SDK](https://cloud.google.com/sdk/docs/install)
+- [Google Cloud SDK](https://cloud.google.com/sdk/docs/install)
 - [Terraform](https://www.terraform.io/downloads.html)
 - run `gcloud auth login`
 - run `gcloud auth application-default login`

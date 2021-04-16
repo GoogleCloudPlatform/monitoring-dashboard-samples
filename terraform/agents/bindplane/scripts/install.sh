@@ -17,7 +17,7 @@
 # over itself and polute the agents page in the BindPlane UI
 sudo systemctl status bpagent
 if [ $? = 0 ]; then
-    # mysqld service exists
+    # bpagent service exists
     exit 0
 fi
 
