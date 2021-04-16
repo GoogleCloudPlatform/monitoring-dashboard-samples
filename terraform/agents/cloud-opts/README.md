@@ -4,7 +4,7 @@ This directory serves as an example on how to leverage Terraform's [template_fil
 
 ## Prerequisite
 
-- [Gcloud SDK](https://cloud.google.com/sdk/docs/install)
+- [Google Cloud SDK](https://cloud.google.com/sdk/docs/install)
 - [Terraform](https://www.terraform.io/downloads.html)
 - run `gcloud auth login`
 - run `gcloud auth application-default login`

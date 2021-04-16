@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Set Azure vars
+# Set variables injected by Terraform template
 $env:scriptEndpoint="${scriptEndpoint}"
 $env:agentVersion="${agentVersion}"
 
