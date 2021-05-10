@@ -17,18 +17,17 @@ Shell](http://gstatic.com/cloudssh/images/open-btn.png)](https://console.cloud.g
     *  PROJECT_ID you wish to import the dashboard to
     *  FILE_NAME with the input filename for the dashboard JSON config
 
-```bash
-export PROJECT_ID=<PROJECT_ID>
+    ```bash
+    export PROJECT_ID=<PROJECT_ID>
 
-export FILE_NAME=<DASH_FILE_NAME>
-```
+    export FILE_NAME=<DASH_FILE_NAME>
+    ```
 
 1. Use the provided [script](scripts/dashboard/dashboard.sh) to create a dashboard.
 
-```bash
-scripts/dashboard/dashboard.sh import \
-    $PROJECT_ID $FILE_NAME
-```
+    ```bash
+    scripts/dashboard/dashboard.sh import $PROJECT_ID $FILE_NAME
+    ```
 
 Alternatively, you can run the following command via curl. Use the [projects.dashboards.create](https://cloud.google.com/monitoring/api/ref_v3/rest/v1/projects.dashboards/create) to call the Dashboards API with the sample JSON and create a new dashboard.
 Make sure you replace the __[project-id]__ and __[file-name.json]__ in the command:
@@ -69,6 +68,5 @@ If you want to export a dashboard to a JSON file and share it, you can use the f
 1. Use the gcloud command line to export the dashboard to a JSON file.
 
     ```bash
-    scripts/dashboard/dashboard.sh export \
-        $DASH_ID $PROJECT_ID $FILE_NAME
+    scripts/dashboard/dashboard.sh export $DASH_ID $PROJECT_ID $FILE_NAME
     ```
