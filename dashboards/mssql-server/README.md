@@ -7,5 +7,5 @@
 
 |Microsoft SQL Server Overview|
 |:---------------------|
-|Filename: [microsoft_sql_server-overview.json](microsoft_sql_server-overview.json)|
+|Filename: [microsoft-sql-server-overview.json](microsoft-sql-server-overview.json)|
 |This dashboard has a variety of widgets split into 3 sections of metrics: Instances, Databases and Queries. The widgets in the dashboard include useful metrics like `Active Connections`, `Disk Usage`, `Disk Space`, `Buffer Cache Hit Ratio`, `Top 10 queries by Exectuion Count` etc.|
