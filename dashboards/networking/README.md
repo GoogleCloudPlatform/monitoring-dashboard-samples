@@ -1,5 +1,11 @@
 ### Dashboards for Networking
 
+|Cloud CDN Monitoring|
+|:-------------------|
+|Filename: [cloud-cdn-monitoring.json](cloud-cdn-monitoring.json)|
+|This dashboard has 12 charts for the [Cloud CDN metrics](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-loadbalancing) `CDN traffic overview`.|
+
+&nbsp;
 |Cloud DNS Monitoring|
 |:-------------------|
 |Filename: [clouddns-monitoring.json](clouddns-monitoring.json)|
