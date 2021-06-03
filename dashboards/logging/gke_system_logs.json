@@ -1,0 +1,151 @@
+{
+  "displayName": "GKE System logs",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 4,
+        "widget": {
+          "title": "GKE system logs – k8s_container logs",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "STACKED_AREA",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'logging.googleapis.com/byte_count'\n| filter\n    (resource.namespace_name == 'cnrm-system')\n    || (resource.namespace_name == 'docker')\n    || (resource.namespace_name == 'config-management-system')\n    || (resource.namespace_name == 'gatekeeper-system')\n    || (resource.namespace_name == 'gke-connect')\n    || (resource.namespace_name == 'gke-system')\n    || (resource.namespace_name == 'istio-system')\n    || (resource.namespace_name == 'knative-serving')\n    || (resource.namespace_name == 'monitoring-system')\n    || (resource.namespace_name == 'kube-system')\n| group_by [project_id], sum(value.byte_count)\n| every 1d"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "xPos": 4,
+        "yPos": 5
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "GKE system logs – k8s_pod",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "STACKED_AREA",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_pod\n| metric 'logging.googleapis.com/byte_count'\n| filter\n    (resource.namespace_name == 'cnrm-system')\n    || (resource.namespace_name == 'docker')\n    || (resource.namespace_name == 'config-management-system')\n    || (resource.namespace_name == 'gatekeeper-system')\n    || (resource.namespace_name == 'gke-connect')\n    || (resource.namespace_name == 'gke-system')\n    || (resource.namespace_name == 'istio-system')\n    || (resource.namespace_name == 'knative-serving')\n    || (resource.namespace_name == 'monitoring-system')\n    || (resource.namespace_name == 'kube-system')\n| group_by [project_id], sum(value.byte_count)\n| every 1d"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "xPos": 8,
+        "yPos": 5
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "GKE system logs – node logs",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "STACKED_AREA",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'logging.googleapis.com/byte_count'\n| filter\n    (metric.log == 'container-runtime') \n    || (metric.log = 'docker')\n    || (metric.log == 'kube-container-runtime-monitor')\n    || (metric.log == 'kube-logrotate')\n    || (metric.log == 'kube-node-configuration')\n    || (metric.log == 'kube-node-installation') || (metric.log == 'kubelet')\n    || (metric.log == 'kubelet-monitor') \n    || (metric.log == 'node-journal')\n    || (metric.log == 'node-problem-detector')\n| group_by [project_id], sum(value.byte_count)\n| every 1d"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "yPos": 5
+      },
+      {
+        "height": 1,
+        "widget": {
+          "text": {
+            "format": "MARKDOWN"
+          },
+          "title": "Monthly GKE system log volume"
+        },
+        "width": 12
+      },
+      {
+        "height": 2,
+        "widget": {
+          "text": {
+            "content": "Use these charts to view the GKE system log volume over time. Use the time range selector to adjust the time range.",
+            "format": "RAW"
+          },
+          "title": "Adjustable log volume charts"
+        },
+        "width": 12,
+        "yPos": 3
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesQueryLanguage": "fetch k8s_pod\n| metric 'logging.googleapis.com/byte_count'\n| filter\n    (resource.namespace_name == 'cnrm-system')\n    || (resource.namespace_name == 'docker')\n    || (resource.namespace_name == 'config-management-system')\n    || (resource.namespace_name == 'gatekeeper-system')\n    || (resource.namespace_name == 'gke-connect')\n    || (resource.namespace_name == 'gke-system')\n    || (resource.namespace_name == 'istio-system')\n    || (resource.namespace_name == 'knative-serving')\n    || (resource.namespace_name == 'monitoring-system')\n    || (resource.namespace_name == 'kube-system')\n| group_by [], [value_byte_count_aggregate_aggregate: sum(value.byte_count)]\n| every 30d"
+            }
+          },
+          "title": "k8s_pod Byte Count"
+        },
+        "width": 4,
+        "xPos": 8,
+        "yPos": 1
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'logging.googleapis.com/byte_count'\n| filter\n   (resource.namespace_name == 'cnrm-system')\n   || (resource.namespace_name == 'docker')\n   || (resource.namespace_name == 'config-management-system')\n   || (resource.namespace_name == 'gatekeeper-system')\n   || (resource.namespace_name == 'gke-connect')\n   || (resource.namespace_name == 'gke-system')\n   || (resource.namespace_name == 'istio-system')\n   || (resource.namespace_name == 'knative-serving')\n   || (resource.namespace_name == 'monitoring-system')\n   || (resource.namespace_name == 'kube-system')\n| group_by [], sum(value.byte_count)\n| every 30d\n"
+            }
+          },
+          "title": "k8s_container Byte Count"
+        },
+        "width": 4,
+        "xPos": 4,
+        "yPos": 1
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'logging.googleapis.com/byte_count'\n| filter\n    (metric.log == 'container-runtime') || (metric.log = 'docker')\n    || (metric.log == 'kube-container-runtime-monitor')\n    || (metric.log == 'kube-logrotate')\n    || (metric.log == 'kube-node-configuration')\n    || (metric.log == 'kube-node-installation') || (metric.log == 'kubelet')\n    || (metric.log == 'kubelet-monitor') || (metric.log == 'node-journal')\n    || (metric.log == 'node-problem-detector')\n| group_by [], sum(value.byte_count)\n| every 30d"
+            }
+          },
+          "title": "Node Byte Count"
+        },
+        "width": 4,
+        "yPos": 1
+      }
+    ]
+  }
+}
