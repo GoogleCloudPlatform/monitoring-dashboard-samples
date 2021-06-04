@@ -1,0 +1,78 @@
+{
+  "category": "CUSTOM",
+  "displayName": "Dataflow logs",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 9,
+        "widget": {
+          "title": "Dataflow Byte Count",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "STACKED_AREA",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch dataflow_job\n| metric 'logging.googleapis.com/byte_count'\n| group_by [project_id],sum(value.byte_count)\n| every 1d"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 5
+      },
+      {
+        "height": 1,
+        "widget": {
+          "text": {
+            "content": " ",
+            "format": "MARKDOWN"
+          },
+          "title": "Dataflow log volume"
+        },
+        "width": 12,
+        "xPos": 0,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "timeSeriesQueryLanguage": "fetch dataflow_job\n| metric 'logging.googleapis.com/byte_count'\n| group_by [], sum(value.byte_count)\n| every 30d"
+            }
+          },
+          "title": "Dataflow Byte Count [30d]"
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 1
+      },
+      {
+        "height": 2,
+        "widget": {
+          "text": {
+            "content": "Use this chart to view the Dataflow  log volume over time. Use the time range selector to adjust the time range.",
+            "format": "RAW"
+          },
+          "title": "Adjustable log volume chart"
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 3
+      }
+    ]
+  }
+}
