@@ -70,3 +70,26 @@ If you want to export a dashboard to a JSON file and share it, you can use the f
     ```bash
     scripts/dashboard/dashboard.sh export $DASH_ID $PROJECT_ID $FILE_NAME
     ```
+
+## Sample Dashboards Contributor Guidelines
+
+### Screenshots
+
+Please add a screenshot with your dashboard. All screenshots should live in the same directory as the sample dashboard specification.
+
+### Filenames
+
+If there is only a single screenshot, the name should match the dashboard specification but with a PNG extension. For example:
+
+    cloudrun-monitoring.json
+    cloudrun-monitoring.png
+
+If there are multiple screenshots, a two digit number should be added between the name and file extension. For example:
+
+    gke-cluster-monitoring.json
+    gke-cluster-monitoring.01.png
+    gke-cluster-monitoring.02.png
+
+### Update README
+
+Please also update the README.md file in the same directory of your dashboard file.

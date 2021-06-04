@@ -17,6 +17,12 @@
 |Filename: [kubernetes-usage.json](kubernetes-usage.json)|
 |This dashboard has several widgets mostly focusing up on a Kubernetes Logging Environment by looking at the metrics `Log Bytes Sent`, `Log Entries` split up by different monitored resource types found for Kubernetes like `containers`, `pods`, `namespaces`, and `clusters`.|
 
+&nbsp;
+
+|Logging Usage - GKE System logs|
+|:-----------------------|
+|Filename: [gke-system-usage.json](gke-system-usage.json)|
+|This dashboard has widgets to show GKE system logs by looking at the logging metric `byte_count`. It uses various queries to filter the metric for GKE nodes, pods, and containers.|
 
 &nbsp;
 
@@ -31,4 +37,11 @@
 |Logging Usage - Cloud SQL|
 |:-----------------------|
 |Filename: [cloudsql-usage.json](cloudsql-usage.json)|
-|This dashboard is also simple in that it primarily looks at the `Log Bytes Sent` and `Log Entries` metrics but also adds in some additional visualizations of `Entries By Severity` for monitored resources of `cloudsql_database` and `cloudsql_instance_database`.|
+|This dashboard primarily looks at the `Log Bytes Sent` and `Log Entries` metrics but also adds in some additional visualizations of `Entries By Severity` for monitored resources of `cloudsql_database` and `cloudsql_instance_database`.|
+
+&nbsp;
+
+|Logging Usage - Dataflow logs|
+|:-----------------------|
+|Filename: [dataflow-usage.json](dataflow-usage.json)|
+|This dashboard has widgets to show dataflow log volumes by looking at the logging metric `byte_count`. |
