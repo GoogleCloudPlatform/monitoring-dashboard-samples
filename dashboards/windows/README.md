@@ -5,7 +5,7 @@ Note: [Blue Medora Bindplane](https://cloud.google.com/stackdriver/blue-medora) 
 |Active Directory Monitoring|
 |:---------------------|
 |Filename: [active-directory-monitoring.json](active-directory-monitoring.json)|
-|This dashboard has 8 charts to display the metrics for the `Active directory servers`. Bule Medora needs to be [configured](https://bluemedora.com/monitoring-microsoft-active-directory-with-stackdriver-logging/). The metrics include resource utilization and service status.|
+|This dashboard has 8 charts to display the metrics for the `Active directory servers`. Blue Medora needs to be [configured](https://bluemedora.com/monitoring-microsoft-active-directory-with-stackdriver-logging/). The metrics include resource utilization and service status.|
 &nbsp;
 
 |Windows Server Monitoring|
