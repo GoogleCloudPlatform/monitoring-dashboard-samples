@@ -1,13 +1,13 @@
-### Dashboards for VMware
+### Dashboards for VMware Agent
 
 ##### Notes:
 
-- These dashboards are for a temporary period of time while progress of the alpha version of the vSphere/GCVE agent. Metric types are volatile currently so these example dashboards will be the supported versions for iterated development of the agent. 
+- These dashboards are for the alpha version of the headless vSphere/GCVE agent. 
 
 |GCVE Contention|
 |:---------------------|
 |Filename: [contention.json](contention.json)|
-|This dashboard has a variety of widgets and graphs that are split up into the sections for cluster, hosts and virtual machines to help identify resource allocation and distribution. Including such metrics as `Available Memory`, `Cpu Usage`, `Memory Utilization` etc.|
+|This dashboard has a variety of widgets and graphs that are split up into the sections for cluster, hosts and virtual machines to help identify resource allocation and distribution. Including such metrics as `Available Memory`, `CPU Usage`, `Memory Utilization` etc.|
 
 |GCVE Overview|
 |:----------------------|
