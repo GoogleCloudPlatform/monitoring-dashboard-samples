@@ -1,13 +1,14 @@
-### Dashboards for VMware Agent
+### Dashboards for VMware
 
 ##### Notes:
-
-- These dashboards are for the alpha version of the headless vSphere/GCVE agent. 
+- This integration is not for the [Preview Cloud Operations agent for Google Cloud VMware Engine](https://cloud.google.com/blog/products/vmware-engine/monitor-your-vmware-instances-in-google-cloud) and this integration is deprecated for that use case.
+- [Bindplane](https://cloud.google.com/stackdriver/blue-medora) needs to be configured for some dashboards.
+- For a detailed list of all the metrics and set up information, you can find documentation [here](https://docs.bindplane.bluemedora.com/docs/vmware-vcenter).
 
 |GCVE Contention|
 |:---------------------|
 |Filename: [contention.json](contention.json)|
-|This dashboard has a variety of widgets and graphs that are split up into the sections for cluster, hosts and virtual machines to help identify resource allocation and distribution. Including such metrics as `Available Memory`, `CPU Usage`, `Memory Utilization` etc.|
+|This dashboard has a variety of widgets and graphs that are split up into the sections for cluster, hosts and virtual machines to help identify resource allocation and distribution. Including such metrics as `Available Memory`, `Cpu Usage`, `Memory Utilization` etc.|
 
 |GCVE Overview|
 |:----------------------|
