@@ -1,14 +1,10 @@
-### Dashboards for VMware
+### Dashboards for Cloud Operations agent for Google Cloud VMware Engine
 
-##### Notes:
-
-- [Bindplane](https://cloud.google.com/stackdriver/blue-medora) needs to be configured for some dashboards.
-- For a detailed list of all the metrics and set up information, you can find documentation [here](https://docs.bindplane.bluemedora.com/docs/vmware-vcenter).
 
 |GCVE Contention|
 |:---------------------|
 |Filename: [contention.json](contention.json)|
-|This dashboard has a variety of widgets and graphs that are split up into the sections for cluster, hosts and virtual machines to help identify resource allocation and distribution. Including such metrics as `Available Memory`, `Cpu Usage`, `Memory Utilization` etc.|
+|This dashboard has a variety of widgets and graphs that are split up into the sections for cluster, hosts and virtual machines to help identify resource allocation and distribution. Including such metrics as `Available Memory`, `CPU Usage`, `Memory Utilization` etc.|
 
 |GCVE Overview|
 |:----------------------|
