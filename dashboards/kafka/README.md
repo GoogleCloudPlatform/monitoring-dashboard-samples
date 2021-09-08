@@ -1,4 +1,4 @@
-### Dashboards for Azure Virtual Machines
+### Dashboards for Kafka
 
 #### Notes
 
