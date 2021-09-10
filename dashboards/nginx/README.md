@@ -8,4 +8,4 @@
 |Nginx Overview|
 |:------------------|
 |Filename: [overview.json](overview.json)|
-|This dashboard has 3 charts displaying `Requests`, `Current Connections`, `Connections History`.|
+|This dashboard has charts displaying `Request Rate`, `Current Connections`, and `Connections Rate` from NGINX as well as charts of infrastructure related metrics for the running NGINX VMs: `CPU % Top 5 VMs`, `Memory % Top 5 VMs`, and `NGINX VMs by Region` for a count of VMs over time. There is also a card with links to docs and NGINX log in Cloud Logging.|
