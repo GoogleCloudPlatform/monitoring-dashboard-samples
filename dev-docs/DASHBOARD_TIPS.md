@@ -16,7 +16,7 @@ Memory), as well as the number of VMs serving the workload to ensure that you
 have enough infrastructure provisioned for your load.
 
 Using the MQL, it is possible to do an inner join on two metrics so that you can
-show a chart of a infrastructure metric (like CPU) filtered to all VMs that are
+show a chart of an infrastructure metric (like CPU) filtered to all VMs that are
 producing a value for another metric (like NGINX request count). This enables
 creating charts of infrastructure metrics for a given workload!
 
@@ -30,18 +30,18 @@ MQL queries should be in [Strict-form](https://cloud.google.com/monitoring/mql/q
 help reduce the chance of charts breaking if there are changes to the MQL
 language in the future or some types of changes to metric schemas. 
 
-This note about using strict form applies particularly to use of MQL macros, 
+This note about using strict form applies particularly to MQL macros, 
 which are still in Preview (see [MQL Macros docs](https://cloud.google.com/monitoring/mql/query-language?hl=en#ql-macros)). 
 
-Fortunately there is a three-dot menu option in Dashboard Builder to see the
+Fortunately, there is a three-dot menu option in Dashboard Builder to see the
 strict form version of the query which you can then copy-paste in once you are
 done with it. If you build the chart in Metrics Explorer, it will also enforce
-that it get saved in strict form.
+that it gets saved in strict form.
 
 ## Legend Templates
 
 Have you ever hovered over a line on a chart and had it show a hover card that
-was more confusing that it was useful? Or maybe you were trying to see some key
+was more confusing than it was useful? Or maybe you were trying to see some key
 piece of information about a line on the chart (e.g. a VM name) but the
 information in the legend was just so busy with all the different labels that
 define that line. Legend templates are the answer!
@@ -60,7 +60,7 @@ in the UI by clicking the "Advanced" tab in dashboard builder and scrolling down
 to the bottom under "Additional Options", which allows you to use the UI to add
 in placeholder terms for metric/metadata/resource labels.
 
-You can also type a legend template in directly (or put it in via the JSON
+You can also type a legend template indirectly (or put it in via the JSON
 editor).
 
 For non-MQL charts, legend template placeholders take on the following format
@@ -74,18 +74,18 @@ For non-MQL charts, legend template placeholders take on the following format
 To be used in the legend template, the labels need to be part of what the chart
 returns as labels on the streams (needs to be part of the "group by" or implied
 group by of the chart). For example, suppose you have a chart where each line
-is a VM and you want to the legend template to show up as "[VM name] (VM zone)",
+is a VM and you want the legend template to show up as "[VM name] (VM zone)",
 then you could make the legend template be
 `${metadata.system_labels\.name} (${resource.labels.zone})`, and a sample value
 could be "instance-1 (us-central1-a)".
 
 ### Legend templates for MQL charts
 
-MQL charts also suport legend templates and they can be particularly useful for
+MQL charts also support legend templates. They can be particularly useful for
 MQL charts because the default legend templates include key/value pairs, which
 can end up looking pretty busy.
 
-Howevever, the dashboard builder UI (as of Sept 2021) doesn't have support for
+However, the dashboard builder UI (as of Sept 2021) doesn't have support for
 adding legend templates for MQL charts, so you will need to add them via the
 JSON editor. You should also do this **last** once you are done with your MQL
 chart and have saved it in strict form, because editing the chart outside the
@@ -153,11 +153,11 @@ documentation for how to install/configure/troubleshoot a particular
 integration, and possibly also links to the logs associated with an integration
 as well.
 
-Since log names in GCP have the project ID in them, it's not possible to create
+Since log names in GCP have the project ID in them, it's not possible to create a
 link to the exact log name for the project, but we can use a substring match on
-it (may be slower to load but gets customers into the right place).
+it (maybe slower to load but gets customers into the right place).
 
-In order to link to logs use a URL of the form
+In order to link to logs, use a URL of the form
 `https://console.cloud.google.com/logs/query?query=[URL encoded query]`. A
 project-neutral query for a log stream will look like e.g.
 `logName:"nginx_access" resource.type="gce_instance"`, and when URL encoded, the
@@ -178,7 +178,7 @@ documentation as well as logs:
 # Appendix: Useful MQL Macros
 
 **NOTE**: Remember to save the MQL in strict form before committing to the 
-sample dashboards repo per above (which will expand out the macros).
+sample dashboards repo per above (which will expand the macros).
 
 ## Top 5 CPU Utilization for VMs that emit a given metric 
 
