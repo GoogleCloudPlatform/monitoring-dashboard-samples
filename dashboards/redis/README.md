@@ -2,7 +2,7 @@
 
 #### Notes
 
-- These three dashboards are primarily separated via where the metrics are populated from. Metrics can come from the [BindPlane integration](https://docs.bindplane.bluemedora.com/docs/redis), the builtin [Memorystore integration](https://cloud.google.com/memorystore/docs/redis), or [Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party) for Redis.
+- These dashboards are primarily separated via where the metrics are populated from. Metrics can come from the [BindPlane integration](https://docs.bindplane.bluemedora.com/docs/redis), the builtin [Memorystore integration](https://cloud.google.com/memorystore/docs/redis), or [Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party) for Redis.
 
 |Redis Overview|
 |:------------------|
@@ -18,33 +18,16 @@
 
 &nbsp;
 
-|Redis Ops Agent|
+|Redis GCE Overview|
 |:-----------------------|
-|Filename: [overview-ops-agent.json](overview-ops-agent.json)|
-|This dashboard has 18 charts that are built for Redis running in [Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/redis#monitored-metrics), including:|
-- `uptime`
-- `cpu/time`
-- `clients/connected`
-- `clients/max_input_buffer`
-- `clients/max_output_buffer`
-- `clients/blocked`
-- `keys/expired`
-- `keys/evicted`
-- `connections/received`
-- `connections/rejected`
-- `memory/used`
-- `memory/peak`
-- `memory/rss`
-- `memory/lua`
-- `memory/fragmentation_ratio`
-- `rdb/changes_since_last_save`
-- `commands`
-- `commands/processed`
-- `net/input`
-- `net/output`
-- `keyspace/hits`
-- `keyspace/misses`
-- `latest_fork`
-- `slaves/connected`
-- `replication/backlog_first_byte_offset`
-- `replication/offset`
+|Filename: [redis-gce-overview.json](redis-gce-overview.json)|
+|This dashboard has 9 charts that are built for Redis running in [Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/redis#monitored-metrics), including `Commands`, `Clients`, `Up Status`, `Network`, `Memory`, `Keys`, `Keyspace`, `Connections`, and `Commands Processed`|
+
+&nbsp;
+
+|Redis GCE Usage|
+|:-----------------------|
+|Filename: [redis-gce-usage.json](redis-gce-usage.json)|
+|This dashboard has 9 charts that are built for Redis running in [Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/redis#monitored-metrics), including `Buffer`, `RDB Changes`, `Memory Fragment Ratio`, `CPU Consumed`, `Latest Fork`, `Replication Backlog`, `Slaves Connected`, `CPU % Top 5 VMs`, and `Hosts by Region`| 
+
+
