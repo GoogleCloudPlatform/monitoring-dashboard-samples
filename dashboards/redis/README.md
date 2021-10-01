@@ -21,13 +21,13 @@
 |Redis GCE Overview|
 |:-----------------------|
 |Filename: [redis-gce-overview.json](redis-gce-overview.json)|
-|This dashboard has 9 charts that are built for Redis running in [Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/redis#monitored-metrics), including `Commands`, `Clients`, `Up Status`, `Network`, `Memory`, `Keys`, `Keyspace`, `Connections`, and `Commands Processed`|
+|This dashboard has 9 charts for viewing Redis when monitored by [Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/redis#monitored-metrics), including `Commands`, `Clients`, `Up Status`, `Network`, `Memory`, `Keys`, `Keyspace`, `Connections`, and `Commands Processed`|
 
 &nbsp;
 
 |Redis GCE Usage|
 |:-----------------------|
 |Filename: [redis-gce-usage.json](redis-gce-usage.json)|
-|This dashboard has 9 charts that are built for Redis running in [Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/redis#monitored-metrics), including `Buffer`, `RDB Changes`, `Memory Fragment Ratio`, `CPU Consumed`, `Latest Fork`, `Replication Backlog`, `Slaves Connected`, `CPU % Top 5 VMs`, and `Hosts by Region`| 
+|This dashboard has 9 charts for viewing Redis when monitored by [Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/redis#monitored-metrics), including `Buffer`, `RDB Changes`, `Memory Fragment Ratio`, `CPU Consumed`, `Latest Fork`, `Replication Backlog`, `Slaves Connected`, `CPU % Top 5 VMs`, and `Hosts by Region`| 
 
 
