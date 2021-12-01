@@ -8,4 +8,4 @@
 |Apache Overview|
 |:------------------|
 |Filename: [apache-gce-overview.json](apache-gce-overview.json)|
-|This dashboard has charts displaying `Request Rate`, `Traffic Rate`, `Connections`, `Scoreboard` and `Workers` from Apache as well as charts of infrastructure related metrics for the running Apache VMs: `CPU % Top 5 VMs`, `Memory % Top 5 VMs` and `Hosts by Region` for a count of VMs over time. There is also a card with links to docs and Apache logs in Cloud Logging.|
+|This dashboard has charts displaying `Request Rate`, `Traffic Rate`, `Connections`, `Scoreboard` and `Workers` from Apache as well as charts of infrastructure related metrics for the running Apache VMs: `CPU % Top 5 VMs`, `Memory % Top 5 VMs`, `Hosts by Region`, `Apache Access Logs Panel` and `Apache Error Logs Panel`. There is also a card with links to docs and Apache logs in Cloud Logging.|
