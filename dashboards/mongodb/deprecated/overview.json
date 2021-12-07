@@ -14,9 +14,8 @@
             "dataSets": [
               {
                 "plotType": "LINE",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch generic_node\n| metric\n    'external.googleapis.com/bluemedora/mongodb/mongod/network/traffic_count'\n| align delta(1m)\n| every 1m\n| cast_units 'By'"
+                  "timeSeriesQueryLanguage": "fetch generic_node\n| metric\n    'external.googleapis.com/bluemedora/generic_node/mongodb/mongod/network/traffic_count'\n| align delta(1m)\n| every 1m\n| cast_units 'By'"
                 }
               }
             ],
@@ -41,9 +40,8 @@
             "dataSets": [
               {
                 "plotType": "LINE",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch generic_node\n| metric 'external.googleapis.com/bluemedora/mongodb/memory_usage'\n| group_by 1m, [value_memory_usage_mean: mean(value.memory_usage)]\n| every 1m\n| cast_units 'MBy'"
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/mongodb/memory_usage'\n| group_by 1m, [value_memory_usage_mean: mean(value.memory_usage)]\n| every 1m\n| cast_units 'MBy'"
                 }
               }
             ],
@@ -69,13 +67,12 @@
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "aggregation": {
                       "perSeriesAligner": "ALIGN_RATE"
                     },
-                    "filter": "metric.type=\"external.googleapis.com/bluemedora/mongodb/cache/misses\" resource.type=\"generic_node\"",
+                    "filter": "metric.type=\"agent.googleapis.com/mongodb/cache/misses\" resource.type=\"gce_instance\"",
                     "secondaryAggregation": {
                       "perSeriesAligner": "ALIGN_MEAN"
                     }
@@ -104,9 +101,8 @@
             "dataSets": [
               {
                 "plotType": "LINE",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch generic_node\n| metric\n    'external.googleapis.com/bluemedora/mongodb/storage_size'\n| group_by 1m, [value_storage_size_mean: mean(value.storage_size)]\n| every 1m\n| cast_units 'By'"
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric\n    'agent.googleapis.com/mongodb/database/collection/storage_size'\n| group_by 1m, [value_storage_size_mean: mean(value.storage_size)]\n| every 1m\n| cast_units 'By'"
                 }
               }
             ],
@@ -133,7 +129,6 @@
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "aggregation": {
@@ -144,7 +139,7 @@
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"external.googleapis.com/bluemedora/mongodb/database/collection/objects_count\" resource.type=\"generic_node\"",
+                    "filter": "metric.type=\"agent.googleapis.com/mongodb/objects\" resource.type=\"gce_instance\"",
                     "secondaryAggregation": {}
                   }
                 }
@@ -173,7 +168,6 @@
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_BAR",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "aggregation": {
@@ -182,7 +176,7 @@
                       ],
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
-                    "filter": "metric.type=\"external.googleapis.com/bluemedora/mongodb/mongod/assert/count\" resource.type=\"generic_node\"",
+                    "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/mongodb/mongod/assert/count\" resource.type=\"generic_node\"",
                     "secondaryAggregation": {
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
@@ -215,7 +209,7 @@
                   "crossSeriesReducer": "REDUCE_MEAN",
                   "perSeriesAligner": "ALIGN_MEAN"
                 },
-                "filter": "metric.type=\"external.googleapis.com/bluemedora/mongodb/database/collection/total_indexes\" resource.type=\"generic_node\""
+                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/mongodb/database/collection/total_indexes\" resource.type=\"generic_node\""
               }
             }
           },
@@ -233,7 +227,7 @@
                   "crossSeriesReducer": "REDUCE_MEAN",
                   "perSeriesAligner": "ALIGN_MEAN"
                 },
-                "filter": "metric.type=\"external.googleapis.com/bluemedora/mongodb/mongod/connection/available_count\" resource.type=\"generic_node\""
+                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/mongodb/mongod/connection/available_count\" resource.type=\"generic_node\""
               }
             }
           },
@@ -252,7 +246,7 @@
                   "crossSeriesReducer": "REDUCE_MEAN",
                   "perSeriesAligner": "ALIGN_MEAN"
                 },
-                "filter": "metric.type=\"external.googleapis.com/bluemedora/mongodb/connections\" resource.type=\"generic_node\""
+                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/mongodb/connections\" resource.type=\"generic_node\""
               }
             }
           },
@@ -268,10 +262,29 @@
             "timeSeriesQuery": {
               "timeSeriesFilter": {
                 "aggregation": {
+                  "crossSeriesReducer": "REDUCE_SUM",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"agent.googleapis.com/mongodb/collections\" resource.type=\"gce_instance\""
+              }
+            }
+          },
+          "title": "Collections"
+        },
+        "width": 2,
+        "xPos": 8
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "aggregation": {
                   "crossSeriesReducer": "REDUCE_MEAN",
                   "perSeriesAligner": "ALIGN_MEAN"
                 },
-                "filter": "metric.type=\"external.googleapis.com/bluemedora/mongodb/mongod/tickets\" resource.type=\"generic_node\""
+                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/mongodb/mongod/tickets\" resource.type=\"generic_node\""
               }
             }
           },
@@ -292,7 +305,6 @@
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "aggregation": {
@@ -302,7 +314,7 @@
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"external.googleapis.com/bluemedora/mongodb/extents\" resource.type=\"generic_node\"",
+                    "filter": "metric.type=\"agent.googleapis.com/mongodb/extents\" resource.type=\"gce_instance\"",
                     "secondaryAggregation": {}
                   }
                 }
@@ -331,7 +343,6 @@
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_BAR",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "aggregation": {
@@ -340,7 +351,7 @@
                       ],
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
-                    "filter": "metric.type=\"external.googleapis.com/bluemedora/mongodb/mongod/documents/operation_count\" resource.type=\"generic_node\"",
+                    "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/mongodb/mongod/documents/operation_count\" resource.type=\"generic_node\"",
                     "secondaryAggregation": {
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
@@ -371,7 +382,7 @@
                 "aggregation": {
                   "perSeriesAligner": "ALIGN_RATE"
                 },
-                "filter": "metric.type=\"external.googleapis.com/bluemedora/mongodb/mongod/page_faults\" resource.type=\"generic_node\"",
+                "filter": "metric.type=\"external.googleapis.com/bluemedora/generic_node/mongodb/mongod/page_faults\" resource.type=\"generic_node\"",
                 "secondaryAggregation": {
                   "crossSeriesReducer": "REDUCE_SUM",
                   "perSeriesAligner": "ALIGN_MEAN"
@@ -395,9 +406,8 @@
             "dataSets": [
               {
                 "plotType": "LINE",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch generic_node\n| metric 'external.googleapis.com/bluemedora/mongodb/data_size'\n| group_by 1m, [value_data_size_mean: mean(value.data_size)]\n| every 1m\n| group_by [metric.database_name],\n    [value_data_size_mean_mean: mean(value_data_size_mean)]\n| cast_units 'By'"
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/mongodb/data_size'\n| group_by 1m, [value_data_size_mean: mean(value.data_size)]\n| every 1m\n| group_by [metric.database_name],\n    [value_data_size_mean_mean: mean(value_data_size_mean)]\n| cast_units 'By'"
                 }
               }
             ],
