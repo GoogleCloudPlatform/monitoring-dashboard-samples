@@ -6,6 +6,30 @@ docs.
 
 For MQL docs, see [Introduction to Monitoring Query Language](https://cloud.google.com/monitoring/mql) and the [Monitoring Query Language reference](https://cloud.google.com/monitoring/mql/reference). See also [About the MQL language](https://cloud.google.com/monitoring/mql/query-language) doc which includes information about various things including strict form and macros.
 
+## Don't use the Logs Panel component (yet!)
+
+The [LogsPanel](https://cloud.google.com/monitoring/api/ref_v3/rest/v1/projects.dashboards#logspanel)
+component would be a great addition to sample dashboards, as it would allow showing
+log entries for the log streams produced by various application integrations
+(e.g. embedding NGINX access logs, etc.).
+
+However, the component currently has a limitation that makes it unsuitable
+for sample dashboards: it requires that you specify a the `resourceNames` that
+the logs will be queried from. This needs to be a list of projects in the form
+of `projects/[project number]`, and the current project is not implicitly included.
+
+This means that if we specified a test project used to develop the dashboard (or
+left it empty) the component would always show no logs when copied to a specific
+project, which would be misleading to the customer as they wonder where their
+e.g. NGINX logs went, when in fact they are there just not being shown.
+
+As of 2021-12-14 this is the case, but we will investigate how we could
+modify the LogsPanel component to enable it to be more flexible and have it e.g.
+infer the `resourceNames` from the current metric scope if it's unspecified.
+
+In the mean time, the best we can do is to link to logs in a markdown card,
+see below under "Embedding Markdown With Links to Docs/Logs".
+
 ## MQL Joins to bring in Infrastructure Metrics alongside Workload Metrics
 
 Suppose you want to monitor a group of web servers running NGINX or Apache on
@@ -170,9 +194,9 @@ documentation as well as logs:
 ```
 [How to configure NGINX Monitoring](https://cloud.google.com/monitoring/agent/ops-agent/third-party/nginx)
 
-[View NGINX Access Logs](https://console.cloud.google.com/logs/query?query=logName:%22nginx_access%22%0Aresource.type%3D%22gce_instance%22)
+[View NGINX Access Logs](https://console.cloud.google.com/logs/query?query=logName:%22nginx_default_access%22%0Aresource.type%3D%22gce_instance%22)
 
-[View NGINX Error Logs](https://console.cloud.google.com/logs/query?query=logName:%22nginx_error%22%0Aresource.type%3D%22gce_instance%22)
+[View NGINX Error Logs](https://console.cloud.google.com/logs/query?query=logName:%22nginx_default_error%22%0Aresource.type%3D%22gce_instance%22)
 ```
 
 # Appendix: Useful MQL Macros
