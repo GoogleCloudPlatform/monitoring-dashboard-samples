@@ -1,0 +1,227 @@
+{
+  "displayName": "Anthos cluster node status",
+  "gridLayout": {
+    "columns": "2",
+    "widgets": [
+      {
+        "title": "Node condition",
+        "xyChart": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"kubernetes.io/anthos/kube_node_status_condition\" resource.type=\"k8s_container\" metric.label.\"status\"!=\"false\"",
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_MEAN",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "resource.label.\"project_id\"",
+                      "resource.label.\"location\"",
+                      "resource.label.\"cluster_name\"",
+                      "metric.label.\"node\"",
+                      "metric.label.\"condition\"",
+                      "metric.label.\"status\""
+                    ]
+                  },
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              },
+              "plotType": "LINE",
+              "minAlignmentPeriod": "60s"
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          },
+          "chartOptions": {
+            "mode": "COLOR"
+          }
+        }
+      },
+      {
+        "title": "CPU usage per node per mode per CPU (s/s)",
+        "xyChart": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"kubernetes.io/anthos/node_cpu_seconds_total\" resource.type=\"k8s_node\"",
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_RATE",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "resource.label.\"project_id\"",
+                      "resource.label.\"cluster_name\"",
+                      "resource.label.\"location\"",
+                      "resource.label.\"node_name\"",
+                      "metric.label.\"cpu\"",
+                      "metric.label.\"mode\""
+                    ]
+                  },
+                  "secondaryAggregation": {}
+                }
+              },
+              "plotType": "LINE",
+              "minAlignmentPeriod": "60s"
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          },
+          "chartOptions": {
+            "mode": "COLOR"
+          }
+        }
+      },
+      {
+        "title": "Allocatable CPU cores per node",
+        "xyChart": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"kubernetes.io/anthos/kube_node_status_allocatable_cpu_cores\" resource.type=\"k8s_container\"",
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_MEAN",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "resource.label.\"project_id\"",
+                      "resource.label.\"location\"",
+                      "resource.label.\"cluster_name\"",
+                      "metric.label.\"node\""
+                    ]
+                  },
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              },
+              "plotType": "LINE",
+              "minAlignmentPeriod": "60s"
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          },
+          "chartOptions": {
+            "mode": "COLOR"
+          }
+        }
+      },
+      {
+        "title": "Memory usage per node (bytes)",
+        "xyChart": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"kubernetes.io/anthos/node_memory_Active_bytes\" resource.type=\"k8s_node\"",
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_MEAN",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "resource.label.\"project_id\"",
+                      "resource.label.\"location\"",
+                      "resource.label.\"cluster_name\"",
+                      "resource.label.\"node_name\""
+                    ]
+                  },
+                  "secondaryAggregation": {}
+                }
+              },
+              "plotType": "LINE",
+              "minAlignmentPeriod": "60s"
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          },
+          "chartOptions": {
+            "mode": "COLOR"
+          }
+        }
+      },
+      {
+        "title": "Allocatable memory per node (bytes)",
+        "xyChart": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"kubernetes.io/anthos/kube_node_status_allocatable_memory_bytes\" resource.type=\"k8s_container\"",
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_MEAN",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "resource.label.\"project_id\"",
+                      "resource.label.\"location\"",
+                      "resource.label.\"cluster_name\"",
+                      "metric.label.\"node\""
+                    ]
+                  },
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              },
+              "plotType": "LINE",
+              "minAlignmentPeriod": "60s"
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          },
+          "chartOptions": {
+            "mode": "COLOR"
+          }
+        }
+      },
+      {
+        "title": "Available filesystem size per node per device (bytes)",
+        "xyChart": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"kubernetes.io/anthos/node_filesystem_free_bytes\" resource.type=\"k8s_node\"",
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_MEAN",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "resource.label.\"project_id\"",
+                      "resource.label.\"location\"",
+                      "resource.label.\"cluster_name\"",
+                      "resource.label.\"node_name\"",
+                      "metric.label.\"device\""
+                    ]
+                  },
+                  "secondaryAggregation": {}
+                },
+                "unitOverride": "1"
+              },
+              "plotType": "LINE",
+              "minAlignmentPeriod": "60s"
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          },
+          "chartOptions": {
+            "mode": "COLOR"
+          }
+        }
+      }
+    ]
+  }
+}
