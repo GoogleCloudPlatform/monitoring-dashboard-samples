@@ -1,0 +1,252 @@
+{
+    "displayName": "MongoDB GCE Overview",
+    "mosaicLayout": {
+      "columns": 12,
+      "tiles": [
+        {
+          "height": 4,
+          "widget": {
+            "title": "Active Connections",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "minAlignmentPeriod": "60s",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "perSeriesAligner": "ALIGN_MEAN"
+                      },
+                      "filter": "metric.type=\"workload.googleapis.com/mongodb.connection.count\" resource.type=\"gce_instance\" metric.label.\"type\"=\"active\""
+                    }
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Collection Size",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "minAlignmentPeriod": "60s",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "perSeriesAligner": "ALIGN_MEAN"
+                      },
+                      "filter": "metric.type=\"workload.googleapis.com/mongodb.collection.count\" resource.type=\"gce_instance\""
+                    }
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 8
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Server Memory Usage",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/mongodb.memory.usage'\n| filter (metric.database == 'admin')\n| group_by 1m, [value_usage_mean: mean(value.usage)]\n| every 1m\n| cast_units 'By'"
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 12,
+          "yPos": 4
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Index Count",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "minAlignmentPeriod": "60s",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "perSeriesAligner": "ALIGN_MEAN"
+                      },
+                      "filter": "metric.type=\"workload.googleapis.com/mongodb.index.count\" resource.type=\"gce_instance\""
+                    }
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "yPos": 8
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Operations",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "minAlignmentPeriod": "60s",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "perSeriesAligner": "ALIGN_DELTA"
+                      },
+                      "filter": "metric.type=\"workload.googleapis.com/mongodb.operation.count\" resource.type=\"gce_instance\"",
+                      "secondaryAggregation": {
+                        "alignmentPeriod": "60s",
+                        "perSeriesAligner": "ALIGN_RATE"
+                      }
+                    }
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 12,
+          "yPos": 16
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Index Size",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/mongodb.index.size'\n| group_by 1m, [value_size_mean: mean(value.size)]\n| every 1m\n| cast_units 'By'"
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 12,
+          "yPos": 12
+        },
+        {
+          "height": 3,
+          "widget": {
+            "text": {
+              "content": "[How to configure MongoDB Monitoring](https://cloud.google.com/monitoring/agent/ops-agent/third-party/mongodb)\n\n[View MongoDB Access Logs](https://console.cloud.google.com/logs/query;query=logName:\"mongodb_default\"%0Aresource.type%3D\"gce_instance\"%0AjsonPayload.component%3D\"ACCESS\")\n\n[View MongoDB General Logs](https://console.cloud.google.com/logs/query;query=logName:\"mongodb_default\"%0Aresource.type%3D\"gce_instance\"%0AjsonPayload.component!%3D\"ACCESS\")",
+              "format": "MARKDOWN"
+            },
+            "title": "MongoDB Monitoring Links"
+          },
+          "width": 12,
+          "yPos": 20
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Available Connections",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "minAlignmentPeriod": "60s",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "perSeriesAligner": "ALIGN_MEAN"
+                      },
+                      "filter": "metric.type=\"workload.googleapis.com/mongodb.connection.count\" resource.type=\"gce_instance\" metric.label.\"type\"=\"available\" metric.label.\"database\"=\"admin\"",
+                      "secondaryAggregation": {
+                        "alignmentPeriod": "60s"
+                      }
+                    }
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 6
+        }
+      ]
+    }
+  }
+  
