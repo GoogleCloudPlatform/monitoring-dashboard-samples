@@ -118,7 +118,8 @@
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
                     "filter": "metric.type=\"workload.googleapis.com/postgresql.db_size\""
-                  }
+                  },
+                  "unitOverride": "By"
                 }
               }
             ],
@@ -268,7 +269,37 @@
             }
           }
         },
-        "width": 6,
+        "width": 4,
+        "yPos": 12
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Memory % Top 5 VMs",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "${labels.metadata\\.system\\.name} (${labels.resource\\.zone})",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "def top_5_memory_filtered_by_metric filter_metric =\n  fetch gce_instance\n  | { t_memory:\n        metric 'agent.googleapis.com/memory/percent_used'\n        | filter metric.state = 'used'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value val(0)\n  | group_by [metadata.system.name, resource.project_id, resource.zone], 1m,\n      .mean()\n  | top 5\n  | every 1m;\n\n  @top_5_memory_filtered_by_metric 'workload.googleapis.com/postgresql.operations'"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "xPos": 4,
         "yPos": 12
       },
       {
@@ -296,8 +327,8 @@
             }
           }
         },
-        "width": 6,
-        "xPos": 6,
+        "width": 4,
+        "xPos": 8,
         "yPos": 12
       },
       {
