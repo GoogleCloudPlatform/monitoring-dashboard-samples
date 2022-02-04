@@ -8,6 +8,13 @@
 
 &nbsp;
 
+|Dataproc Job Monitoring|
+|:-------------------------|
+|Filename: [dataproc-job-monitoring.json](dataproc-job-monitoring.json)|
+|This dashboard demonstrates 4 different charts in a single dashboard that provides a single view for the Dataproc job [metrics](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-dataproc). Base on your requirements, you can adjust the sliding window and time for the `Slow job` chart.|
+
+&nbsp;
+
 |Data Processing Monitoring|
 |:-------------------------|
 |Filename: [dataprocessing-monitoring.json](dataprocessing-monitoring.json)|
