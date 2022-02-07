@@ -6,46 +6,6 @@
       {
         "height": 4,
         "widget": {
-          "title": "Bulk Requests",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "legendTemplate": "Bulk Requests",
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"workload.googleapis.com/couchdb.httpd.bulk_requests\"",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 4
-      },
-      {
-        "height": 4,
-        "widget": {
           "title": "Requests by Method",
           "xyChart": {
             "chartOptions": {
@@ -117,77 +77,6 @@
         },
         "width": 6,
         "xPos": 6
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Open Databases",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "legendTemplate": "Open Databases",
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"workload.googleapis.com/couchdb.database.open\" resource.type=\"gce_instance\""
-                  }
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 12
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Open Files Descriptors",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "legendTemplate": "Open File Descriptors",
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"workload.googleapis.com/couchdb.file_descriptor.open\" resource.type=\"gce_instance\""
-                  }
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "yPos": 12
       },
       {
         "height": 4,
@@ -327,7 +216,7 @@
         "height": 4,
         "widget": {
           "text": {
-            "content": "[How to configure Couchdb Monitoring](https://cloud.google.com/monitoring/agent/ops-agent/third-party/couchdb)\n\n[View Couchdb Access Logs](https://console.cloud.google.com/logs/query?query=logName:%22couchdb_default_access%22%0Aresource.type%3D%22gce_instance%22)\n",
+            "content": "[How to configure Couchdb Monitoring](https://cloud.google.com/monitoring/agent/ops-agent/third-party/couchdb)\n\n[View Couchdb Error Logs](https://console.cloud.google.com/logs/query?query=logName:%22couchdb%22%0Aresource.type%3D%22gce_instance%22)\n",
             "format": "MARKDOWN"
           },
           "title": "Couchdb Monitoring Links"
@@ -374,7 +263,6 @@
             },
             "dataSets": [
               {
-                "legendTemplate": "Average Request Time",
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
@@ -402,6 +290,120 @@
         },
         "width": 6,
         "yPos": 4
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Bulk Requests",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"workload.googleapis.com/couchdb.httpd.bulk_requests\" resource.type=\"gce_instance\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 4
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Open File Descriptors",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"workload.googleapis.com/couchdb.file_descriptor.open\" resource.type=\"gce_instance\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s"
+                    }
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "yPos": 12
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Open Databases",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"workload.googleapis.com/couchdb.database.open\" resource.type=\"gce_instance\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s"
+                    }
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 12
       }
     ]
   }
