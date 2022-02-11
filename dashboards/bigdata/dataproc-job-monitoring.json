@@ -1,0 +1,134 @@
+{
+  "category": "CUSTOM",
+  "displayName": "Dataproc Job Monitoring",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 4,
+        "widget": {
+          "title": "Running jobs by project",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch cloud_dataproc_cluster\n| metric 'dataproc.googleapis.com/cluster/job/running_count'\n| group_by 1m, [value_running_count_aggregate: aggregate(value.running_count)]\n| every 1m\n| group_by [resource.project_id],\n    [value_running_count_aggregate_aggregate:\n       aggregate(value_running_count_aggregate)]"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 0
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Failed jobs by project",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch cloud_dataproc_cluster\n| metric 'dataproc.googleapis.com/cluster/job/failed_count'\n| align delta(1m)\n| every 1m\n| group_by [resource.project_id],\n    [value_failed_count_aggregate: aggregate(value.failed_count)]"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 4
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Submitted jobs by project",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch cloud_dataproc_cluster\n| metric 'dataproc.googleapis.com/cluster/job/submitted_count'\n| align delta(1m)\n| every 1m\n| group_by [resource.project_id],\n    [value_submitted_count_aggregate: aggregate(value.submitted_count)]"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 0
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Slow jobs (>=120s) by project",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch cloud_dataproc_cluster\n| metric 'dataproc.googleapis.com/cluster/job/completion_time'\n| group_by sliding(1h), [d: aggregate(value.completion_time)]\n| value add[f: scale(fraction_less_than_from(d, 120 's'), '1')]\n| value [high_latency_count: (1 - f) * count_from(d)]\n| group_by [resource.project_id],\n    [high_latency_count_aggregate: aggregate(high_latency_count)]"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 4
+      },
+      {
+        "height": 2,
+        "widget": {
+          "text": {
+            "content": "[View Failed job logs](https://console.cloud.google.com/logs/query?query=resource.type%3D%22cloud_dataproc_cluster%22%0Aseverity%3DERROR%0A). You may also want to expand the time range for the logs.",
+            "format": "MARKDOWN"
+          },
+          "title": "Cloud Logging:"
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 8
+      }
+    ]
+  }
+}
