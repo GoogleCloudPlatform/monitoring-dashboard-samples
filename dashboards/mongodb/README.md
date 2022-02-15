@@ -9,3 +9,10 @@
 |:------------------|
 |Filename: [overview.json](overview.json)|
 |This dashboard has several charts for the related [BindPlane metrics for MongoDB](https://docs.bindplane.bluemedora.com/docs/stackdriver-metrics-mongodb), including metrics like `Indexes`, `Available Connections`, `Active Connections`, `Data Size`,`Memory Usage`, `Bytes Loaded in Cache`,`Global Lock Total Time` and `Throughput`.|
+
+
+
+|MongoDB GCE Overview|
+|:------------------|
+|Filename: [mongodb-gce-overview.json](mongodb-gce-overview.json)|
+|This dashboard has several charts for the related [Google Cloud Ops Agent Integration for MongoDB](https://github.com/GoogleCloudPlatform/ops-agent/tree/master/docs/mongodb.md), including metrics like `Indexes`, `Available Connections`, `Active Connections`, `Data Size`,`Memory Usage`, and `Operations`.|
