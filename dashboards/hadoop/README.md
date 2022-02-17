@@ -9,5 +9,4 @@
 |Hadoop GCE Overview|
 |:------------------|
 |Filename: [hadoop-gce-overview.json](hadoop-gce-overview.json)|
-|This dashboard has 12 charts for viewing hadoop when monitored by 
-[Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/hadoop#monitored-metrics), including `Data Nodes`, `Volume Failures`, `Capacity Used`, `Capacity Limit`, `Block Count`, `Corrupt Blocks`, `Missing Blocks`, `File Count`, `File Load`, `CPU % Top 5 VMs`, `Memory % Top 5 VMs` and`Hosts By Region`. There is also a `Hadoop Monitoring Link` card with links to docs and hadoop log in Cloud Logging.
+|This dashboard has 12 charts for viewing hadoop when monitored by [Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/hadoop#monitored-metrics), including `Data Nodes`, `Volume Failures`, `Capacity Used`, `Capacity Limit`, `Block Count`, `Corrupt Blocks`, `Missing Blocks`, `File Count`, `File Load`, `CPU % Top 5 VMs`, `Memory % Top 5 VMs` and`Hosts By Region`. There is also a `Hadoop Monitoring Link` card with links to docs and hadoop log in Cloud Logging.
