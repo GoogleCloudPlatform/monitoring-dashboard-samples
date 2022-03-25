@@ -2,10 +2,10 @@
 
 #### Notes
 
-- These dashboards are built using [BindPlane](https://docs.bindplane.bluemedora.com/docs/getting-started)
-- The full list of metrics supported by BindPlane can be found in the [BindPlane Docs for Apache Kafka](https://docs.bindplane.bluemedora.com/docs/all-metrics-kafka)
+- This dashboard is based on Google's [Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent).
 
-|Kafka Overview|
+
+|Kafka GCE Overview|
 |:------------------|
-|Filename: [overview.json](overview.json)|
-|This dashboard has 8 charts that give a summary of how the kafka environments are doing by outlining metrics like `Incoming Messages`, `Broker Errors`, `Total Requests`, `Incoming Bytes`, `Network Traffic`, `Memory Utilization`, and `Failed Requests.|
+|Filename: [kafka-gce-overview.json](kafka-gce-overview.json)|
+|This dashboard has 12 charts for viewing Kafka when monitored by [Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/kafka#monitored-metrics), including `Messages`, `Network IO`, `Requests`, `Failed Requests`, `Purgatory`, `Partitions`, `Offline Partitions`, `Under Replicated Partitions`, `ISR Operations`, `CPU % Top 5 VMs`, `Memory % Top 5 VMs`, and `Hosts by Region`.

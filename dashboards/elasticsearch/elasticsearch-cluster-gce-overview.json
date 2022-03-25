@@ -1,0 +1,261 @@
+{
+  "displayName": "Elasticsearch Cluster GCE Overview",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "timeSeriesQuery": {
+              "apiSource": "DEFAULT_CLOUD",
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "crossSeriesReducer": "REDUCE_MEAN",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"workload.googleapis.com/elasticsearch.cluster.nodes\" resource.type=\"gce_instance\""
+              }
+            }
+          },
+          "title": "Nodes"
+        },
+        "width": 3,
+        "xPos": 0,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "thresholds": [
+              {
+                "color": "YELLOW",
+                "direction": "BELOW",
+                "label": "",
+                "value": 1
+              }
+            ],
+            "timeSeriesQuery": {
+              "apiSource": "DEFAULT_CLOUD",
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "crossSeriesReducer": "REDUCE_SUM",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"workload.googleapis.com/elasticsearch.cluster.health\" resource.type=\"gce_instance\" metric.label.\"status\"=\"green\""
+              }
+            }
+          },
+          "title": "Green Status"
+        },
+        "width": 2,
+        "xPos": 3,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "thresholds": [
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 0
+              }
+            ],
+            "timeSeriesQuery": {
+              "apiSource": "DEFAULT_CLOUD",
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "crossSeriesReducer": "REDUCE_SUM",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"workload.googleapis.com/elasticsearch.cluster.health\" resource.type=\"gce_instance\" metric.label.\"status\"=\"yellow\""
+              }
+            }
+          },
+          "title": "Yellow Status"
+        },
+        "width": 2,
+        "xPos": 5,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "thresholds": [
+              {
+                "color": "RED",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 0
+              }
+            ],
+            "timeSeriesQuery": {
+              "apiSource": "DEFAULT_CLOUD",
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "crossSeriesReducer": "REDUCE_SUM",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"workload.googleapis.com/elasticsearch.cluster.health\" resource.type=\"gce_instance\" metric.label.\"status\"=\"yellow\""
+              }
+            }
+          },
+          "title": "Red Status"
+        },
+        "width": 2,
+        "xPos": 7,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "timeSeriesQuery": {
+              "apiSource": "DEFAULT_CLOUD",
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "crossSeriesReducer": "REDUCE_MEAN",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"workload.googleapis.com/elasticsearch.cluster.data_nodes\" resource.type=\"gce_instance\""
+              }
+            }
+          },
+          "title": "Data Nodes"
+        },
+        "width": 3,
+        "xPos": 9,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "timeSeriesQuery": {
+              "apiSource": "DEFAULT_CLOUD",
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "crossSeriesReducer": "REDUCE_MEAN",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"workload.googleapis.com/elasticsearch.cluster.shards\" resource.type=\"gce_instance\" metric.label.\"state\"=\"active\""
+              }
+            }
+          },
+          "title": "Active Shards"
+        },
+        "width": 3,
+        "xPos": 0,
+        "yPos": 2
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "timeSeriesQuery": {
+              "apiSource": "DEFAULT_CLOUD",
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "crossSeriesReducer": "REDUCE_MEAN",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"workload.googleapis.com/elasticsearch.cluster.shards\" resource.type=\"gce_instance\" metric.label.\"state\"=\"initializing\""
+              }
+            }
+          },
+          "title": "Initializing Shards"
+        },
+        "width": 3,
+        "xPos": 3,
+        "yPos": 2
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "timeSeriesQuery": {
+              "apiSource": "DEFAULT_CLOUD",
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "crossSeriesReducer": "REDUCE_MEAN",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"workload.googleapis.com/elasticsearch.cluster.shards\" resource.type=\"gce_instance\" metric.label.\"state\"=\"relocating\""
+              }
+            }
+          },
+          "title": "Relocating Shards"
+        },
+        "width": 3,
+        "xPos": 6,
+        "yPos": 2
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "timeSeriesQuery": {
+              "apiSource": "DEFAULT_CLOUD",
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "crossSeriesReducer": "REDUCE_MEAN",
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"workload.googleapis.com/elasticsearch.cluster.shards\" resource.type=\"gce_instance\" metric.label.\"state\"=\"relocating\""
+              }
+            }
+          },
+          "title": "Unassigned Shards"
+        },
+        "width": 3,
+        "xPos": 9,
+        "yPos": 2
+      },
+      {
+        "height": 4,
+        "widget": {
+          "text": {
+            "content": "[How to Configure Elasticsearch Monitoring](https://cloud.google.com/monitoring/agent/ops-agent/third-party/elasticsearch)\n\n[View Elasticsearch Logs](https://console.cloud.google.com/logs/query?query=logName:%22elasticsearch_default_json%22%0Aresource.type%3D%22gce_instance%22)\n\n[View Elasticsearch GC Logs](https://console.cloud.google.com/logs/query?query=logName:%22elasticsearch_default_gc%22%0Aresource.type%3D%22gce_instance%22)",
+            "format": "MARKDOWN"
+          },
+          "title": "Elasticsearch Monitoring Links"
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 4
+      }
+    ]
+  }
+}
