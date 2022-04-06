@@ -1,0 +1,160 @@
+type: GCE
+agent_requirement:
+  metrics_minimum_supported_version:
+    major: '2'
+    minor: '8'
+    patch: '0'
+  logs_minimum_supported_version:
+    major: '2'
+    minor: '5'
+    patch: '0'
+install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/mysql
+launch_stage: GA
+detection:
+  characteristic_log:
+    log_name_regex: mysql_error|mysql_general|mysql_slow
+default_metrics:
+- name: workload.googleapis.com/mysql.buffer_pool_data_pages
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - status
+- name: workload.googleapis.com/mysql.buffer_pool_limit
+  valid_type: INT64
+  kind: GAUGE
+  labels: []
+- name: workload.googleapis.com/mysql.buffer_pool_operations
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - operation
+- name: workload.googleapis.com/mysql.buffer_pool_page_flushes
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels: []
+- name: workload.googleapis.com/mysql.buffer_pool_pages
+  valid_type: DOUBLE
+  kind: GAUGE
+  labels:
+  - kind
+- name: workload.googleapis.com/mysql.buffer_pool_size
+  valid_type: DOUBLE
+  kind: GAUGE
+  labels:
+  - kind
+- name: workload.googleapis.com/mysql.commands
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - command
+- name: workload.googleapis.com/mysql.double_writes
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - kind
+- name: workload.googleapis.com/mysql.handlers
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - kind
+- name: workload.googleapis.com/mysql.locks
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - kind
+- name: workload.googleapis.com/mysql.log_operations
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - operation
+- name: workload.googleapis.com/mysql.operations
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - operation
+- name: workload.googleapis.com/mysql.page_operations
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - operation
+- name: workload.googleapis.com/mysql.row_locks
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - kind
+- name: workload.googleapis.com/mysql.row_operations
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - operation
+- name: workload.googleapis.com/mysql.sorts
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - kind
+- name: workload.googleapis.com/mysql.threads
+  valid_type: DOUBLE
+  kind: GAUGE
+  labels:
+  - kind
+default_logs:
+  name: mysql_slow
+  fields:
+  - name: jsonPayload.message
+    type: string
+  - name: jsonPayload.user
+    type: string
+  - name: jsonPayload.database
+    type: string
+  - name: jsonPayload.host
+    type: string
+  - name: jsonPayload.ipAddress
+    type: string
+  - name: jsonPayload.tid
+    type: number
+  - name: jsonPayload.queryTime
+    type: number
+  - name: jsonPayload.lockTime
+    type: number
+  - name: jsonPayload.rowsSent
+    type: number
+  - name: jsonPayload.rowsExamined
+    type: number
+  - name: jsonPayload.errorNumber
+    type: number
+  - name: jsonPayload.killed
+    type: number
+  - name: jsonPayload.bytesReceived
+    type: number
+  - name: jsonPayload.bytesSent
+    type: number
+  - name: jsonPayload.readFirst
+    type: number
+  - name: jsonPayload.readLast
+    type: number
+  - name: jsonPayload.readKey
+    type: number
+  - name: jsonPayload.readNext
+    type: number
+  - name: jsonPayload.readPrev
+    type: number
+  - name: jsonPayload.readRnd
+    type: number
+  - name: jsonPayload.readRndNext
+    type: number
+  - name: jsonPayload.sortMergePasses
+    type: number
+  - name: jsonPayload.sortRangeCount
+    type: number
+  - name: jsonPayload.sortRows
+    type: number
+  - name: jsonPayload.sortScanCount
+    type: number
+  - name: jsonPayload.createdTmpDiskTables
+    type: number
+  - name: jsonPayload.createdTmpTables
+    type: number
+  - name: jsonPayload.startTime
+    type: string
+  - name: jsonPayload.endTime
+    type: string
