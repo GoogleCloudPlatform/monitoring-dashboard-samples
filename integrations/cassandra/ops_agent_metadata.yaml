@@ -1,0 +1,90 @@
+type: GCE
+agent_requirement:
+  metrics_minimum_supported_version:
+    major: '2'
+    minor: '6'
+    patch: '0'
+install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/cassandra
+launch_stage: GA
+detection:
+  characteristic_log:
+    log_name_regex: cassandra_system|cassandra_debug|cassandra_gc
+default_logs:
+  name: cassandra_gc
+  fields:
+  - name: jsonPayload.message
+    type: string
+  - name: jsonPayload.uptime
+    type: string
+  - name: jsonPayload.timeStopped
+    type: string
+  - name: jsonPayload.timeStopping
+    type: string
+default_metrics:
+- name: workload.googleapis.com/cassandra.client.request.count
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - operation
+- name: workload.googleapis.com/cassandra.client.request.error.count
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - operation
+  - status
+- name: workload.googleapis.com/cassandra.client.request.range_slice.latency.50p
+  valid_type: DOUBLE
+  kind: GAUGE
+  labels: []
+- name: workload.googleapis.com/cassandra.client.request.range_slice.latency.99p
+  valid_type: DOUBLE
+  kind: GAUGE
+  labels: []
+- name: workload.googleapis.com/cassandra.client.request.range_slice.latency.max
+  valid_type: DOUBLE
+  kind: GAUGE
+  labels: []
+- name: workload.googleapis.com/cassandra.client.request.read.latency.50p
+  valid_type: DOUBLE
+  kind: GAUGE
+  labels: []
+- name: workload.googleapis.com/cassandra.client.request.read.latency.99p
+  valid_type: DOUBLE
+  kind: GAUGE
+  labels: []
+- name: workload.googleapis.com/cassandra.client.request.read.latency.max
+  valid_type: DOUBLE
+  kind: GAUGE
+  labels: []
+- name: workload.googleapis.com/cassandra.client.request.write.latency.50p
+  valid_type: DOUBLE
+  kind: GAUGE
+  labels: []
+- name: workload.googleapis.com/cassandra.client.request.write.latency.99p
+  valid_type: DOUBLE
+  kind: GAUGE
+  labels: []
+- name: workload.googleapis.com/cassandra.client.request.write.latency.max
+  valid_type: DOUBLE
+  kind: GAUGE
+  labels: []
+- name: workload.googleapis.com/cassandra.compaction.tasks.completed
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels: []
+- name: workload.googleapis.com/cassandra.compaction.tasks.pending
+  valid_type: INT64
+  kind: GAUGE
+  labels: []
+- name: workload.googleapis.com/cassandra.storage.load.count
+  valid_type: INT64
+  kind: GAUGE
+  labels: []
+- name: workload.googleapis.com/cassandra.storage.total_hints.count
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels: []
+- name: workload.googleapis.com/cassandra.storage.total_hints.in_progress.count
+  valid_type: INT64
+  kind: GAUGE
+  labels: []

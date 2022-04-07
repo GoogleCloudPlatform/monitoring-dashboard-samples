@@ -1,0 +1,63 @@
+type: GCE
+agent_requirement:
+  metrics_minimum_supported_version:
+    major: '2'
+    minor: '9'
+    patch: '0'
+install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/tomcat
+launch_stage: GA
+detection:
+  characteristic_log:
+    log_name_regex: tomcat_system|tomcat_access
+default_logs:
+  name: tomcat_access
+  fields:
+  - name: httpRequest.remoteIp
+    type: string
+  - name: httpRequest.requestUrl
+    type: string
+  - name: httpRequest.protocol
+    type: string
+  - name: httpRequest.requestMethod
+    type: string
+  - name: jsonPayload.host
+    type: string
+  - name: jsonPayload.user
+    type: string
+default_metrics:
+- name: workload.googleapis.com/tomcat.errors
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - proto_handler
+- name: workload.googleapis.com/tomcat.max_time
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - proto_handler
+- name: workload.googleapis.com/tomcat.processing_time
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - proto_handler
+- name: workload.googleapis.com/tomcat.request_count
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - proto_handler
+- name: workload.googleapis.com/tomcat.sessions
+  valid_type: DOUBLE
+  kind: GAUGE
+  labels: []
+- name: workload.googleapis.com/tomcat.threads
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - proto_handler
+  - state
+- name: workload.googleapis.com/tomcat.traffic
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - direction
+  - proto_handler

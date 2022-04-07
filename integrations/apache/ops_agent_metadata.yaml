@@ -1,0 +1,56 @@
+type: GCE
+agent_requirement:
+  metrics_minimum_supported_version:
+    major: '2'
+    minor: '7'
+    patch: '0'
+install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/apache
+launch_stage: GA
+detection:
+  characteristic_log:
+    log_name_regex: apache_access|apache_error
+default_logs:
+  name: apache_error
+  fields:
+  - name: jsonPayload.client
+    type: string
+  - name: jsonPayload.level
+    type: string
+  - name: jsonPayload.module
+    type: string
+  - name: jsonPayload.message
+    type: string
+  - name: jsonPayload.errorCode
+    type: string
+  - name: jsonPayload.pid
+    type: string
+  - name: jsonPayload.tid
+    type: string
+default_metrics:
+- name: workload.googleapis.com/apache.current_connections
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - server_name
+- name: workload.googleapis.com/apache.requests
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - server_name
+- name: workload.googleapis.com/apache.scoreboard
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - server_name
+  - state
+- name: workload.googleapis.com/apache.traffic
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - server_name
+- name: workload.googleapis.com/apache.workers
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - server_name
+  - state

@@ -1,0 +1,81 @@
+type: GCE
+agent_requirement:
+  metrics_minimum_supported_version:
+    major: '2'
+    minor: '11'
+    patch: '0'
+install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/mongodb
+launch_stage: GA
+detection:
+  characteristic_log:
+    log_name_regex: mongodb
+default_logs:
+  name: mongodb
+  fields:
+  - name: jsonPayload.component
+    type: string
+  - name: jsonPayload.ctx
+    type: string
+  - name: jsonPayload.id
+    type: number
+  - name: jsonPayload.message
+    type: string
+  - name: jsonPayload.attributes
+    type: object (optional)
+default_metrics:
+- name: workload.googleapis.com/mongodb.cache.operations
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - type
+- name: workload.googleapis.com/mongodb.collection.count
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - database
+- name: workload.googleapis.com/mongodb.connection.count
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - database
+  - type
+- name: workload.googleapis.com/mongodb.data.size
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - database
+- name: workload.googleapis.com/mongodb.global_lock.time
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels: []
+- name: workload.googleapis.com/mongodb.index.count
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - database
+- name: workload.googleapis.com/mongodb.index.size
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - database
+- name: workload.googleapis.com/mongodb.memory.usage
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - database
+  - type
+- name: workload.googleapis.com/mongodb.object.count
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - database
+- name: workload.googleapis.com/mongodb.operation.count
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - operation
+- name: workload.googleapis.com/mongodb.storage.size
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - database

@@ -1,0 +1,60 @@
+type: GCE
+agent_requirement:
+  metrics_minimum_supported_version:
+    major: '2'
+    minor: '11'
+    patch: '0'
+install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/hadoop
+launch_stage: GA
+detection:
+  characteristic_log:
+    log_name_regex: hadoop
+default_logs:
+  name: hadoop
+  fields:
+  - name: jsonPayload.message
+    type: string
+  - name: jsonPayload.source
+    type: string
+default_metrics:
+- name: workload.googleapis.com/hadoop.name_node.block.corrupt
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - node_name
+- name: workload.googleapis.com/hadoop.name_node.block.count
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - node_name
+- name: workload.googleapis.com/hadoop.name_node.block.missing
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - node_name
+- name: workload.googleapis.com/hadoop.name_node.capacity.limit
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - node_name
+- name: workload.googleapis.com/hadoop.name_node.capacity.usage
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - node_name
+- name: workload.googleapis.com/hadoop.name_node.data_node.count
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - node_name
+  - state
+- name: workload.googleapis.com/hadoop.name_node.file.load
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - node_name
+- name: workload.googleapis.com/hadoop.name_node.volume.failed
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - node_name

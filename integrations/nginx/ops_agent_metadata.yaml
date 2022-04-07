@@ -1,0 +1,56 @@
+type: GCE
+agent_requirement:
+  metrics_minimum_supported_version:
+    major: '2'
+    minor: '1'
+    patch: '0'
+install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/nginx
+launch_stage: GA
+detection:
+  characteristic_log:
+    log_name_regex: nginx_access|nginx_error
+default_logs:
+  name: nginx_error
+  fields:
+  - name: jsonPayload.client
+    type: string
+  - name: jsonPayload.level
+    type: string
+  - name: jsonPayload.message
+    type: string
+  - name: jsonPayload.request
+    type: string
+  - name: jsonPayload.pid
+    type: number
+  - name: jsonPayload.tid
+    type: number
+  - name: jsonPayload.connection
+    type: number
+  - name: jsonPayload.server
+    type: string
+  - name: jsonPayload.subrequest
+    type: string
+  - name: jsonPayload.upstream
+    type: string
+  - name: jsonPayload.host
+    type: string
+  - name: jsonPayload.referer
+    type: string
+default_metrics:
+- name: workload.googleapis.com/nginx.connections_accepted
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels: []
+- name: workload.googleapis.com/nginx.connections_current
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - state
+- name: workload.googleapis.com/nginx.connections_handled
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels: []
+- name: workload.googleapis.com/nginx.requests
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels: []

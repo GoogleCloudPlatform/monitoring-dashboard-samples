@@ -1,0 +1,99 @@
+type: GCE
+agent_requirement:
+  metrics_minimum_supported_version:
+    major: '2'
+    minor: '10'
+    patch: '0'
+install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/solr
+launch_stage: GA
+detection:
+  characteristic_log:
+    log_name_regex: solr_system
+default_logs:
+  name: solr_system
+  fields:
+  - name: jsonPayload.message
+    type: string
+  - name: jsonPayload.thread
+    type: string
+  - name: jsonPayload.source
+    type: string
+  - name: jsonPayload.collection
+    type: string
+  - name: jsonPayload.shard
+    type: string
+  - name: jsonPayload.replica
+    type: string
+  - name: jsonPayload.core
+    type: string
+  - name: jsonPayload.exception
+    type: string
+default_metrics:
+- name: workload.googleapis.com/solr.cache.eviction.count
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - cache
+  - core
+- name: workload.googleapis.com/solr.cache.hit.count
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - cache
+  - core
+- name: workload.googleapis.com/solr.cache.insert.count
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - cache
+  - core
+- name: workload.googleapis.com/solr.cache.lookup.count
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - cache
+  - core
+- name: workload.googleapis.com/solr.cache.size
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - cache
+  - core
+- name: workload.googleapis.com/solr.document.count
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - core
+- name: workload.googleapis.com/solr.index.size
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - core
+- name: workload.googleapis.com/solr.request.count
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - core
+  - handler
+  - type
+- name: workload.googleapis.com/solr.request.error.count
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - core
+  - handler
+  - type
+- name: workload.googleapis.com/solr.request.time.average
+  valid_type: DOUBLE
+  kind: GAUGE
+  labels:
+  - core
+  - handler
+  - type
+- name: workload.googleapis.com/solr.request.timeout.count
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - core
+  - handler
+  - type

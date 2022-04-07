@@ -1,0 +1,45 @@
+type: GCE
+agent_requirement:
+  metrics_minimum_supported_version:
+    major: '2'
+    minor: '9'
+    patch: '0'
+install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/postgresql
+launch_stage: GA
+detection:
+  characteristic_log:
+    log_name_regex: postgresql_general
+default_logs:
+  name: postgresql_general
+  fields:
+  - name: jsonPayload.message
+    type: string
+  - name: jsonPayload.level
+    type: string
+  - name: jsonPayload.tid
+    type: number
+  - name: jsonPayload.role
+    type: string
+  - name: jsonPayload.user
+    type: string
+default_metrics:
+- name: workload.googleapis.com/postgresql.backends
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - database
+- name: workload.googleapis.com/postgresql.commits
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - database
+- name: workload.googleapis.com/postgresql.db_size
+  valid_type: INT64
+  kind: GAUGE
+  labels:
+  - database
+- name: workload.googleapis.com/postgresql.rollbacks
+  valid_type: INT64
+  kind: CUMULATIVE
+  labels:
+  - database
