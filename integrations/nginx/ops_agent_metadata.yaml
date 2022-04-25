@@ -1,0 +1,111 @@
+!!omap
+- type: GCE
+- launch_stage: GA
+- install_documentation_url: "https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/nginx"
+- agent_requirement: !!omap
+  - logs_minimum_supported_version: !!omap
+    - major: '2'
+    - minor: '1'
+    - patch: '0'
+  - metrics_minimum_supported_version: !!omap
+    - major: '2'
+    - minor: '1'
+    - patch: '0'
+- detections: !!omap
+  - characteristic_log:
+      log_name_regex: nginx
+  - characteristic_metric:
+      metric_type: workload.googleapis.com/nginx.requests
+- default_logs:
+  - !!omap
+    - name: nginx_access
+    - fields:
+      - !!omap
+        - name: httpRequest.remoteIp
+        - type: string
+        - description: "The IP address (IPv4 or IPv6) of the client that issued the HTTP request. This field can include port information. Examples: 192.168.1.1, 10.0.0.1:80, FE80::0202:B3FF:FE1E:8329."
+      - !!omap
+        - name: httpRequest.requestUrl
+        - type: string
+        - description: "The scheme (http, https), the host name, the path and the query portion of the URL that was requested. Example: http://example.com/some/info?color=red."
+      - !!omap
+        - name: jsonPayload.host
+        - type: string
+        - description: Contents of the Host header (usually not reported by nginx)
+      - !!omap
+        - name: jsonPayload.user
+        - type: string
+        - description: Authenticated username for the request
+  - !!omap
+    - name: nginx_error
+    - fields:
+      - !!omap
+        - name: jsonPayload.client
+        - type: string
+        - description: Client IP address (optional)
+      - !!omap
+        - name: jsonPayload.level
+        - type: string
+        - description: Log entry level
+      - !!omap
+        - name: jsonPayload.message
+        - type: string
+        - description: Log message
+      - !!omap
+        - name: jsonPayload.request
+        - type: string
+        - description: Original HTTP request (optional)
+      - !!omap
+        - name: jsonPayload.pid
+        - type: number
+        - description: Process ID
+      - !!omap
+        - name: jsonPayload.tid
+        - type: number
+        - description: Thread ID
+      - !!omap
+        - name: jsonPayload.connection
+        - type: number
+        - description: Connection ID
+      - !!omap
+        - name: jsonPayload.server
+        - type: string
+        - description: Nginx server name (optional)
+      - !!omap
+        - name: jsonPayload.subrequest
+        - type: string
+        - description: Nginx subrequest (optional)
+      - !!omap
+        - name: jsonPayload.upstream
+        - type: string
+        - description: Upstream request URI (optional)
+      - !!omap
+        - name: jsonPayload.host
+        - type: string
+        - description: Host header (optional)
+      - !!omap
+        - name: jsonPayload.referer
+        - type: string
+        - description: Referer header (optional)
+- default_metrics:
+  - !!omap
+    - name: workload.googleapis.com/nginx.connections_accepted
+    - value_type: INT64
+    - kind: CUMULATIVE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/nginx.connections_current
+    - value_type: INT64
+    - kind: GAUGE
+    - labels:
+      - state
+  - !!omap
+    - name: workload.googleapis.com/nginx.connections_handled
+    - value_type: INT64
+    - kind: CUMULATIVE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/nginx.requests
+    - value_type: INT64
+    - kind: CUMULATIVE
+    - labels: []

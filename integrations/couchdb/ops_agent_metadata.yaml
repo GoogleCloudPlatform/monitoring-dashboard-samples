@@ -1,0 +1,99 @@
+!!omap
+- type: GCE
+- launch_stage: GA
+- install_documentation_url: "https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/couchdb"
+- agent_requirement: !!omap
+  - logs_minimum_supported_version: !!omap
+    - major: '2'
+    - minor: '11'
+    - patch: '0'
+  - metrics_minimum_supported_version: !!omap
+    - major: '2'
+    - minor: '10'
+    - patch: '0'
+- detections: !!omap
+  - characteristic_log:
+      log_name_regex: CouchDB
+  - characteristic_metric:
+      metric_type: workload.googleapis.com/couchdb.database.open
+- default_logs:
+  - !!omap
+    - name: couchdb
+    - fields:
+      - !!omap
+        - name: jsonPayload.node
+        - type: string
+        - description: node instance name
+      - !!omap
+        - name: jsonPayload.path
+        - type: string
+        - description: request path
+      - !!omap
+        - name: jsonPayload.remote_user
+        - type: string
+        - description: Authenticated username for the request
+      - !!omap
+        - name: jsonPayload.status_message
+        - type: string
+        - description: status code message
+      - !!omap
+        - name: jsonPayload.pid
+        - type: string
+        - description: Process ID
+      - !!omap
+        - name: jsonPayload.message
+        - type: string
+        - description: Log message
+      - !!omap
+        - name: jsonPayload.host
+        - type: string
+        - description: host instance name
+      - !!omap
+        - name: httpRequest
+        - type: object
+        - description: Information about the HTTP request associated with this log entry, if applicable. It's availble in access logs.
+- default_metrics:
+  - !!omap
+    - name: workload.googleapis.com/couchdb.average_request_time
+    - value_type: DOUBLE
+    - kind: GAUGE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/couchdb.database.open
+    - value_type: INT64
+    - kind: GAUGE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/couchdb.database.operations
+    - value_type: INT64
+    - kind: CUMULATIVE
+    - labels:
+      - operation
+  - !!omap
+    - name: workload.googleapis.com/couchdb.file_descriptor.open
+    - value_type: INT64
+    - kind: GAUGE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/couchdb.httpd.bulk_requests
+    - value_type: INT64
+    - kind: CUMULATIVE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/couchdb.httpd.requests
+    - value_type: INT64
+    - kind: CUMULATIVE
+    - labels:
+      - http_method
+  - !!omap
+    - name: workload.googleapis.com/couchdb.httpd.responses
+    - value_type: INT64
+    - kind: CUMULATIVE
+    - labels:
+      - http_status_code
+  - !!omap
+    - name: workload.googleapis.com/couchdb.httpd.views
+    - value_type: INT64
+    - kind: CUMULATIVE
+    - labels:
+      - view
