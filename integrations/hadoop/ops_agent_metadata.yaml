@@ -1,0 +1,80 @@
+!!omap
+- type: GCE
+- launch_stage: GA
+- install_documentation_url: "https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/hadoop"
+- agent_requirement: !!omap
+  - logs_minimum_supported_version: !!omap
+    - major: '2'
+    - minor: '11'
+    - patch: '0'
+  - metrics_minimum_supported_version: !!omap
+    - major: '2'
+    - minor: '11'
+    - patch: '0'
+- detections: !!omap
+  - characteristic_log:
+      log_name_regex: Hadoop
+  - characteristic_metric:
+      metric_type: workload.googleapis.com/hadoop.name_node.capacity.usage
+- default_logs:
+  - !!omap
+    - name: hadoop
+    - fields:
+      - !!omap
+        - name: jsonPayload.message
+        - type: string
+        - description: 'Log message'
+      - !!omap
+        - name: jsonPayload.source
+        - type: string
+        - description: 'The source Java class of the log entry'
+- default_metrics:
+  - !!omap
+    - name: workload.googleapis.com/hadoop.name_node.block.corrupt
+    - value_type: INT64
+    - kind: GAUGE
+    - labels:
+      - node_name
+  - !!omap
+    - name: workload.googleapis.com/hadoop.name_node.block.count
+    - value_type: INT64
+    - kind: GAUGE
+    - labels:
+      - node_name
+  - !!omap
+    - name: workload.googleapis.com/hadoop.name_node.block.missing
+    - value_type: INT64
+    - kind: GAUGE
+    - labels:
+      - node_name
+  - !!omap
+    - name: workload.googleapis.com/hadoop.name_node.capacity.limit
+    - value_type: INT64
+    - kind: GAUGE
+    - labels:
+      - node_name
+  - !!omap
+    - name: workload.googleapis.com/hadoop.name_node.capacity.usage
+    - value_type: INT64
+    - kind: GAUGE
+    - labels:
+      - node_name
+  - !!omap
+    - name: workload.googleapis.com/hadoop.name_node.data_node.count
+    - value_type: INT64
+    - kind: GAUGE
+    - labels:
+      - node_name
+      - state
+  - !!omap
+    - name: workload.googleapis.com/hadoop.name_node.file.load
+    - value_type: INT64
+    - kind: GAUGE
+    - labels:
+      - node_name
+  - !!omap
+    - name: workload.googleapis.com/hadoop.name_node.volume.failed
+    - value_type: INT64
+    - kind: GAUGE
+    - labels:
+      - node_name

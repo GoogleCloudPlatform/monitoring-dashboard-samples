@@ -1,0 +1,109 @@
+!!omap
+- type: GCE
+- launch_stage: GA
+- install_documentation_url: "https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/zookeeper"
+- agent_requirement: !!omap
+  - logs_minimum_supported_version: !!omap
+    - major: '2'
+    - minor: '11'
+    - patch: '0'
+  - metrics_minimum_supported_version: !!omap
+    - major: '2'
+    - minor: '10'
+    - patch: '0'
+- detections: !!omap
+  - characteristic_log:
+      log_name_regex: ZooKeeper
+  - characteristic_metric:
+      metric_type: workload.googleapis.com/zookeeper.file_descriptor.limit
+- default_logs:
+  - !!omap
+    - name: zookeeper_general
+    - fields:
+      - !!omap
+        - name: jsonPayload.message
+        - type: string
+        - description: Log message, including detailed stacktrace where provided
+      - !!omap
+        - name: jsonPayload.thread
+        - type: string
+        - description: Thread from which the log originated
+      - !!omap
+        - name: jsonPayload.source
+        - type: string
+        - description: Source of where the log originated
+      - !!omap
+        - name: jsonPayload.line
+        - type: number
+        - description: Line number from which the log was generated in source
+      - !!omap
+        - name: jsonPayload.myid
+        - type: number
+        - description: Numeric ID of the Zookeeper instance
+- default_metrics:
+  - !!omap
+    - name: workload.googleapis.com/zookeeper.connection.active
+    - value_type: INT64
+    - kind: GAUGE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/zookeeper.data_tree.ephemeral_node.count
+    - value_type: INT64
+    - kind: GAUGE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/zookeeper.data_tree.size
+    - value_type: INT64
+    - kind: GAUGE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/zookeeper.file_descriptor.limit
+    - value_type: INT64
+    - kind: GAUGE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/zookeeper.file_descriptor.open
+    - value_type: INT64
+    - kind: GAUGE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/zookeeper.fsync.exceeded_threshold.count
+    - value_type: INT64
+    - kind: CUMULATIVE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/zookeeper.latency.avg
+    - value_type: INT64
+    - kind: GAUGE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/zookeeper.latency.max
+    - value_type: INT64
+    - kind: GAUGE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/zookeeper.latency.min
+    - value_type: INT64
+    - kind: GAUGE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/zookeeper.packet.count
+    - value_type: INT64
+    - kind: CUMULATIVE
+    - labels:
+      - direction
+  - !!omap
+    - name: workload.googleapis.com/zookeeper.request.active
+    - value_type: INT64
+    - kind: GAUGE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/zookeeper.watch.count
+    - value_type: INT64
+    - kind: GAUGE
+    - labels: []
+  - !!omap
+    - name: workload.googleapis.com/zookeeper.znode.count
+    - value_type: INT64
+    - kind: GAUGE
+    - labels: []
