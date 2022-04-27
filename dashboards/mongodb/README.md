@@ -3,7 +3,7 @@
 ### Notes
 
 - These metrics are supplied from [BindPlane's agent integration for MongoDB](https://docs.bindplane.bluemedora.com/docs/stackdriver-agent-migration-mongodb)
-- The deprecated dashboard listed [here](./deprecated/overview.json) exists as an alternative for people who deployed their mongo instance within GCE, however the more external installation seems the more prevalent, so that is the default. 
+- The deprecated dashboard listed [here](https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples/tree/master/dashboards/mongodb/deprecated) exists as an alternative for people who deployed their mongo instance within GCE, however the more external installation seems the more prevalent, so that is the default. 
 
 |MongoDB Overview|
 |:------------------|
