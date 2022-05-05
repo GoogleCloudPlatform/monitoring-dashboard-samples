@@ -8,4 +8,4 @@
 |Varnish Overview|
 |:------------------|
 |Filename: [varnish-gce-overview.json](varnish-gce-overview.json)|
-|This dashboard has charts displaying `Backend Connections`, `Session Connections`, `Requests`, `Request Errors`, `Threads`, `Cache Hit Rate`, `Cache Hits / Misses`, `Current Cached Objects`, & `Cached Objects` from Varnish as well as charts of infrastructure related metrics for the running Varnish VMs: `CPU % Top 5 VMs`, `Memory % Top 5 VMs`, and `Hosts by Region`. There is also a card with links to docs and the Varnish logs in Cloud Logging.|
+|This dashboard has charts displaying `Backend Connections`, `Session Connections`, `Requests`, `Request Errors`, `Threads`, `Cache Hits / Misses`, `Current Cached Objects`, & `Cached Objects` from Varnish as well as charts of infrastructure related metrics for the running Varnish VMs: `CPU % Top 5 VMs`, `Memory % Top 5 VMs`, and `Hosts by Region`. There is also a card with links to docs and the Varnish logs in Cloud Logging.|
