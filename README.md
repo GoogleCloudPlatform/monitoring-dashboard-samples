@@ -90,6 +90,41 @@ If there are multiple screenshots, a two digit number should be added between th
     gke-cluster-monitoring.01.png
     gke-cluster-monitoring.02.png
 
+### metadata.yaml content
+
+In order for sample dashboards to appear in the Cloud Console, the `metadata.yaml` file in your dashboard's directory needs
+to be updated to include any new dashboards you are adding.
+
+The top level of this file should include a single `dashboards:` key, whose value is a list of dashboard objects.
+
+Example:
+
+```yaml
+dashboards:
+  -
+    category: Nginx
+    id: overview
+    display_name: Nginx Overview
+    description: |-
+      This dashboard has charts for viewing Nginx when monitored by [Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/nginx#monitored-metrics), Request Rate, Current Connections, and Connections Rate from NGINX as well as charts of infrastructure related metrics for the running NGINX VMs: CPU % Top 5 VMs, Memory % Top 5 VMs, and NGINX VMs by Region for a count of VMs over time. 
+
+      There is also a card with links to docs and Nginx logs in Cloud Logging.
+    integration_platform: GCE
+    integration_id: nginx
+```
+
+The dashboard object is described by the following values:
+
+| Field name | Description |
+|:-----------|-------------|
+| `category` | Sets the group name the dashboard will appear under in the Cloud Console. |
+| `id`       | Should match the dashboard file name without the extension.         |
+| `display_name` | Will be the name of the dashboard shown in the samples list of the Cloud Console. |
+| `description`  | A brief description of the dashboard and its contents. Supports markdown-formatted links only. Include empty newlines for paragraph breaks. |
+| `integration_platform` | Optional. If this dashboard contains metrics for an Ops Agent application integration, indicate this with platform code `'GCE'`. |
+| `integration_id` | Optional. If this dashboard contains metrics for an Ops Agent application integration, indicate the integration's id. |
+| `integration_version` | Optional. If this dashboard requires a specific revision of an integration include the version here. |
+
 ### Update README
 
 Please also update the README.md file in the same directory of your dashboard file.
