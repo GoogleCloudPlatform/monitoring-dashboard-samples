@@ -95,12 +95,12 @@ If there are multiple screenshots, a two digit number should be added between th
 In order for sample dashboards to appear in the Cloud Console, the `metadata.yaml` file in your dashboard's directory needs
 to be updated to include any new dashboards you are adding.
 
-The top level of this file should include a single `dashboards:` key, whose value is a list of dashboard objects.
+The top level of this file should include a single `sample_dashboards:` key, whose value is a list of dashboard objects.
 
 Example:
 
 ```yaml
-dashboards:
+sample_dashboards:
   -
     category: Nginx
     id: overview
