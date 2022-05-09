@@ -1,0 +1,96 @@
+platforms:
+- type: GCE
+  launch_stage: GA
+  install_documentation_url: !!python/object/new:ruamel.yaml.scalarstring.DoubleQuotedScalarString
+    args:
+    - https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/hadoop
+    state: !!python/tuple
+    - null
+    - _yaml_anchor: !!python/object/new:ruamel.yaml.anchor.Anchor
+        state: !!python/tuple
+        - null
+        - value: null
+          always_dump: false
+  agent_requirement:
+    logs_minimum_supported_version:
+      major: '2'
+      minor: '11'
+      patch: '0'
+    metrics_minimum_supported_version:
+      major: '2'
+      minor: '11'
+      patch: '0'
+  detections:
+    characteristic_log:
+      log_name_regex: Hadoop
+    characteristic_metric:
+      metric_type: workload.googleapis.com/hadoop.name_node.capacity.usage
+  default_logs:
+  - name: hadoop
+    fields:
+    - name: jsonPayload.message
+      type: string
+      description: !!python/object/new:ruamel.yaml.scalarstring.SingleQuotedScalarString
+        args:
+        - Log message
+        state: !!python/tuple
+        - null
+        - _yaml_anchor: !!python/object/new:ruamel.yaml.anchor.Anchor
+            state: !!python/tuple
+            - null
+            - value: null
+              always_dump: false
+    - name: jsonPayload.source
+      type: string
+      description: !!python/object/new:ruamel.yaml.scalarstring.SingleQuotedScalarString
+        args:
+        - The source Java class of the log entry
+        state: !!python/tuple
+        - null
+        - _yaml_anchor: !!python/object/new:ruamel.yaml.anchor.Anchor
+            state: !!python/tuple
+            - null
+            - value: null
+              always_dump: false
+  default_metrics:
+  - name: workload.googleapis.com/hadoop.name_node.block.corrupt
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - node_name
+  - name: workload.googleapis.com/hadoop.name_node.block.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - node_name
+  - name: workload.googleapis.com/hadoop.name_node.block.missing
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - node_name
+  - name: workload.googleapis.com/hadoop.name_node.capacity.limit
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - node_name
+  - name: workload.googleapis.com/hadoop.name_node.capacity.usage
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - node_name
+  - name: workload.googleapis.com/hadoop.name_node.data_node.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - node_name
+    - state
+  - name: workload.googleapis.com/hadoop.name_node.file.load
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - node_name
+  - name: workload.googleapis.com/hadoop.name_node.volume.failed
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - node_name

@@ -1,0 +1,153 @@
+platforms:
+- type: GCE
+  launch_stage: GA
+  install_documentation_url: !!python/object/new:ruamel.yaml.scalarstring.DoubleQuotedScalarString
+    args:
+    - https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/redis
+    state: !!python/tuple
+    - null
+    - _yaml_anchor: !!python/object/new:ruamel.yaml.anchor.Anchor
+        state: !!python/tuple
+        - null
+        - value: null
+          always_dump: false
+  agent_requirement:
+    logs_minimum_supported_version:
+      major: '2'
+      minor: '5'
+      patch: '0'
+    metrics_minimum_supported_version:
+      major: '2'
+      minor: '7'
+      patch: '0'
+  detections:
+    characteristic_log:
+      log_name_regex: Redis
+    characteristic_metric:
+      metric_type: workload.googleapis.com/redis.clients.max_input_buffer
+  default_logs:
+  - name: redis
+    fields:
+    - name: jsonPayload.level
+      type: string
+      description: Log entry level
+    - name: jsonPayload.message
+      type: string
+      description: !!python/object/new:ruamel.yaml.scalarstring.SingleQuotedScalarString
+        args:
+        - ''
+        state: !!python/tuple
+        - null
+        - _yaml_anchor: !!python/object/new:ruamel.yaml.anchor.Anchor
+            state: !!python/tuple
+            - null
+            - value: null
+              always_dump: false
+    - name: jsonPayload.roleChar
+      type: string
+      description: redis role character (X, C, S, M)
+    - name: jsonPayload.role
+      type: string
+      description: translated from redis role character (sentinel, RDB/AOF_writing_child,
+        slave, master)
+    - name: jsonPayload.pid
+      type: number
+      description: Process ID
+  default_metrics:
+  - name: workload.googleapis.com/redis.clients.blocked
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/redis.clients.connected
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/redis.clients.max_input_buffer
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/redis.clients.max_output_buffer
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/redis.commands.processed
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/redis.connections.received
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/redis.connections.rejected
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/redis.cpu.time
+    value_type: DOUBLE
+    kind: CUMULATIVE
+    labels:
+    - state
+  - name: workload.googleapis.com/redis.keys.evicted
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/redis.keys.expired
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/redis.keyspace.hits
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/redis.keyspace.misses
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/redis.latest_fork
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/redis.memory.fragmentation_ratio
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/redis.memory.lua
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/redis.memory.peak
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/redis.memory.rss
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/redis.memory.used
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/redis.net.input
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/redis.net.output
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/redis.rdb.changes_since_last_save
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/redis.replication.backlog_first_byte_offset
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/redis.replication.offset
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/redis.slaves.connected
+    value_type: INT64
+    kind: GAUGE
+    labels: []

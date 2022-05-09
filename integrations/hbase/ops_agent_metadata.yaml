@@ -1,0 +1,325 @@
+platforms:
+- type: GCE
+  launch_stage: GA
+  install_documentation_url: !!python/object/new:ruamel.yaml.scalarstring.DoubleQuotedScalarString
+    args:
+    - https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/hbase
+    state: !!python/tuple
+    - null
+    - _yaml_anchor: !!python/object/new:ruamel.yaml.anchor.Anchor
+        state: !!python/tuple
+        - null
+        - value: null
+          always_dump: false
+  agent_requirement:
+    logs_minimum_supported_version:
+      major: '2'
+      minor: '11'
+      patch: '0'
+    metrics_minimum_supported_version:
+      major: '2'
+      minor: '11'
+      patch: '0'
+  detections:
+    characteristic_log:
+      log_name_regex: HBase
+    characteristic_metric:
+      metric_type: workload.googleapis.com/hbase.region_server.operation.append.latency.p99
+  default_logs:
+  - name: hbase_system
+    fields:
+    - name: jsonPayload.message
+      type: string
+      description: !!python/object/new:ruamel.yaml.scalarstring.SingleQuotedScalarString
+        args:
+        - Log message, including detailed stacktrace where provided
+        state: !!python/tuple
+        - null
+        - _yaml_anchor: !!python/object/new:ruamel.yaml.anchor.Anchor
+            state: !!python/tuple
+            - null
+            - value: null
+              always_dump: false
+    - name: jsonPayload.module
+      type: string
+      description: !!python/object/new:ruamel.yaml.scalarstring.SingleQuotedScalarString
+        args:
+        - Module of hbase where the log originated
+        state: !!python/tuple
+        - null
+        - _yaml_anchor: !!python/object/new:ruamel.yaml.anchor.Anchor
+            state: !!python/tuple
+            - null
+            - value: null
+              always_dump: false
+    - name: jsonPayload.source
+      type: string
+      description: !!python/object/new:ruamel.yaml.scalarstring.SingleQuotedScalarString
+        args:
+        - source of where the log originated
+        state: !!python/tuple
+        - null
+        - _yaml_anchor: !!python/object/new:ruamel.yaml.anchor.Anchor
+            state: !!python/tuple
+            - null
+            - value: null
+              always_dump: false
+  default_metrics:
+  - name: workload.googleapis.com/hbase.master.region_server.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - state
+  - name: workload.googleapis.com/hbase.master.regions_in_transition.count
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/hbase.master.regions_in_transition.oldest_age
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/hbase.master.regions_in_transition.over_threshold
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/hbase.region_server.active_handler.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.authentication.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+    - state
+  - name: workload.googleapis.com/hbase.region_server.block_cache.operation.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+    - state
+  - name: workload.googleapis.com/hbase.region_server.blocked_update.time
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.disk.store_file.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.disk.store_file.size
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.files.local
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.gc.old_gen.time
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.gc.time
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.gc.young_gen.time
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.open_connection.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.append.latency.max
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.append.latency.mean
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.append.latency.median
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.append.latency.min
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.append.latency.p99
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.delete.latency.max
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.delete.latency.mean
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.delete.latency.median
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.delete.latency.min
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.delete.latency.p99
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.get.latency.max
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.get.latency.mean
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.get.latency.median
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.get.latency.min
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.get.latency.p99
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.increment.latency.max
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.increment.latency.mean
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.increment.latency.median
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.increment.latency.min
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.increment.latency.p99
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.put.latency.max
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.put.latency.mean
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.put.latency.median
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.put.latency.min
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.put.latency.p99
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.replay.latency.max
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.replay.latency.mean
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.replay.latency.median
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.replay.latency.min
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operation.replay.latency.p99
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.operations.slow
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - operation
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.queue.length
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+    - state
+  - name: workload.googleapis.com/hbase.region_server.queue.request.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+    - state
+  - name: workload.googleapis.com/hbase.region_server.region.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+  - name: workload.googleapis.com/hbase.region_server.request.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
+    - state
+  - name: workload.googleapis.com/hbase.region_server.write_ahead_log.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - region_server
