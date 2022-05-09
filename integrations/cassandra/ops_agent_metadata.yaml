@@ -1,0 +1,135 @@
+platforms:
+- type: GCE
+  launch_stage: GA
+  install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/cassandra
+  agent_requirement:
+    logs_minimum_supported_version:
+      major: '2'
+      minor: '15'
+      patch: '0'
+    metrics_minimum_supported_version:
+      major: '2'
+      minor: '15'
+      patch: '0'
+  detections:
+    characteristic_log:
+      log_name_regex: Cassandra
+    characteristic_metric:
+      metric_type: workload.googleapis.com/cassandra.client.request.count
+  default_logs:
+  - name: cassandra_system
+    fields:
+    - name: jsonPayload.message
+      type: string
+      description: Log message, including detailed stacktrace where provided
+    - name: jsonPayload.level
+      type: string
+      description: Log entry level
+    - name: jsonPayload.module
+      type: string
+      description: Module of cassandra where the log originated
+    - name: jsonPayload.javaClass
+      type: string
+      description: Java class where the log originated
+    - name: jsonPayload.lineNumber
+      type: string
+      description: Line number of the source file where the log originated
+  - name: cassandra_debug
+    fields:
+    - name: jsonPayload.message
+      type: string
+      description: Log message
+    - name: jsonPayload.level
+      type: string
+      description: Log entry level
+    - name: jsonPayload.module
+      type: string
+      description: Module of cassandra where the log originated
+    - name: jsonPayload.javaClass
+      type: string
+      description: Java class where the log originated
+    - name: jsonPayload.lineNumber
+      type: string
+      description: Line number of the source file where the log originated
+  - name: cassandra_gc
+    fields:
+    - name: jsonPayload.message
+      type: string
+      description: Log message
+    - name: jsonPayload.uptime
+      type: string
+      description: Seconds the JVM has been active
+    - name: jsonPayload.timeStopped
+      type: string
+      description: Seconds the JVM was stopped for garbage collection
+    - name: jsonPayload.timeStopping
+      type: string
+      description: Seconds the JVM took to stop threads before garbage collection
+  default_metrics:
+  - name: workload.googleapis.com/cassandra.client.request.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - operation
+  - name: workload.googleapis.com/cassandra.client.request.error.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - operation
+    - status
+  - name: workload.googleapis.com/cassandra.client.request.range_slice.latency.50p
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/cassandra.client.request.range_slice.latency.99p
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/cassandra.client.request.range_slice.latency.max
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/cassandra.client.request.read.latency.50p
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/cassandra.client.request.read.latency.99p
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/cassandra.client.request.read.latency.max
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/cassandra.client.request.write.latency.50p
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/cassandra.client.request.write.latency.99p
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/cassandra.client.request.write.latency.max
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/cassandra.compaction.tasks.completed
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/cassandra.compaction.tasks.pending
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/cassandra.storage.load.count
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/cassandra.storage.total_hints.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/cassandra.storage.total_hints.in_progress.count
+    value_type: INT64
+    kind: GAUGE
+    labels: []

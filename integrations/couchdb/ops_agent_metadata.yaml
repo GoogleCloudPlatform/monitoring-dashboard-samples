@@ -1,0 +1,83 @@
+platforms:
+- type: GCE
+  launch_stage: GA
+  install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/couchdb
+  agent_requirement:
+    logs_minimum_supported_version:
+      major: '2'
+      minor: '15'
+      patch: '0'
+    metrics_minimum_supported_version:
+      major: '2'
+      minor: '15'
+      patch: '0'
+  detections:
+    characteristic_log:
+      log_name_regex: CouchDB
+    characteristic_metric:
+      metric_type: workload.googleapis.com/couchdb.database.open
+  default_logs:
+  - name: couchdb
+    fields:
+    - name: jsonPayload.node
+      type: string
+      description: node instance name
+    - name: jsonPayload.path
+      type: string
+      description: request path
+    - name: jsonPayload.remote_user
+      type: string
+      description: Authenticated username for the request
+    - name: jsonPayload.status_message
+      type: string
+      description: status code message
+    - name: jsonPayload.pid
+      type: string
+      description: Process ID
+    - name: jsonPayload.message
+      type: string
+      description: Log message
+    - name: jsonPayload.host
+      type: string
+      description: host instance name
+    - name: httpRequest
+      type: object
+      description: Information about the HTTP request associated with this log entry,
+        if applicable. It's available in access logs.
+  default_metrics:
+  - name: workload.googleapis.com/couchdb.average_request_time
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/couchdb.database.open
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/couchdb.database.operations
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - operation
+  - name: workload.googleapis.com/couchdb.file_descriptor.open
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/couchdb.httpd.bulk_requests
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/couchdb.httpd.requests
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - http_method
+  - name: workload.googleapis.com/couchdb.httpd.responses
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - http_status_code
+  - name: workload.googleapis.com/couchdb.httpd.views
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - view

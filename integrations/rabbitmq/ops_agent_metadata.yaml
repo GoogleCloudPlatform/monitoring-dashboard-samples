@@ -1,0 +1,37 @@
+platforms:
+- type: GCE
+  launch_stage: GA
+  install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/rabbitmq
+  agent_requirement:
+    logs_minimum_supported_version:
+      major: '2'
+      minor: '15'
+      patch: '0'
+    metrics_minimum_supported_version:
+      major: '2'
+      minor: '15'
+      patch: '0'
+  detections:
+    characteristic_log:
+      log_name_regex: RabbitMQ
+    characteristic_metric:
+      metric_type: workload.googleapis.com/rabbitmq.message.current
+  default_logs:
+  - name: rabbitmq
+    fields:
+    - name: jsonPayload.process_id
+      type: string
+      description: The process ID issuing the log
+    - name: jsonPayload.message
+      type: string
+      description: Log message
+  default_metrics:
+  - name: workload.googleapis.com/rabbitmq.consumer.count
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/rabbitmq.message.current
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - state

@@ -1,0 +1,91 @@
+platforms:
+- type: GCE
+  launch_stage: GA
+  install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/apache
+  agent_requirement:
+    logs_minimum_supported_version:
+      major: '2'
+      minor: '15'
+      patch: '0'
+    metrics_minimum_supported_version:
+      major: '2'
+      minor: '15'
+      patch: '0'
+  detections:
+    characteristic_log:
+      log_name_regex: Apache Web Server
+    characteristic_metric:
+      metric_type: workload.googleapis.com/apache.current_connections
+  default_logs:
+  - name: apache_access
+    fields:
+    - name: httpRequest.remoteIp
+      type: string
+      description: The IP address (IPv4 or IPv6) of the client that issued the HTTP
+        request
+    - name: httpRequest.requestUrl
+      type: string
+      description: Request URL (typically just the path part of the URL)
+    - name: httpRequest.protocol
+      type: string
+      description: Protocol used for the request
+    - name: httpRequest.requestMethod
+      type: string
+      description: HTTP method
+    - name: jsonPayload.host
+      type: string
+      description: Contents of the Host header
+    - name: jsonPayload.user
+      type: string
+      description: Authenticated username for the request
+  - name: apache_error
+    fields:
+    - name: jsonPayload.client
+      type: string
+      description: Client IP address (optional)
+    - name: jsonPayload.level
+      type: string
+      description: Log entry level
+    - name: jsonPayload.module
+      type: string
+      description: apache module where the log originated
+    - name: jsonPayload.message
+      type: string
+      description: Log message
+    - name: jsonPayload.errorCode
+      type: string
+      description: apache error code
+    - name: jsonPayload.pid
+      type: string
+      description: Process ID
+    - name: jsonPayload.tid
+      type: string
+      description: Thread ID
+  default_metrics:
+  - name: workload.googleapis.com/apache.current_connections
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - server_name
+  - name: workload.googleapis.com/apache.requests
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - server_name
+  - name: workload.googleapis.com/apache.scoreboard
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - server_name
+    - state
+  - name: workload.googleapis.com/apache.traffic
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - server_name
+  - name: workload.googleapis.com/apache.workers
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - server_name
+    - state

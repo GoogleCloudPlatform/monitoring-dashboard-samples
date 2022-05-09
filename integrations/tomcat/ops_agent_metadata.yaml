@@ -1,0 +1,87 @@
+platforms:
+- type: GCE
+  launch_stage: GA
+  install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/tomcat
+  agent_requirement:
+    logs_minimum_supported_version:
+      major: '2'
+      minor: '15'
+      patch: '0'
+    metrics_minimum_supported_version:
+      major: '2'
+      minor: '15'
+      patch: '0'
+  detections:
+    characteristic_log:
+      log_name_regex: Tomcat
+    characteristic_metric:
+      metric_type: workload.googleapis.com/tomcat.threads
+  default_logs:
+  - name: tomcat_system
+    fields:
+    - name: jsonPayload.message
+      type: string
+      description: Log message, including detailed stacktrace where provided
+    - name: jsonPayload.module
+      type: string
+      description: Module of tomcat where the log originated
+    - name: jsonPayload.source
+      type: string
+      description: source of where the log originated
+  - name: tomcat_access
+    fields:
+    - name: httpRequest.remoteIp
+      type: string
+      description: ''
+    - name: httpRequest.requestUrl
+      type: string
+      description: ''
+    - name: httpRequest.protocol
+      type: string
+      description: ''
+    - name: httpRequest.requestMethod
+      type: string
+      description: ''
+    - name: jsonPayload.host
+      type: string
+      description: Contents of the Host header
+    - name: jsonPayload.user
+      type: string
+      description: Authenticated username for the request
+  default_metrics:
+  - name: workload.googleapis.com/tomcat.errors
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - proto_handler
+  - name: workload.googleapis.com/tomcat.max_time
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - proto_handler
+  - name: workload.googleapis.com/tomcat.processing_time
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - proto_handler
+  - name: workload.googleapis.com/tomcat.request_count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - proto_handler
+  - name: workload.googleapis.com/tomcat.sessions
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/tomcat.threads
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - proto_handler
+    - state
+  - name: workload.googleapis.com/tomcat.traffic
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - direction
+    - proto_handler
