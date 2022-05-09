@@ -1,0 +1,194 @@
+platforms:
+- type: GCE
+  launch_stage: HIDDEN
+  launch_date: '2022-05-09'
+  agent_requirement:
+    logs_minimum_supported_version:
+      major: '2'
+      minor: '15'
+      patch: '0'
+    metrics_minimum_supported_version:
+      major: '2'
+      minor: '15'
+      patch: '0'
+  detections:
+    characteristic_log:
+      log_name_regex: AD DS
+    characteristic_metric:
+      metric_type: workload.googleapis.com/active_directory.ds.bind.rate
+  default_logs:
+  - name: active_directory_ds
+    fields:
+    - name: jsonPayload.Message
+      type: string
+      description: The log message.
+    - name: jsonPayload.RecordNumber
+      type: number
+      description: The sequence number of the event log.
+    - name: jsonPayload.TimeGenerated
+      type: string
+      description: A timestamp representing when the record was generated.
+    - name: jsonPayload.TimeWritten
+      type: string
+      description: A timestamp representing when the record was written to the event
+        log.
+    - name: jsonPayload.EventID
+      type: number
+      description: An ID identifying the type of the event.
+    - name: jsonPayload.EventType
+      type: string
+      description: The type of event.
+    - name: jsonPayload.Qualifiers
+      type: number
+      description: A qualifier number that is used for event identification.
+    - name: jsonPayload.EventCategory
+      type: number
+      description: The category of the event.
+    - name: jsonPayload.Channel
+      type: string
+      description: The event log channel where the log was logged.
+    - name: jsonPayload.Sid
+      type: string
+      description: The security identifier identifying a security principal or security
+        group of the process that logged this message.
+    - name: jsonPayload.SourceName
+      type: string
+      description: The source component that logged this message.
+    - name: jsonPayload.ComputerName
+      type: string
+      description: The name of the computer from which this log originates.
+    - name: jsonPayload.Data
+      type: string
+      description: Extra event-specific data included with the log.
+    - name: jsonPayload.StringInserts
+      type: '[]string'
+      description: Dynamic string data that was used to construct the log message.
+  - name: active_directory_ds
+    fields:
+    - name: jsonPayload.Message
+      type: string
+      description: The log message.
+    - name: jsonPayload.RecordNumber
+      type: number
+      description: The sequence number of the event log.
+    - name: jsonPayload.TimeGenerated
+      type: string
+      description: A timestamp representing when the record was generated.
+    - name: jsonPayload.TimeWritten
+      type: string
+      description: A timestamp representing when the record was written to the event
+        log.
+    - name: jsonPayload.EventID
+      type: number
+      description: An ID identifying the type of the event.
+    - name: jsonPayload.EventType
+      type: string
+      description: The type of event.
+    - name: jsonPayload.Qualifiers
+      type: number
+      description: A qualifier number that is used for event identification.
+    - name: jsonPayload.EventCategory
+      type: number
+      description: The category of the event.
+    - name: jsonPayload.Channel
+      type: string
+      description: The event log channel where the log was logged.
+    - name: jsonPayload.Sid
+      type: string
+      description: The security identifier identifying a security principal or security
+        group of the process that logged this message.
+    - name: jsonPayload.SourceName
+      type: string
+      description: The source component that logged this message.
+    - name: jsonPayload.ComputerName
+      type: string
+      description: The name of the computer from which this log originates.
+    - name: jsonPayload.Data
+      type: string
+      description: Extra event-specific data included with the log.
+    - name: jsonPayload.StringInserts
+      type: '[]string'
+      description: Dynamic string data that was used to construct the log message.
+  default_metrics:
+  - name: workload.googleapis.com/active_directory.ds.bind.rate
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - type
+  - name: workload.googleapis.com/active_directory.ds.ldap.bind.last_successful.time
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/active_directory.ds.ldap.bind.rate
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/active_directory.ds.ldap.client.session.count
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/active_directory.ds.ldap.search.rate
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/active_directory.ds.name_cache.hit_rate
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/active_directory.ds.notification.queued
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/active_directory.ds.operation.rate
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - type
+  - name: workload.googleapis.com/active_directory.ds.replication.network.io
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - direction
+    - type
+  - name: workload.googleapis.com/active_directory.ds.replication.object.rate
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - direction
+  - name: workload.googleapis.com/active_directory.ds.replication.operation.pending
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/active_directory.ds.replication.property.rate
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - direction
+  - name: workload.googleapis.com/active_directory.ds.replication.sync.object.pending
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/active_directory.ds.replication.sync.request.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - result
+  - name: workload.googleapis.com/active_directory.ds.replication.value.rate
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - direction
+    - type
+  - name: workload.googleapis.com/active_directory.ds.security_descriptor_propagations_event.queued
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/active_directory.ds.suboperation.rate
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - type
+  - name: workload.googleapis.com/active_directory.ds.thread.count
+    value_type: INT64
+    kind: GAUGE
+    labels: []
