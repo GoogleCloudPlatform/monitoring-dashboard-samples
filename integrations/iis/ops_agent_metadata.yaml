@@ -1,0 +1,137 @@
+platforms:
+- type: GCE
+  launch_stage: GA
+  metrics_receiver_version: '1'
+  install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/iis
+  agent_requirement:
+    logs_minimum_supported_version:
+      major: '2'
+      minor: '14'
+      patch: '0'
+    metrics_minimum_supported_version:
+      major: '1'
+      minor: '0'
+      patch: '0'
+  detections:
+    characteristic_log:
+      log_name_regex: IIS
+    characteristic_metric:
+      metric_type: agent.googleapis.com/iis/request_count
+  default_logs:
+  - name: iis_access
+    fields:
+    - name: httpRequest.serverIp
+      type: string
+      description: The server's IP and port that was requested
+    - name: httpRequest.remoteIp
+      type: string
+      description: IP of the client that made the request
+    - name: httpRequest.requestUrl
+      type: string
+      description: Request URL (typically just the path part of the URL)
+    - name: httpRequest.requestMethod
+      type: string
+      description: HTTP method
+    - name: httpRequest.status
+      type: number
+      description: HTTP status code
+    - name: httpRequest.userAgent
+      type: string
+      description: Contents of the `User-Agent` header
+    - name: httpRequest.referer
+      type: string
+      description: Contents of the `Referer` header
+    - name: jsonPayload.sc_substatus
+      type: string
+      description: The server's IP and port that was requested
+    - name: jsonPayload.sc_win32_status
+      type: string
+      description: The server's IP and port that was requested
+    - name: jsonPayload.time_taken
+      type: string
+      description: The length of time that the action took, in milliseconds
+    - name: jsonPayload.user
+      type: string
+      description: Authenticated username for the request
+  default_metrics:
+  - name: agent.googleapis.com/iis/current_connections
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: agent.googleapis.com/iis/network/transferred_bytes_count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - direction
+  - name: agent.googleapis.com/iis/new_connection_count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: agent.googleapis.com/iis/request_count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - http_method
+- type: GCE
+  launch_stage: HIDDEN
+  metrics_receiver_version: '2'
+  agent_requirement:
+    metrics_minimum_supported_version:
+      major: '2'
+      minor: '15'
+      patch: '0'
+  detections:
+    characteristic_metric:
+      metric_type: workload.googleapis.com/iis.request.count
+  default_metrics:
+  - name: workload.googleapis.com/iis.request.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - request
+  - name: workload.googleapis.com/iis.request.rejected
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/iis.request.queue.count
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/iis.request.queue.age.max
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/iis.network.file.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - direction
+  - name: workload.googleapis.com/iis.network.blocked
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/iis.network.io
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - direction
+  - name: workload.googleapis.com/iis.connection.attempt.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/iis.connection.active
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/iis.connection.anonymous
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/iis.thread.active
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/iis.uptime
+    value_type: INT64
+    kind: GAUGE
+    labels: []
