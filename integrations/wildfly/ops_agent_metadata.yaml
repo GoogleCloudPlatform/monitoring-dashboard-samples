@@ -1,0 +1,118 @@
+!!omap
+- platforms:
+  - !!omap
+    - type: GCE
+    - launch_stage: GA
+    - install_documentation_url: "https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/wildfly"
+    - agent_requirement: !!omap
+      - logs_minimum_supported_version: !!omap
+        - major: '2'
+        - minor: '11'
+        - patch: '0'
+      - metrics_minimum_supported_version: !!omap
+        - major: '2'
+        - minor: '12'
+        - patch: '0'
+    - detections: !!omap
+      - characteristic_log:
+          log_name_regex: WildFly
+      - characteristic_metric:
+          metric_type: workload.googleapis.com/wildfly.network.io
+    - default_logs:
+      - !!omap
+        - name: wildfly_system
+        - fields:
+          - !!omap
+            - name: jsonPayload.messageCode
+            - type: string
+            - description: Wildfly specific message code preceding the log, where applicable
+          - !!omap
+            - name: jsonPayload.message
+            - type: string
+            - description: Log message
+          - !!omap
+            - name: jsonPayload.thread
+            - type: string
+            - description: Thread where the log originated
+          - !!omap
+            - name: jsonPayload.source
+            - type: string
+            - description: Source where the log originated
+    - default_metrics:
+      - !!omap
+        - name: workload.googleapis.com/wildfly.session.count
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - deployment
+      - !!omap
+        - name: workload.googleapis.com/wildfly.session.active
+        - value_type: INT64
+        - kind: GAUGE
+        - labels:
+          - deployment
+      - !!omap
+        - name: workload.googleapis.com/wildfly.session.expired
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - deployment
+      - !!omap
+        - name: workload.googleapis.com/wildfly.session.rejected
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - deployment
+      - !!omap
+        - name: workload.googleapis.com/wildfly.request.count
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - listener
+          - server
+      - !!omap
+        - name: workload.googleapis.com/wildfly.request.time
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - listener
+          - server
+      - !!omap
+        - name: workload.googleapis.com/wildfly.request.server_error
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - listener
+          - server
+      - !!omap
+        - name: workload.googleapis.com/wildfly.network.io
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - listener
+          - server
+          - state
+      - !!omap
+        - name: workload.googleapis.com/wildfly.jdbc.connection.open
+        - value_type: INT64
+        - kind: GAUGE
+        - labels:
+          - data_source
+          - state
+      - !!omap
+        - name: workload.googleapis.com/wildfly.jdbc.request.wait
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - data_source
+      - !!omap
+        - name: workload.googleapis.com/wildfly.jdbc.transaction.count
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels: []
+      - !!omap
+        - name: workload.googleapis.com/wildfly.jdbc.rollback.count
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - cause

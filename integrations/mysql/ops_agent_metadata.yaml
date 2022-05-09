@@ -1,0 +1,279 @@
+!!omap
+- platforms:
+  - !!omap
+    - type: GCE
+    - launch_stage: GA
+    - install_documentation_url: "https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/mysql"
+    - agent_requirement: !!omap
+      - logs_minimum_supported_version: !!omap
+        - major: '2'
+        - minor: '5'
+        - patch: '0'
+      - metrics_minimum_supported_version: !!omap
+        - major: '2'
+        - minor: '8'
+        - patch: '0'
+    - detections: !!omap
+      - characteristic_log:
+          log_name_regex: MySQL
+      - characteristic_metric:
+          metric_type: workload.googleapis.com/mysql.threads
+    - default_logs:
+      - !!omap
+        - name: mysql_error
+        - fields:
+          - !!omap
+            - name: jsonPayload.level
+            - type: string
+            - description: 'Log entry level'
+          - !!omap
+            - name: jsonPayload.message
+            - type: string
+            - description: 'Log message'
+          - !!omap
+            - name: jsonPayload.subsystem
+            - type: string
+            - description: 'MySQL subsystem where the log originated'
+          - !!omap
+            - name: jsonPayload.tid
+            - type: number
+            - description: 'Thread ID where the log originated'
+          - !!omap
+            - name: jsonPayload.errorCode
+            - type: string
+            - description: 'MySQL error code associated with the log'
+      - !!omap
+        - name: mysql_general
+        - fields:
+          - !!omap
+            - name: jsonPayload.message
+            - type: string
+            - description: 'Log of the database action'
+          - !!omap
+            - name: jsonPayload.command
+            - type: string
+            - description: 'Type of database action being logged'
+          - !!omap
+            - name: jsonPayload.tid
+            - type: number
+            - description: 'Thread ID where the log originated'
+      - !!omap
+        - name: mysql_slow
+        - fields:
+          - !!omap
+            - name: jsonPayload.message
+            - type: string
+            - description: 'Full text of the query'
+          - !!omap
+            - name: jsonPayload.user
+            - type: string
+            - description: 'User that executed the query'
+          - !!omap
+            - name: jsonPayload.database
+            - type: string
+            - description: 'Database where the query was executed'
+          - !!omap
+            - name: jsonPayload.host
+            - type: string
+            - description: 'Host of the database instance'
+          - !!omap
+            - name: jsonPayload.ipAddress
+            - type: string
+            - description: 'Address of the database instance'
+          - !!omap
+            - name: jsonPayload.tid
+            - type: number
+            - description: 'Thread ID where the query was logged'
+          - !!omap
+            - name: jsonPayload.queryTime
+            - type: number
+            - description: 'The statement execution time in seconds'
+          - !!omap
+            - name: jsonPayload.lockTime
+            - type: number
+            - description: 'The time to acquire locks in seconds'
+          - !!omap
+            - name: jsonPayload.rowsSent
+            - type: number
+            - description: 'The number of rows sent to the client'
+          - !!omap
+            - name: jsonPayload.rowsExamined
+            - type: number
+            - description: 'The number of rows examined by the server layer'
+          - !!omap
+            - name: jsonPayload.errorNumber
+            - type: number
+            - description: 'The statement error number, or 0 if no error occurred'
+          - !!omap
+            - name: jsonPayload.killed
+            - type: number
+            - description: 'If the statement was terminated, the error number indicating why, or 0 if the statement terminated normally'
+          - !!omap
+            - name: jsonPayload.bytesReceived
+            - type: number
+            - description: 'The number of bytes received from all clients'
+          - !!omap
+            - name: jsonPayload.bytesSent
+            - type: number
+            - description: 'The number of bytes sent to all clients'
+          - !!omap
+            - name: jsonPayload.readFirst
+            - type: number
+            - description: 'The number of times the first entry in an index was read'
+          - !!omap
+            - name: jsonPayload.readLast
+            - type: number
+            - description: 'The number of requests to read the last key in an index'
+          - !!omap
+            - name: jsonPayload.readKey
+            - type: number
+            - description: 'The number of requests to read a row based on a key'
+          - !!omap
+            - name: jsonPayload.readNext
+            - type: number
+            - description: 'The number of requests to read the next row in key order'
+          - !!omap
+            - name: jsonPayload.readPrev
+            - type: number
+            - description: 'The number of requests to read the previous row in key order'
+          - !!omap
+            - name: jsonPayload.readRnd
+            - type: number
+            - description: 'The number of requests to read a row based on a fixed position'
+          - !!omap
+            - name: jsonPayload.readRndNext
+            - type: number
+            - description: 'The number of requests to read the next row in the data file'
+          - !!omap
+            - name: jsonPayload.sortMergePasses
+            - type: number
+            - description: 'The number of merge passes that the sort algorithm has had to do'
+          - !!omap
+            - name: jsonPayload.sortRangeCount
+            - type: number
+            - description: 'The number of sorts that were done using ranges'
+          - !!omap
+            - name: jsonPayload.sortRows
+            - type: number
+            - description: 'The number of sorted rows'
+          - !!omap
+            - name: jsonPayload.sortScanCount
+            - type: number
+            - description: 'The number of sorts that were done by scanning the table'
+          - !!omap
+            - name: jsonPayload.createdTmpDiskTables
+            - type: number
+            - description: 'The number of internal on-disk temporary tables created by the server'
+          - !!omap
+            - name: jsonPayload.createdTmpTables
+            - type: number
+            - description: 'The number of internal temporary tables created by the server'
+          - !!omap
+            - name: jsonPayload.startTime
+            - type: string
+            - description: 'The statement execution start time'
+          - !!omap
+            - name: jsonPayload.endTime
+            - type: string
+            - description: 'The statement execution end time'
+    - default_metrics:
+      - !!omap
+        - name: workload.googleapis.com/mysql.buffer_pool_data_pages
+        - value_type: INT64
+        - kind: GAUGE
+        - labels:
+          - status
+      - !!omap
+        - name: workload.googleapis.com/mysql.buffer_pool_limit
+        - value_type: INT64
+        - kind: GAUGE
+        - labels: []
+      - !!omap
+        - name: workload.googleapis.com/mysql.buffer_pool_operations
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - operation
+      - !!omap
+        - name: workload.googleapis.com/mysql.buffer_pool_page_flushes
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels: []
+      - !!omap
+        - name: workload.googleapis.com/mysql.buffer_pool_pages
+        - value_type: DOUBLE
+        - kind: GAUGE
+        - labels:
+          - kind
+      - !!omap
+        - name: workload.googleapis.com/mysql.buffer_pool_size
+        - value_type: DOUBLE
+        - kind: GAUGE
+        - labels:
+          - kind
+      - !!omap
+        - name: workload.googleapis.com/mysql.commands
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - command
+      - !!omap
+        - name: workload.googleapis.com/mysql.double_writes
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - kind
+      - !!omap
+        - name: workload.googleapis.com/mysql.handlers
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - kind
+      - !!omap
+        - name: workload.googleapis.com/mysql.locks
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - kind
+      - !!omap
+        - name: workload.googleapis.com/mysql.log_operations
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - operation
+      - !!omap
+        - name: workload.googleapis.com/mysql.operations
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - operation
+      - !!omap
+        - name: workload.googleapis.com/mysql.page_operations
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - operation
+      - !!omap
+        - name: workload.googleapis.com/mysql.row_locks
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - kind
+      - !!omap
+        - name: workload.googleapis.com/mysql.row_operations
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - operation
+      - !!omap
+        - name: workload.googleapis.com/mysql.sorts
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - kind
+      - !!omap
+        - name: workload.googleapis.com/mysql.threads
+        - value_type: DOUBLE
+        - kind: GAUGE
+        - labels:
+          - kind

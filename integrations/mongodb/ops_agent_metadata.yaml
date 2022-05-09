@@ -1,0 +1,112 @@
+!!omap
+- platforms:
+  - !!omap
+    - type: GCE
+    - launch_stage: GA
+    - install_documentation_url: "https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/mongodb"
+    - agent_requirement: !!omap
+      - logs_minimum_supported_version: !!omap
+        - major: '2'
+        - minor: '10'
+        - patch: '0'
+      - metrics_minimum_supported_version: !!omap
+        - major: '2'
+        - minor: '11'
+        - patch: '0'
+    - detections: !!omap
+      - characteristic_log:
+          log_name_regex: MongoDB
+      - characteristic_metric:
+          metric_type: workload.googleapis.com/mongodb.memory.usage
+    - default_logs:
+      - !!omap
+        - name: mongodb
+        - fields:
+          - !!omap
+            - name: jsonPayload.component
+            - type: string
+            - description: Categorization of the log message. A full list can be found [here](https://docs.mongodb.com/manual/reference/log-messages/#std-label-log-message-components)
+          - !!omap
+            - name: jsonPayload.ctx
+            - type: string
+            - description: The name of the thread issuing the log statement
+          - !!omap
+            - name: jsonPayload.id
+            - type: number
+            - description: Log ID
+          - !!omap
+            - name: jsonPayload.message
+            - type: string
+            - description: Log message
+          - !!omap
+            - name: jsonPayload.attributes
+            - type: object (optional)
+            - description: Object containing one or more key-value pairs for any additional attributes provided
+    - default_metrics:
+      - !!omap
+        - name: workload.googleapis.com/mongodb.cache.operations
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - type
+      - !!omap
+        - name: workload.googleapis.com/mongodb.collection.count
+        - value_type: INT64
+        - kind: GAUGE
+        - labels:
+          - database
+      - !!omap
+        - name: workload.googleapis.com/mongodb.connection.count
+        - value_type: INT64
+        - kind: GAUGE
+        - labels:
+          - database
+          - type
+      - !!omap
+        - name: workload.googleapis.com/mongodb.data.size
+        - value_type: INT64
+        - kind: GAUGE
+        - labels:
+          - database
+      - !!omap
+        - name: workload.googleapis.com/mongodb.global_lock.time
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels: []
+      - !!omap
+        - name: workload.googleapis.com/mongodb.index.count
+        - value_type: INT64
+        - kind: GAUGE
+        - labels:
+          - database
+      - !!omap
+        - name: workload.googleapis.com/mongodb.index.size
+        - value_type: INT64
+        - kind: GAUGE
+        - labels:
+          - database
+      - !!omap
+        - name: workload.googleapis.com/mongodb.memory.usage
+        - value_type: INT64
+        - kind: GAUGE
+        - labels:
+          - database
+          - type
+      - !!omap
+        - name: workload.googleapis.com/mongodb.object.count
+        - value_type: INT64
+        - kind: GAUGE
+        - labels:
+          - database
+      - !!omap
+        - name: workload.googleapis.com/mongodb.operation.count
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - operation
+      - !!omap
+        - name: workload.googleapis.com/mongodb.storage.size
+        - value_type: INT64
+        - kind: CUMULATIVE
+        - labels:
+          - database
