@@ -109,9 +109,9 @@ sample_dashboards:
       This dashboard has charts for viewing Nginx when monitored by [Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/nginx#monitored-metrics), Request Rate, Current Connections, and Connections Rate from NGINX as well as charts of infrastructure related metrics for the running NGINX VMs: CPU % Top 5 VMs, Memory % Top 5 VMs, and NGINX VMs by Region for a count of VMs over time. 
 
       There is also a card with links to docs and Nginx logs in Cloud Logging.
-    integration:
-      id: nginx
-      platform: GCE
+    related_integrations:
+      - id: nginx
+        platform: GCE
 ```
 
 The dashboard object is described by the following values:
@@ -122,10 +122,10 @@ The dashboard object is described by the following values:
 | `id`       | Should match the dashboard file name without the extension.         |
 | `display_name` | Will be the name of the dashboard shown in the samples list of the Cloud Console. |
 | `description`  | A brief description of the dashboard and its contents. Supports markdown-formatted links only. Include empty newlines for paragraph breaks. |
-| `integration`  | Optional. If this dashboard contains metrics for an Ops Agent application integration, include this object to link the dashboard to the correct integration. |
-| `integration.platform` | Required. For an Ops Agent application integration, use platform code `'GCE'`. |
-| `integration.id` | Required. Should match the integration's id. |
-| `integration.version` | Optional. If this dashboard requires a specific revision of an integration include the version here. |
+| `related_integrations`  | Optional. A list of integrations which collect the metrics displayed on this dashboard. |
+| `related_integrations.platform` | Required for integration. For an Ops Agent application integration, use platform code `'GCE'`. |
+| `related_integrations.id` | Required for integration. Should match the integration's id. |
+| `related_integrations.version` | Optional. If this dashboard requires a specific revision of an integration include the version here. |
 
 ### Update README
 
