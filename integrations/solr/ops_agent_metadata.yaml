@@ -1,0 +1,113 @@
+platforms:
+- type: GCE
+  launch_stage: GA
+  install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/solr
+  agent_requirement:
+    logs_minimum_supported_version:
+      major: 2
+      minor: 10
+      patch: 0
+    metrics_minimum_supported_version:
+      major: 2
+      minor: 10
+      patch: 0
+  detections:
+  - characteristic_metric:
+      metric_type: workload.googleapis.com/solr.cache.size
+  default_logs:
+  - name: solr_system
+    fields:
+    - name: jsonPayload.message
+      type: string
+      description: Log message
+    - name: jsonPayload.thread
+      type: string
+      description: Thread where the log originated
+    - name: jsonPayload.source
+      type: string
+      description: Source of where the log originated
+    - name: jsonPayload.collection
+      type: string
+      description: Solr collection related to the log
+    - name: jsonPayload.shard
+      type: string
+      description: Solr shard related to the log
+    - name: jsonPayload.replica
+      type: string
+      description: Solr replica related to the log
+    - name: jsonPayload.core
+      type: string
+      description: Solr core related to the log
+    - name: jsonPayload.exception
+      type: string
+      description: Exception related to the log, including detailed stacktrace where
+        provided
+  default_metrics:
+  - name: workload.googleapis.com/solr.cache.eviction.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - cache
+    - core
+  - name: workload.googleapis.com/solr.cache.hit.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - cache
+    - core
+  - name: workload.googleapis.com/solr.cache.insert.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - cache
+    - core
+  - name: workload.googleapis.com/solr.cache.lookup.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - cache
+    - core
+  - name: workload.googleapis.com/solr.cache.size
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - cache
+    - core
+  - name: workload.googleapis.com/solr.document.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - core
+  - name: workload.googleapis.com/solr.index.size
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - core
+  - name: workload.googleapis.com/solr.request.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - core
+    - handler
+    - type
+  - name: workload.googleapis.com/solr.request.error.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - core
+    - handler
+    - type
+  - name: workload.googleapis.com/solr.request.time.average
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - core
+    - handler
+    - type
+  - name: workload.googleapis.com/solr.request.timeout.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - core
+    - handler
+    - type
