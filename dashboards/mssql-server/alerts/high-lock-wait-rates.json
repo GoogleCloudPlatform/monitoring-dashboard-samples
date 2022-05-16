@@ -1,0 +1,38 @@
+{
+    "displayName": "MSSQL - High Lock Wait Rates",
+    "documentation": {
+        "content": "If 'lock.wait.rate' is above a user defined value it shows that your resources are being blocked waiting for locks to be lifted slowing down the server.\n",
+        "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+        {
+            "displayName": "VM Instance - workload/sqlserver.lock.wait.rate",
+            "conditionThreshold": {
+                "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/sqlserver.lock.wait.rate\"",
+                "aggregations": [
+                    {
+                        "alignmentPeriod": "300s",
+                        "crossSeriesReducer": "REDUCE_NONE",
+                        "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                ],
+                "comparison": "COMPARISON_GT",
+                "duration": "0s",
+                "trigger": {
+                    "count": 1
+                },
+                "thresholdValue": 3
+            }
+        }
+    ],
+    "alertStrategy": {
+        "autoClose": "604800s",
+        "notificationPrompts": [
+            "OPENED"
+        ]
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+}
