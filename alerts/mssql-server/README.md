@@ -1,4 +1,3 @@
-
 # Alerts for MSSQL in the Ops Agent
 
 ## Connections Near Limit
