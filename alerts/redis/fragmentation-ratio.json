@@ -1,0 +1,34 @@
+{
+    "displayName": "Redis - Memory Fragmentation Ratio < 1",
+    "documentation": {
+        "content": "A fragmentation ratio less than 1.0 means that Redis is under-provisioned and requires more memory than is available on the system and so it has resorted to using swap memory resources thus reducing overall performance.",
+        "mimeType": "text/markdown"
+    },
+    "conditions": [
+        {
+            "displayName": "Redis - Memory Fragmentation Ratio < 1",
+            "conditionThreshold": {
+                "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/redis.memory.fragmentation_ratio\"",
+                "aggregations": [
+                    {
+                        "alignmentPeriod": "300s",
+                        "crossSeriesReducer": "REDUCE_NONE",
+                        "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                ],
+                "comparison": "COMPARISON_LT",
+                "duration": "0s",
+                "evaluationMissingData": "EVALUATION_MISSING_DATA_NO_OP",
+                "trigger": {
+                    "count": 1
+                },
+                "thresholdValue": 1
+            }
+        }
+    ],
+    "alertStrategy": {
+        "autoClose": "43200s"
+    },
+    "combiner": "OR",
+    "enabled": true
+}
