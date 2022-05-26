@@ -1,0 +1,35 @@
+{
+  "displayName": "Access log failures",
+  "documentation": {},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Access log failures",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "60s",
+            "crossSeriesReducer": "REDUCE_SUM",
+            "perSeriesAligner": "ALIGN_SUM"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "metric.type=\"logging.googleapis.com/user/jetty.request.failed.count\"",
+        "thresholdValue": 10,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED"
+    ]
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
