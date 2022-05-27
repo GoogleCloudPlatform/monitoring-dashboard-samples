@@ -7,9 +7,12 @@ platforms:
       major: 2
       minor: 16
       patch: 0
+    metrics_minimum_supported_version: {}
   detections:
   - characteristic_log:
       log_name_regex: jetty
+  - characteristic_metric:
+      metric_type: workload.googleapis.com/jetty.select.count
   default_logs:
   - name: jetty_access
     fields:
@@ -37,3 +40,32 @@ platforms:
     - name: httpRequest.status
       type: string
       description: ''
+  default_metrics:
+  - name: workload.googleapis.com/jetty.select.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/jetty.session.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - resource
+  - name: workload.googleapis.com/jetty.session.time.total
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - resource
+  - name: workload.googleapis.com/jetty.session.time.max
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - resource
+  - name: workload.googleapis.com/jetty.thread.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - state
+  - name: workload.googleapis.com/jetty.thread.queue.count
+    value_type: INT64
+    kind: GAUGE
+    labels: []
