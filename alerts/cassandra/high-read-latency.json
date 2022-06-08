@@ -1,35 +1,36 @@
 {
     "displayName": "Cassandra - High Read Latency",
     "documentation": {
-      "content": "Read latency is generally considered the slower operation in cassandra due to hardware limitations or the data model. Read latency is a good indicator of how well those affectors are fitting to the cassandra environment and if read latency is high, it might be time to update the hardware or dig deeper into why cassandra is losing performance. Feel free to tune this alert for your hardware and latency tolerance, but 4000 µs was the initial threshold specified in this alert. For this alert the median 50th percentile was chosen.",
-      "mimeType": "text/markdown"
+        "content": "Read latency is generally considered the slower operation in cassandra due to hardware limitations or the data model. Read latency is a good indicator of how well those affectors are fitting to the cassandra environment and if read latency is high, it might be time to update the hardware or dig deeper into why cassandra is losing performance. Feel free to tune this alert for your hardware and latency tolerance, but 4000 µs was the initial threshold specified in this alert. For this alert the median 50th percentile was chosen.",
+        "mimeType": "text/markdown"
     },
     "userLabels": {},
     "conditions": [
-      {
-        "displayName": "VM Instance - workload/cassandra.client.request.read.latency.50p",
-        "conditionThreshold": {
-          "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/cassandra.client.request.read.latency.50p\"",
-          "aggregations": [
-            {
-              "alignmentPeriod": "60s",
-              "crossSeriesReducer": "REDUCE_NONE",
-              "perSeriesAligner": "ALIGN_MEAN"
+        {
+            "displayName": "VM Instance - workload/cassandra.client.request.read.latency.50p",
+            "conditionThreshold": {
+                "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/cassandra.client.request.read.latency.50p\"",
+                "aggregations": [
+                    {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_NONE",
+                        "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                ],
+                "comparison": "COMPARISON_GT",
+                "evaluationMissingData": "EVALUATION_MISSING_DATA_NO_OP",
+                "duration": "0s",
+                "trigger": {
+                    "count": 1
+                },
+                "thresholdValue": 4000
             }
-          ],
-          "comparison": "COMPARISON_GT",
-          "duration": "0s",
-          "trigger": {
-            "count": 1
-          },
-          "thresholdValue": 4000
         }
-      }
     ],
     "alertStrategy": {
-      "autoClose": "3600s"
+        "autoClose": "3600s"
     },
     "combiner": "OR",
     "enabled": true,
     "notificationChannels": []
-  }
+}
