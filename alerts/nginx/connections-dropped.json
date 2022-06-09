@@ -1,0 +1,31 @@
+{
+  "name": "projects/otel-agent-dev/alertPolicies/17173158050515749364",
+  "displayName": "Nginx - connections dropped",
+  "documentation": {
+    "content": "Connections dropped value is derived from the connections accepted minus the connections handled. This value should be near 0. When this value is rising, then this means you may have a resource saturation problem.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "name": "projects/otel-agent-dev/alertPolicies/17173158050515749364/conditions/7319351562589308713",
+      "displayName": "New condition",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "60s",
+        "query": "{ \n    t_0: fetch gce_instance::workload.googleapis.com/nginx.connections_accepted\n    ;\n    t_1: fetch gce_instance::workload.googleapis.com/nginx.connections_handled\n}\n| outer_join 0\n| value val(0) - val(1)\n| align rate(5m)\n| condition val() > 0\n",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED"
+    ]
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
