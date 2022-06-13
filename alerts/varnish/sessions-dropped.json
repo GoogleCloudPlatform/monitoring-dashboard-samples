@@ -1,0 +1,35 @@
+{
+  "name": "projects/otel-agent-dev/alertPolicies/15537161145972419755",
+  "displayName": "Varnish - Sessions Dropped",
+  "documentation": {},
+  "userLabels": {},
+  "conditions": [
+    {
+      "name": "projects/otel-agent-dev/alertPolicies/15537161145972419755/conditions/15537161145972416590",
+      "displayName": "VM Instance - workload/varnish.session.count",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_RATE"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/varnish.session.count\" AND metric.labels.kind = \"dropped\"",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED"
+    ]
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}

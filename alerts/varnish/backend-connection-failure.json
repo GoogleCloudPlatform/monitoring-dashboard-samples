@@ -1,0 +1,36 @@
+{
+    "name": "projects/otel-agent-dev/alertPolicies/15816128761328501269",
+    "displayName": "Varnish - backend connection failure",
+    "documentation": {},
+    "userLabels": {},
+    "conditions": [
+      {
+        "name": "projects/otel-agent-dev/alertPolicies/15816128761328501269/conditions/15816128761328501466",
+        "displayName": "VM Instance - workload/varnish.backend.connection.count",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "perSeriesAligner": "ALIGN_RATE"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/varnish.backend.connection.count\" AND metric.labels.kind = \"fail\"",
+          "thresholdValue": 10,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s",
+      "notificationPrompts": [
+        "OPENED"
+      ]
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }

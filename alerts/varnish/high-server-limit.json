@@ -1,0 +1,35 @@
+{
+    "name": "projects/otel-agent-dev/alertPolicies/7298978230498782881",
+    "displayName": "Varnish - high server limit",
+    "documentation": {},
+    "userLabels": {},
+    "conditions": [
+      {
+        "name": "projects/otel-agent-dev/alertPolicies/7298978230498782881/conditions/7298978230498779876",
+        "displayName": "VM Instance - workload/varnish.thread.operation.count",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "perSeriesAligner": "ALIGN_RATE"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/varnish.thread.operation.count\" AND metric.labels.operation = \"failed\"",
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s",
+      "notificationPrompts": [
+        "OPENED"
+      ]
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }

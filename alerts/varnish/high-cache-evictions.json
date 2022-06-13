@@ -1,0 +1,36 @@
+{
+    "name": "projects/otel-agent-dev/alertPolicies/13277237989178709151",
+    "displayName": "Varnish - High cache evictions",
+    "documentation": {},
+    "userLabels": {},
+    "conditions": [
+      {
+        "name": "projects/otel-agent-dev/alertPolicies/13277237989178709151/conditions/13277237989178708376",
+        "displayName": "VM Instance - workload/varnish.object.nuked",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "perSeriesAligner": "ALIGN_RATE"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/varnish.object.nuked\"",
+          "thresholdValue": 10,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s",
+      "notificationPrompts": [
+        "OPENED"
+      ]
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }
