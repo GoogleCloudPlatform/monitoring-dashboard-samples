@@ -1,0 +1,34 @@
+{
+  "displayName": "Flink - high failed checkpoints",
+  "documentation": {
+    "content": "When the checkpoint delta value exceeds a threshold value, that indicates that your system may be overworking having higher processing time and lower throughput.",
+    "mimeType": "text/markdown"
+},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - workload/flink.job.checkpoint.count",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_DELTA"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/flink.job.checkpoint.count\" AND metric.labels.checkpoint = \"failed\"",
+        "thresholdValue": 5,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}

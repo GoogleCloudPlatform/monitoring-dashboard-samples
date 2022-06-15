@@ -1,0 +1,34 @@
+{
+  "displayName": "Flink - high job restarts",
+  "documentation": {
+    "content": "When the job restarts delta value exceeds a threshold value, that indicates the flink jobs are not running in a healthy state.",
+    "mimeType": "text/markdown"
+},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - workload/flink.job.restart.count",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_DELTA"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/flink.job.restart.count\"",
+        "thresholdValue": 5,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
