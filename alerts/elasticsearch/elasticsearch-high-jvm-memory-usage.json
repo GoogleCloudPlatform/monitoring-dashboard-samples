@@ -1,0 +1,26 @@
+{
+  "displayName": "Elasticsearch - high jvm memory usage",
+  "documentation": {
+    "content": "When the jvm heap ratio of heap used over max heap exceeds a threshold, then application's performance may start to degrade.",
+    "mimeType": "text/markdown"
+},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - workload/jvm.memory.heap.used",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "0s",
+        "query": "fetch gce_instance\n| { \nt_0: metric 'workload.googleapis.com/jvm.memory.heap.used';\nt_1: metric 'workload.googleapis.com/jvm.memory.heap.max'\n}\n| outer_join 0\n| value t_0.value.used / t_1.value.max\n| condition val() > .9\n| every 5m\n| window 5m\n",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
