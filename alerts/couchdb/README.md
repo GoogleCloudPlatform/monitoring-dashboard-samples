@@ -14,12 +14,15 @@ User labels can be used for these policies by modifying the userLabels fields of
 }
 ```
 
-## High request time alert
-
 ## High request rate alert
 The request rate is derived from the requests metrics taken as a rate every 5 minutes. This value should be monitored beforehand to understand what qualifies as a normal request rate so a threshold can be established. When request rate is above this threshold, then that means there is a large spike in traffic which logs can help diagnose if these are nefarious requests.
 
 The `"thresholdValue"` can be adjusted based adjusted depending on what is considered to be a high request rate.
+
+## Low request rate alert
+The request rate is derived from the requests metrics taken as a rate every 5 minutes. This value should be monitored beforehand to understand what qualifies as a normal request rate so a threshold can be established. When request rate is below this threshold, then that means there is an environment problem that are limiting the request rates.
+
+The "thresholdValue" can be adjusted based adjusted depending on what is considered to be a low request rate.
 
 ## High server error rate alert
 The server error rate is derived from processing access logs status code. The server error rate value is the number of 5xx status codes / total status codes per 5 minutes. When the server error rate spikes suddenly, then you have a high priority server problem as clients are experiencing 5xx errors and are not being served successfully.
