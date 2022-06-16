@@ -1,0 +1,26 @@
+{
+  "displayName": "hadoop - low available capacity",
+  "documentation": {
+    "content": "A low available capacity means that the total available disk space capacity across all HDFS clusters is low and should be increased.",
+    "mimeType": "text/markdown"
+},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - workload/hadoop.name_node.capacity.usage",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "0s",
+        "query": "fetch gce_instance\n| { \n    t_0: metric workload.googleapis.com/hadoop.name_node.capacity.usage;\n    t_1: metric workload.googleapis.com/hadoop.name_node.capacity.limit\n}\n| outer_join 0\n| value val(0) / val(1)\n| condition val() > .80\n| every 5m\n| window 5m",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
