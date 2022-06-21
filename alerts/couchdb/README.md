@@ -25,7 +25,7 @@ The request rate is derived from the requests metrics taken as a rate every 5 mi
 The "thresholdValue" can be adjusted based adjusted depending on what is considered to be a low request rate.
 
 ## High server error rate alert
-The server error rate is derived from processing access logs status code. The server error rate value is the number of 5xx status codes / total status codes per 5 minutes. When the server error rate spikes suddenly, then you have a high priority server problem as clients are experiencing 5xx errors and are not being served successfully.
+The server error rate is derived from processing access logs status code. The server error rate value is the number of 5xx status codes per 5 minute window. When the server error rate spikes suddenly, then you have a high priority server problem as backends are experiencing 5xx errors and clients are not being served successfully.
 
 ### Prerequisites
 
