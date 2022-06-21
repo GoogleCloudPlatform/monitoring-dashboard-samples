@@ -1,0 +1,31 @@
+{
+  "displayName": "Memcached - High CPU Usage",
+  "documentation": {},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - workload/memcached.cpu.usage",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "60s",
+            "perSeriesAligner": "ALIGN_RATE"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/memcached.cpu.usage\"",
+        "thresholdValue": 0.1,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}

@@ -1,0 +1,31 @@
+{
+  "displayName": "Memcached - High Evictions",
+  "documentation": {},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - workload/memcached.evictions",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_RATE"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/memcached.evictions\"",
+        "thresholdValue": 0,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
