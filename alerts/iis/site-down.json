@@ -1,0 +1,31 @@
+{
+  "displayName": "IIS - Site Down",
+  "documentation": {},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - workload/iis.uptime",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_LT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/iis.uptime\"",
+        "thresholdValue": 1,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": false,
+  "notificationChannels": []
+}

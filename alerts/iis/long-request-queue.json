@@ -1,0 +1,31 @@
+{
+  "displayName": "IIS - Long Request Queue",
+  "documentation": {},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - workload/iis.request.queue.count",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/iis.request.queue.count\"",
+        "thresholdValue": 10,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": false,
+  "notificationChannels": []
+}
