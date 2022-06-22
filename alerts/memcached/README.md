@@ -31,7 +31,7 @@ i.e.
 
 #### Notification Channels
 
-The ID of the notification channel to be notifed.
+The ID of the notification channel to be notified.
 
 ```json
     "notificationChannels": [
