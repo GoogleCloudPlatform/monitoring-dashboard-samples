@@ -1,0 +1,35 @@
+{
+    "displayName": "HBase - Slow Operations",
+    "documentation": {
+        "content": "Slow operations can be an indication that the HDFS may be in an unhealthy state. ",
+        "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+        {
+            "displayName": "VM Instance - workload/hbase.region_server.operations.slow",
+            "conditionThreshold": {
+                "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/hbase.region_server.operations.slow\"",
+                "aggregations": [
+                    {
+                        "alignmentPeriod": "300s",
+                        "crossSeriesReducer": "REDUCE_NONE",
+                        "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                ],
+                "comparison": "COMPARISON_GT",
+                "duration": "0s",
+                "trigger": {
+                    "count": 1
+                },
+                "thresholdValue": 10
+            }
+        }
+    ],
+    "alertStrategy": {
+        "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+}

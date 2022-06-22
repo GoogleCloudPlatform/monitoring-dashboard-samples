@@ -1,0 +1,27 @@
+{
+    "displayName": "HBase - Authentication Errors",
+    "documentation": {
+        "content": "Authentication errors could indicate that clients do not have correct credentials or somebody is maliciously trying to access the HBase system.",
+        "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+        {
+            "displayName": "HBase Authentication Errors",
+            "evaluationMissingData": "EVALUATION_MISSING_DATA_NO_OP",
+            "conditionMonitoringQueryLanguage": {
+                "duration": "0s",
+                "trigger": {
+                    "count": 1
+                },
+                "query": "fetch gce_instance\n| metric 'workload.googleapis.com/hbase.region_server.authentication.count'\n| filter (metric.state == \"failures\")\n| group_by 1m, [value_count_mean: mean(value.count)]\n| every 1m\n| condition val() > 5"
+            }
+        }
+    ],
+    "alertStrategy": {
+        "autoClose": "3600s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+}
