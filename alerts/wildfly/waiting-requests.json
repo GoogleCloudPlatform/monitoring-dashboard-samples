@@ -1,0 +1,36 @@
+{
+    "displayName": "Wildfly - Waiting Requests",
+    "documentation": {
+        "content": "Waiting requests could be an indication of high CPU usage or perhaps slow disk I/O. It would be recommended to use some kind of CPU utilization tool like top to dig deeper.",
+        "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+        {
+            "displayName": "Wildfly - Waiting Requests",
+            "conditionThreshold": {
+                "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/wildfly.jdbc.request.wait\"",
+                "aggregations": [
+                    {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_NONE",
+                        "perSeriesAligner": "ALIGN_RATE"
+                    }
+                ],
+                "comparison": "COMPARISON_GT",
+                "duration": "60s",
+                "trigger": {
+                    "count": 1
+                },
+                "evaluationMissingData": "EVALUATION_MISSING_DATA_NO_OP",
+                "thresholdValue": 4
+            }
+        }
+    ],
+    "alertStrategy": {
+        "autoClose": "3600s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+}

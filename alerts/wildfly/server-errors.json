@@ -1,0 +1,36 @@
+{
+    "displayName": "WildFly - Server Errors",
+    "documentation": {
+      "content": "Raw server errors coming form WildFly could indicate application outages/other uptime factors.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Wildfly - Server Errors",
+        "evaluationMissingData": "EVALUATION_MISSING_DATA_NO_OP",
+        "conditionThreshold": {
+          "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/wildfly.request.server_error\"",
+          "aggregations": [
+            {
+              "alignmentPeriod": "60s",
+              "crossSeriesReducer": "REDUCE_NONE",
+              "perSeriesAligner": "ALIGN_RATE"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "trigger": {
+            "count": 1
+          },
+          "thresholdValue": 5
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "3600s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }
