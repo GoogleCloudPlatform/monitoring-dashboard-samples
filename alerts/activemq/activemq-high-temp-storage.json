@@ -1,0 +1,34 @@
+{
+  "displayName": "Activemq - High temp storage",
+  "documentation": {
+    "content": "When the broker's non-persistent storage is near it's limit, messages are moved to a temp file system. If that temp file system fills up, then producers will stop sending messages until storage space is freed.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - workload/activemq.disk.temp_usage",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/activemq.disk.temp_usage\"",
+        "thresholdValue": 0.9,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
