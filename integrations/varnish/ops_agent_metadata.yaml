@@ -1,15 +1,55 @@
 platforms:
 - type: GCE
-  launch_stage: HIDDEN
-  launch_date: '2022-05-10'
+  launch_stage: GA
+  install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/varnish
   agent_requirement:
+    logs_minimum_supported_version:
+      major: 2
+      minor: 16
+      patch: 0
     metrics_minimum_supported_version:
       major: 2
       minor: 15
       patch: 0
   detections:
+  - characteristic_log:
+      log_name_regex: varnish
   - characteristic_metric:
       metric_type: workload.googleapis.com/varnish.backend.connection.count
+  default_logs:
+  - name: varnish
+    fields:
+    - name: httpRequest.remoteIp
+      type: string
+      description: The IP address (IPv4 or IPv6) of the client that issued the HTTP
+        request
+    - name: httpRequest.requestMethod
+      type: string
+      description: HTTP method
+    - name: jsonPayload.host
+      type: string
+      description: Contents of the Host header
+    - name: jsonPayload.user
+      type: string
+      description: Authenticated username for the request
+    - name: httpRequest.requestUrl
+      type: string
+      description: Request URL (typically just the path part of the URL
+    - name: httpRequest.protocol
+      type: string
+      description: Protocol used for the request
+    - name: httpRequest.status
+      type: string
+      description: HTTP status code
+    - name: httpRequest.responseSize
+      type: string
+      description: Response size
+    - name: httpRequest.referer
+      type: string
+      description: Contents of the `Referer` header
+    - name: httpRequest.userAgent
+      type: string
+      description: Contents of the `User-Agent` header
   default_metrics:
   - name: workload.googleapis.com/varnish.backend.connection.count
     value_type: INT64
