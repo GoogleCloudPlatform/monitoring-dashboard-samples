@@ -1,0 +1,26 @@
+{
+  "displayName": "MySQL - High number of log errors",
+  "documentation": {
+    "content": "Log error are a count of logs collected from mysql_error logs with an error level per 5 minute window. The default condition of error per 5 minute window is 5.",
+    "mimeType": "text/markdown"
+},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "logging/user/mysql.error.count",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "0s",
+        "query": "fetch gce_instance\n| metric 'logging.googleapis.com/user/mysql.error.count'\n| window 5m \n| condition val() > 5\n",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
