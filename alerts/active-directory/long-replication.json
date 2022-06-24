@@ -1,0 +1,36 @@
+{
+    "displayName": "Active Directory - Long Replication",
+    "documentation": {
+        "content": "Alert configured for if a replication takes longer than 30 minutes, feel free to modify this window to fit your environment. This could be an indication that replication is taking longer than expected.",
+        "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+        {
+            "displayName": "Active Directory - Long Replications",
+            "conditionThreshold": {
+                "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/active_directory.ds.replication.operation.pending\"",
+                "aggregations": [
+                    {
+                        "alignmentPeriod": "900s",
+                        "crossSeriesReducer": "REDUCE_NONE",
+                        "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                ],
+                "comparison": "COMPARISON_GT",
+                "duration": "60s",
+                "trigger": {
+                    "count": 1
+                },
+                "evaluationMissingData": "EVALUATION_MISSING_DATA_NO_OP",
+                "thresholdValue": 1
+            }
+        }
+    ],
+    "alertStrategy": {
+        "autoClose": "3600s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+}
