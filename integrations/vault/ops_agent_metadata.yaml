@@ -1,0 +1,134 @@
+platforms:
+- type: GCE
+  launch_stage: HIDDEN
+  launch_date: '2022-07-01'
+  agent_requirement:
+    logs_minimum_supported_version:
+      major: 2
+      minor: 18
+      patch: 1
+  detections:
+  - characteristic_log:
+      log_name_regex: vault
+  default_logs:
+  - name: vault_audit
+    fields:
+    - name: jsonPayload.auth.token_type
+      type: string
+      description: ''
+    - name: jsonPayload.request.namespace.id
+      type: string
+      description: ''
+    - name: jsonPayload.request.path
+      type: string
+      description: The requested Vault path for operation.
+    - name: jsonPayload.request.operation
+      type: string
+      description: 'This is the type of operation which corresponds to path capabilities
+        and is expected to be one of: `create`, `read`, `update`, `delete`, or `list`.'
+    - name: jsonPayload.type
+      type: string
+      description: the type of audit log.
+    - name: jsonPayload.error
+      type: string
+      description: "If an error occurred with the request, the error message is included\
+        \ in this field\u2019s value."
+    - name: jsonPayload.auth.client_token
+      type: string
+      description: "This is an HMAC of the client\u2019s token ID."
+    - name: jsonPayload.auth.accessor
+      type: string
+      description: This is an HMAC of the client token accessor.
+    - name: jsonPayload.auth.display_name
+      type: string
+      description: This is the display name set by the auth method role or explicitly
+        at secret creation time.
+    - name: jsonPayload.auth.policies
+      type: object
+      description: This will contain a list of policies associated with the client_token.
+    - name: jsonPayload.auth.metadata
+      type: object
+      description: This will contain a list of metadata key/value pairs associated
+        with the client_token.
+    - name: jsonPayload.auth.entity_id
+      type: string
+      description: This is a token entity identifier.
+    - name: jsonPayload.request.id
+      type: string
+      description: This is the unique request identifier.
+    - name: jsonPayload.request.client_token
+      type: string
+      description: This is an HMAC of the client's token ID.
+    - name: jsonPayload.request.client_token_accessor
+      type: string
+      description: This is an HMAC of the client token accessor.
+    - name: jsonPayload.request.data
+      type: object
+      description: The data object will contain secret data in key/value pairs.
+    - name: jsonPayload.request.policy_override
+      type: boolean
+      description: this is true when a soft-mandatory policy override was requested.
+    - name: jsonPayload.request.remote_address
+      type: string
+      description: The IP address of the client making the request.
+    - name: jsonPayload.request.wrap_ttl
+      type: string
+      description: If the token is wrapped, this displays configured wrapped TTL value
+        as numeric string.
+    - name: jsonPayload.request.headers
+      type: object
+      description: Additional HTTP headers specified by the client as part of the
+        request.
+    - name: jsonPayload.response.data.creation_time
+      type: string
+      description: "RFC3339 format timestamp of the token\u2019s creation."
+    - name: jsonPayload.response.data.creation_ttl
+      type: string
+      description: Token creation TTL in seconds.
+    - name: jsonPayload.response.data.expire_time
+      type: string
+      description: RFC3339 format timestamp representing the moment this token will
+        expire.
+    - name: jsonPayload.response.data.explicit_max_ttl
+      type: string
+      description: "Explicit token maximum TTL value as seconds (\u20180\u2019 when\
+        \ not set)."
+    - name: jsonPayload.response.data.issue_time
+      type: string
+      description: RFC3339 format timestamp.
+    - name: jsonPayload.response.data.num_uses
+      type: number
+      description: If the token is limited to a number of uses, that value will be
+        represented here.
+    - name: jsonPayload.response.data.orphan
+      type: boolean
+      description: Boolean value representing whether the token is an orphan.
+    - name: jsonPayload.response.data.renewable
+      type: boolean
+      description: Boolean value representing whether the token is an orphan.
+    - name: jsonPayload.response.data.id
+      type: string
+      description: This is the unique response identifier.
+    - name: jsonPayload.response.data.path
+      type: string
+      description: The requested Vault path for operation.
+    - name: jsonPayload.response.data.policies
+      type: object
+      description: This will contain a list of policies associated with the client_token.
+    - name: jsonPayload.response.data.accessor
+      type: string
+      description: This is an HMAC of the client token accessor.
+    - name: jsonPayload.response.data.display_name
+      type: string
+      description: This is the display name set by the auth method role or explicitly
+        at secret creation time.
+    - name: jsonPayload.response.data.display_name
+      type: string
+      description: This is the display name set by the auth method role or explicitly
+        at secret creation time.
+    - name: jsonPayload.response.data.entity_id
+      type: string
+      description: This is a token entity identifier.
+    - name: timestamp
+      type: string ([`Timestamp`](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Timestamp))
+      description: Time the request was received
