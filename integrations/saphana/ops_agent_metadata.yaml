@@ -1,0 +1,326 @@
+platforms:
+- type: GCE
+  launch_stage: HIDDEN
+  launch_date: '2022-07-01'
+  agent_requirement:
+    logs_minimum_supported_version:
+      major: 2
+      minor: 18
+      patch: 1
+    metrics_minimum_supported_version:
+      major: 2
+      minor: 18
+      patch: 1
+  detections:
+  - characteristic_log:
+      log_name_regex: saphana
+  - characteristic_metric:
+      metric_type: workload.googleapis.com/saphana.connection.count
+  default_logs:
+  - name: saphana
+    fields:
+    - name: jsonPayload.component
+      type: string
+      description: SAP HANA component
+    - name: jsonPayload.thread_id
+      type: number
+      description: ID of the thread logging the message
+    - name: jsonPayload.connection_id
+      type: number
+      description: ID of the connection where the message originated, if message was
+        logged within the scope of a connection
+    - name: jsonPayload.transaction_id
+      type: number
+      description: ID of the transaction where the message originated, if message
+        was logged within the scope of a transaction
+    - name: jsonPayload.update_transaction_id
+      type: number
+      description: ID of the update transaction where the message originated, if message
+        was logged within the scope of an update transaction
+    - name: jsonPayload.message
+      type: string
+      description: Log message
+    - name: sourceLocation.file
+      type: string
+      description: Source file name
+    - name: sourceLocation.line
+      type: number
+      description: Line within the source file
+  default_metrics:
+  - name: workload.googleapis.com/saphana.alert.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - rating
+  - name: workload.googleapis.com/saphana.backup.latest
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/saphana.column.memory.used
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - subtype
+    - type
+  - name: workload.googleapis.com/saphana.component.memory.used
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - component
+    - host
+  - name: workload.googleapis.com/saphana.connection.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - status
+  - name: workload.googleapis.com/saphana.cpu.used
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - host
+    - type
+  - name: workload.googleapis.com/saphana.disk.size.current
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - path
+    - state
+    - usage_type
+  - name: workload.googleapis.com/saphana.host.memory.current
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - state
+  - name: workload.googleapis.com/saphana.host.swap.current
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - state
+  - name: workload.googleapis.com/saphana.instance.code_size
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+  - name: workload.googleapis.com/saphana.instance.memory.current
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - state
+  - name: workload.googleapis.com/saphana.instance.memory.shared.allocated
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+  - name: workload.googleapis.com/saphana.instance.memory.used.peak
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+  - name: workload.googleapis.com/saphana.license.expiration.time
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - product
+    - system
+  - name: workload.googleapis.com/saphana.license.limit
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - product
+    - system
+  - name: workload.googleapis.com/saphana.license.peak
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - product
+    - system
+  - name: workload.googleapis.com/saphana.network.request.average_time
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - host
+  - name: workload.googleapis.com/saphana.network.request.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - state
+  - name: workload.googleapis.com/saphana.network.request.finished.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - host
+    - type
+  - name: workload.googleapis.com/saphana.replication.average_time
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - mode
+    - port
+    - primary
+    - secondary
+  - name: workload.googleapis.com/saphana.replication.backlog.size
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - mode
+    - port
+    - primary
+    - secondary
+  - name: workload.googleapis.com/saphana.replication.backlog.time
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - mode
+    - port
+    - primary
+    - secondary
+  - name: workload.googleapis.com/saphana.row_store.memory.used
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - type
+  - name: workload.googleapis.com/saphana.schema.memory.used.current
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - schema
+    - type
+  - name: workload.googleapis.com/saphana.schema.memory.used.max
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - schema
+  - name: workload.googleapis.com/saphana.schema.operation.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - host
+    - schema
+    - type
+  - name: workload.googleapis.com/saphana.schema.record.compressed.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - schema
+  - name: workload.googleapis.com/saphana.schema.record.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - schema
+    - type
+  - name: workload.googleapis.com/saphana.service.code_size
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - service
+  - name: workload.googleapis.com/saphana.service.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - status
+  - name: workload.googleapis.com/saphana.service.memory.compactors.allocated
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - service
+  - name: workload.googleapis.com/saphana.service.memory.compactors.freeable
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - service
+  - name: workload.googleapis.com/saphana.service.memory.effective_limit
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - service
+  - name: workload.googleapis.com/saphana.service.memory.heap.current
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - service
+    - state
+  - name: workload.googleapis.com/saphana.service.memory.limit
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - service
+  - name: workload.googleapis.com/saphana.service.memory.shared.current
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - service
+    - state
+  - name: workload.googleapis.com/saphana.service.memory.used
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - service
+    - type
+  - name: workload.googleapis.com/saphana.service.stack_size
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - service
+  - name: workload.googleapis.com/saphana.service.thread.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+    - status
+  - name: workload.googleapis.com/saphana.transaction.blocked
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - host
+  - name: workload.googleapis.com/saphana.transaction.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - host
+    - type
+  - name: workload.googleapis.com/saphana.volume.operation.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - host
+    - path
+    - type
+    - usage_type
+  - name: workload.googleapis.com/saphana.volume.operation.size
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - host
+    - path
+    - type
+    - usage_type
+  - name: workload.googleapis.com/saphana.volume.operation.time
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - host
+    - path
+    - type
+    - usage_type
