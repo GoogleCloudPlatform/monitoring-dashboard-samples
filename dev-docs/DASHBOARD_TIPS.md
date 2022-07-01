@@ -6,29 +6,25 @@ docs.
 
 For MQL docs, see [Introduction to Monitoring Query Language](https://cloud.google.com/monitoring/mql) and the [Monitoring Query Language reference](https://cloud.google.com/monitoring/mql/reference). See also [About the MQL language](https://cloud.google.com/monitoring/mql/query-language) doc which includes information about various things including strict form and macros.
 
-## Don't use the Logs Panel component (yet!)
+## Logs Panel component
 
 The [LogsPanel](https://cloud.google.com/monitoring/api/ref_v3/rest/v1/projects.dashboards#logspanel)
-component would be a great addition to sample dashboards, as it would allow showing
+component is a great addition to sample dashboards, as it allows showing
 log entries for the log streams produced by various application integrations
 (e.g. embedding NGINX access logs, etc.).
 
-However, the component currently has a limitation that makes it unsuitable
-for sample dashboards: it requires that you specify a the `resourceNames` that
-the logs will be queried from. This needs to be a list of projects in the form
-of `projects/[project number]`, and the current project is not implicitly included.
+In order to make sure the use of the Logs Panel works well in a sample
+dashboards context, you should ensure that the logs filter in the sample
+dashboard doesn't reference a project ID. This will make it so that the logs
+panel will work in any project that the sample dashboard is imported into.
 
-This means that if we specified a test project used to develop the dashboard (or
-left it empty) the component would always show no logs when copied to a specific
-project, which would be misleading to the customer as they wonder where their
-e.g. NGINX logs went, when in fact they are there just not being shown.
-
-As of 2021-12-14 this is the case, but we will investigate how we could
-modify the LogsPanel component to enable it to be more flexible and have it e.g.
-infer the `resourceNames` from the current metric scope if it's unspecified.
-
-In the mean time, the best we can do is to link to logs in a markdown card,
-see below under "Embedding Markdown With Links to Docs/Logs".
+In order to do that, use the `log_id` function to filter for the suffix part of
+a log name that doesn't include the project ID. So for example, in the [NGINX
+sample dashboard](https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples/blob/master/dashboards/nginx/overview.json)
+there is a logs panel query like this:
+```
+log_id("nginx_access") resource.type="gce_instance"
+```
 
 ## MQL Joins to bring in Infrastructure Metrics alongside Workload Metrics
 
