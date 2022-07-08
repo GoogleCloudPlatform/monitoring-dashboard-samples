@@ -8,7 +8,7 @@ Alerts on JVM heap memory usage being near maximum. When the JVM reaches its max
 
 The JVM can spin up threads depending on the type of application. This means that this alert requires some more contextual decision-making on the threshold. When the thread count exceeds a limit (whether set by an OS or JVM configuration), then new threads cannot be spun up even if the JVM is well-provisioned.
 
-### Creating notification Channels and User Labels
+### Creating Notification Channels and User Labels
 
 Whether these alert policies are being used as standalones or base templates for a deployment strategy like terraform, one thing that should be utilized is notification channels and user labels.
 
