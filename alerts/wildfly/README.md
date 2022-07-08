@@ -6,7 +6,7 @@ If 5 or more server errors are happening over a 1 minute interval could be an in
 
 ## Waiting Requests
 
-Waiting requests could be an indication of high CPU usage or perhaps slow disk I/O. It would be recommended to use some kind of CPU utilization tool like top to dig deeper.
+Waiting requests could be an indication of high CPU usage or perhaps slow disk I/O. If 4 or more requests are queued for more than 1 minute, then the alert policy will be triggered. It would be recommended to use some kind of CPU utilization tool like top to dig deeper.
 
 ## JDBC Connections near limit
 
