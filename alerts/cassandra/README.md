@@ -6,13 +6,13 @@ This Alert generally is looking at unexpected increases of throughput in the Cas
 
 ## High Errors
 
-This alert looks at the amount of requests made and the amount of errors received and alerts if ratios of exceptions exceeds 10% of the total amount of requests. Things captured in this alert could include timeouts, write exceptions, unavailable exceptions and etc. These generally require further investigation and indicate an issue with the Cassandra node.
+This alert policy looks at the amount of requests made and the amount of errors received. An alert is triggered alerts if the number of exceptions exceeds 10% of the total amount of requests. Things captured in this alert could include timeouts, write exceptions, unavailable exceptions, etc. These generally require further investigation and indicate an issue with the Cassandra node.
 
 ## High Read Latency
 
-Read latency is generally considered the slower operation in cassandra due to hardware limitations or the data model. Read latency is a good indicator of how well those affectors are fitting to the cassandra environment and if read latency is high, it might be time to update the hardware or dig deeper into why cassandra is losing performance. Feel free to tune this alert for your hardware and latency tolerance, but 4000 µs was the initial threshold specified in this alert. For this alert the median 50th percentile was chosen.
+Read latency is generally considered the slower operation in Cassandra due to hardware limitations or the data model. Read latency is a good indicator of how well those affectors are fitting to the Cassandra environment and if read latency is high, it might be time to update the hardware or dig deeper into why Cassandra is losing performance. Feel free to tune this alert for your hardware and latency tolerance, but 4000 µs was the initial threshold specified in this alert. For this alert the median 50th percentile was chosen.
 
-### Creating notification Channels and User Labels
+### Creating Notification Channels and User Labels
 
 Whether these alert policies are being used as standalones or base templates for a deployment strategy like terraform, one thing that should be utilized is notification channels and user labels.
 
