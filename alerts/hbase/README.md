@@ -2,15 +2,15 @@
 
 ## Slow Operations
 
-Slow operations can be an indication that the HDFS may be in an unhealthy state.
+Slow operations are defined as operations that took over `1000ms` to complete. Slow operations can be an indication that the HDFS may be in an unhealthy state. This alert is configured to fire if `10` slow operations are recorded.
 
 ## HBase Server Stopped
 
-If the HBase has unexpected downtime, this alert will help teams discern that the server is stopped and unable to function in their environment.
+If the HBase has unexpected downtime, this alert will help teams discern that the server is stopped and unable to function in their environment. The alert is currently configured for 5 minutes of downtime may be considered lenient for certain environments, so feel free to tighten or loosen the `duration` if desired.
 
 Required Log Query:
 
-```sh
+```
 logName="projects/<project_id>/logs/hbase_system"
 jsonPayload.message="regionserver.HeapMemoryManager: Stopping"
 ```
@@ -19,9 +19,9 @@ Replace <project_id> with your Project ID
 
 ## Authentication Errors
 
-Authentication errors could indicate that clients do not have correct credentials or somebody is maliciously trying to access the HBase system.
+Authentication errors could indicate that clients do not have correct credentials or somebody is maliciously trying to access the HBase system. The alert is configured to fire if 5 authentication errors are happening over a minute. Feel free to modify to fit use cases.
 
-### Creating notification Channels and User Labels
+### Creating Notification Channels and User Labels
 
 Whether these alert policies are being used as standalones or base templates for a deployment strategy like terraform, one thing that should be utilized is notification channels and user labels.
 

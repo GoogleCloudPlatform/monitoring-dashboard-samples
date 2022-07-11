@@ -1,7 +1,7 @@
 {
     "displayName": "HBase - Server is Down",
     "documentation": {
-        "content": "If the HBase has unexpected downtime, this alert will help teams discern that the server is stopped and unable to function in their environment.\n\nRequired Log Query:\n\n```sh\nlogName=\"projects/<project_id>/logs/hbase_system\"\njsonPayload.message=\"regionserver.HeapMemoryManager: Stopping\"\n```\n\nReplace <project_id> with your Project ID",
+        "content": "If the HBase has unexpected downtime, this alert will help teams discern that the server is stopped and unable to function in their environment. The alert is currently configured for 5 minutes of downtime may be considered lenient for certain environments, so feel free to tighten or loosen the `duration` if desired.\n\nRequired Log Query:\n\n```\nlogName=\"projects/<project_id>/logs/hbase_system\"\njsonPayload.message=\"regionserver.HeapMemoryManager: Stopping\"\n```\n\nReplace <project_id> with your Project ID",
         "mimeType": "text/markdown"
     },
     "userLabels": {},
@@ -18,7 +18,7 @@
                     }
                 ],
                 "comparison": "COMPARISON_GT",
-                "duration": "600s",
+                "duration": "300s",
                 "trigger": {
                     "count": 1
                 },
