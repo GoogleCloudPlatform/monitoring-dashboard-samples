@@ -1,19 +1,5 @@
 # MySQL Alerts for Ops Agent
 
-### Notification Channels
-For all alerts, a notification channel needs to be set up or the alert will fire silently.
-
-### User Labels
-User labels can be used for these policies by modifying the userLabels fields of the policies. i.e.
-
-```json
-{ 
-  "userLabels": {
-    "datacenter": "central"
-  }
-}
-```
-
 ## High number of log warnings alert
 Log warnings are a count of logs collected from mysql_error logs with a warning level per 5 minute window. The default condition of warnings per 5 minute window is 20.
 
@@ -52,4 +38,18 @@ The filter for the metric should be:
 logName:"mysql_slow"
 jsonPayload.message:("SELECT" OR "INSERT" OR "UPDATE" OR "CREATE" OR "DELETE")
 jsonPayload.queryTime>1
+```
+
+### Notification Channels
+For all alerts, a notification channel needs to be set up or the alert will fire silently.
+
+### User Labels
+User labels can be used for these policies by modifying the userLabels fields of the policies. i.e.
+
+```json
+{ 
+  "userLabels": {
+    "datacenter": "central"
+  }
+}
 ```
