@@ -2,15 +2,15 @@
 
 ## High Average Latency
 
-if `zookeeper.latency.avg` is 100ms or higher, it shows that the server can't keep up with demand and performance improvements should be sought after.
+If `zookeeper.latency.avg` is 100ms or higher, it shows that the server can't keep up with demand and performance improvements should be sought after.
 
 ## High fsync Duration
 
-if `zookeeper.fsync.exceeded_threshold.count` is above an amount dependent on your environment it could show either the fsync duration  threshold set is too low or there is an issue writing to files.
+If `zookeeper.fsync.exceeded_threshold.count` is above an amount dependent on your environment it could show either the fsync duration  threshold set is too low or there is an issue writing to files.
 
 ## Low Open File Descriptors
 
-if `workload.googleapis.com/zookeeper.file_descriptor.open` is about to hit `workload.googleapis.com/zookeeper.file_descriptor.limit` zookeeper will not be able to handle any new requests and will fail to connect new clients.
+If `workload.googleapis.com/zookeeper.file_descriptor.open` is about to hit `workload.googleapis.com/zookeeper.file_descriptor.limit` zookeeper will not be able to handle any new requests and will fail to connect new clients.
 
 ### Creating notification Channels and User Labels
 
