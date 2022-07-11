@@ -2,17 +2,17 @@
 
 ## Spiking Evictions
 
-if ‘bucket.item.ejection.count’ begins to spike by 10 or a user defined threshold it could show that there is unexpected memory pressure.
+If ‘bucket.item.ejection.count’ begins to spike this could indicate that there is unexpected memory pressure. The default threshold is set to 10 for the alert policy and this can be customized for your environment.
 
 ## Unrecoverable OOM Errors
 
-if `bucket.error.oom.count` that are `unrecoverable` increase above 0 should be a cause for concern
+If `bucket.error.oom.count` that are `unrecoverable` increase above 0 should be a cause for concern because it implies the couchbase server is either underprovisioned or an application is over-utilizing the couchbase server.
 
 ## High Memory Usage
 
-if `bucket.memory.usage` bytes is higher than what is anticipated it could show that the bucket needs to be allocated more. Subjective to environment, configure threshold knowingly.
+If `bucket.memory.usage` bytes is higher than what is anticipated it could show that the bucket needs to be allocated more. Subjective to environment and this alert can be customized for your environment.
 
-### Creating notification Channels and User Labels
+### Creating Notification Channels and User Labels
 
 Whether these alert policies are being used as standalones or base templates for a deployment strategy like terraform, one thing that should be utilized is notification channels and user labels.
 
