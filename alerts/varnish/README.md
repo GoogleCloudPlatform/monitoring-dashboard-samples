@@ -1,8 +1,5 @@
 # Varnish Alerts for Ops Agent
 
-### Notification Channels
-For all alerts, a notification channel needs to be set up or the alert will fire silently.
-
 ### User Labels
 User labels can be used for these policies by modifying the userLabels fields of the policies. i.e.
 
@@ -32,3 +29,6 @@ Backend connection failure alert is triggered when `workload.googleapis.com/varn
 - A tcp connection has timed out from a network issue, overload or unresponsive backend.
 - A request is sent to the backend, but the backend did not respond within a certain time. 
 - A backend started streaming a response but stopped sending data without closing the connection.
+
+### Notification Channels
+For all alerts, a notification channel needs to be set up or the alert will fire silently.
