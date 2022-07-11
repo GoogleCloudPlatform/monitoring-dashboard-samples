@@ -1,0 +1,44 @@
+{
+  "name": "projects/otel-agent-dev/alertPolicies/654644043443499434",
+  "displayName": "Aerospike - High Memory Utilization",
+  "documentation": {
+    "content": "This alert is triggered when less than 5% of system memory is free for an Aerospike node.\nThis indicates the user should investigate memory usage and potentially allocate more RAM or add additional nodes.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "name": "projects/otel-agent-dev/alertPolicies/654644043443499434/conditions/654644043443500287",
+      "displayName": "Aerospike - High Memory Utilization",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_LT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/aerospike.node.memory.free\"",
+        "thresholdValue": 5,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": [],
+  "creationRecord": {
+    "mutateTime": "2022-07-08T18:42:12.052249773Z",
+    "mutatedBy": "nico.stewart@bluemedora.com"
+  },
+  "mutationRecord": {
+    "mutateTime": "2022-07-08T18:42:12.052249773Z",
+    "mutatedBy": "nico.stewart@bluemedora.com"
+  }
+}
