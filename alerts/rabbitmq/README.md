@@ -21,4 +21,4 @@ When the message unacknowledged mean is higher than a threshold, then errors or 
 When the unroutable message rate is greater than a threshold, then the consumers are not getting every message.
 
 ## Low deliverable messages alert
-When the deliverable message rate are lower than a threshold, then there may be an issue with a producer or routing logic.
+When the deliverable message rate is lower than a threshold, then there may be an issue with a producer or routing logic.
