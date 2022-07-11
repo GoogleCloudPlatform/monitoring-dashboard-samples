@@ -18,7 +18,7 @@ User labels can be used for these policies by modifying the userLabels fields of
 When red cluster status duration exceeds 5 minute, at least one replica shard is unallocated or missing.
 
 ## Red cluster status alert
-When red cluster status duration is exceeds minute, at least one primary shard is missing, and you are missing data.
+When red cluster status duration is exceeds 1 minute, at least one primary shard is missing, and data is missing.
 
-## High jvm memory heap usage alert
-When the jvm heap ratio of heap used over max heap exceeds a threshold, then application's performance may start to degrade.
+## High JVM memory heap usage alert
+When the JVM heap ratio of heap used over max heap exceeds a threshold, then application's performance may start to degrade.
