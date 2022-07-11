@@ -1,19 +1,5 @@
 # Alerts for Tomcat in the Ops Agent
 
-### Notification Channels
-For all alerts, a notification channel needs to be set up or the alert will fire silently.
-
-### User Labels
-User labels can be used for these policies by modifying the userLabels fields of the policies. i.e.
-
-```json
-{ 
-  "userLabels": {
-    "datacenter": "central"
-  }
-}
-```
-
 ## High request rate alert
 The request rate is derived from the requests metrics taken as a rate every 5 minutes. This value should be monitored beforehand to understand what qualifies as a normal request rate so a threshold can be established. When request rate is above this threshold, then that means there is a large spike in traffic which logs can help diagnose if these are nefarious requests.
 
@@ -36,4 +22,18 @@ The filter for the metric should be:
 ```
 logName:"tomcat_access"
 httpRequest.status >= 500
+```
+
+### Notification Channels
+For all alerts, a notification channel needs to be set up or the alert will fire silently.
+
+### User Labels
+User labels can be used for these policies by modifying the userLabels fields of the policies. i.e.
+
+```json
+{ 
+  "userLabels": {
+    "datacenter": "central"
+  }
+}
 ```
