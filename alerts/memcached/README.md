@@ -3,7 +3,7 @@
 
 ## High CPU Usage
 
-if `memcached.cpu.usage` is higher than what is anticipated it could show that the Server us overloaded and efforts to improve performance may be necessary. Subjective to environment, configure threshold knowingly.
+if `memcached.cpu.usage` is higher than what is anticipated, default is `0.9`, it could show that the Server is overloaded and efforts to improve performance may be necessary. Subjective to environment, configure threshold knowingly.
 
 ## High Evictions
 
