@@ -3,15 +3,15 @@
 
 ## Site Down
 
-if `iis.uptime` is `0` then the site is down or has restarted.
+If `iis.uptime` is `0` then the site is down or has restarted.
 
 ## Long Request Queue
 
-if `iis.request.queue.count` increases above a threshold dependent on your system, it could show the server is overloaded.
+If `iis.request.queue.count` increases above a threshold dependent on your system, it could show the server is overloaded.
 
 ## High Connections
 
-if `iis.connection.active` Spikes above a threshold dependent on your system, it can show a security Issue.
+If `iis.connection.active` Spikes above a threshold dependent on your system (default: `10`), it can show a security Issue.
 
 ### Creating notification Channels and User Labels
 
