@@ -23,6 +23,13 @@
 
 &nbsp;
 
+| Anthos utilization metering                                                                                              |
+|:-------------------------------------------------------------------------------------------------------------------------|
+| Filename: [Anthos-utilization-metering.json](Anthos-utilization-metering.json)                                           |
+| This dashboard has 6 charts to indicate the requests and consumptions of cpu, memory, and ephemeral storage per cluster. |
+
+&nbsp;
+
 |GKE on-prem node status|
 |:---------------------|
 |Filename: [GKE-on-prem-node-status.json](GKE-on-prem-node-status.json)|
