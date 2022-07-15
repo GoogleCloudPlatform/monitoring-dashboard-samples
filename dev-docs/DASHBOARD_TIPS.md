@@ -19,11 +19,24 @@ dashboard doesn't reference a project ID. This will make it so that the logs
 panel will work in any project that the sample dashboard is imported into.
 
 In order to do that, use the `log_id` function to filter for the suffix part of
-a log name that doesn't include the project ID. So for example, in the [NGINX
-sample dashboard](https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples/blob/master/dashboards/nginx/overview.json)
+a log name that doesn't include the project ID, if the integration will have a
+consistent log ID.
+
+Note however, that for the Ops Agent integrations, it's better to use the
+`logging.googleapis.com/instrumentation_source` label, which has been available
+since Ops Agent version 2.17.0. This is because the user can customize the log
+ID based on the name of the receiver in the Ops Agent config.
+
+For backwards compatbility with older Ops Agent releases, it makes sense also
+for now to include an `OR` clause with the default `log_id`. So for example, 
+in the [NGINX sample dashboard](https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples/blob/master/dashboards/nginx/overview.json)
 there is a logs panel query like this:
 ```
-log_id("nginx_access") resource.type="gce_instance"
+(
+  labels."logging.googleapis.com/instrumentation_source"="agent.googleapis.com/nginx_access"
+  OR log_id("nginx_access")
+)
+resource.type="gce_instance"
 ```
 
 ## MQL Joins to bring in Infrastructure Metrics alongside Workload Metrics
