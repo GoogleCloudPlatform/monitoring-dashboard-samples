@@ -1,0 +1,101 @@
+platforms:
+- type: GCE
+  launch_stage: GA
+  install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/couchbase
+  agent_requirement:
+    logs_minimum_supported_version:
+      major: 2
+      minor: 18
+      patch: 2
+    metrics_minimum_supported_version:
+      major: 2
+      minor: 18
+      patch: 2
+  detections:
+  - characteristic_log:
+      log_name_regex: couchbase
+  - characteristic_metric:
+      metric_type: workload.googleapis.com/couchbase.bucket.memory.usage
+  default_logs:
+  - name: couchbase_general
+    fields:
+    - name: jsonPayload.message
+      type: string
+      description: Log message
+    - name: jsonPayload.node_name
+      type: string
+      description: The name of the node issuing the log message
+    - name: jsonPayload.module_name
+      type: string
+      description: The name of the module issuing the entry
+  - name: couchbase_http_access
+    fields:
+    - name: jsonPayload.message
+      type: string
+      description: Log message
+    - name: jsonPayload.client_ip
+      type: string
+      description: The IP address of the client invoking the HTTP request
+    - name: jsonPayload.user
+      type: string
+      description: The name of the user making the HTTP request if basic auth is used.
+    - name: jsonPayload.method
+      type: string
+      description: The HTTP method of the request
+    - name: jsonPayload.status_code
+      type: integer
+      description: The status code of the response of the HTTP request
+  - name: couchbase_goxdcr
+    fields:
+    - name: jsonPayload.message
+      type: string
+      description: Log message
+    - name: log_type
+      type: string
+      description: The name of the component that is issuing the cross-datacenter
+        log
+  default_metrics:
+  - name: workload.googleapis.com/couchbase.bucket.operation.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - bucket_name
+    - op
+  - name: workload.googleapis.com/couchbase.bucket.item.count
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - bucket_name
+    - state
+  - name: workload.googleapis.com/couchbase.bucket.vbucket.count
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - bucket_name
+    - state
+  - name: workload.googleapis.com/couchbase.bucket.memory.usage
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - bucket_name
+  - name: workload.googleapis.com/couchbase.bucket.item.ejection.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - bucket_name
+  - name: workload.googleapis.com/couchbase.bucket.error.oom.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - bucket_name
+    - error_type
+  - name: workload.googleapis.com/couchbase.bucket.memory.high_water_mark.limit
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - bucket_name
+  - name: workload.googleapis.com/couchbase.bucket.memory.low_water_mark.limit
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - bucket_name
