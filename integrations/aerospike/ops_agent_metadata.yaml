@@ -1,0 +1,66 @@
+platforms:
+- type: GCE
+  launch_stage: HIDDEN
+  launch_date: '2022-07-19'
+  agent_requirement:
+    metrics_minimum_supported_version:
+      major: 2
+      minor: 18
+      patch: 2
+  detections:
+  - characteristic_metric:
+      metric_type: workload.googleapis.com/aerospike.node.connection.open
+  default_metrics:
+  - name: workload.googleapis.com/aerospike.namespace.transaction.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - namespace_name
+    - node_name
+    - result
+    - type
+  - name: workload.googleapis.com/aerospike.namespace.disk.available
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - namespace_name
+    - node_name
+  - name: workload.googleapis.com/aerospike.namespace.memory.free
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - namespace_name
+    - node_name
+  - name: workload.googleapis.com/aerospike.namespace.memory.usage
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - component
+    - namespace_name
+    - node_name
+  - name: workload.googleapis.com/aerospike.namespace.scan.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - namespace_name
+    - node_name
+    - result
+    - type
+  - name: workload.googleapis.com/aerospike.node.connection.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - node_name
+    - operation
+    - type
+  - name: workload.googleapis.com/aerospike.node.connection.open
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - node_name
+    - type
+  - name: workload.googleapis.com/aerospike.node.memory.free
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - node_name

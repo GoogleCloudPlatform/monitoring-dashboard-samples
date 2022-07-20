@@ -1,15 +1,21 @@
 platforms:
 - type: GCE
-  launch_stage: HIDDEN
-  launch_date: '2022-07-01'
+  launch_stage: GA
+  install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/vault
   agent_requirement:
     logs_minimum_supported_version:
       major: 2
       minor: 18
       patch: 1
+    metrics_minimum_supported_version:
+      major: 2
+      minor: 18
+      patch: 2
   detections:
   - characteristic_log:
       log_name_regex: vault
+  - characteristic_metric:
+      metric_type: workload.googleapis.com/vault.memory.usage
   default_logs:
   - name: vault_audit
     fields:
@@ -28,14 +34,14 @@ platforms:
         and is expected to be one of: `create`, `read`, `update`, `delete`, or `list`.'
     - name: jsonPayload.type
       type: string
-      description: the type of audit log.
+      description: The type of audit log.
     - name: jsonPayload.error
       type: string
-      description: "If an error occurred with the request, the error message is included\
-        \ in this field\u2019s value."
+      description: If an error occurred with the request, the error message is included
+        in this field's value.
     - name: jsonPayload.auth.client_token
       type: string
-      description: "This is an HMAC of the client\u2019s token ID."
+      description: This is an HMAC of the client's token ID.
     - name: jsonPayload.auth.accessor
       type: string
       description: This is an HMAC of the client token accessor.
@@ -67,7 +73,7 @@ platforms:
       description: The data object will contain secret data in key/value pairs.
     - name: jsonPayload.request.policy_override
       type: boolean
-      description: this is true when a soft-mandatory policy override was requested.
+      description: This is `true` when a soft-mandatory policy override was requested.
     - name: jsonPayload.request.remote_address
       type: string
       description: The IP address of the client making the request.
@@ -81,21 +87,20 @@ platforms:
         request.
     - name: jsonPayload.response.data.creation_time
       type: string
-      description: "RFC3339 format timestamp of the token\u2019s creation."
+      description: RFC 3339 format timestamp of the token's creation.
     - name: jsonPayload.response.data.creation_ttl
       type: string
       description: Token creation TTL in seconds.
     - name: jsonPayload.response.data.expire_time
       type: string
-      description: RFC3339 format timestamp representing the moment this token will
+      description: RFC 3339 format timestamp representing the moment this token will
         expire.
     - name: jsonPayload.response.data.explicit_max_ttl
       type: string
-      description: "Explicit token maximum TTL value as seconds (\u20180\u2019 when\
-        \ not set)."
+      description: Explicit token maximum TTL value as seconds ("0" when not set).
     - name: jsonPayload.response.data.issue_time
       type: string
-      description: RFC3339 format timestamp.
+      description: RFC 3339 format timestamp.
     - name: jsonPayload.response.data.num_uses
       type: number
       description: If the token is limited to a number of uses, that value will be
@@ -132,3 +137,83 @@ platforms:
     - name: timestamp
       type: string ([`Timestamp`](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Timestamp))
       description: Time the request was received
+  default_metrics:
+  - name: workload.googleapis.com/vault.core.request.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - cluster
+  - name: workload.googleapis.com/vault.core.leader.duration
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/vault.token.lease.count
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/vault.token.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - cluster
+    - namespace
+  - name: workload.googleapis.com/vault.token.revoke.time
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/vault.token.renew.time
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/vault.audit.request.failed
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/vault.audit.response.failed
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/vault.memory.usage
+    value_type: DOUBLE
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/vault.storage.operation.put.time
+    value_type: DOUBLE
+    kind: CUMULATIVE
+    labels:
+    - storage
+  - name: workload.googleapis.com/vault.storage.operation.delete.time
+    value_type: DOUBLE
+    kind: CUMULATIVE
+    labels:
+    - storage
+  - name: workload.googleapis.com/vault.storage.operation.list.time
+    value_type: DOUBLE
+    kind: CUMULATIVE
+    labels:
+    - storage
+  - name: workload.googleapis.com/vault.storage.operation.get.time
+    value_type: DOUBLE
+    kind: CUMULATIVE
+    labels:
+    - storage
+  - name: workload.googleapis.com/vault.storage.operation.put.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - storage
+  - name: workload.googleapis.com/vault.storage.operation.delete.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - storage
+  - name: workload.googleapis.com/vault.storage.operation.list.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - storage
+  - name: workload.googleapis.com/vault.storage.operation.get.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - storage
