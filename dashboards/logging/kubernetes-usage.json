@@ -1,4 +1,5 @@
 {
+  "category": "CUSTOM",
   "displayName": "Logging Usage - Kubernetes",
   "mosaicLayout": {
     "columns": 12,
@@ -15,17 +16,18 @@
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
-                      "groupByFields": [
-                        "resource.label.\"project_id\"",
-                        "resource.label.\"container_name\""
-                      ],
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"logging.googleapis.com/byte_count\" resource.type=\"k8s_container\"",
                     "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
                         "resource.label.\"project_id\"",
@@ -45,17 +47,113 @@
           }
         },
         "width": 6,
-        "yPos": 6
+        "xPos": 0,
+        "yPos": 9
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Entries Ingested",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"logging.googleapis.com/log_entry_count\" resource.type=\"k8s_container\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"container_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 9
       },
       {
         "height": 1,
         "widget": {
           "text": {
-            "format": "MARKDOWN"
+            "content": "",
+            "format": "RAW"
           },
-          "title": "Ingestion by Container"
+          "title": "Summary of Kubernetes ingestion  "
         },
         "width": 12,
+        "xPos": 0,
+        "yPos": 0
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Bytes Ingested",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"logging.googleapis.com/byte_count\" resource.type=\"k8s_cluster\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"cluster_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
         "yPos": 5
       },
       {
@@ -70,116 +168,18 @@
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
-                      "groupByFields": [
-                        "resource.label.\"project_id\"",
-                        "resource.label.\"container_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"logging.googleapis.com/log_entry_count\" resource.type=\"k8s_container\"",
-                    "secondaryAggregation": {
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"project_id\"",
-                        "resource.label.\"container_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 6
-      },
-      {
-        "height": 1,
-        "widget": {
-          "text": {
-            "format": "RAW"
-          },
-          "title": "Ingestion By Cluster"
-        },
-        "width": 12
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Bytes Ingested",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "groupByFields": [
-                        "resource.label.\"project_id\"",
-                        "resource.label.\"cluster_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"logging.googleapis.com/byte_count\" resource.type=\"k8s_cluster\"",
-                    "secondaryAggregation": {
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"project_id\"",
-                        "resource.label.\"cluster_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "yPos": 1
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Entries Ingested",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "groupByFields": [
-                        "resource.label.\"project_id\"",
-                        "resource.label.\"cluster_name\""
-                      ],
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"logging.googleapis.com/log_entry_count\" resource.type=\"k8s_cluster\"",
                     "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
                         "resource.label.\"project_id\"",
@@ -200,203 +200,361 @@
         },
         "width": 6,
         "xPos": 6,
+        "yPos": 5
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Bytes Ingested",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"logging.googleapis.com/byte_count\" resource.type=\"k8s_container\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"pod_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 13
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Entries Ingested",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"logging.googleapis.com/log_entry_count\" resource.type=\"k8s_container\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"pod_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 13
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Bytes Ingested",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"logging.googleapis.com/byte_count\" resource.type=\"k8s_container\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"namespace_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 17
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Entries Ingested",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"logging.googleapis.com/log_entry_count\" resource.type=\"k8s_container\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"namespace_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 17
+      },
+      {
+        "height": 4,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "tableDisplayOptions": {},
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"cluster_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"logging.googleapis.com/byte_count\" resource.type=\"k8s_container\""
+                  }
+                }
+              }
+            ],
+            "metricVisualization": "BAR"
+          },
+          "title": "Top Cluster log volume"
+        },
+        "width": 3,
+        "xPos": 0,
         "yPos": 1
       },
       {
         "height": 4,
         "widget": {
-          "title": "Bytes Ingested",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
+          "timeSeriesTable": {
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_BAR",
+                "tableDisplayOptions": {},
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "aggregation": {
-                      "groupByFields": [
-                        "resource.label.\"project_id\"",
-                        "resource.label.\"pod_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"logging.googleapis.com/byte_count\" resource.type=\"k8s_container\"",
-                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
-                        "resource.label.\"project_id\"",
-                        "resource.label.\"pod_name\""
+                        "resource.label.\"namespace_name\""
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
-                    }
+                    },
+                    "filter": "metric.type=\"logging.googleapis.com/byte_count\" resource.type=\"k8s_container\""
                   }
                 }
               }
             ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
+            "metricVisualization": "BAR"
+          },
+          "title": "Top namespace log volume"
         },
-        "width": 6,
-        "yPos": 11
+        "width": 3,
+        "xPos": 3,
+        "yPos": 1
       },
       {
-        "height": 1,
+        "height": 4,
         "widget": {
-          "text": {
-            "format": "RAW"
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "tableDisplayOptions": {},
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"pod_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"logging.googleapis.com/byte_count\" resource.type=\"k8s_container\""
+                  }
+                }
+              }
+            ],
+            "metricVisualization": "BAR"
           },
-          "title": "Ingestion by Pod"
+          "title": "Top pod log volume"
+        },
+        "width": 3,
+        "xPos": 6,
+        "yPos": 1
+      },
+      {
+        "height": 4,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "tableDisplayOptions": {},
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"container_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"logging.googleapis.com/byte_count\" resource.type=\"k8s_container\""
+                  }
+                }
+              }
+            ],
+            "metricVisualization": "BAR"
+          },
+          "title": "Top container log volume"
+        },
+        "width": 3,
+        "xPos": 9,
+        "yPos": 1
+      },
+      {
+        "height": 4,
+        "widget": {
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "title": "ingestion by namespace"
         },
         "width": 12,
-        "yPos": 10
+        "xPos": 0,
+        "yPos": 17
       },
       {
         "height": 4,
         "widget": {
-          "title": "Entries Ingested",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "groupByFields": [
-                        "resource.label.\"project_id\"",
-                        "resource.label.\"pod_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"logging.googleapis.com/log_entry_count\" resource.type=\"k8s_container\"",
-                    "secondaryAggregation": {
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"project_id\"",
-                        "resource.label.\"pod_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 11
-      },
-      {
-        "height": 1,
-        "widget": {
-          "text": {
-            "format": "RAW"
+          "collapsibleGroup": {
+            "collapsed": false
           },
-          "title": "Ingestion by Namespace"
+          "title": "Ingestion by pod"
         },
         "width": 12,
-        "yPos": 15
+        "xPos": 0,
+        "yPos": 13
       },
       {
         "height": 4,
         "widget": {
-          "title": "Bytes Ingested",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_BAR",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "groupByFields": [
-                        "resource.label.\"namespace_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"logging.googleapis.com/byte_count\" resource.type=\"k8s_container\"",
-                    "secondaryAggregation": {
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"namespace_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "title": "Ingestion by container"
         },
-        "width": 6,
-        "yPos": 16
+        "width": 12,
+        "xPos": 0,
+        "yPos": 9
       },
       {
         "height": 4,
         "widget": {
-          "title": "Entries Ingested",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "groupByFields": [
-                        "resource.label.\"namespace_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"logging.googleapis.com/log_entry_count\" resource.type=\"k8s_container\"",
-                    "secondaryAggregation": {
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"namespace_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "title": "Cluster ingestion"
         },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 16
+        "width": 12,
+        "xPos": 0,
+        "yPos": 5
       }
     ]
   }
