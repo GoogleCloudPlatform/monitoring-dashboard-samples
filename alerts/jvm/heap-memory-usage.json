@@ -9,7 +9,7 @@
         {
             "displayName": "JVM - Heap Memory Near Max",
             "conditionMonitoringQueryLanguage": {
-                "duration": "1m",
+                "duration": "60s",
                 "query": "{ \n    t_0: fetch gce_instance::workload.googleapis.com/jvm.memory.heap.used\n    ;\n    t_1: fetch gce_instance::workload.googleapis.com/jvm.memory.heap.max\n}\n| outer_join 0\n| value val(0) / val(1)\n| window 1m \n| condition val() > .9\n\n",
                 "trigger": {
                     "count": 1
