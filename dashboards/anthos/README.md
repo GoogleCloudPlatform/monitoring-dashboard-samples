@@ -18,14 +18,14 @@
 
 | Anthos cluster pod status                                                                                                                                                                                                                                      |
 |:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Filename: [Anthos-cluster-pod-status.json](Anthos-cluster-pod-status.json)                                                                                                                                                                                     |
+|Filename: [Anthos-cluster-pod-status.json](Anthos-cluster-pod-status.json)|
 | This dashboard has 6 charts to indicate the status of pod, including Number of restarts per container, Container memory usage per container, Container CPU usage per container, Network ingress (bytes) per pod, Network egress (bytes) per pod and Pod phase. |
 
 &nbsp;
 
 | Anthos utilization metering                                                                                              |
 |:-------------------------------------------------------------------------------------------------------------------------|
-| Filename: [Anthos-utilization-metering.json](Anthos-utilization-metering.json)                                           |
+|Filename: [Anthos-utilization-metering.json](Anthos-utilization-metering.json)|
 | This dashboard has 6 charts to indicate the requests and consumptions of cpu, memory, and ephemeral storage per cluster. |
 
 &nbsp;
@@ -39,12 +39,12 @@
 
 | GKE on-prem control plane uptime                                                         |
 |:-----------------------------------------------------------------------------------------|
-| Filename: [GKE-on-prem-control-plane-uptime.json](GKE-on-prem-control-plane-uptime.json) |
+|Filename: [GKE-on-prem-control-plane-uptime.json](GKE-on-prem-control-plane-uptime.json)|
 | This dashboard has 8 charts to indicate the uptime of control plane components.          |
 
 &nbsp;
 
 | GKE on-prem pod status                                                                                                                                                                                                                                         |
 |:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Filename: [GKE-on-prem-pod-status.json](GKE-on-prem-pod-status.json)                                                                                                                                                                                           |
+|Filename: [GKE-on-prem-pod-status.json](GKE-on-prem-pod-status.json)|
 | This dashboard has 6 charts to indicate the status of pod, including Number of restarts per container, Container memory usage per container, Container CPU usage per container, Network ingress (bytes) per pod, Network egress (bytes) per pod and Pod phase. |
