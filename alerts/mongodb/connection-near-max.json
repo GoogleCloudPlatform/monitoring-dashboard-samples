@@ -1,0 +1,34 @@
+{
+    "displayName": "MongoDB - Connection Utilization Near Max",
+    "documentation": {
+        "content": "If connections are approaching the limit, then new connections cannot be established. By default the mongod rejects connections at around 52000. Applications may stop functioning if connections cannot be established.",
+        "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+        {
+            "displayName": "MongoDB - Connections Near Limit",
+            "conditionThreshold": {
+                "aggregations": [
+                    {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                ],
+                "comparison": "COMPARISON_GT",
+                "duration": "0s",
+                "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/mongodb.connection.count\" AND metric.labels.type = \"current\"",
+                "thresholdValue": 50000,
+                "trigger": {
+                    "count": 1
+                }
+            }
+        }
+    ],
+    "alertStrategy": {
+        "autoClose": "3600s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+}
