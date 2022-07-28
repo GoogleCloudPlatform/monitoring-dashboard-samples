@@ -1,0 +1,34 @@
+  {
+  "displayName": "Sap Hana - High priority alert",
+  "documentation": {
+    "content": "High priority alert occurs when `saphana.alert.count` produces a rating 5 alert for critical error messages.",
+    "mimeType": "text/markdown"
+},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Generic Node - saphana.alert.count",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_COUNT"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"generic_node\" AND metric.type = \"custom.googleapis.com/saphana.alert.count\" AND metric.labels.rating = \"5\"",
+        "thresholdValue": 5,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
