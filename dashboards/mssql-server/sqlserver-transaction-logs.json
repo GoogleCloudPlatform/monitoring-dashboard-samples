@@ -1,12 +1,13 @@
 {
-  "displayName": "MongoDB Overview",
+  "category": "CUSTOM",
+  "displayName": "SQL Server Transaction Logs",
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
       {
         "height": 4,
         "widget": {
-          "title": "Active Connections",
+          "title": "Log Flush Waits",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -14,53 +15,19 @@
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
+                "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/mongodb.connection.count\" resource.type=\"gce_instance\" metric.label.\"type\"=\"active\""
-                  }
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Global Lock Time",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"workload.googleapis.com/mongodb.global_lock.time\" resource.type=\"gce_instance\"",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
+                    "filter": "metric.type=\"workload.googleapis.com/sqlserver.transaction_log.flush.wait.rate\" resource.type=\"gce_instance\""
+                  },
+                  "unitOverride": "{commits}/s"
                 }
               }
             ],
@@ -72,12 +39,13 @@
           }
         },
         "width": 6,
-        "xPos": 6
+        "xPos": 6,
+        "yPos": 0
       },
       {
         "height": 4,
         "widget": {
-          "title": "Collection Size",
+          "title": "Log Flushes",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -85,16 +53,57 @@
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
+                "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/mongodb.collection.count\" resource.type=\"gce_instance\""
-                  }
+                    "filter": "metric.type=\"workload.googleapis.com/sqlserver.transaction_log.flush.data.rate\" resource.type=\"gce_instance\""
+                  },
+                  "unitOverride": "{flushes}/s"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 4
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Log Flush Data",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_AREA",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"workload.googleapis.com/sqlserver.transaction_log.flush.data.rate\" resource.type=\"gce_instance\""
+                  },
+                  "unitOverride": "By/s"
                 }
               }
             ],
@@ -112,34 +121,7 @@
       {
         "height": 4,
         "widget": {
-          "title": "Server Memory Usage",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/mongodb.memory.usage'\n| group_by 1m, [value_usage_mean: mean(value.usage)]\n| every 1m\n| cast_units 'By'"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "yPos": 4
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Index Count",
+          "title": "Log Usage",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -150,13 +132,16 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/mongodb.index.count\" resource.type=\"gce_instance\""
-                  }
+                    "filter": "metric.type=\"workload.googleapis.com/sqlserver.transaction_log.percent_used\" resource.type=\"gce_instance\""
+                  },
+                  "unitOverride": "%"
                 }
               }
             ],
@@ -168,40 +153,13 @@
           }
         },
         "width": 6,
-        "yPos": 8
+        "xPos": 0,
+        "yPos": 0
       },
       {
         "height": 4,
         "widget": {
-          "title": "Cache Operations",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/mongodb.cache.operations'\n| align rate(1m)\n| every 1m"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 8
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Operations",
+          "title": "Log Growths",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -209,23 +167,27 @@
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
+                "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_DELTA"
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_RATE"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/mongodb.operation.count\" resource.type=\"gce_instance\"",
+                    "filter": "metric.type=\"workload.googleapis.com/sqlserver.transaction_log.growth.count\" resource.type=\"gce_instance\"",
                     "secondaryAggregation": {
                       "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_RATE"
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_MEAN"
                     }
                   }
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -234,25 +196,41 @@
           }
         },
         "width": 6,
-        "yPos": 12
+        "xPos": 0,
+        "yPos": 8
       },
       {
         "height": 4,
         "widget": {
-          "title": "Index Size",
+          "title": "Log Shrinks",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
-                "plotType": "LINE",
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/mongodb.index.size'\n| group_by 1m, [value_size_mean: mean(value.size)]\n| every 1m\n| cast_units 'By'"
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"workload.googleapis.com/sqlserver.transaction_log.shrink.count\" resource.type=\"gce_instance\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  }
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -262,7 +240,7 @@
         },
         "width": 6,
         "xPos": 6,
-        "yPos": 12
+        "yPos": 8
       }
     ]
   }

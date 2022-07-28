@@ -1,0 +1,34 @@
+{
+  "displayName": "Rabbitmq - high unacknowledged messages",
+  "documentation": {
+    "content": "When the message unacknowledged rate is higher than a threshold, then errors or performance issues may arise.",
+    "mimeType": "text/markdown"
+},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - workload/rabbitmq.message.current",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/rabbitmq.message.current\" AND metadata.system_labels.state = \" unacknowledged\"",
+        "thresholdValue": 5,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}

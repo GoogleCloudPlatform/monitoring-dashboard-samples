@@ -1,0 +1,36 @@
+{
+    "displayName": "Active Directory - LDAP Connections Higher than Recommended",
+    "documentation": {
+        "content": "It is recommended to keep LDAP connections below 8000. If this value is exceeding then there may be real performance impacts.",
+        "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+        {
+            "displayName": "Active Directory - LDAP Connections Above Recommendation",
+            "conditionThreshold": {
+                "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/active_directory.ds.ldap.client.session.count\"",
+                "aggregations": [
+                    {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_NONE",
+                        "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                ],
+                "comparison": "COMPARISON_GT",
+                "duration": "60s",
+                "trigger": {
+                    "count": 1
+                },
+                "evaluationMissingData": "EVALUATION_MISSING_DATA_NO_OP",
+                "thresholdValue": 8000
+            }
+        }
+    ],
+    "alertStrategy": {
+        "autoClose": "3600s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+}

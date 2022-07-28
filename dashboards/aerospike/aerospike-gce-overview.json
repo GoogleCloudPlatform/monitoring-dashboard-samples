@@ -1,0 +1,269 @@
+{
+  "displayName": "Aerospike GCE Overview",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 4,
+        "widget": {
+          "title": "Free Memory %",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s"
+                    },
+                    "filter": "metric.type=\"workload.googleapis.com/aerospike.node.memory.free\" resource.type=\"gce_instance\""
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 0
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Open Connections",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s"
+                    },
+                    "filter": "metric.type=\"workload.googleapis.com/aerospike.node.connection.open\" resource.type=\"gce_instance\""
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 0
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Namespace Transactions",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"workload.googleapis.com/aerospike.namespace.transaction.count\" resource.type=\"gce_instance\""
+                  }
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "xPos": 0,
+        "yPos": 4
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Namespace Memory Free",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance::workload.googleapis.com/aerospike.namespace.memory.free | group_by [metric.node_name, metric.namespace_name] | bottom 5, val(0)\n"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "xPos": 4,
+        "yPos": 4
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Namespace Disk Free",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance::workload.googleapis.com/aerospike.namespace.disk.available | group_by [metric.node_name, metric.namespace_name] | bottom 5, val(0)\n"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "xPos": 8,
+        "yPos": 4
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "CPU % Top 5 VMs",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "${labels.metric\\.instance_name} (${labels.resource\\.zone})",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "def top_5_cpu_filtered_by_metric filter_metric =\n  fetch gce_instance\n  | { t_cpu: metric 'compute.googleapis.com/instance/cpu/utilization'; \n  t_filter_metric: metric $filter_metric }\n  | join\n  | value t_cpu.value.utilization\n  | group_by [resource.project_id, resource.zone, metric.instance_name], 1m,\n      [value_utilization_mean: mean(t_cpu.value.utilization)]\n  | top 5\n  | every 1m;\n\n@top_5_cpu_filtered_by_metric 'workload.googleapis.com/aerospike.node.memory.free'\n"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "yPos": 8
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Memory % Top 5 VMs",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "${labels.metadata\\.system\\.name} (${labels.resource\\.zone})",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "def top_5_memory_filtered_by_metric filter_metric =\n  fetch gce_instance\n  | { t_memory:\n        metric 'agent.googleapis.com/memory/percent_used'\n        | filter metric.state = 'used'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value val(0)\n  | group_by [metadata.system.name, resource.project_id, resource.zone], 1m,\n      .mean()\n  | top 5\n  | every 1m;\n\n  @top_5_memory_filtered_by_metric 'workload.googleapis.com/aerospike.node.memory.free'"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "xPos": 4,
+        "yPos": 8
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Hosts by Region",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "${labels.region}",
+                "plotType": "STACKED_AREA",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "def vms_with_metric_count_by_region metric =\n  fetch gce_instance\n  | metric $metric\n  # Shift points forward from the past 2 minutes so a VM that misses a point\n  # won't temporarily shift down the number of VMs.\n  | align next_older(2m)\n  | group_by [resource.project_id, resource.zone, resource.instance_id], 1m, .pick_any\n  | group_by [resource.project_id, resource.zone], 1m, .count\n  | map\n      add[\n        region: re_extract(resource.zone, '([^-]+-[^-]+)-[^-]+', '\\\\1')]\n  | group_by [region], .sum\n  | every 1m;\n\n@vms_with_metric_count_by_region 'workload.googleapis.com/aerospike.node.memory.free'"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "xPos": 8,
+        "yPos": 8
+      },
+      {
+        "height": 4,
+        "widget": {
+          "text": {
+            "content": "[How to configure Aerospike Monitoring](https://cloud.google.com/monitoring/agent/ops-agent/third-party/aerospike)\n\n",
+            "format": "MARKDOWN"
+          },
+          "title": "Aerospike Monitoring Links"
+        },
+        "width": 4,
+        "yPos": 12
+      }
+    ]
+  }
+}

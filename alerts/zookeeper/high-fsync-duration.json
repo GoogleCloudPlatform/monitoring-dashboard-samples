@@ -1,0 +1,34 @@
+{
+  "displayName": "Zookeeper - High fsync Duration",
+  "documentation": {
+    "content": "If `zookeeper.fsync.exceeded_threshold.count` is above an amount dependent on your environment it could show either the fsync duration  threshold set is too low or there is an issue writing to files.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - workload/zookeeper.fsync.exceeded_threshold.count",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_RATE"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/zookeeper.fsync.exceeded_threshold.count\"",
+        "thresholdValue": 5,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}

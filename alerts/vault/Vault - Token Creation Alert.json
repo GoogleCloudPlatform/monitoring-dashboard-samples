@@ -1,0 +1,34 @@
+{
+  "displayName": "Vault - Token Creation Alert",
+  "documentation": {
+    "content": "This alert will be triggered when tokens are being created at a rate considered abnormally high for the user.\nThis alert will help notify users if an application is under stress or abnormal usage. The threshold for this alert will need to be adjusted on a per user basis.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - workload/vault.token.count",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/vault.token.count\"",
+        "thresholdValue": 20,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
