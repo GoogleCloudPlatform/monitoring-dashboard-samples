@@ -9,11 +9,10 @@
         {
             "displayName": "Error Rate higher than 10%",
             "conditionMonitoringQueryLanguage": {
-                "duration": "1m",
+                "duration": "0s",
                 "trigger": {
                     "count": 1
                 },
-                "evaluationMissingData": "EVALUATION_MISSING_DATA_NO_OP",
                 "query": "{\n    t_0: fetch gce_instance::workload.googleapis.com/cassandra.client.request.count\n    ; \n    t_1: fetch gce_instance::workload.googleapis.com/cassandra.client.request.error.count\n}\n| outer_join 1\n| group_by [metric.status, metric.operation]\n| value val(1) / if(has_value(val(0)), 1, val(0))\n| window 1m\n| condition val() > .1"
             }
         }
