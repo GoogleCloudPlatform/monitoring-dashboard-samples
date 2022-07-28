@@ -1,0 +1,34 @@
+{
+  "displayName": "Elasticsearch - red cluster status",
+  "documentation": {
+    "content": "When red cluster status duration is exceeds 1 minute, at least one primary shard is missing, and data is missing.",
+    "mimeType": "text/markdown"
+},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - workload/elasticsearch.cluster.health",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "60s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/elasticsearch.cluster.health\" AND metric.labels.status = \"red\"",
+        "thresholdValue": 1,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
