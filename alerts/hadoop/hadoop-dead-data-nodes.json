@@ -1,0 +1,34 @@
+{
+  "displayName": "hadoop - dead data nodes",
+  "documentation": {
+    "content": "A dead data node can cause network activity problems as the NameNode initiates replication of blocks lost on the data nodes.When multiple data nodes are lost, data loss can occur.",
+    "mimeType": "text/markdown"
+},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - workload/hadoop.name_node.data_node.count",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/hadoop.name_node.data_node.count\" AND metric.labels.state = \"dead\"",
+        "thresholdValue": 5,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
