@@ -1,0 +1,34 @@
+{
+  "displayName": "Aerospike - High Namespace Disk Utilization",
+  "documentation": {
+    "content": "This alert is triggered when less than 5% of contiguous disk space is free for an Aerospike namespace on a single node.\nThis indicates the user should investigate whether defragmentation is unable to keep up with the current load, and potentially allocate more disk space.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Aerospike - High Namespace Disk Utilization",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_LT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/aerospike.namespace.disk.available\"",
+        "thresholdValue": 5,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
