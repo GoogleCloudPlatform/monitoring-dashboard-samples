@@ -1,0 +1,33 @@
+{
+  "displayName": "Varnish - Sessions Dropped",
+  "documentation": {
+    "content": "Sessions dropped alert is triggered when 'workload.googleapis.com/varnish.session.count is greater than 0. This occurs when varnish is out of worker threads and the session queue is filled up. This means incoming requests may be dropped indicating that either varnish is overloaded or the thread pool needs to be increased.",
+    "mimeType": "text/markdown"
+},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - workload/varnish.session.count",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_RATE"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/varnish.session.count\" AND metric.labels.kind = \"dropped\"",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}

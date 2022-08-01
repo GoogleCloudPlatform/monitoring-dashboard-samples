@@ -1,0 +1,34 @@
+{
+    "displayName": "Varnish - High cache evictions",
+    "documentation": {
+      "content": "High cache evictions alert is triggered when 'workload.googleapis.com/varnish.object.nuked' increases at an alarming rate that exceeds a user-defined threshold. This objects are evicting at a faster rate because of the lack of space, so increasing the cache size would help.",
+      "mimeType": "text/markdown"
+  },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "VM Instance - workload/varnish.object.nuked",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "perSeriesAligner": "ALIGN_RATE"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/varnish.object.nuked\"",
+          "thresholdValue": 10,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }

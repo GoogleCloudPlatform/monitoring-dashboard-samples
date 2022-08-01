@@ -1,0 +1,416 @@
+{
+    "category": "CUSTOM",
+    "displayName": "Flink GCE Jobs Overview",
+    "mosaicLayout": {
+      "columns": 12,
+      "tiles": [
+        {
+          "height": 4,
+          "widget": {
+            "title": "Number of Restarts",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "legendTemplate": "${metric.labels.host_name}.jobmanager.${metric.labels.job_name}",
+                  "minAlignmentPeriod": "60s",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "apiSource": "DEFAULT_CLOUD",
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_NONE",
+                        "perSeriesAligner": "ALIGN_RATE"
+                      },
+                      "filter": "metric.type=\"workload.googleapis.com/flink.job.restart.count\" resource.type=\"gce_instance\""
+                    }
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 4,
+          "xPos": 0,
+          "yPos": 0
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Last Checkpoint Time",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "legendTemplate": "${metric.labels.host_name}.jobmanager.${metric.labels.job_name}",
+                  "minAlignmentPeriod": "60s",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "apiSource": "DEFAULT_CLOUD",
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_NONE",
+                        "perSeriesAligner": "ALIGN_NONE"
+                      },
+                      "filter": "metric.type=\"workload.googleapis.com/flink.job.last_checkpoint.time\" resource.type=\"gce_instance\""
+                    },
+                    "unitOverride": "ms"
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 4,
+          "xPos": 4,
+          "yPos": 0
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Last Checkpoint Size",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "legendTemplate": "${metric.labels.host_name}.jobmanager.${metric.labels.job_name}",
+                  "minAlignmentPeriod": "60s",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "apiSource": "DEFAULT_CLOUD",
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_NONE",
+                        "perSeriesAligner": "ALIGN_NONE"
+                      },
+                      "filter": "metric.type=\"workload.googleapis.com/flink.job.last_checkpoint.size\" resource.type=\"gce_instance\""
+                    },
+                    "unitOverride": "By"
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 4,
+          "xPos": 8,
+          "yPos": 0
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Checkpoints In Progress",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "legendTemplate": "${metric.labels.host_name}.jobmanager.${metric.labels.job_name}",
+                  "minAlignmentPeriod": "60s",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "apiSource": "DEFAULT_CLOUD",
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_NONE",
+                        "perSeriesAligner": "ALIGN_NONE"
+                      },
+                      "filter": "metric.type=\"workload.googleapis.com/flink.job.checkpoint.in_progress\" resource.type=\"gce_instance\""
+                    }
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 4,
+          "xPos": 0,
+          "yPos": 4
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Checkpoints Completed",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "legendTemplate": "${labels.metric\\.host_name}.jobmanager.${labels.metric\\.job_name}",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/flink.job.checkpoint.count'\n| filter checkpoint = 'completed'\n| align rate(1m)\n| every 1m"
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 4,
+          "xPos": 4,
+          "yPos": 4
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Checkpoints Failed",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "legendTemplate": "${labels.metric\\.host_name}.jobmanager.${labels.metric\\.job_name}",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/flink.job.checkpoint.count'\n| filter checkpoint = 'failed'\n| align rate(1m)\n| every 1m"
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 4,
+          "xPos": 8,
+          "yPos": 4
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Task Records In",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "legendTemplate": "${labels.metric\\.host_name}.taskmanager.${labels.metric\\.taskmanager_id}.${labels.metric\\.job_name}.${labels.metric\\.task_name}.${labels.metric\\.subtask_index}",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/flink.task.record.count'\n| filter record = 'in'\n| align rate(1m)\n| every 1m"
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 4,
+          "xPos": 0,
+          "yPos": 8
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Task Records Out",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "legendTemplate": "${labels.metric\\.host_name}.taskmanager.${labels.metric\\.taskmanager_id}.${labels.metric\\.job_name}.${labels.metric\\.task_name}.${labels.metric\\.subtask_index}",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/flink.task.record.count'\n| filter record = 'out'\n| align rate(1m)\n| every 1m"
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 4,
+          "xPos": 4,
+          "yPos": 8
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Task Records Dropped",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "legendTemplate": "${labels.metric\\.host_name}.taskmanager.${labels.metric\\.taskmanager_id}.${labels.metric\\.job_name}.${labels.metric\\.task_name}.${labels.metric\\.subtask_index}",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/flink.task.record.count'\n| filter record = 'dropped'\n| align rate(1m)\n| every 1m"
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 4,
+          "xPos": 8,
+          "yPos": 8
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Operator Records In",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "legendTemplate": "${labels.metric\\.host_name}.taskmanager.${labels.metric\\.taskmanager_id}.${labels.metric\\.job_name}.${labels.metric\\.operator_name}.${labels.metric\\.subtask_index}",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/flink.operator.record.count'\n| filter record = 'in'\n| align rate(1m)\n| every 1m"
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 4,
+          "xPos": 0,
+          "yPos": 12
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Operator Records Out",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "legendTemplate": "${labels.metric\\.host_name}.taskmanager.${labels.metric\\.taskmanager_id}.${labels.metric\\.job_name}.${labels.metric\\.operator_name}.${labels.metric\\.subtask_index}",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/flink.operator.record.count'\n| filter record = 'out'\n| align rate(1m)\n| every 1m"
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 4,
+          "xPos": 4,
+          "yPos": 12
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Operator Records Dropped",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "legendTemplate": "${labels.metric\\.host_name}.taskmanager.${labels.metric\\.taskmanager_id}.${labels.metric\\.job_name}.${labels.metric\\.operator_name}.${labels.metric\\.subtask_index}",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/flink.operator.record.count'\n| filter record = 'dropped'\n| align rate(1m)\n| every 1m"
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 4,
+          "xPos": 8,
+          "yPos": 12
+        },
+        {
+          "height": 4,
+          "widget": {
+            "text": {
+              "content": "[How to configure flink Monitoring](https://cloud.google.com/monitoring/agent/ops-agent/third-party/flink)\n\n[View Flink Logs](https://console.cloud.google.com/logs/query?query=logName:%22flink%22%0Aresource.type%3D%22gce_instance%22)\n\n",
+              "format": "MARKDOWN"
+            },
+            "title": "flink Monitoring Links"
+          },
+          "width": 4,
+          "xPos": 0,
+          "yPos": 16
+        }
+      ]
+    }
+  }

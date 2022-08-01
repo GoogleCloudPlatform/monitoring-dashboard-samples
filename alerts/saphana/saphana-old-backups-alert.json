@@ -1,0 +1,34 @@
+{
+  "displayName": "Sap Hana - Old backups alert",
+  "documentation": {
+    "content": "If `backup.latest` is older than 24 hours there can be an issue with creating new backups.",
+    "mimeType": "text/markdown"
+},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Generic Node - saphana.backup.latest",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"generic_node\" AND metric.type = \"custom.googleapis.com/saphana.backup.latest\"",
+        "thresholdValue": 86400,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}

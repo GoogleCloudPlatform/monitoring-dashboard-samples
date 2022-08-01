@@ -1,0 +1,26 @@
+{
+    "displayName": "JVM - Heap Memory Usage Near Max",
+    "documentation": {
+        "content": "Alert for JVM heap memory usage being near maximum. When the JVM reaches its max, depending on the JVM configuration, this could lead to Out of Memory errors.",
+        "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+        {
+            "displayName": "JVM - Heap Memory Near Max",
+            "conditionMonitoringQueryLanguage": {
+                "duration": "60s",
+                "query": "{ \n    t_0: fetch gce_instance::workload.googleapis.com/jvm.memory.heap.used\n    ;\n    t_1: fetch gce_instance::workload.googleapis.com/jvm.memory.heap.max\n}\n| outer_join 0\n| value val(0) / val(1)\n| window 1m \n| condition val() > .9\n\n",
+                "trigger": {
+                    "count": 1
+                }
+            }
+        }
+    ],
+    "alertStrategy": {
+        "autoClose": "3600s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+}

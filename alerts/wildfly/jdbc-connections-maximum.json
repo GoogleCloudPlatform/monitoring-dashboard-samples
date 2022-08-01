@@ -1,0 +1,36 @@
+{
+    "displayName": "WildFly - JDBC Connection Near Limit",
+    "documentation": {
+        "content": "If the JDBC connection limit is reaching its max (default=20 connections), then backend connections could end up failing.",
+        "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+        {
+            "displayName": "WildFly - JDBC Connections near limit",
+            "conditionThreshold": {
+                "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/wildfly.jdbc.connection.open\" AND metric.labels.state = \"active\"",
+                "aggregations": [
+                    {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_NONE",
+                        "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                ],
+                "comparison": "COMPARISON_GT",
+                "duration": "60s",
+                "trigger": {
+                    "count": 1
+                },
+                "evaluationMissingData": "EVALUATION_MISSING_DATA_NO_OP",
+                "thresholdValue": 20
+            }
+        }
+    ],
+    "alertStrategy": {
+        "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+}

@@ -1,0 +1,32 @@
+{
+  "displayName": "Sap Hana - server down",
+  "documentation": {
+    "content": "When the `saphana.uptime` metric is absent, an alert is triggered indicating server downtime.",
+    "mimeType": "text/markdown"
+},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Generic Node - saphana.uptime",
+      "conditionAbsent": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_COUNT"
+          }
+        ],
+        "duration": "300s",
+        "filter": "resource.type = \"generic_node\" AND metric.type = \"custom.googleapis.com/saphana.uptime\"",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}

@@ -104,7 +104,6 @@
                   }
                 }
               ],
-              "thresholds": [],
               "timeshiftDuration": "0s",
               "yAxis": {
                 "label": "y1Axis",
@@ -142,7 +141,6 @@
                   }
                 }
               ],
-              "thresholds": [],
               "timeshiftDuration": "0s",
               "yAxis": {
                 "label": "y1Axis",
@@ -180,7 +178,6 @@
                   }
                 }
               ],
-              "thresholds": [],
               "timeshiftDuration": "0s",
               "yAxis": {
                 "label": "y1Axis",
@@ -210,7 +207,6 @@
                   }
                 }
               ],
-              "thresholds": [],
               "timeshiftDuration": "0s",
               "yAxis": {
                 "label": "y1Axis",
@@ -240,7 +236,6 @@
                   }
                 }
               ],
-              "thresholds": [],
               "timeshiftDuration": "0s",
               "yAxis": {
                 "label": "y1Axis",
@@ -266,11 +261,10 @@
                   "plotType": "STACKED_AREA",
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
-                    "timeSeriesQueryLanguage": "def vms_with_metric_count_by_region metric =\n  fetch gce_instance\n  | metric $metric\n  # Shift points forward from the past 2 minutes so a VM that misses a point\n  # won't temporarily shift down the number of VMs.\n  | align next_older(2m)\n  | group_by [resource.project_id, resource.zone, resource.instance_id], 1m, .pick_any\n  | group_by [resource.project_id, resource.zone], 1m, .count\n  | map\n      add[\n        region: re_extract(resource.zone, '([^-]+-[^-]+)-[^-]+', '\\\\1')]\n  | group_by [region], .sum\n  | every 1m;\n\n@vms_with_metric_count_by_region 'workload.googleapis.com/apache.requests'"
+                    "timeSeriesQueryLanguage": "def vms_with_metric_count_by_region metric =\n  fetch gce_instance\n  | metric $metric\n  # Shift points forward from the past 2 minutes so a VM that misses a point\n  # won't temporarily shift down the number of VMs.\n  | align next_older(2m)\n  | group_by [resource.project_id, resource.zone, resource.instance_id], 1m, .pick_any\n  | group_by [resource.project_id, resource.zone], 1m, .count\n  | map\n      add[\n        region: re_extract(resource.zone, '([^-]+-[^-]+)-[^-]+', '\\\\1')]\n  | group_by [region], .sum\n  | every 1m;\n\n@vms_with_metric_count_by_region 'workload.googleapis.com/tomcat.threads'"
                   }
                 }
               ],
-              "thresholds": [],
               "timeshiftDuration": "0s",
               "yAxis": {
                 "label": "y1Axis",
@@ -313,7 +307,6 @@
                   }
                 }
               ],
-              "thresholds": [],
               "timeshiftDuration": "0s",
               "yAxis": {
                 "label": "y1Axis",
@@ -356,7 +349,6 @@
                   }
                 }
               ],
-              "thresholds": [],
               "timeshiftDuration": "0s",
               "yAxis": {
                 "label": "y1Axis",
