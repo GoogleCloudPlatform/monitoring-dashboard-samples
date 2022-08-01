@@ -1,0 +1,34 @@
+{
+  "displayName": "Couchdb - high server error rate",
+  "documentation": {
+    "content": "The server error rate is derived from processing access logs status code. The server error rate value is the number of 5xx status codes per 5 minute window. When the server error rate spikes suddenly, then you have a high priority server problem as backends are experiencing 5xx errors and clients are not being served successfully.",
+    "mimeType": "text/markdown"
+},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "New condition",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "crossSeriesReducer": "REDUCE_SUM",
+            "perSeriesAligner": "ALIGN_RATE"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type=\"logging.googleapis.com/user/couchdb.server.error.count\"",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}

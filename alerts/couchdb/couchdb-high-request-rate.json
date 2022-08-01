@@ -1,0 +1,42 @@
+{
+  "displayName": "Couchdb - high request rate",
+  "documentation": {
+    "content": "The request rate is derived from the requests metrics taken as a rate of every 5 minutes. This value should be monitored beforehand to understand what qualifies as a normal request rate so a threshold can be established. When request rate is above this threshold, then that means there is a large spike in traffic which logs can help diagnose if these are nefarious requests.",
+    "mimeType": "text/markdown"
+},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - workload/couchdb.httpd.requests",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_RATE"
+          },
+          {
+            "alignmentPeriod": "300s",
+            "crossSeriesReducer": "REDUCE_SUM",
+            "groupByFields": [
+              "resource.label.instance_id"
+            ],
+            "perSeriesAligner": "ALIGN_SUM"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/couchdb.httpd.requests\"",
+        "thresholdValue": 100,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
