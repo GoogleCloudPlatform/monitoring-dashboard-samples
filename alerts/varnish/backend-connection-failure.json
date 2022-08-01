@@ -1,0 +1,34 @@
+{
+    "displayName": "Varnish - backend connection failure",
+    "documentation": {
+      "content": "Backend connection failure alert is triggered when `workload.googleapis.com/varnish.backend.connection.count` is greater than zero.",
+      "mimeType": "text/markdown"
+  },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "VM Instance - workload/varnish.backend.connection.count",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "perSeriesAligner": "ALIGN_RATE"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/varnish.backend.connection.count\" AND metric.labels.kind = \"fail\"",
+          "thresholdValue": 10,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }
