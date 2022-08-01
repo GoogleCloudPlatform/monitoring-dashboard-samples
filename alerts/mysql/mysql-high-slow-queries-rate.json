@@ -1,0 +1,34 @@
+{
+  "displayName": "MySQL - high slow queries rate",
+  "documentation": {
+    "content": "The slow queries are collected from mysql_slow logs. More specific queries can be filtered using the `jasonPayload.message` field shown in the filter below. Additionally, different max query times can also be filtered using `jsonPayload.queryTime` field.",
+    "mimeType": "text/markdown"
+},
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "New condition",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_RATE"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type=\"logging.googleapis.com/user/mysql.slow_queries.count\"",
+        "thresholdValue": 0.5,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
