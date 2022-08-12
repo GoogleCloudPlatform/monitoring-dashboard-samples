@@ -33,3 +33,10 @@
 |:---------------------|
 |Filename: [gke-cluster-monitoring.json](gke-cluster-monitoring.json)|
 |This dashboard has 18 charts for the related [Kubernetes metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes), including metrics for the worker nodes such as total allocatable CPU cores and memory; metrics for containers such as CPU and memory request utilization; metrics for Pods such as network bytes received and transmitted.|
+
+&nbsp;
+
+|GKE Active/Idle Clusters Monitoring|
+|:---------------------|
+|Filename: [gke-active-idle-clusters.json](gke-active-idle-clusters.json)|
+|This dashboard has 3 charts using the related [Kubernetes metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes) to show the container count and resource usage in user namespaces within a specific period. Users can see how active and idle their clusters are.|
