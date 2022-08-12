@@ -1,0 +1,82 @@
+{
+    "category": "CUSTOM",
+    "displayName": "GKE Active/Idle clusters",
+    "mosaicLayout": {
+      "columns": 12,
+      "tiles": [
+        {
+          "height": 4,
+          "widget": {
+            "timeSeriesTable": {
+              "dataSets": [
+                {
+                  "tableDisplayOptions": {},
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch k8s_container\n| { kube_system_containers:\n      metric 'kubernetes.io/container/uptime'\n      | filter resource.namespace_name == 'kube-system'\n      | every 30d\n      | group_by [resource.cluster_name, resource.project_id],\n          [row_count1: row_count()]\n  ; all_other_containers:\n      metric 'kubernetes.io/container/uptime'\n      | (resource.namespace_name != 'istio-system'\n         && resource.namespace_name != 'gatekeeper-system'\n         && resource.namespace_name != 'gke-system')\n      | every 30d\n      | group_by [resource.cluster_name, resource.project_id],\n          [row_count2: row_count()] }\n| join\n| value [val(1) - val(0)]\n"
+                  }
+                }
+              ],
+              "metricVisualization": "NUMBER"
+            },
+            "title": "Container count in user namespaces within last 30 days"
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 0
+        },
+        {
+          "height": 4,
+          "widget": {
+            "timeSeriesTable": {
+              "dataSets": [
+                {
+                  "tableDisplayOptions": {},
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/used_bytes'\n| filter\n    (resource.namespace_name != 'kube-system'\n     && resource.namespace_name != 'istio-system'\n     && resource.namespace_name != 'gatekeeper-system'\n     && resource.namespace_name != 'gke-system')\n| every 30d\n| group_by [resource.cluster_name, resource.project_id],\n   [value_used_bytes_mean: mean(value.used_bytes)]\n# treat absent value as zeros\n|{ident; group_by sliding(30d)}\n| outer_join 0\n| value val(0)"
+                  }
+                }
+              ],
+              "metricVisualization": "NUMBER"
+            },
+            "title": "Container memory usage in user namespaces within last 30 days"
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 4
+        },
+        {
+          "height": 4,
+          "widget": {
+            "timeSeriesTable": {
+              "dataSets": [
+                {
+                  "tableDisplayOptions": {},
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric 'kubernetes.io/container/cpu/core_usage_time'\n  |filter\n    (resource.namespace_name != 'kube-system'\n     && resource.namespace_name != 'istio-system'\n     && resource.namespace_name != 'gatekeeper-system'\n     && resource.namespace_name != 'gke-system')\n  | align delta(30d)\n  | every 30d\n  | group_by [resource.cluster_name, resource.project_id],\n      [value_core_usage_time_aggregate: aggregate(value.core_usage_time)]\n; fetch k8s_node\n  | metric 'kubernetes.io/node/cpu/allocatable_cores'\n  | group_by 30d, [value_allocatable_cores_mean: mean(value.allocatable_cores)]\n  | every 30d\n  | group_by [resource.cluster_name, resource.project_id],\n      [value_request_cores_mean_aggregate:\n         aggregate(value_allocatable_cores_mean)]\n  | mul (43200) }\n| join\n| div\n| cast_units (\"10^2.%\")\n# treat absent value as zeros\n|{ident; group_by sliding(30d)}\n| outer_join 0\n| value val(0)"
+                  }
+                }
+              ],
+              "metricVisualization": "NUMBER"
+            },
+            "title": "Container CPU utilization in user namespaces within last 30 days"
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 4
+        },
+        {
+          "height": 4,
+          "widget": {
+            "text": {
+              "content": "If __container count in user namespaces__ is zero, it means the cluster is idle.\n\nIf in user namespaces, __container memory usage__ is low (<1 MiB) and  __container CPU utilization is also low (0.01%), the cluster is **likely** idle.\n\nNote: __User namespace__ is any namespace except __kube-system__, __istio-system__, __gatekeeper-system__, __gke-system__. If needed, you can update the filter in the charts.\n\nYou can modify the query and change **_30 days_** to the time window you need.\n\nYou can also filter and sort the values in the charts.\n\n\n\n\n\n",
+              "format": "MARKDOWN"
+            },
+            "title": "How to interpret the charts"
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 0
+        }
+      ]
+    }
+  }
