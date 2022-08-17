@@ -39,4 +39,4 @@
 |GKE Active/Idle Clusters Monitoring|
 |:---------------------|
 |Filename: [gke-active-idle-clusters.json](gke-active-idle-clusters.json)|
-|This dashboard has 3 charts using the related [Kubernetes metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes) to show the container count and resource usage in user namespaces within a specific period. Users can see how active and idle their clusters are.|
+|This dashboard has 2 charts using the related [Kubernetes metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes) to show the container count and resource usage in user namespaces within a specific period. Users can see how active and idle their clusters are.|
