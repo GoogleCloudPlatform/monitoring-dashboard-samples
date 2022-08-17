@@ -1,0 +1,333 @@
+{
+    "dashboardFilters": [
+      {
+        "filterType": "RESOURCE_LABEL",
+        "labelKey": "region"
+      },
+      {
+        "filterType": "RESOURCE_LABEL",
+        "labelKey": "project_id"
+      },
+      {
+        "filterType": "RESOURCE_LABEL",
+        "labelKey": "database_id"
+      }
+    ],
+    "displayName": "CloudSQL - Transactions",
+    "mosaicLayout": {
+      "columns": 12,
+      "tiles": [
+        {
+          "height": 4,
+          "widget": {
+            "alertChart": {
+              "name": "projects/otel-agent-dev/alertPolicies/9123919143766465969"
+            }
+          },
+          "width": 4,
+          "xPos": 0,
+          "yPos": 14
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Top 5 Highest Network Received Bytes",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/network/received_bytes_count'\n| align rate(1m)\n| top 5\n| every 1m\n"
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 8
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Top 5 Highest Network Sent Bytes",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/network/sent_bytes_count'\n| align rate(1m)\n| top 5\n| every 1m\n"
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 8
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "PostgreSQL - Top 5 Highest DB Rows Affected",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/postgresql/tuples_processed_count'\n| align rate(1m)\n| group_by[resource.database_id, metric.operation_type]\n| top 5\n| every 1m"
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 4,
+          "xPos": 8,
+          "yPos": 14
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "MySQL/SQL Server - Top 5 Highest Connections",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/network/connections'\n| top 5\n| every 1m\n"
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 2
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "PostgreSQL - Top 5 Highest Connections",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/postgresql/num_backends'\n| top 5\n| every 1m\n"
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 2
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "PostgreSQL - Top 5 Highest Transactions",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/postgresql/transaction_count'\n| align rate(1m)\n| group_by [resource.database_id]\n| top 5\n| every 1m\n"
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 4,
+          "xPos": 4,
+          "yPos": 14
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "MySQL - Top 5 Highest Queries",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/mysql/queries'\n| align rate(1m)\n| top 5\n| every 1m\n"
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 20
+        },
+        {
+          "height": 2,
+          "widget": {
+            "text": {
+              "content": "The top 5 highest connections on postgreSQL instances",
+              "format": "RAW"
+            },
+            "title": "PostgreSQL - Top 5 Highest Connections"
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 0
+        },
+        {
+          "height": 2,
+          "widget": {
+            "text": {
+              "content": "The top 5 highest connections on MySQL/SQL Server instances",
+              "format": "RAW"
+            },
+            "title": "MySQL/SQL Server - Top 5 Highest Connections"
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 0
+        },
+        {
+          "height": 2,
+          "widget": {
+            "text": {
+              "content": "The top 5 instances with the highest received bytes.",
+              "format": "RAW"
+            },
+            "title": "Top 5 Highest Network Received Bytes"
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 6
+        },
+        {
+          "height": 2,
+          "widget": {
+            "text": {
+              "content": "The top 5 instances with the highest sent bytes",
+              "format": "RAW"
+            },
+            "title": "Top 5 Highest Network Sent Bytes"
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 6
+        },
+        {
+          "height": 2,
+          "widget": {
+            "text": {
+              "content": "This Alert chart detects when a transaction has not been vacuumed before 10 additional transactions have happened",
+              "format": "RAW"
+            },
+            "title": "PostgreSQL - Slow Transactions"
+          },
+          "width": 4,
+          "xPos": 0,
+          "yPos": 12
+        },
+        {
+          "height": 2,
+          "widget": {
+            "text": {
+              "content": "The top 5 PostgreSQL instances with highest amount of rows being altered.",
+              "format": "RAW"
+            },
+            "title": "PostgreSQL - Top 5 Highest DB Rows Affected"
+          },
+          "width": 4,
+          "xPos": 8,
+          "yPos": 12
+        },
+        {
+          "height": 2,
+          "widget": {
+            "text": {
+              "content": "The top 5 PostgreSQL instances with the highest transaction count to see which instance has the most activity",
+              "format": "RAW"
+            },
+            "title": "PostgreSQL - Top 5 Highest Transactions"
+          },
+          "width": 4,
+          "xPos": 4,
+          "yPos": 12
+        },
+        {
+          "height": 2,
+          "widget": {
+            "text": {
+              "content": "Top 5 instances that have the highest amount of queries executed against the db.",
+              "format": "RAW"
+            },
+            "title": "MySQL - Top 5 Highest Queries"
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 18
+        }
+      ]
+    }
+  }

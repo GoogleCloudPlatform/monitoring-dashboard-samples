@@ -1,0 +1,267 @@
+{
+    "dashboardFilters": [
+      {
+        "filterType": "RESOURCE_LABEL",
+        "labelKey": "region"
+      },
+      {
+        "filterType": "RESOURCE_LABEL",
+        "labelKey": "database_id"
+      },
+      {
+        "filterType": "RESOURCE_LABEL",
+        "labelKey": "zone"
+      }
+    ],
+    "displayName": "CloudSQL - Replication",
+    "mosaicLayout": {
+      "columns": 12,
+      "tiles": [
+        {
+          "height": 4,
+          "widget": {
+            "title": "Replication States",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "minAlignmentPeriod": "60s",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_NONE",
+                        "perSeriesAligner": "ALIGN_COUNT_TRUE"
+                      },
+                      "filter": "metric.type=\"cloudsql.googleapis.com/database/replication/state\" resource.type=\"cloudsql_database\"",
+                      "secondaryAggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [
+                          "metric.label.\"state\""
+                        ],
+                        "perSeriesAligner": "ALIGN_MEAN"
+                      }
+                    }
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 2
+        },
+        {
+          "height": 4,
+          "widget": {
+            "alertChart": {
+              "name": "<insert alert name here or remove chart>"
+            }
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 2
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Top 5 Replications with Highest CPU Usage",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "def top_5_memory_filtered_by_metric filter_metric =\n  fetch cloudsql_database\n  | { t_memory:\n        metric 'cloudsql.googleapis.com/database/cpu/utilization'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value val(0)\n  | group_by [metadata.system.name, resource.project_id], 1m,\n      .mean()\n  | top 5\n  | every 1m;\n\n  @top_5_memory_filtered_by_metric 'cloudsql.googleapis.com/database/replication/state'"
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 8
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Top 5 Replications with Highest Memory Usage",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "def top_5_memory_filtered_by_metric filter_metric =\n  fetch cloudsql_database\n  | { t_memory:\n        metric 'cloudsql.googleapis.com/database/memory/utilization'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value val(0)\n  | group_by [metadata.system.name, resource.project_id]\n  | top 5\n  | every 1m;\n\n  @top_5_memory_filtered_by_metric 'cloudsql.googleapis.com/database/replication/state'"
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 8
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Top 5 Replications with Highest Replica Lag",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "def top_5_memory_filtered_by_metric filter_metric =\n  fetch cloudsql_database\n  | { t_memory:\n        metric 'cloudsql.googleapis.com/database/replication/replica_lag'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value val(0)\n  | group_by [metadata.system.name, resource.project_id], 1m,\n      .mean()\n  | top 5\n  | every 1m;\n\n  @top_5_memory_filtered_by_metric 'cloudsql.googleapis.com/database/replication/state'"
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 14
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Top 5 Replications with Highest Log Archive Failures",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesQueryLanguage": "def top_5_memory_filtered_by_metric filter_metric =\n  fetch cloudsql_database\n  | { t_memory:\n        metric 'cloudsql.googleapis.com/database/replication/log_archive_failure_count'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value val(0)\n  | group_by [metadata.system.name, resource.project_id], 1m,\n      .mean()\n  | top 5\n  | every 1m;\n\n  @top_5_memory_filtered_by_metric 'cloudsql.googleapis.com/database/replication/state'"
+                  }
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 14
+        },
+        {
+          "height": 2,
+          "widget": {
+            "text": {
+              "content": "Count of replications in each state that indicates whether they are running correctly or not.",
+              "format": "RAW"
+            },
+            "title": "Replication States"
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 0
+        },
+        {
+          "height": 2,
+          "widget": {
+            "text": {
+              "content": "Alert chart that fires when a replication enters an error state.",
+              "format": "RAW"
+            },
+            "title": "Replication In Error State"
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 0
+        },
+        {
+          "height": 2,
+          "widget": {
+            "text": {
+              "content": "Top 5 Replication instances with the highest CPU usage that indicates what replications are under the most load.",
+              "format": "RAW"
+            },
+            "title": "Top 5 Replications with Highest CPU Usage"
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 6
+        },
+        {
+          "height": 2,
+          "widget": {
+            "text": {
+              "content": "Top 5 Replication instances with the highest Memory usage that indicates what replications are under the most load.",
+              "format": "RAW"
+            },
+            "title": "Top 5 Replications with Highest Memory Usage"
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 6
+        },
+        {
+          "height": 2,
+          "widget": {
+            "text": {
+              "content": "Top 5 Replicas that are the furthest behind the master node, in seconds.",
+              "format": "RAW"
+            },
+            "title": "Top 5 Replications with Highest Replica Lag"
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 12
+        },
+        {
+          "height": 2,
+          "widget": {
+            "text": {
+              "content": "Top 5 Replicas that are the furthest behind the master node, in seconds.",
+              "format": "RAW"
+            },
+            "title": "Top 5 Replications with Highest Log Archive Failures"
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 12
+        }
+      ]
+    }
+  }

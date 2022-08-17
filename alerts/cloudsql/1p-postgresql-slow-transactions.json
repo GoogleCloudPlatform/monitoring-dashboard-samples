@@ -1,0 +1,34 @@
+{
+  "displayName": "PostgreSQL - Slow Transactions",
+  "documentation": {
+    "content": "This Alert fires if the database is having trouble keeping up transactions. improvements in performance should be investigated. those improvements could be increasing resources for cloudsql or improving query efficiency, for more information visit https://cloud.google.com/sql/docs/postgres/diagnose-issues.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Cloud SQL - PostgreSQL - Slow Transactions",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"cloudsql_database\" AND metric.type = \"cloudsql.googleapis.com/database/postgresql/vacuum/oldest_transaction_age\"",
+        "thresholdValue": 10,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
