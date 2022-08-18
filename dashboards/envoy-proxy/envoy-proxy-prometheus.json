@@ -1,0 +1,303 @@
+{
+  "category": "CUSTOM",
+  "displayName": "Envoy Proxy",
+  "etag": "ef961d6c50d70e82bc2e13b6e51c39ec",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [
+              {
+                "color": "RED",
+                "direction": "BELOW",
+                "label": "",
+                "value": 0
+              },
+              {
+                "color": "YELLOW",
+                "direction": "BELOW",
+                "label": "",
+                "value": 0
+              }
+            ],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(envoy_server_live)"
+            }
+          },
+          "title": "Live Proxies"
+        },
+        "width": 2,
+        "xPos": 0,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "avg(envoy_server_uptime)/60"
+            }
+          },
+          "title": "Average Uptime (minutes)"
+        },
+        "width": 3,
+        "xPos": 2,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "SUM(envoy_server_memory_allocated)"
+            }
+          },
+          "title": "Allocated Memory"
+        },
+        "width": 2,
+        "xPos": 5,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "SUM(envoy_server_memory_heap_size)"
+            }
+          },
+          "title": "Heap Size"
+        },
+        "width": 2,
+        "xPos": 7,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "thresholds": [
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 0
+              }
+            ],
+            "timeSeriesQuery": {
+              "prometheusQuery": "(sum(envoy_cluster_membership_healthy)  - sum(envoy_cluster_membership_total))"
+            }
+          },
+          "title": "Unhealthy Proxies"
+        },
+        "width": 3,
+        "xPos": 9,
+        "yPos": 0
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "Total Active Connections",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "envoy_cluster_upstream_cx_active{envoy_cluster_name=~\"\",host=~\"()\"}"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 2
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "Total Requests Rate",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "irate(envoy_cluster_upstream_rq_total[1m])"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 2
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "Allocated Memory",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "envoy_server_memory_allocated"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 5
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "Upstream Network Traffic",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "irate(envoy_cluster_upstream_cx_rx_bytes_total[5m])"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 5
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "CDS Update Attempts",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(envoy_cluster_manager_cds_update_attempt[5m])"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "xPos": 0,
+        "yPos": 8
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "CDS Update Success",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(envoy_cluster_manager_cds_update_success[5m])"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "xPos": 4,
+        "yPos": 8
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "CDS Update Failure",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(envoy_cluster_manager_cds_update_failure[5m])"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "xPos": 8,
+        "yPos": 8
+      }
+    ]
+  },
+  "name": "projects/685351563540/dashboards/d4c36f08-6619-434c-86d0-7153e68c8196"
+}
