@@ -9,3 +9,13 @@
 |:------------------|
 |Filename: [mongodb-gce-overview.json](mongodb-gce-overview.json)|
 |This dashboard has several charts for the related [Google Cloud Ops Agent Integration for MongoDB](https://github.com/GoogleCloudPlatform/ops-agent/tree/master/docs/mongodb.md), including metrics like `Active Connections`, `Collection Size`, `Server Memory Usage`, `Index Count`, `Index Size`, and `Operations`.|
+
+#### Notes
+
+- This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/percona/mongodb_exporter).
+
+|MongoDB Prometheus|
+|:------------------|
+|Filename: [mongodb-prometheus.json](mongodb-prometheus.json)|
+|This dashboard has charts displaying: `Connections Available`, `Disk Read/Write IO`, `Memory`, `Opcounters`, and `Ops Latencies`|
+
