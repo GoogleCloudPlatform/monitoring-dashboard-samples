@@ -1,0 +1,320 @@
+{
+  "category": "CUSTOM",
+  "displayName": "Kubernetes Cluster Overview",
+  "etag": "ee7edbf9c42d0b4c19f4ed44beba8fe5",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 7,
+        "widget": {
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "title": "Cluster Overview"
+        },
+        "width": 12,
+        "xPos": 0,
+        "yPos": 0
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Node CPU Usage",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "100 - (avg by (instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 3
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Node Memory Used",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "node_memory_MemTotal_bytes - node_memory_MemFree_bytes"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 3
+      },
+      {
+        "height": 4,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "tableDisplayOptions": {},
+                "timeSeriesQuery": {
+                  "prometheusQuery": "kube_persistentvolume_capacity_bytes"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Persistent Volume Provisioned Capacity "
+        },
+        "width": 12,
+        "xPos": 0,
+        "yPos": 9
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 0
+              }
+            ],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(kube_persistentvolume_status_phase{phase=\"Available\"})"
+            }
+          },
+          "title": "PV Unbound"
+        },
+        "width": 2,
+        "xPos": 6,
+        "yPos": 7
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 0
+              }
+            ],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(kube_persistentvolume_status_phase{phase=\"Pending\"})"
+            }
+          },
+          "title": "PV Pending"
+        },
+        "width": 2,
+        "xPos": 8,
+        "yPos": 7
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [
+              {
+                "color": "RED",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 0
+              },
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 0
+              }
+            ],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(kube_persistentvolume_status_phase{phase=\"Failed\"})"
+            }
+          },
+          "title": "PV Failed"
+        },
+        "width": 2,
+        "xPos": 10,
+        "yPos": 7
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "gaugeView": {
+              "upperBound": 10000000000000
+            },
+            "thresholds": [
+              {
+                "color": "RED",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 8000000000000
+              },
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 6000000000000
+              }
+            ],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(kube_persistentvolume_capacity_bytes)"
+            }
+          },
+          "title": "Persistent Volume Provisioned Capacity (Total)"
+        },
+        "width": 3,
+        "xPos": 0,
+        "yPos": 7
+      },
+      {
+        "height": 6,
+        "widget": {
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "title": "Persistent Volume"
+        },
+        "width": 12,
+        "xPos": 0,
+        "yPos": 7
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(kube_persistentvolume_status_phase{phase=\"Bound\"})"
+            }
+          },
+          "title": "PV Bound"
+        },
+        "width": 3,
+        "xPos": 3,
+        "yPos": 7
+      },
+      {
+        "height": 3,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "tableDisplayOptions": {},
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (cluster) (kube_node_status_condition{condition=\"Ready\",status=\"true\"})"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Nodes (Ready)"
+        },
+        "width": 3,
+        "xPos": 0,
+        "yPos": 0
+      },
+      {
+        "height": 3,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "tableDisplayOptions": {},
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (cluster) (kube_node_status_condition{condition=\"Ready\",status=\"true\"})"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Nodes (Not Ready)"
+        },
+        "width": 3,
+        "xPos": 3,
+        "yPos": 0
+      },
+      {
+        "height": 3,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "tableDisplayOptions": {},
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (cluster) (kube_pod_status_scheduled)"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Scheduled Pods Per Cluster"
+        },
+        "width": 3,
+        "xPos": 9,
+        "yPos": 0
+      },
+      {
+        "height": 3,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "tableDisplayOptions": {},
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (location) (kube_node_status_condition{condition=\"Ready\",status=\"true\"})"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Nodes Location"
+        },
+        "width": 3,
+        "xPos": 6,
+        "yPos": 0
+      }
+    ]
+  },
+  "name": "projects/685351563540/dashboards/e849b0c6-8105-496b-b884-15b9261ab650"
+}
