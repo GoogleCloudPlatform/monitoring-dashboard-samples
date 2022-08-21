@@ -1,4 +1,5 @@
 {
+  "category": "CUSTOM",
   "displayName": "Logging Management",
   "mosaicLayout": {
     "columns": 12,
@@ -15,15 +16,16 @@
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"logging.googleapis.com/byte_count\"",
-                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
                       "perSeriesAligner": "ALIGN_SUM"
-                    }
+                    },
+                    "filter": "metric.type=\"logging.googleapis.com/byte_count\""
                   }
                 }
               }
@@ -36,6 +38,7 @@
           }
         },
         "width": 6,
+        "xPos": 0,
         "yPos": 1
       },
       {
@@ -50,19 +53,26 @@
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
-                      "perSeriesAligner": "ALIGN_RATE"
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_SUM"
                     },
                     "filter": "metric.type=\"logging.googleapis.com/log_entry_count\"",
                     "secondaryAggregation": {
-                      "perSeriesAligner": "ALIGN_MEAN"
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_NONE"
                     }
                   }
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -86,15 +96,16 @@
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"logging.googleapis.com/exports/byte_count\" resource.type=\"logging_sink\"",
-                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
                       "perSeriesAligner": "ALIGN_SUM"
-                    }
+                    },
+                    "filter": "metric.type=\"logging.googleapis.com/exports/byte_count\" resource.type=\"logging_sink\""
                   }
                 }
               }
@@ -107,6 +118,7 @@
           }
         },
         "width": 6,
+        "xPos": 0,
         "yPos": 6
       },
       {
@@ -121,15 +133,16 @@
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
-                      "perSeriesAligner": "ALIGN_RATE"
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_SUM"
                     },
-                    "filter": "metric.type=\"logging.googleapis.com/exports/log_entry_count\" resource.type=\"logging_sink\"",
-                    "secondaryAggregation": {
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
+                    "filter": "metric.type=\"logging.googleapis.com/exports/log_entry_count\" resource.type=\"logging_sink\""
                   }
                 }
               }
@@ -157,15 +170,16 @@
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
-                      "perSeriesAligner": "ALIGN_RATE"
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_SUM"
                     },
-                    "filter": "metric.type=\"logging.googleapis.com/logs_based_metrics_error_count\"",
-                    "secondaryAggregation": {
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
+                    "filter": "metric.type=\"logging.googleapis.com/logs_based_metrics_error_count\""
                   }
                 }
               }
@@ -185,11 +199,13 @@
         "height": 1,
         "widget": {
           "text": {
+            "content": "",
             "format": "RAW"
           },
           "title": "Log Based Metrics"
         },
         "width": 12,
+        "xPos": 0,
         "yPos": 10
       },
       {
@@ -204,13 +220,16 @@
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
-                      "perSeriesAligner": "ALIGN_MEAN"
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_SUM"
                     },
-                    "filter": "metric.type=\"monitoring.googleapis.com/stats/num_time_series\" resource.type=\"global\"",
-                    "secondaryAggregation": {}
+                    "filter": "metric.type=\"monitoring.googleapis.com/stats/num_time_series\" resource.type=\"global\""
                   }
                 }
               }
@@ -223,28 +242,34 @@
           }
         },
         "width": 6,
+        "xPos": 0,
         "yPos": 11
       },
       {
         "height": 1,
         "widget": {
           "text": {
+            "content": "",
             "format": "RAW"
           },
           "title": "Exported Logs"
         },
         "width": 12,
+        "xPos": 0,
         "yPos": 5
       },
       {
         "height": 1,
         "widget": {
           "text": {
+            "content": "",
             "format": "RAW"
           },
           "title": "Ingestion"
         },
-        "width": 12
+        "width": 12,
+        "xPos": 0,
+        "yPos": 0
       }
     ]
   }
