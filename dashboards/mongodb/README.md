@@ -7,7 +7,7 @@
 |MongoDB Overview|
 |:------------------|
 |Filename: [mongodb-gce-overview.json](mongodb-gce-overview.json)|
-|This dashboard has charts displaying `Connections`, `Sessions`, `Databases`, `Data Size`, `Storage Size`, `Objects`, `Collections`, `Document Operations`, `Indexes`, `Indexes accessed`, `Index Size`, `Requests`, `Received Bytes`, `Transmitted Bytes`, `Operations Rate Avg.`, `Operations Duration`, `Memory Usage`, `Cache Hits / Misses`, `Global Lock Hold Time`, `Cursors`, and `Cursor Duration` from MongoDB as well as charts of infrastructure related metrics for the running MongoDB VMs: `CPU % Top 5 VMs`, `Memory % Top 5 VMs`, and `Hosts by Region`. There is also a log panel containing MongoDB logs.|
+|This dashboard has charts displaying `Connections`, `Sessions`, `Databases`, `Data Size`, `Storage Size`, `Objects`, `Collections`, `Document Operations`, `Indexes`, `Indexes accessed`, `Index Size`, `Requests`, `Received Bytes`, `Transmitted Bytes`, `Operations Rate Avg.`, `Operations Duration`, `Memory Usage`, `Cache Hits / Misses`, `Global Lock Hold Time`, `Cursors`, and `Cursor Duration` from MongoDB as well as charts of infrastructure related metrics for the VMs running MongoDB: `CPU % Top 5 VMs`, `Memory % Top 5 VMs`, and `Hosts by Region`. There is also a log panel containing MongoDB logs.|
 
 |MongoDB Prometheus|
 |:------------------|
