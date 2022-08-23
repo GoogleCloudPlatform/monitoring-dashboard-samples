@@ -1,4 +1,4 @@
-# Alerts for Couchbase in the Ops Agent
+# Alerts for CloudSQL in the Ops Agent
 
 ## Spiking Evictions
 
@@ -34,6 +34,6 @@ The ID of the notification channel to be notified.
 
 ```json
     "notificationChannels": [
-        "projects/project-id/notificationChannels/1234567
+        "projects/project-id/notificationChannels/1234567"
     ]
 ```
