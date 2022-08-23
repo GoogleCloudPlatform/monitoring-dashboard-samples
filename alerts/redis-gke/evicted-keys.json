@@ -1,0 +1,35 @@
+{
+    "displayName": "Redis - Prometheus - High Rate of Evicted Keys",
+    "documentation": {
+      "content": "Under memory pressure, the system will evict keys to free up memory. This is an indicator of memory pressure due to the Redis or system configuration.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Prometheus Target - prometheus/redis_evicted_keys_total/counter",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "perSeriesAligner": "ALIGN_RATE"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "300s",
+          "evaluationMissingData": "EVALUATION_MISSING_DATA_NO_OP",
+          "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/redis_evicted_keys_total/counter\"",
+          "thresholdValue": 1,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }

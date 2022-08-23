@@ -1,0 +1,34 @@
+{
+    "displayName": "Kafka - Prometheus - Change in Number of ISRs",
+    "documentation": {
+      "content": "In sync replicas (ISRs) are required for proper failover. The number of in sync replicas should be static, unless the broker cluster is expanding or partitions are removed. If the number of in sync replicas deviates without the broker cluster being modified, you should investigate to maintain high availability.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Prometheus Target - prometheus/kafka_topic_partition_in_sync_replica/gauge",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "perSeriesAligner": "ALIGN_PERCENT_CHANGE"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/kafka_topic_partition_in_sync_replica/gauge\"",
+          "thresholdValue": 10,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }
