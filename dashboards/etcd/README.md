@@ -7,4 +7,4 @@
 |etcd Prometheus|
 |:------------------|
 |Filename: [etcd-prometheus.json](etcd-prometheus.json)|
-|This dashboard includes charts displaying: `Leader Changes`, `Proposals Pending Apply`, `gRPC Received Bytes`, `gRPC Sent Bytes`, `Proposals Queue to Commit`, `Proposals Failed`, `WAL Fsync 95th Percentile Latency (seconds) over 5m`, `Backend Commit 95th Percentile Latency (seconds) over 5m`, `Proposals Applied`, and `Proposals Commited` |
+|This dashboard includes charts displaying: `Leader Changes`, `Proposals Pending Apply`, `gRPC Received Bytes`, `gRPC Sent Bytes`, `Proposals Queue to Commit`, `Proposals Failed`, `WAL Fsync 95th Percentile Latency (seconds) over 5m`, `Backend Commit 95th Percentile Latency (seconds) over 5m`, `Proposals Applied`, and `Proposals Commited`|
