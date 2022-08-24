@@ -15,11 +15,7 @@
 |Filename: [elasticsearch-cluster-gce-overview.json](elasticsearch-cluster-gce-overview.json)| 
 | This dashboard has 9 widgets for viewing Elasticsearch cluster-level metrics when monitored by the Google's Ops Agent including  `Nodes`, `Green Status`, `Yellow Status`, `Red Status`, `Data Nodes`, `Active Shards`, `Initializing Shards`, `Relocating Shards`, and `Unassigned Shards`. |
 
-#### Notes
-
-- This dashboard is based prometheus metrics exposed by an [exporter](https://github.com/prometheus-community/elasticsearch_exporter).
-
 |Elasticsearch Prometheus|
 |:------------------|
 |Filename: [elasticsearch-prometheus.json](elasticsearch-prometheus.json)| 
-| This dashboard has charts displaying: `Tripped Breakers`, `CPU Avg Usage %`, `JVM Memory Avg Usage %`, `ES Nodes`, `ES Data Nodes`, `Pending Tasks`, `Cluster Health`, `OS Load Average over 15min`, `CPU Usage %`, `JVM Memory Pool Peak Used Bytes`, `Disk Usage %`, `Network Usage`, and `Thread Pool Operations Rejected`. |
+|This dashboard is based prometheus metrics exposed by an [exporter](https://github.com/prometheus-community/elasticsearch_exporter). This dashboard has charts displaying: `Tripped Breakers`, `CPU Avg Usage %`, `JVM Memory Avg Usage %`, `ES Nodes`, `ES Data Nodes`, `Pending Tasks`, `Cluster Health`, `OS Load Average over 15min`, `CPU Usage %`, `JVM Memory Pool Peak Used Bytes`, `Disk Usage %`, `Network Usage`, and `Thread Pool Operations Rejected`. |
