@@ -7,4 +7,4 @@
 |ScyllaDB Prometheus|
 |:------------------|
 |Filename: [scylladb-prometheus.json](scylladb-prometheus.json)|
-|This dashboard has various charts displaying metrics related to: `Node Status`, `Resource Utilization`, `Read Performance`, `Write Performance`, and `Cache` |
+|This dashboard has various charts displaying metrics related to: `Node Status`, `Resource Utilization`, `Read Performance`, `Write Performance`, and `Cache`|
