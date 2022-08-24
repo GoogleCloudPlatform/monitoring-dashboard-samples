@@ -10,11 +10,7 @@
 |Filename: [overview.json](overview.json)|
 |This dashboard has charts displaying `Request Rate`, `Current Connections`, and `Connections Rate` from NGINX as well as charts of infrastructure related metrics for the running NGINX VMs: `CPU % Top 5 VMs`, `Memory % Top 5 VMs`, and `NGINX VMs by Region` for a count of VMs over time. There is also a card with links to docs and NGINX log in Cloud Logging.|
 
-#### Notes
-
-- This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/nginxinc/nginx-prometheus-exporter).
-
 |Nginx Prometheus|
 |:------------------|
 |Filename: [nginx-prometheus.json](nginx-prometheus.json)|
-|This dashboard has charts displaying: `HTTP Requests`, `Active Connections`, `Connections Waiting`, `Accepted Connections`, `Reading Connections`, and `Connections Writing`|
+|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/nginxinc/nginx-prometheus-exporter). This dashboard has charts displaying: `HTTP Requests`, `Active Connections`, `Connections Waiting`, `Accepted Connections`, `Reading Connections`, and `Connections Writing`|
