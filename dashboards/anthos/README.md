@@ -48,3 +48,10 @@
 |:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |Filename: [GKE-on-prem-pod-status.json](GKE-on-prem-pod-status.json)|
 | This dashboard has 6 charts to indicate the status of pod, including Number of restarts per container, Container memory usage per container, Container CPU usage per container, Network ingress (bytes) per pod, Network egress (bytes) per pod and Pod phase. |
+
+&nbsp;
+
+| GKE on-prem vSphere vm health status|
+|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|Filename: [GKE-on-prem-vSphere-vm-health.json](GKE-on-prem-vSphere-vm-health.json)|
+| This dashboard has 4 charts to indicate the health of vSphere VMs, including CPU readiness per vCPU, Memory page-fault latency, Average virtual disk read latency, and Average virtual disk write latency |
