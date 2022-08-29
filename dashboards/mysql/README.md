@@ -13,4 +13,4 @@
 |MySQL Prometheus|
 |:------------------|
 |Filename: [mysql-prometheus.json](mysql-prometheus.json)|
-|This dashboard is based on prometheus metrics being exposed by an [exporter](https://github.com/prometheus/mysqld_exporter). This dashboard has charts displaying: `Global Status Uptime (days)`, `Available Connections`, `Open Files Available`, `Cache Hit Rate`, `MySQL Up`, `Global Status Connection Error Rate (5m)`, `Slow Queries`, `Buffer Pool Cache Hit Ratio`, `Full Join`, `Full Range Join`, `Range Check`, and `Scan` |
+|This dashboard is based on prometheus metrics being exposed by an [exporter](https://github.com/prometheus/mysqld_exporter). This dashboard has charts displaying: `Global Status Uptime (days)`, `Available Connections`, `Open Files Available`, `Cache Hit Rate`, `MySQL Up`, `Global Status Connection Error Rate (5m)`, `Slow Queries`, `Buffer Pool Cache Hit Ratio`, `Full Join`, `Full Range Join`, `Range Check`, and `Scan`|
