@@ -4,9 +4,9 @@
 Connection errors mean a connection failed to be established. This indicates applications may be having trouble connecting to your MySQL database. See the `error` label on the time-series that triggers the alert for a more specific cause.
 
 
-### Creating notification Channels and User Labels
+### Creating Notification Channels and User Labels
 
-Whether these alert policies are being used as standalones or base templates for a deployment strategy like terraform, one thing that should be utilized is notification channels and user labels.
+It is strongly recommended to add notification channels and user labels to the alert policies. The notification channel will set the notification destination if the alert policy is triggered. User labels are used for categorization, and can be used to indicate the severity level.
 
 ### User Labels
 
@@ -16,7 +16,7 @@ i.e.
 
 ```json
     "userLabels": {
-        "datacenter": "central"
+        "Severity": "Warning"
     }
 ```
 

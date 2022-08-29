@@ -8,9 +8,9 @@ A fragmentation ratio less than 1.0 means that Redis requires more memory than i
 
 Under memory pressure, the system will evict keys to free up memory. This is an indicator of memory pressure due to the Redis or system configuration. By default, this alert fires if at least 1 key is evicted every second.
 
-### Creating notification Channels and User Labels
+### Creating Notification Channels and User Labels
 
-Whether these alert policies are being used as standalones or base templates for a deployment strategy like terraform, one thing that should be utilized is notification channels and user labels.
+It is strongly recommended to add notification channels and user labels to the alert policies. The notification channel will set the notification destination if the alert policy is triggered. User labels are used for categorization, and can be used to indicate the severity level.
 
 ### User Labels
 
@@ -20,7 +20,7 @@ i.e.
 
 ```json
     "userLabels": {
-        "datacenter": "central"
+        "Severity": "Warning"
     }
 ```
 
