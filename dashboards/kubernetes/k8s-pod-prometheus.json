@@ -1,0 +1,413 @@
+{
+  "category": "CUSTOM",
+  "displayName": "Kubernetes Pod Prometheus Overview",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(kube_pod_status_scheduled{condition=\"true\"})"
+            }
+          },
+          "title": "Scheduled Pods"
+        },
+        "width": 2,
+        "xPos": 0,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [
+              {
+                "color": "RED",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 50
+              },
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 10
+              }
+            ],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(kube_pod_status_phase{phase=\"Pending\"})"
+            }
+          },
+          "title": "Pending Pods"
+        },
+        "width": 2,
+        "xPos": 4,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 0
+              }
+            ],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(kube_pod_status_phase{phase=\"Failed\"})"
+            }
+          },
+          "title": "Failed Pods"
+        },
+        "width": 2,
+        "xPos": 10,
+        "yPos": 0
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Pod CPU Usage",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum(rate(container_cpu_usage_seconds_total{container!~\"POD|\"}[1m])) by (pod)\n"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 8
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Pod Memory Usage",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum(container_memory_usage_bytes{container!~\"POD|\"}) by (pod)\n"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 8
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Pod Network Receive Bytes",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum(rate(container_network_receive_bytes_total{pod!~\"\"}[1m])) by (pod)\n"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 12
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Pod Network Transmit Bytes",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum(rate(container_network_transmit_bytes_total{pod!~\"\"}[1m])) by (pod)\n"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 12
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(kube_pod_status_phase{phase=\"Running\"})"
+            }
+          },
+          "title": "Running Pods"
+        },
+        "width": 2,
+        "xPos": 2,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [
+              {
+                "color": "RED",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 50
+              },
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 10
+              }
+            ],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(kube_pod_status_reason{phase=\"Evicted\"})"
+            }
+          },
+          "title": "Evicted Pods"
+        },
+        "width": 2,
+        "xPos": 6,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [
+              {
+                "color": "RED",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 50
+              },
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 10
+              }
+            ],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(kube_pod_status_reason{phase=\"Shutdown\"})"
+            }
+          },
+          "title": "Shutdown Pods"
+        },
+        "width": 2,
+        "xPos": 8,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "count(kube_statefulset_created)"
+            }
+          },
+          "title": "Statefulsets"
+        },
+        "width": 2,
+        "xPos": 8,
+        "yPos": 2
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "count(kube_deployment_status_condition{status=\"true\", condition=\"Available\"})"
+            }
+          },
+          "title": "Deployments"
+        },
+        "width": 2,
+        "xPos": 4,
+        "yPos": 2
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "count(kube_daemonset_created)"
+            }
+          },
+          "title": "Daemonsets"
+        },
+        "width": 2,
+        "xPos": 6,
+        "yPos": 2
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "count(kube_job_created)"
+            }
+          },
+          "title": "Jobs"
+        },
+        "width": 2,
+        "xPos": 10,
+        "yPos": 2
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "count(kube_namespace_created)"
+            }
+          },
+          "title": "Namespaces"
+        },
+        "width": 2,
+        "xPos": 0,
+        "yPos": 2
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "count(kube_replicaset_created)"
+            }
+          },
+          "title": "Replicasets"
+        },
+        "width": 2,
+        "xPos": 2,
+        "yPos": 2
+      },
+      {
+        "height": 4,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "tableDisplayOptions": {},
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (cluster) (kube_pod_status_scheduled)"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Scheduled Pods Per Cluster"
+        },
+        "width": 4,
+        "xPos": 0,
+        "yPos": 4
+      },
+      {
+        "height": 4,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "tableDisplayOptions": {},
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (cluster) (kube_pod_status_phase{phase=\"Failed\"})"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Failed Pods Per Cluster"
+        },
+        "width": 4,
+        "xPos": 4,
+        "yPos": 4
+      },
+      {
+        "height": 4,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "tableDisplayOptions": {},
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (exported_namespace) (kube_pod_status_scheduled{condition=\"true\"})"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Pods Per Namespace"
+        },
+        "width": 4,
+        "xPos": 8,
+        "yPos": 4
+      }
+    ]
+  }
+}
