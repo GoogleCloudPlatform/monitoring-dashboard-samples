@@ -1,0 +1,259 @@
+{
+  "category": "CUSTOM",
+  "displayName": "Jenkins Prometheus Overview",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 3,
+        "widget": {
+          "title": "Job Build Speed",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "jenkins_job_building_duration"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 4
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "JVM Memory Free %",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "(vm_memory_total_max{job=\"jenkins-metrics\"} - vm_memory_total_used{job=\"jenkins-metrics\"}) / vm_memory_total_max{job=\"jenkins-metrics\"} * 100.0"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "xPos": 8,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "jenkins_executor_free_value"
+            }
+          },
+          "title": "Executor Free"
+        },
+        "width": 3,
+        "xPos": 3,
+        "yPos": 2
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "Queue Size",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "jenkins_queue_size_value"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 4
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "Job Queued Rate",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(jenkins_job_queuing_duration_count[1m])"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 7
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "jenkins_executor_in_use_value"
+            }
+          },
+          "title": "Executor In Use"
+        },
+        "width": 3,
+        "xPos": 3,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "thresholds": [
+              {
+                "color": "RED",
+                "direction": "BELOW",
+                "label": "",
+                "value": 1
+              }
+            ],
+            "timeSeriesQuery": {
+              "prometheusQuery": "jenkins_health_check_score"
+            }
+          },
+          "title": "Health Check"
+        },
+        "width": 3,
+        "xPos": 0,
+        "yPos": 0
+      },
+      {
+        "height": 4,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "jenkins_plugins_failed"
+            }
+          },
+          "title": "Plugins Failed"
+        },
+        "width": 2,
+        "xPos": 6,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "jenkins_node_offline_value"
+            }
+          },
+          "title": "Nodes Offline"
+        },
+        "width": 3,
+        "xPos": 0,
+        "yPos": 2
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "Job Queue Duration",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "jenkins_job_queuing_duration"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 12,
+        "xPos": 0,
+        "yPos": 10
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "Resource Usage",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "vm_cpu_load{job=\"jenkins-metrics\"}"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 7
+      }
+    ]
+  }
+}
