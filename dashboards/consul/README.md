@@ -2,7 +2,7 @@
 
 #### Notes
 
-- This dashboard is based on 
+- This dashboard is based on metrics from an [exporter](https://github.com/prometheus/consul_exporter).
 
 |Consul Prometheus|
 |:------------------|
