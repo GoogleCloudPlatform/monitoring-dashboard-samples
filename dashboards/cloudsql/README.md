@@ -3,7 +3,6 @@
 #### Notes
 
 - These dashboards are based on first party Google Cloud monitoring solutions.
-- each of these dashboards have an alert associated with them that should be created, and the name added to the alert chart on the corresponding dashboard.
 
 |CloudSQL General|
 |:------------------|
