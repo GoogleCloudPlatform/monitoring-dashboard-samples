@@ -1,0 +1,196 @@
+{
+  "category": "CUSTOM",
+  "displayName": "Argo Workflows Prometheus Overview",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "argo_workflows_count{status=\"Pending\"}"
+            }
+          },
+          "title": "Pending"
+        },
+        "width": 3,
+        "xPos": 2,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "argo_workflows_count{status=\"Running\"}"
+            }
+          },
+          "title": "Running"
+        },
+        "width": 3,
+        "xPos": 0,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "argo_workflows_count{status=\"Error\"}"
+            }
+          },
+          "title": "Errors"
+        },
+        "width": 2,
+        "xPos": 10,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "argo_workflows_count{status=\"Failed\"}"
+            }
+          },
+          "title": "Failed"
+        },
+        "width": 2,
+        "xPos": 8,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "timeSeriesQuery": {
+              "prometheusQuery": "argo_workflows_count{status=\"Succeeded\"}"
+            }
+          },
+          "title": "Succeeded"
+        },
+        "width": 2,
+        "xPos": 6,
+        "yPos": 0
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Operation Duration (seconds)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "argo_workflows_operation_duration_seconds_sum"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 12,
+        "xPos": 0,
+        "yPos": 2
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Queue Adds",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "delta(argo_workflows_queue_adds_count[2m])"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "xPos": 0,
+        "yPos": 6
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Queue Depth",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "argo_workflows_queue_depth_count"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "xPos": 4,
+        "yPos": 6
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Queue Latency",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(argo_workflows_queue_latency_sum[1m])"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 4,
+        "xPos": 8,
+        "yPos": 6
+      }
+    ]
+  }
+}
