@@ -5,6 +5,7 @@ from google.cloud import monitoring_v3
 
 def check_json_in_metadata(path, file_id, file_version):
   metadata_path = "/".join(path.split("/")[:-1]) + "/metadata.yaml"
+  check_metadata_entries(metadata_path)
   f = open(metadata_path)
   data = yaml.safe_load(f)
   templates_metadata = data.get("alert_policy_templates")
