@@ -10,20 +10,18 @@ def check_json_in_metadata(path, file_id, file_version):
   check_metadata_entries(metadata_path)
   with open(metadata_path) as f:
     data = yaml.safe_load(f)
-  templates_metadata = data.get("alert_policy_templates")
-  for template_metadata in templates_metadata:
-    if template_metadata.get("id") == file_id and template_metadata.get("version") == int(file_version[1]):
+  for tmpl in data.get("alert_policy_templates"):
+    if tmpl.get("id") == file_id and tmpl.get("version") == int(file_version[1]):
       return
   raise Exception("{} does not have an entry in {}".format(path, metadata_path))
 
 def check_metadata_entries(path):
   with open(path) as f:
     data = yaml.safe_load(f)
-  templates_metadata = data.get("alert_policy_templates")
   if not templates_metadata:
     raise Exception("alert_policy_templates not defined in {}".format(path))
-  required_fields = set(["id", "version", "display_name", "description"])
-  for template_metadata in templates_metadata:
+  required_fields = {"id", "version", "display_name", "description"}
+  for template_metadata in data.get("alert_policy_templates"):
     missing_fields = required_fields - template_metadata.keys()
     if missing_fields:
       raise Exception("{} missing {}".format(path, missing_fields))
@@ -60,7 +58,7 @@ def main():
 
   # all json files added to alerts folder are implictly taken as alert policy jsons
   # and must follow expected file hierarchy and naming
-  if path.split(".")[-1] == "json":
+  elif path.split(".")[-1] == "json":
     # checking if json file name is in the correct format
     check_json_file_name(path, file_name_parts)
     # check if file has entry in metadata.yaml
