@@ -1,6 +1,6 @@
+import json
 import sys
 import yaml
-import json
 from google.cloud import monitoring_v3
 
 def check_json_in_metadata(path, file_id, file_version):
