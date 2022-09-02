@@ -1,13 +1,15 @@
+#!/usr/bin/python3
 import json
+import os
 import sys
 import yaml
 from google.cloud import monitoring_v3
 
 def check_json_in_metadata(path, file_id, file_version):
-  metadata_path = "/".join(path.split("/")[:-1]) + "/metadata.yaml"
+  metadata_path = os.path.join(os.path.dirname(path), "metadata.yaml")
   check_metadata_entries(metadata_path)
-  f = open(metadata_path)
-  data = yaml.safe_load(f)
+  with open(metadata_path) as f:
+    data = yaml.safe_load(f)
   templates_metadata = data.get("alert_policy_templates")
   for template_metadata in templates_metadata:
     if template_metadata.get("id") == file_id and template_metadata.get("version") == int(file_version[1]):
@@ -15,16 +17,16 @@ def check_json_in_metadata(path, file_id, file_version):
   raise Exception("{} does not have an entry in {}".format(path, metadata_path))
 
 def check_metadata_entries(path):
-  f = open(path)
-  data = yaml.safe_load(f)
+  with open(path) as f:
+    data = yaml.safe_load(f)
   templates_metadata = data.get("alert_policy_templates")
   if not templates_metadata:
     raise Exception("alert_policy_templates not defined in {}".format(path))
-  required_fields = ["id", "version", "display_name", "description"]
+  required_fields = set(["id", "version", "display_name", "description"])
   for template_metadata in templates_metadata:
-    for field in required_fields:
-      if field not in template_metadata.keys():
-        raise Exception("{} missing {}".format(path, field))
+    missing_fields = required_fields - template_metadata.keys()
+    if missing_fields:
+      raise Exception("{} missing {}".format(path, missing_fields))
 
 def check_json_file_name(path, file_name_parts):
   if len(file_name_parts) != 3:
@@ -36,21 +38,21 @@ def check_json_file_name(path, file_name_parts):
     raise Exception("{} 'v' is not followed by numeric version number".format(path))
 
 def check_is_alert_policy_json(path):
-  f = open(path)
-  try:
-    policy_json = json.dumps(json.load(f))
-  except:
-    raise Exception("{} content could not be loaded".format(path))
-  monitoring_v3.AlertPolicy.from_json(policy_json)
+  with open(path) as f:
+    try:
+      policy_json = json.dumps(json.load(f))
+    except:
+      raise Exception("{} content could not be loaded".format(path))
+    monitoring_v3.AlertPolicy.from_json(policy_json)
 
 def main():
   path = sys.argv[1]
   # only run validation script on files added/changed in
-  # alert_templates folder
-  if path.split("/")[0] != "alerts":
+  # alerts folder
+  if os.path.dirname(os.path.dirname(path)) != "alerts":
     sys.exit()
 
-  file_name = path.split("/")[-1]
+  file_name = os.path.basename(path)
   file_name_parts = file_name.split(".")
   # metadata file added/changed would be checked for expected fields
   if file_name == "metadata.yaml":
