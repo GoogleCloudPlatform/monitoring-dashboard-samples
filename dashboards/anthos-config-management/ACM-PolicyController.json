@@ -1,5 +1,7 @@
 {
+  "category": "CUSTOM",
   "displayName": "Policy Controller",
+  "etag": "e04b8e237cf0e29c3a71ee50184963e5",
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -14,17 +16,17 @@
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
-                "plotType": "HEATMAP",
+                "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/gatekeeper_validation_request_duration_seconds\" resource.type=\"k8s_container\""
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/gatekeeper/validation_request_duration_seconds\" resource.type=\"k8s_container\""
                   }
                 }
               }
@@ -41,43 +43,6 @@
         "yPos": 4
       },
       {
-        "height": 4,
-        "widget": {
-          "title": "Workqueue Duration",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "HEATMAP",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "perSeriesAligner": "ALIGN_DELTA"
-                    },
-                    "filter": "metric.type=\"workload.googleapis.com/workqueue_work_duration_seconds\" resource.type=\"k8s_container\""
-                  }
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 8
-      },
-      {
         "height": 2,
         "widget": {
           "scorecard": {
@@ -92,39 +57,14 @@
                   "crossSeriesReducer": "REDUCE_MAX",
                   "perSeriesAligner": "ALIGN_MEAN"
                 },
-                "filter": "metric.type=\"workload.googleapis.com/gatekeeper_constraint_templates\" resource.type=\"k8s_container\" metric.label.\"status\"=\"active\""
+                "filter": "metric.type=\"custom.googleapis.com/opencensus/gatekeeper/constraint_templates\" resource.type=\"k8s_container\" metric.label.\"status\"=\"active\""
               }
             }
           },
           "title": "Constraint Templates"
         },
-        "width": 2,
-        "xPos": 2,
-        "yPos": 0
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "sparkChartView": {
-              "sparkChartType": "SPARK_LINE"
-            },
-            "timeSeriesQuery": {
-              "apiSource": "DEFAULT_CLOUD",
-              "timeSeriesFilter": {
-                "aggregation": {
-                  "alignmentPeriod": "60s",
-                  "crossSeriesReducer": "REDUCE_MAX",
-                  "perSeriesAligner": "ALIGN_MAX"
-                },
-                "filter": "metric.type=\"workload.googleapis.com/gatekeeper_constraints\" resource.type=\"k8s_container\" metric.label.\"status\"=\"active\""
-              }
-            }
-          },
-          "title": "Constraints"
-        },
-        "width": 2,
-        "xPos": 4,
+        "width": 3,
+        "xPos": 0,
         "yPos": 0
       },
       {
@@ -156,15 +96,15 @@
                   "crossSeriesReducer": "REDUCE_MAX",
                   "perSeriesAligner": "ALIGN_MAX"
                 },
-                "filter": "metric.type=\"workload.googleapis.com/gatekeeper_violations\" resource.type=\"k8s_container\" metric.label.\"enforcement_action\"=\"deny\""
+                "filter": "metric.type=\"custom.googleapis.com/opencensus/gatekeeper/violations\" resource.type=\"k8s_container\" metric.label.\"enforcement_action\"=\"deny\""
               }
             }
           },
           "title": "Policy Violations (Deny)"
         },
-        "width": 2,
-        "xPos": 0,
-        "yPos": 2
+        "width": 3,
+        "xPos": 3,
+        "yPos": 0
       },
       {
         "height": 4,
@@ -187,7 +127,7 @@
                       "crossSeriesReducer": "REDUCE_NONE",
                       "perSeriesAligner": "ALIGN_RATE"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/gatekeeper_validation_request_count\" resource.type=\"k8s_container\"",
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/gatekeeper/validation_request_count\" resource.type=\"k8s_container\"",
                     "secondaryAggregation": {
                       "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_NONE",
@@ -211,66 +151,6 @@
       {
         "height": 4,
         "widget": {
-          "title": "Constraint Template Ingestion Duration",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "HEATMAP",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "perSeriesAligner": "ALIGN_DELTA"
-                    },
-                    "filter": "metric.type=\"workload.googleapis.com/gatekeeper_constraint_template_ingestion_duration_seconds\" resource.type=\"k8s_container\""
-                  }
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 8
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "apiSource": "DEFAULT_CLOUD",
-              "timeSeriesFilter": {
-                "aggregation": {
-                  "alignmentPeriod": "60s",
-                  "crossSeriesReducer": "REDUCE_MAX",
-                  "perSeriesAligner": "ALIGN_MAX"
-                },
-                "filter": "metric.type=\"workload.googleapis.com/gatekeeper_audit_last_run_time\" resource.type=\"k8s_container\""
-              }
-            }
-          },
-          "title": "Last Audit Run Time (convert to date)"
-        },
-        "width": 2,
-        "xPos": 0,
-        "yPos": 0
-      },
-      {
-        "height": 4,
-        "widget": {
           "title": "Audit Duration Seconds",
           "xyChart": {
             "chartOptions": {
@@ -279,17 +159,17 @@
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
-                "plotType": "HEATMAP",
+                "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/gatekeeper_audit_duration_seconds\" resource.type=\"k8s_container\""
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/gatekeeper/audit_duration_seconds\" resource.type=\"k8s_container\""
                   }
                 }
               }
@@ -328,14 +208,14 @@
                   "crossSeriesReducer": "REDUCE_MEAN",
                   "perSeriesAligner": "ALIGN_MEAN"
                 },
-                "filter": "metric.type=\"workload.googleapis.com/gatekeeper_violations\" resource.type=\"k8s_container\" metric.label.\"enforcement_action\"=\"dryrun\""
+                "filter": "metric.type=\"custom.googleapis.com/opencensus/gatekeeper/violations\" resource.type=\"k8s_container\" metric.label.\"enforcement_action\"=\"dryrun\""
               }
             }
           },
           "title": "Policy Violations (Dry Run)"
         },
-        "width": 2,
-        "xPos": 2,
+        "width": 3,
+        "xPos": 3,
         "yPos": 2
       },
       {
@@ -361,16 +241,17 @@
                   "crossSeriesReducer": "REDUCE_MEAN",
                   "perSeriesAligner": "ALIGN_MEAN"
                 },
-                "filter": "metric.type=\"workload.googleapis.com/gatekeeper_constraints\" resource.type=\"k8s_container\" metric.label.\"enforcement_action\"=\"warn\""
+                "filter": "metric.type=\"custom.googleapis.com/opencensus/gatekeeper/violations\" resource.type=\"k8s_container\" metric.label.\"enforcement_action\"=\"warn\""
               }
             }
           },
           "title": "Policy Violations (Warning)"
         },
-        "width": 2,
-        "xPos": 4,
+        "width": 3,
+        "xPos": 0,
         "yPos": 2
       }
     ]
-  }
+  },
+  "name": "projects/1045206621198/dashboards/4828130e-48be-4901-aab1-06119d9e9917"
 }
