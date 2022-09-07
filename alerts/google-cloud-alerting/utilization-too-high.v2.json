@@ -1,0 +1,29 @@
+{
+  "displayName": "OiC Sample Metric-Based Alert Policy",
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - CPU usage",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "600s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"compute.googleapis.com/instance/cpu/usage_time\"",
+        "thresholdValue": 1,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
