@@ -18,10 +18,11 @@ def check_json_in_metadata(path, file_id, file_version):
 def check_metadata_entries(path):
   with open(path) as f:
     data = yaml.safe_load(f)
+  templates_metadata = data.get("alert_policy_templates")
   if not templates_metadata:
     raise Exception("alert_policy_templates not defined in {}".format(path))
   required_fields = {"id", "version", "display_name", "description"}
-  for template_metadata in data.get("alert_policy_templates"):
+  for template_metadata in templates_metadata:
     missing_fields = required_fields - template_metadata.keys()
     if missing_fields:
       raise Exception("{} missing {}".format(path, missing_fields))
