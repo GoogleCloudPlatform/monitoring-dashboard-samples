@@ -1,0 +1,34 @@
+{
+    "displayName": "ScyllaDB - Prometheus - High Compaction Load",
+    "documentation": {
+      "content": "High compaction load can interfere with system behavior. If compaction load remains high, you may need to set the compaction share to a static level.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Prometheus Target - prometheus/scylla_scheduler_shares/gauge",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "perSeriesAligner": "ALIGN_MEAN"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/scylla_scheduler_shares/gauge\" AND metric.labels.group = \"compaction\"",
+          "thresholdValue": 1000,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": false,
+    "notificationChannels": []
+  }

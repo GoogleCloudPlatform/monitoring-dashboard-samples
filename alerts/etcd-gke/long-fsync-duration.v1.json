@@ -1,0 +1,35 @@
+{
+    "displayName": "etcd - Prometheus - Long Fsync Duration",
+    "documentation": {
+      "content": "When the WAL (Write-Ahead Logging) fsync time is too long, performance is degrading, often due to disk issues. This could cause cluster instability, or high latency for client requests.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Prometheus Target - prometheus/etcd_disk_wal_fsync_duration_seconds/histogram",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "crossSeriesReducer": "REDUCE_MEAN",
+              "perSeriesAligner": "ALIGN_DELTA"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/etcd_disk_wal_fsync_duration_seconds/histogram\"",
+          "thresholdValue": 0.1,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }
