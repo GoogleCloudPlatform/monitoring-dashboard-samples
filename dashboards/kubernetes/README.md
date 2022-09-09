@@ -4,6 +4,11 @@
 
 - These dashboards are based on built-in promtheus metrics.
 
+|Kubernetes Infrastructure Overview|
+|:------------------|
+|Filename: [k8s-overview-prometheus.json](k8s-overview-prometheus.json)|
+|This dashboard has charts displaying metrics related to: `High Level / Resource Usage`, `Deployments`, `DaemonSets`, and `ReplicaSets`.|
+
 |Kubernetes Cluster Overview|
 |:------------------|
 |Filename: [k8s-cluster-prometheus.json](k8s-cluster-prometheus.json)|
