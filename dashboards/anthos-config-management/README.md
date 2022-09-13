@@ -12,4 +12,4 @@
 |Anthos Config Management Policy Controller|
 |:---------------------|
 |Filename: [ACM-PolicyController.json](ACM-PolicyController.json)|
-|This dashboard has 10 charts to indicate the status of Policy Controller. These charts include number of constraint templates and constraints deployed, policy violations, and the resources used by Policy Controller.|
+|This dashboard surfaces metrics that indicate the status of Policy Controller and the policies enforced.|
