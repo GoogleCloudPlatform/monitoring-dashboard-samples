@@ -13,7 +13,12 @@
 |Elasticsearch Cluster GCE Overview|
 |:------------------|
 |Filename: [elasticsearch-cluster-gce-overview.json](elasticsearch-cluster-gce-overview.json)| 
-| This dashboard has 14 widgets for viewing Elasticsearch cluster-level metrics when monitored by the Google's Ops Agent including  `Nodes`, `Green Status`, `Yellow Status`, `Red Status`, `Data Nodes`, `Active Shards`, `Initializing Shards`, `Relocating Shards`, `Unassigned Shards`, `Published Cluster States`, `Published Clusters State Differences`, `Queued States`, `Update State Time`, and `Attempted State Updates` from Elasticsearch. There is also a log panel containing `Elasticsearch_json` and `Elasticsearch_gc` logs.|
+| This dashboard has 14 widgets for viewing Elasticsearch cluster-level metrics when monitored by the Google's Ops Agent including  `Nodes`, `Green Status`, `Yellow Status`, `Red Status`, `Data Nodes`, `Active Shards`, `Initializing Shards`, `Relocating Shards`, `Unassigned Shards`, `Published Cluster States`, `Published Clusters State Differences`, `Queued States`, `Update State Time`, and `Attempted State Updates` from Elasticsearch. There is also log panels containing `Elasticsearch_json` and `Elasticsearch_gc` logs.|
+
+|Elasticsearch Node GCE Advance Overview|
+|:------------------|
+|Filename: [elasticsearch-node-gce-advance-overview.json](elasticsearch-node-gce-advance-overview.json)|
+| This dashboard has charts displaying `Estimated Breaker Memory Used`, `Breaker Memory Limit`, `Total Tripped Breakers`, `Disk I/O Read`, `Disk I/O Write`, `Shards Data Set Size`, `Shards Reserved Size`, `Translog Operations`, `Translog Size`, `Translog Uncommitted Size`, `CPU Usage`, `OS Memory Usage`, `CPU 1m Avg Load`, `CPU 5m Avg Load`, `CPU 15m Avg Load`, `Indexing Pressure`, `Indexing Pressure Limit`, `Indexing Pressure Rejections`, `Documents Ingested`, `Current Documents Ingested`, `Preprocessed Documents Ingested`, `Failed Operations Ingested`, `Failed Pipeline Operations Ingested`, `Current Pipeline Documents Ingested`, `Script Compilations`, `Script Compilations Triggered`, and `Script Cache Evictions` from Elasticsearch. There are also log panels containing `Elasticsearch_json` and `Elasticsearch_gc` logs.|
 
 |Elasticsearch Prometheus|
 |:------------------|
