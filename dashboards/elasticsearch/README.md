@@ -13,7 +13,7 @@
 |Elasticsearch Cluster GCE Overview|
 |:------------------|
 |Filename: [elasticsearch-cluster-gce-overview.json](elasticsearch-cluster-gce-overview.json)| 
-| This dashboard has 9 widgets for viewing Elasticsearch cluster-level metrics when monitored by the Google's Ops Agent including  `Nodes`, `Green Status`, `Yellow Status`, `Red Status`, `Data Nodes`, `Active Shards`, `Initializing Shards`, `Relocating Shards`, and `Unassigned Shards`. |
+| This dashboard has 14 widgets for viewing Elasticsearch cluster-level metrics when monitored by the Google's Ops Agent including  `Nodes`, `Green Status`, `Yellow Status`, `Red Status`, `Data Nodes`, `Active Shards`, `Initializing Shards`, `Relocating Shards`, `Unassigned Shards`, `Published Cluster States`, `Published Clusters State Differences`, `Queued States`, `Update State Time`, and `Attempted State Updates` from Elasticsearch. There is also a log panel containing `Elasticsearch_json` and `Elasticsearch_gc` logs.|
 
 |Elasticsearch Prometheus|
 |:------------------|
