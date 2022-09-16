@@ -44,7 +44,7 @@
         },
         "width": 6,
         "xPos": 6,
-        "yPos": 4
+        "yPos": 8
       },
       {
         "height": 4,
@@ -56,7 +56,6 @@
             },
             "dataSets": [
               {
-                "legendTemplate": "commit ${metric.labels.database}",
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
@@ -68,7 +67,7 @@
                       "crossSeriesReducer": "REDUCE_NONE",
                       "perSeriesAligner": "ALIGN_RATE"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/postgresql.commits\"",
+                    "filter": "metric.type=\"workload.googleapis.com/postgresql.commits\" resource.type=\"gce_instance\"",
                     "secondaryAggregation": {
                       "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_NONE",
@@ -76,25 +75,9 @@
                     }
                   }
                 }
-              },
-              {
-                "legendTemplate": "rollback ${metric.labels.database}",
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_AREA",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"workload.googleapis.com/postgresql.rollbacks\" resource.type=\"gce_instance\""
-                  }
-                }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -102,9 +85,9 @@
             }
           }
         },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 0
+        "width": 6,
+        "xPos": 0,
+        "yPos": 4
       },
       {
         "height": 4,
@@ -116,24 +99,14 @@
             },
             "dataSets": [
               {
-                "legendTemplate": "size ${metric.labels.database}",
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
+                "plotType": "STACKED_BAR",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"workload.googleapis.com/postgresql.db_size\""
-                  },
-                  "unitOverride": "By"
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/postgresql.db_size'\n| group_by 1m, [value_db_size_mean: mean(value.db_size)]\n| every 1m\n| cast_units 'By'"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -141,14 +114,14 @@
             }
           }
         },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 0
+        "width": 6,
+        "xPos": 6,
+        "yPos": 4
       },
       {
         "height": 4,
         "widget": {
-          "title": "Backends",
+          "title": "Connections",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -179,7 +152,7 @@
             }
           }
         },
-        "width": 4,
+        "width": 6,
         "xPos": 0,
         "yPos": 0
       },
@@ -219,7 +192,7 @@
         },
         "width": 6,
         "xPos": 0,
-        "yPos": 4
+        "yPos": 8
       },
       {
         "height": 4,
@@ -262,7 +235,7 @@
         },
         "width": 12,
         "xPos": 0,
-        "yPos": 8
+        "yPos": 12
       },
       {
         "height": 4,
@@ -291,7 +264,7 @@
         },
         "width": 4,
         "xPos": 0,
-        "yPos": 12
+        "yPos": 20
       },
       {
         "height": 4,
@@ -320,7 +293,7 @@
         },
         "width": 4,
         "xPos": 4,
-        "yPos": 12
+        "yPos": 20
       },
       {
         "height": 4,
@@ -349,21 +322,93 @@
         },
         "width": 4,
         "xPos": 8,
-        "yPos": 12
+        "yPos": 20
       },
       {
         "height": 2,
         "widget": {
           "text": {
-            "content": "[How to configure PostgreSQL Monitoring](https://cloud.google.com/monitoring/agent/ops-agent/third-party/postgresql)\n\n[View PostgreSQL General Log](https://console.cloud.google.com/logs/query;query=resource.type%3D%22gce_instance%22%0AlogName:postgresql_general)",
+            "content": "[How to configure PostgreSQL Monitoring](https://cloud.google.com/monitoring/agent/ops-agent/third-party/postgresql)\n\n[View PostgreSQL Error Log](https://console.cloud.google.com/logs/query?query=logName:%22postgresql_error%22%0Aresource.type%3D%22gce_instance%22)",
             "format": "MARKDOWN"
           },
           "title": "PostgreSQL Monitoring Links"
         },
         "width": 12,
         "xPos": 0,
+        "yPos": 24
+      },
+      {
+        "height": 4,
+        "widget": {
+          "timeSeriesTable": {
+            "columnSettings": [],
+            "dataSets": [
+              {
+                "tableDisplayOptions": {},
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/postgresql.table.size'\n| group_by 1m, [value_size_mean: mean(value.size)]\n| every 1m\n| cast_units 'By'"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Table Size"
+        },
+        "width": 6,
+        "xPos": 0,
         "yPos": 16
+      },
+      {
+        "height": 4,
+        "widget": {
+          "timeSeriesTable": {
+            "columnSettings": [],
+            "dataSets": [
+              {
+                "tableDisplayOptions": {},
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/postgresql.index.size'\n| group_by 1m, [value_size_mean: mean(value.size)]\n| every 1m\n| cast_units 'By'"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Index Size"
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 16
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Connection Utilization",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| {\nt_0: metric 'workload.googleapis.com/postgresql.backends'\n| group_by [resource.instance_id]\n;\nt_1: metric 'workload.googleapis.com/postgresql.connection.max'\n| group_by [resource.instance_id]\n}\n| outer_join 0\n| value val(0)/val(1) * 100\n| cast_units '%'"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 0
       }
     ]
-  }
+  },
+  "name": "projects/1086931010737/dashboards/022e0165-f808-45dd-a44f-70da92aff3ea"
 }
