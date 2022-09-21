@@ -1,7 +1,7 @@
 # etcd Alerts for GKE
 
 ## Long fsync duration alert
-When the WAL (Write-Ahead Logging) fsync time is too long, performance is degrading, often due to disk issues. This could cause cluster instability, or high latency for client requests.
+When the WAL (Write-Ahead Logging) fsync time is too long, performance is degrading, often due to disk issues. This could cause cluster instability or high latency for client requests.
 
 ## Rapid leader changes alert
 When the leader of the cluster changes often, it indicates that the leader is unstable, often due to network issues or high load.
