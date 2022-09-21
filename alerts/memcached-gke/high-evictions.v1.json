@@ -1,0 +1,33 @@
+{
+  "displayName": "Memcached - Prometheus - High Evictions",
+  "documentation": {
+    "content": "If the number of evicted items increases by 1 or more that shows that items are being evicted due to high memory usage, which could indicate not enough memory, or too many objects being inserted.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Prometheus Target - prometheus/memcached_items_evicted_total/counter",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_DELTA"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/memcached_items_evicted_total/counter\"",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
