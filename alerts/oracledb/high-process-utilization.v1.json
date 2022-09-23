@@ -1,0 +1,26 @@
+{
+    "displayName": "Oracle Database - High Process Utilization",
+    "documentation": {
+        "content": "Alert fires when the database is nearing the process limit, which could result in new processes being blocked from starting.",
+        "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+        {
+            "displayName": "Processes near system max",
+            "conditionMonitoringQueryLanguage": {
+                "duration": "0s",
+                "trigger": {
+                    "count": 1
+                },
+                "query": "{\n     t_0: fetch gce_instance::workload.googleapis.com/oracle.process.limit ;\n     t_1: fetch gce_instance::workload.googleapis.com/oracle.process.count\n}\n| group_by [resource.instance_id]\n| outer_join 0\n| window 1m\n| condition val(0) * .9 < val(1)\n"
+            }
+        }
+    ],
+    "alertStrategy": {
+        "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+}
