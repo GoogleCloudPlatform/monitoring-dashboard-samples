@@ -1,0 +1,34 @@
+{
+  "displayName": "Replication in Error State",
+  "documentation": {
+    "content": "This Alert fires when any replica has stopped working and has entered an error state. For more information around disaster recovery visit: https://cloud.google.com/sql/docs/mysql/replication/cross-region-replicas.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Cloud SQL Database - Replication in Error State",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_COUNT_TRUE"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"cloudsql_database\" AND metric.type = \"cloudsql.googleapis.com/database/replication/state\" AND metric.labels.state = \"Error\"",
+        "thresholdValue": 1,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
