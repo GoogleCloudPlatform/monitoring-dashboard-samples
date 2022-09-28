@@ -1,13 +1,14 @@
-name: 'Add PR reviewers'
+name: 'Add Dashboard PR reviewers'
 on:
   pull_request_target:
-    types: [ready_for_review]
+    types: [opened, ready_for_review]
+    paths: ["dashboards/**", "integrations/**"]
 
 jobs:
   add-owner:
     runs-on: ubuntu-latest
     steps:
       - name: run
-        uses: kentaro-m/auto-assign-action@v1.1.1
+        uses: kentaro-m/auto-assign-action@v1.2.3
         with:
           configuration-path: ".github/review-assignment-config.yaml"
