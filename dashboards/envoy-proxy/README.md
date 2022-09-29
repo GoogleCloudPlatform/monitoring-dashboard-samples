@@ -2,7 +2,7 @@
 
 #### Notes
 
-- This dashboard is based on metrics collected by Istio for the built-in Envoy sidecar. [metrics collected by Istio](https://istio.io/latest/docs/ops/integrations/prometheus/).
+- This dashboard is based on [metrics collected by Istio] for the built-in Envoy sidecar. (https://istio.io/latest/docs/ops/integrations/prometheus/).
 
 |Envoy Proxy|
 |:------------------|
