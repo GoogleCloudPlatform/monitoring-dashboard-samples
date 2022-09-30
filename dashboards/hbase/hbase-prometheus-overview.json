@@ -1,13 +1,14 @@
 {
   "category": "CUSTOM",
   "displayName": "HBase Prometheus Overview",
+  "etag": "60a87bf42336cdeeaeb37d0a1d8de1f3",
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
       {
         "height": 4,
         "widget": {
-          "title": "Slow Get Operations",
+          "title": "Region Servers",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -17,7 +18,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_RegionServer_Server_slowGetCount"
+                  "prometheusQuery": "hbase_Master_Server_numRegionServers"
                 }
               }
             ],
@@ -35,7 +36,7 @@
       {
         "height": 4,
         "widget": {
-          "title": "Get Operations Time 99th Percentile",
+          "title": "Dead Region Servers",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -45,7 +46,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_getTime_99th_percentile"
+                  "prometheusQuery": "hbase_Master_Server_numDeadRegionServers"
                 }
               }
             ],
@@ -63,7 +64,7 @@
       {
         "height": 4,
         "widget": {
-          "title": "Slow Append Operations",
+          "title": "Read Requests",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -73,7 +74,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(hbase_RegionServer_Server_slowAppendCount[5m])"
+                  "prometheusQuery": "rate(hbase_RegionServer_Server_readRequestCount[1m])"
                 }
               }
             ],
@@ -91,7 +92,7 @@
       {
         "height": 4,
         "widget": {
-          "title": "Append Operations Time 99th Percentile",
+          "title": "Write Requests",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -101,7 +102,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_appendTime_99th_percentile"
+                  "prometheusQuery": "rate(hbase_RegionServer_Server_writeRequestCount[1m])"
                 }
               }
             ],
@@ -115,203 +116,8 @@
         "width": 6,
         "xPos": 6,
         "yPos": 4
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Slow Delete Operations",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "rate(hbase_RegionServer_Server_slowDeleteCount[5m])"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 8
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Delete Operations Time 99th Percentile",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_deleteTime_99th_percentile"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 8
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Slow Put Operations",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "rate(hbase_RegionServer_Server_slowPutCount[5m])"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 12
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Put Operations Time 99th Percentile",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_putTime_99th_percentile"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 12
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Slow Increment Operations",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "rate(hbase_RegionServer_Server_slowIncrementCount[5m])"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 16
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Increment Operations Time 99th Percentile",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_incrementTime_99th_percentile"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 16
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Replay 99th Percentile",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_RegionServer_Server_Replay_99th_percentile"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 20
       }
     ]
-  }
+  },
+  "name": "projects/685351563540/dashboards/37c44280-771f-42a8-8335-a3c5b5756117"
 }
