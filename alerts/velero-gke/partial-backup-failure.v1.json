@@ -1,0 +1,34 @@
+{
+    "displayName": "Velero - Prometheus - Partial Backup Failure",
+    "documentation": {
+      "content": "This alert triggers when a backup partially fails. This indicates that a full backup could not be made, and the resulting backup only partially describes the cluster. Inspect the logs for Velero in order to further determine the cause.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Prometheus Target - prometheus/velero_backup_partial_failure_total/counter",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "perSeriesAligner": "ALIGN_RATE"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/velero_backup_partial_failure_total/counter\"",
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }
+  

@@ -1,0 +1,38 @@
+{
+  "displayName": "CloudSQL - Instance in Failed State",
+  "documentation": {
+    "content": "This Alert fires when any CloudSQL Instance has stopped working and has entered an error state. The cause should be investigated and the instance should be restored from a backup. for more information around managing instances and troubleshooting failed instances visit: https://cloud.google.com/sql/docs/troubleshooting#managing-instances",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Cloud SQL Database - Instance state",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "crossSeriesReducer": "REDUCE_SUM",
+            "groupByFields": [
+              "metric.label.state"
+            ],
+            "perSeriesAligner": "ALIGN_COUNT_TRUE"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"cloudsql_database\" AND metric.type = \"cloudsql.googleapis.com/database/instance_state\" AND metric.labels.state = \"FAILED\"",
+        "thresholdValue": 1,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
