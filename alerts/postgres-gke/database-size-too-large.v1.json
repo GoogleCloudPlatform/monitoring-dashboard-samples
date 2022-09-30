@@ -1,0 +1,34 @@
+{
+    "displayName": "PostgreSQL - Prometheus - Database Size Too Large",
+    "documentation": {
+      "content": "If the database is growing larger than expected (100 GB by default), it may signal excess data being stored or excess records not being properly removed by an application.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Prometheus Target - prometheus/pg_database_size_bytes/gauge",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "perSeriesAligner": "ALIGN_MEAN"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/pg_database_size_bytes/gauge\"",
+          "thresholdValue": 100000000000,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }

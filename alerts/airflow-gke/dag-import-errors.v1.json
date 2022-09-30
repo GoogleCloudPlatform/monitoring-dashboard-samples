@@ -1,0 +1,33 @@
+{
+    "displayName": "Apache Airflow Scheduler - Prometheus - DAG Import Errors",
+    "documentation": {
+      "content": "When a DAG file fails to import, the DAG will not be able to run.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Prometheus Target - prometheus/airflow_dag_processing_import_errors/gauge",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "perSeriesAligner": "ALIGN_MEAN"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/airflow_dag_processing_import_errors/gauge\"",
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }
