@@ -1,0 +1,27 @@
+{
+    "displayName": "Postgres - High CPU Utilization",
+    "documentation": {
+        "content": "Alerts whenever the CPU utilization goes above 80% which usually indicates the instance's performance is heavily degraded and likely is going to impact applications reliant on postgres.",
+        "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+        {
+            "displayName": "Postgres CPU > 90%",
+            "conditionMonitoringQueryLanguage": {
+                "duration": "0s",
+                "trigger": {
+                    "count": 1
+                },
+                "evaluationMissingData": "EVALUATION_MISSING_DATA_NO_OP",
+                "query": "def top_cpu_filtered_by_metric filter_metric =\n  fetch gce_instance\n  | { t_cpu: metric 'compute.googleapis.com/instance/cpu/utilization'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value t_cpu.value.utilization\n  | group_by [resource.project_id, resource.zone, metric.instance_name], 1m,\n      [value_utilization_mean: mean(t_cpu.value.utilization)]\n  | every 1m;\n\n@top_cpu_filtered_by_metric 'workload.googleapis.com/postgresql.operations'\n| condition val() > .9"
+            }
+        }
+    ],
+    "alertStrategy": {
+        "autoClose": "1800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+}

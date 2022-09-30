@@ -1,0 +1,35 @@
+{
+    "displayName": "Elasticsearch - Prometheus - Yellow Cluster Status",
+    "documentation": {
+        "content": "When the cluster has a \"yellow\" status, at least one replica shard is unallocated or missing.",
+        "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+        {
+            "displayName": "Prometheus Target - prometheus/elasticsearch_cluster_health_status/gauge",
+            "conditionThreshold": {
+                "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/elasticsearch_cluster_health_status/gauge\" AND metric.labels.color = \"yellow\"",
+                "aggregations": [
+                    {
+                        "alignmentPeriod": "300s",
+                        "crossSeriesReducer": "REDUCE_NONE",
+                        "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                ],
+                "comparison": "COMPARISON_GT",
+                "duration": "0s",
+                "trigger": {
+                    "count": 1
+                },
+                "thresholdValue": 0
+            }
+        }
+    ],
+    "alertStrategy": {
+        "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+}

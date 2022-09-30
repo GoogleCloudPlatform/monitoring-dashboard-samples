@@ -1,0 +1,33 @@
+{
+  "displayName": "Kafka - Prometheus - Under Replicated Partitions",
+  "documentation": {
+    "content": "When there is an under replicated partition for an extended period of time (default is 1 minute), then the cluster is not healthy and cannot guarantee high availability.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Prometheus Target - prometheus/kafka_topic_partition_under_replicated_partition/gauge",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "60s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/kafka_topic_partition_under_replicated_partition/gauge\"",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": false,
+  "notificationChannels": []
+}

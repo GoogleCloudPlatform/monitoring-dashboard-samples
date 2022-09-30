@@ -1,0 +1,34 @@
+{
+  "displayName": "RabbitMQ - Prometheus - High Unacknowledged Messages",
+  "documentation": {
+    "content": "When the number of unacknowledged messages is higher than a threshold, it indicates that consumers may not be able to keep up processing the messages, or are otherwise not acknowledging the message after reading it.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Prometheus Target - prometheus/rabbitmq_channel_messages_unacked/gauge",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/rabbitmq_channel_messages_unacked/gauge\"",
+        "thresholdValue": 5,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
