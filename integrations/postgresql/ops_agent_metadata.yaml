@@ -9,7 +9,7 @@ platforms:
       patch: 0
     metrics_minimum_supported_version:
       major: 2
-      minor: 9
+      minor: 20
       patch: 0
   detections:
   - characteristic_log:
@@ -34,24 +34,125 @@ platforms:
     - name: jsonPayload.user
       type: string
       description: Authenticated user for the action being logged when relevant
+    - name: severity
+      type: string
+      description: ''
   default_metrics:
   - name: workload.googleapis.com/postgresql.backends
     value_type: INT64
     kind: GAUGE
     labels:
     - database
+  - name: workload.googleapis.com/postgresql.bgwriter.buffers.allocated
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/postgresql.bgwriter.buffers.writes
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - source
+  - name: workload.googleapis.com/postgresql.bgwriter.checkpoint.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - type
+  - name: workload.googleapis.com/postgresql.bgwriter.duration
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - type
+  - name: workload.googleapis.com/postgresql.bgwriter.maxwritten
+    value_type: INT64
+    kind: CUMULATIVE
+    labels: []
+  - name: workload.googleapis.com/postgresql.blocks_read
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database
+    - source
+    - table
   - name: workload.googleapis.com/postgresql.commits
     value_type: INT64
     kind: CUMULATIVE
     labels:
     - database
+  - name: workload.googleapis.com/postgresql.connection.max
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/postgresql.database.count
+    value_type: INT64
+    kind: GAUGE
+    labels: []
   - name: workload.googleapis.com/postgresql.db_size
     value_type: INT64
     kind: GAUGE
     labels:
     - database
+  - name: workload.googleapis.com/postgresql.index.scans
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database
+    - index
+    - table
+  - name: workload.googleapis.com/postgresql.index.size
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - database
+    - index
+    - table
+  - name: workload.googleapis.com/postgresql.operations
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database
+    - operation
+    - table
+  - name: workload.googleapis.com/postgresql.replication.data_delay
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - replication_client
   - name: workload.googleapis.com/postgresql.rollbacks
     value_type: INT64
     kind: CUMULATIVE
     labels:
     - database
+  - name: workload.googleapis.com/postgresql.rows
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - database
+    - state
+    - table
+  - name: workload.googleapis.com/postgresql.table.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - database
+  - name: workload.googleapis.com/postgresql.table.size
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - database
+    - table
+  - name: workload.googleapis.com/postgresql.table.vacuum.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database
+    - table
+  - name: workload.googleapis.com/postgresql.wal.age
+    value_type: INT64
+    kind: GAUGE
+    labels: []
+  - name: workload.googleapis.com/postgresql.wal.lag
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - operation
+    - replication_client

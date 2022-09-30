@@ -1,0 +1,33 @@
+{
+    "displayName": "Jenkins - Prometheus - Plugin Failure",
+    "documentation": {
+      "content": "A plugin failure indicates that a plugin has failed to start. Usually, this can be resolved by explicitly disabling the failing plugin, or by resolving dependency issues with the plugin. See the Jenkins logs to determine the exact cause of the plugin failure.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Prometheus Target - prometheus/jenkins_plugins_failed/gauge",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "perSeriesAligner": "ALIGN_MEAN"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/jenkins_plugins_failed/gauge\"",
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": false,
+    "notificationChannels": []
+  }

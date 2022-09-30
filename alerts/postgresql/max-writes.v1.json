@@ -1,0 +1,35 @@
+{
+    "displayName": "Postgresql - Reached Max Written Buffers",
+    "documentation": {
+        "content": "Alert fires when the background writer attains 3 maxwritten errors i.e. it cannot flush buffers because it has written too many. This is an indication that if an outage were to occur, then any bytes pending may be subject to be lost.",
+        "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+        {
+            "displayName": "Experiencing Max Written Pauses",
+            "conditionThreshold": {
+                "filter": "resource.type = \"gce_instance\" AND metric.type = \"workload.googleapis.com/postgresql.bgwriter.maxwritten\"",
+                "aggregations": [
+                    {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_NONE",
+                        "perSeriesAligner": "ALIGN_RATE"
+                    }
+                ],
+                "comparison": "COMPARISON_GT",
+                "duration": "0s",
+                "trigger": {
+                    "count": 1
+                },
+                "thresholdValue": 3
+            }
+        }
+    ],
+    "alertStrategy": {
+        "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+}
