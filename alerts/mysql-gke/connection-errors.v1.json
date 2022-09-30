@@ -1,0 +1,33 @@
+{
+    "displayName": "MySQL - Prometheus - Connection Errors",
+    "documentation": {
+      "content": "Connection errors mean a connection failed to be established. This indicates applications may be having trouble connecting to your MySQL database. See the `error` label on the time-series that triggers the alert for a more specific cause.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Prometheus Target - prometheus/mysql_global_status_connection_errors_total/counter",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "perSeriesAligner": "ALIGN_DELTA"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "300s",
+          "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/mysql_global_status_connection_errors_total/counter\"",
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }
