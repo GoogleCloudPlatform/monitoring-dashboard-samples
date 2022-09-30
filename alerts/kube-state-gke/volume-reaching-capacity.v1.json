@@ -1,0 +1,26 @@
+{
+    "displayName": "Kube State - Prometheus - Volume Reaching Capacity",
+    "documentation": {
+      "content": "This alert triggers when a volume is beginning to reach its capacity. When a volume reaches capacity, it cannot store any more data, which can cause applications to stop working.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Volume Usage Ratio",
+        "conditionMonitoringQueryLanguage": {
+          "duration": "0s",
+          "query": "fetch prometheus_target\n| {\n    t_0: metric prometheus.googleapis.com/kubelet_volume_stats_used_bytes/gauge;\n    t_1: metric prometheus.googleapis.com/kubelet_volume_stats_capacity_bytes/gauge\n}\n| ratio\n| condition val() > 0.9\n| every 5m\n| window 5m",
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }

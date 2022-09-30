@@ -1,0 +1,34 @@
+{
+    "displayName": "MongoDB - Prometheus - Connection Utilization Near Max",
+    "documentation": {
+      "content": "If connections are approaching the limit, then new connections cannot be established. By default the mongod rejects connections at around 52000. Applications may stop functioning if connections cannot be established.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Prometheus Target - prometheus/mongodb_sys_netstat_Tcp_CurrEstab/unknown",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "perSeriesAligner": "ALIGN_MEAN"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/mongodb_sys_netstat_Tcp_CurrEstab/unknown\"",
+          "thresholdValue": 50000,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }
