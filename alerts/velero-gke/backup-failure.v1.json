@@ -1,0 +1,33 @@
+{
+    "displayName": "Velero - Prometheus - Backup Failure",
+    "documentation": {
+      "content": "This alert triggers when a backup fails. If this occurs, then a backup failed, and data will be missing. Inspect the logs for Velero in order to further determine the cause.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Prometheus Target - prometheus/velero_backup_failure_total/counter",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "perSeriesAligner": "ALIGN_RATE"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/velero_backup_failure_total/counter\"",
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }

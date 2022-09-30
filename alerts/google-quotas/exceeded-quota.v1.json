@@ -1,0 +1,27 @@
+{
+  "displayName": "Quota Exceeded Alert Policy",
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Quota Exceeded",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "60s",
+            "perSeriesAligner": "ALIGN_COUNT_TRUE",
+            "crossSeriesReducer": "REDUCE_SUM"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type=\"consumer_quota\" AND metric.type=\"serviceruntime.googleapis.com/quota/exceeded\" AND resource.label.project_id=\"${PROJECT}\" AND resource.label.service=\"${SERVICE}\" AND metric.label.quota_metric=\"${METRIC}\" AND metric.label.limit_name=\"${LIMIT}\"",
+        "thresholdValue": 1,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "combiner": "OR",
+  "enabled": true
+}

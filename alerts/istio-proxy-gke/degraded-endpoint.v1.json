@@ -1,0 +1,34 @@
+{
+    "displayName": "Istio Proxy - Prometheus - Degraded Endpoint",
+    "documentation": {
+        "content": "When an endpoint is degraded, the endpoint can still receive traffic, but is de-prioritized. This indicates that a host may have performance issues that need to be remediated for the endpoint to be considered healthy again.",
+        "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+        {
+            "displayName": "Prometheus Target - prometheus/envoy_cluster_membership_degraded/gauge",
+            "conditionThreshold": {
+                "aggregations": [
+                    {
+                        "alignmentPeriod": "300s",
+                        "crossSeriesReducer": "REDUCE_MEAN",
+                        "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                ],
+                "comparison": "COMPARISON_GT",
+                "duration": "0s",
+                "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/envoy_cluster_membership_degraded/gauge\"",
+                "trigger": {
+                    "count": 1
+                }
+            }
+        }
+    ],
+    "alertStrategy": {
+        "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+}
