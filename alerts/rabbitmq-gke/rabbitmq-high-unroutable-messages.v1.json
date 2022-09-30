@@ -1,0 +1,33 @@
+{
+  "displayName": "RabbitMQ - Prometheus - High Unroutable Messages",
+  "documentation": {
+    "content": "When the unroutable message rate is greater than a threshold, the consumers are not getting every message.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Prometheus Target - prometheus/rabbitmq_channel_messages_unroutable_dropped_total/counter",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_RATE"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/rabbitmq_channel_messages_unroutable_dropped_total/counter\"",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
