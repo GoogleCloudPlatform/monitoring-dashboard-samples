@@ -1,0 +1,38 @@
+{
+    "displayName": "NGINX Ingress Controller - Prometheus - High Request Rate",
+    "documentation": {
+      "content": "The request rate is derived from the requests metrics taken as a rate over a 5 minute interval. This value should be monitored beforehand to understand what qualifies as a normal request rate so a threshold can be established. When the request rate is above this threshold, then that means there is a large spike in traffic for a particular controller pod.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Prometheus Target - prometheus/nginx_ingress_controller_requests/counter",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "crossSeriesReducer": "REDUCE_SUM",
+              "groupByFields": [
+                "metric.label.controller_pod"
+              ],
+              "perSeriesAligner": "ALIGN_RATE"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/nginx_ingress_controller_requests/counter\"",
+          "thresholdValue": 100,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }
