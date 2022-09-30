@@ -1,0 +1,34 @@
+{
+  "displayName": "Kibana - Prometheus - High CPU Usage",
+  "documentation": {
+    "content": "This alert triggers when there is a high amount of CPU usage. High CPU usage indicates that Kibana is running out of compute resources, and performance may degrade.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Prometheus Target - prometheus/kibana_os_load5/gauge",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/kibana_os_load5/gauge\"",
+        "thresholdValue": 90,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": false,
+  "notificationChannels": []
+}
