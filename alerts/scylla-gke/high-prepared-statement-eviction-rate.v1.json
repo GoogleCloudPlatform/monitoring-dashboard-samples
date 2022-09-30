@@ -1,0 +1,26 @@
+{
+    "displayName": "ScyllaDB - Prometheus - High Prepared Statement Eviction Rate",
+    "documentation": {
+      "content": "If the prepared statement cache is being continuously evicted, it indicates an error in application prepared-statement usage logic. This can cause performance to degrade.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Prometheus Target - prometheus/scylla_cql_prepared_cache_evictions/counter",
+        "conditionMonitoringQueryLanguage": {
+          "duration": "0s",
+          "query": "fetch prometheus_target\n| { t_0: metric 'prometheus.googleapis.com/scylla_cql_prepared_cache_evictions/counter';\n    t_1: metric 'prometheus.googleapis.com/scylla_cql_authorized_prepared_statements_cache_evictions/counter'\n}\n| outer_join 0, 0\n| add\n| align rate(5m)\n| every 5m\n| condition val() > 100\n",
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": false,
+    "notificationChannels": []
+  }

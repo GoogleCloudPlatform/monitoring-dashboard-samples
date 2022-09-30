@@ -1,0 +1,34 @@
+{
+    "displayName": "Jenkins - Prometheus - Health Score Below 1",
+    "documentation": {
+      "content": "If the Jenkins health score is below 1, then at least one health check has failed. To view which health checks have failed, see `${JENKINS_URL}/metrics/currentUser/healthcheck?pretty=true`.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Prometheus Target - prometheus/jenkins_health_check_score/gauge",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "300s",
+              "perSeriesAligner": "ALIGN_MEAN"
+            }
+          ],
+          "comparison": "COMPARISON_LT",
+          "duration": "0s",
+          "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/jenkins_health_check_score/gauge\"",
+          "thresholdValue": 1,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": false,
+    "notificationChannels": []
+  }

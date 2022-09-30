@@ -1,0 +1,34 @@
+{
+  "displayName": "RabbitMQ - Prometheus - Low Delivered Messages",
+  "documentation": {
+    "content": "When the rate of delivered messages is lower than a threshold, then there may be an issue with a producer or with routing logic.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Prometheus Target - prometheus/rabbitmq_channel_messages_delivered_total/counter",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_RATE"
+          }
+        ],
+        "comparison": "COMPARISON_LT",
+        "duration": "0s",
+        "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/rabbitmq_channel_messages_delivered_total/counter\"",
+        "thresholdValue": 1,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
