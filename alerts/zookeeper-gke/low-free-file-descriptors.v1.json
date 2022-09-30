@@ -1,0 +1,26 @@
+{
+  "displayName": "Zookeeper - Prometheus - Low Free File Descriptors",
+  "documentation": {
+    "content": "If the amount of open file descriptors is about to hit the maximum amount of open file descriptors, Zookeeper will not be able to handle any new requests and will fail to connect new clients.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "New condition",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "0s",
+        "query": "fetch prometheus_target\n| { metric 'prometheus.googleapis.com/max_file_descriptor_count/gauge'\n  ; metric 'prometheus.googleapis.com/open_file_descriptor_count/gauge' }\n| outer_join 0\n| group_by 1m\n| sub\n| condition val() < 1000",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
