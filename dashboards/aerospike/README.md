@@ -13,4 +13,4 @@
 |Aerospike Prometheus Overview|
 |:------------------|
 |Filename: [aerospike-prometheus-overview.json](aerospike-prometheus)|
-| This dashboard has 8 charts for the following metrics: `Free Memory %`, `Node Connections`, `Namespace Memory Used (bytes)`, `Namespace Storage Data in Memory`, `Namespace Transaction Pending Limit`. |
+| This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/aerospike/aerospike-prometheus-exporter). This dashboard has charts displaying: `Free Memory %`, `Node Connections`, `Namespace Memory Used (bytes)`, `Namespace Storage Data in Memory`, `Namespace Transaction Pending Limit`. |
