@@ -1,0 +1,289 @@
+platforms:
+- type: GCE
+  launch_stage: HIDDEN
+  launch_date: '2022-10-03'
+  agent_requirement:
+    logs_minimum_supported_version:
+      major: 2
+      minor: 22
+      patch: 0
+    metrics_minimum_supported_version:
+      major: 2
+      minor: 22
+      patch: 0
+  detections:
+  - characteristic_log:
+      log_name_regex: oracledb
+  - characteristic_metric:
+      metric_type: workload.googleapis.com/oracle.logon.count
+  default_logs:
+  - name: oracledb_alert
+    fields:
+    - name: jsonPayload.message
+      type: string
+      description: Log message
+    - name: severity
+      type: string
+      description: ''
+  - name: oracledb_audit
+    fields:
+    - name: jsonPayload.action
+      type: string
+      description: Action being logged in the audit log
+    - name: jsonPayload.action_number
+      type: number
+      description: Number identifying the type of action being logged
+    - name: jsonPayload.client_terminal
+      type: string
+      description: Identifier of the client terminal where the action originated
+    - name: jsonPayload.client_user
+      type: string
+      description: Client user for the audited action
+    - name: jsonPayload.database_user
+      type: string
+      description: Database user for the audited action
+    - name: jsonPayload.dbid
+      type: number
+      description: Database identifier
+    - name: jsonPayload.length
+      type: number
+      description: Length of the string representing the action being logged
+    - name: jsonPayload.privilege
+      type: string
+      description: Database privilege the action was executed under
+    - name: jsonPayload.sessionid
+      type: number
+      description: Session identifier
+    - name: jsonPayload.status
+      type: string
+      description: Status of the action
+    - name: jsonPayload.user_host
+      type: string
+      description: Host where the audited action originated
+    - name: severity
+      type: string
+      description: ''
+  default_metrics:
+  - name: workload.googleapis.com/oracle.backup.latest
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+  - name: workload.googleapis.com/oracle.buffer.cache.ratio
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.cursor.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.cursor.current
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.disk.operation.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database_id
+    - db_system
+    - direction
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.disk.operation.size
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database_id
+    - db_system
+    - direction
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.logon.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.logon.current
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.network.data
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database_id
+    - db_system
+    - direction
+    - global_name
+    - instance_id
+    - target
+  - name: workload.googleapis.com/oracle.process.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.process.limit
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.process.pga_memory.size
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+    - program
+    - state
+  - name: workload.googleapis.com/oracle.row.cache.ratio
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.service.response_time
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.session.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.session.limit
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.sort.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+    - type
+  - name: workload.googleapis.com/oracle.sort.row.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.tablespace.count
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - contents
+    - database_id
+    - db_system
+    - global_name
+    - status
+  - name: workload.googleapis.com/oracle.tablespace.size
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - contents
+    - database_id
+    - db_system
+    - global_name
+    - state
+    - tablespace_name
+  - name: workload.googleapis.com/oracle.user.calls
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.user.commits
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.user.rollbacks
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+  - name: workload.googleapis.com/oracle.wait.count
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+    - type
+    - wait_class
+  - name: workload.googleapis.com/oracle.wait.time
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+    - type
+    - wait_class
+  - name: workload.googleapis.com/oracle.wait.timeouts
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - database_id
+    - db_system
+    - global_name
+    - instance_id
+    - type
+    - wait_class
