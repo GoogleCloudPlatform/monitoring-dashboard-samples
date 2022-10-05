@@ -1,0 +1,24 @@
+{
+  "displayName": "Network incident alert policy",
+  "documentation": {
+    "content": "Alerts when a network incident happens, based on service_health_event logs.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "service_health_event logged",
+      "conditionMatchedLog": {
+        "filter": "logName=\"projects/${PROJECT_ID}/logs/networkmanagement.googleapis.com%2Fservice_health_event\""
+      }
+    }
+  ],
+  "alertStrategy": {
+    "notificationRateLimit": {
+      "period": "3600s"
+    },
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
