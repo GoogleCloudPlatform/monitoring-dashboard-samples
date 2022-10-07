@@ -17,7 +17,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesQueryLanguage": "fetch gce_instance\n| {\nt_0: metric 'workload.googleapis.com/oracle.tablespace.size'\n| filter (metric.state == 'used')\n| group_by [metric.global_name, metric.tablespace_name]\n;\nt_1: metric 'workload.googleapis.com/oracle.tablespace.size'\n| filter (metric.state == 'free')\n| group_by [metric.global_name, metric.tablespace_name]\n}\n| outer_join 0\n| value val(0)/(val(0)+val(1)) * 100\n| cast_units '%'"
-                },
+                }
               }
             ],
             "timeshiftDuration": "0s",
@@ -111,9 +111,9 @@
                   "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
-                      "alignmentPeriod": "60s",
+                      "alignmentPeriod": "60s"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/oracle.logon.current\" resource.type=\"gce_instance\"",
+                    "filter": "metric.type=\"workload.googleapis.com/oracle.logon.current\" resource.type=\"gce_instance\""
                   }
                 }
               }
