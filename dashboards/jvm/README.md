@@ -13,4 +13,4 @@
 |JVM Prometheus Overview|
 |:------------------|
 |Filename: [jvm-prometheus-overview.json](jvm-prometheus-overview.json)|
-|This dashboard is based on metrics exposed by an [exporter](https://github.com/prometheus/jmx_exporter), including `Classes Loaded`, `Threads`, `Garbage Collection Count`, `Garbage Collection Time`, `Heap Memory`, and `Non-Heap Memory`.|
+|This dashboard is based on metrics exposed by an [exporter](https://github.com/prometheus/jmx_exporter), including `Classes Loaded`, `Threads`, `Garbage Collection Count`, `Garbage Collection Time`, `Memory Committed (bytes)`, and `Memory Used (bytes)`.|
