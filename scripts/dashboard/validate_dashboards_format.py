@@ -70,8 +70,8 @@ def main():
   if file_name == "metadata.yaml":
     check_metadata_entries(path)
 
-  # all json files added to alerts folder are implictly taken as alert policy jsons
-  # and must follow expected file hierarchy and naming
+  # all json files added to dashboards folder must follow expected
+  # file hierarchy and naming
   elif path.split(".")[-1] == "json":
     # checking if json file name is in the correct format
     check_json_file_name(path, file_name_parts)
