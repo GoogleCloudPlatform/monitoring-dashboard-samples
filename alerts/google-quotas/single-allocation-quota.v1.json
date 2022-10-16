@@ -1,0 +1,25 @@
+{
+  "displayName": "High quota utilization - ${LIMIT_DISPLAY_NAME}",
+  "documentation": {
+    "content": "[Increase the quota](https://console.cloud.google.com/iam-admin/quotas",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Usage Nearirng Quota Limit",
+      "conditionMonitoringQueryLanguage": {
+        "query": "fetch ${MONITORED_RESOURCE}| filter resource.service == '${SERVICE_NAME}' && resource.project_id == '${PROJECT_ID}'| { metric ${METRIC_USAGE_TYPE}| align next_older(1d)| group_by [metric.quota_metric, resource.location], max(val()); metric ${METRIC_LIMIT_TYPE}| filter ${QUOTA_FILTER} ${DIMENSIONS_FILTER}| align next_older(1d)| group_by [metric.quota_metric, resource.location], min(val())}| ratio| every 1m| condition gt(val(), 0.8 '1')",
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
