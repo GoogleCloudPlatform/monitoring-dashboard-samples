@@ -1,7 +1,5 @@
 ### Dashboards for Anthos
 
-#### Notes
-
 |Anthos cluster control plane uptime|
 |:---------------------|
 |Filename: [Anthos-cluster-control-plane-uptime.json](Anthos-cluster-control-plane-uptime.json)|
