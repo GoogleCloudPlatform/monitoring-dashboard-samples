@@ -8,4 +8,9 @@
 |ActiveMQ GCE Overview|
 |:------------------|
 |Filename: [activemq-gce-overview.json](activemq-gce-overview.json)|
-|This dashboard has 14 charts for viewing ActiveMQ when monitored by [Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/activemq#monitored-metrics), including `Memory Usage`, `Store Usage`, `Temp Usage`, `Connections`, `Producers`, `Messages Waiting`, `Messages Enqueued`, `Messages Dequeued`,`Total Current Messages`,`Consumers`, `Average Wait Time`, `CPU % Top 5 VMs`, `Memory % Top 5 VMs`, and `Hosts by Region`
+|This dashboard has 14 charts for viewing ActiveMQ when monitored by [Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/activemq#monitored-metrics), including `Memory Usage`, `Store Usage`, `Temp Usage`, `Connections`, `Producers`, `Messages Waiting`, `Messages Enqueued`, `Messages Dequeued`,`Total Current Messages`,`Consumers`, `Average Wait Time`, `CPU % Top 5 VMs`, `Memory % Top 5 VMs`, and `Hosts by Region`. |
+
+|ActiveMQ Prometheus Overview|
+|:------------------|
+|Filename: [activemq-prometheus-overview.json](activemq-prometheus-overview.json)|
+|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/prometheus/jmx_exporter). This dashboard has charts displaying: `Memory Usage`, `Store Usage`, `Temp Usage`, `Connections`, `Producers`, `Messages Waiting`, `Messages Enqueued`, `Messages Dequeued`,`Total Messages`,`Consumers`, `Average Wait Time`. |
