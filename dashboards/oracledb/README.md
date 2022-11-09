@@ -7,5 +7,5 @@
 
 |Oracle Database Overview|
 |:------------------|
-|Filename: [oracle-database-gce-overview.json](oracle-database-gce-overview.json)|
+|Filename: [oracledb-gce-overview.json](oracledb-gce-overview.json)|
 |This dashboard has charts displaying `Tablespace Usage %`, `Response Time`, `Session Usage %`, `Current Logon Count`, `Process Usage %`, `Process PGA Memory Usage`, `Physical Disk Throughput`, and `Network Throughput` from Oracle Database as well as charts of infrastructure related metrics for the running Oracle Database VMs: `CPU % Top 5 VMs`, `Memory % Top 5 VMs`, and `Hosts by Region`. There is also a log panel containing Oracle Database logs.|
