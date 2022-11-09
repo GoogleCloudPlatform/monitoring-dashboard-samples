@@ -1,0 +1,62 @@
+exporter_type: sidecar
+app_name_short: Redis
+app_name: {{app_name_short}}
+app_site_name: Redis
+app_site_url: https://www.redis.com/
+exporter_name: Redis
+exporter_pkg_name: redis_exporter
+exporter_repo_url: https://github.com/oliver006/redis_exporter
+dashboard_available: true
+minimum_exporter_version: v1.43.1
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+config_mods: |
+  apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: redis
+  spec:
+    serviceName: redis
+    selector:
+      matchLabels:
+  +     app.kubernetes.io/name: redis
+    template:
+      metadata:
+        labels:
+  +       app.kubernetes.io/name: redis
+      spec:
+        containers:
+        - name: redis
+          image: "redis:6.2"
+          ports:
+          - containerPort: 6379
+  +     - name: redis-exporter
+  +       image: oliver006/redis_exporter:v1.43.1
+  +       args: [--include-system-metrics]
+  +       resources:
+  +         requests:
+  +           cpu: 100m
+  +           memory: 100Mi
+  +       ports:
+  +       - containerPort: 9121
+  +         name: prometheus
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: redis
+    labels:
+      app.kubernetes.io/name: redis
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: prometheus
+      scheme: http
+      interval: 60s
+      path: /metrics
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: redis
+alerts_config: {% includecode content_path="stackdriver/docs/managed-prometheus/exporters/configs/redis_alerts.yaml" %}
+additional_alert_info: You can adjust the alert thresholds to suit your application.
+sample_promql_query: up{job="redis", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
