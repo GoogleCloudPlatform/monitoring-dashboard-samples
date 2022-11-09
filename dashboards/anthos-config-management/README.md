@@ -1,7 +1,5 @@
 ### Dashboards for Anthos Config Management
 
-#### Notes
-
 |Anthos Config Management ConfigSync |
 |:---------------------|
 |Filename: [ACM-ConfigSync.json](ACM-ConfigSync.json)|

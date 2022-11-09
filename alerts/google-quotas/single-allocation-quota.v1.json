@@ -1,0 +1,25 @@
+{
+  "displayName": "High allocation quota utilization - ${LIMIT_DISPLAY_NAME}",
+  "documentation": {
+    "content": "Alerts when usage reaches 80%. [View quotas](https://console.cloud.google.com/iam-admin/quotas",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Usage nearing allocation quota limit",
+      "conditionMonitoringQueryLanguage": {
+        "query": "fetch ${MONITORED_RESOURCE}| filter ${OUTER_FILTER}| {metric ${METRIC_USAGE_TYPE}| filter ${QUOTA_USAGE_FILTER}| align next_older(1d)| group_by [], .max; metric ${METRIC_LIMIT_TYPE}| filter ${QUOTA_LIMIT_FILTER}| align next_older(1d)| group_by [], .min}| ratio| every 1m| condition gt(val(), 0.8 '1')",
+        "duration": "60s",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
