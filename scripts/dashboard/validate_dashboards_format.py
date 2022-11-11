@@ -75,6 +75,7 @@ def check_metadata(directory, pathMap):
   print("checking metadata")
   print(pathMap)
   path = os.path.join('.', 'dashboards', directory, 'metadata.yaml')
+
   with open(path) as f:
     data = yaml.safe_load(f)
   sample_dashboards = data.get("sample_dashboards")

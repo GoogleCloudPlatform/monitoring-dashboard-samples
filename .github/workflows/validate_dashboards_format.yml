@@ -27,7 +27,7 @@ jobs:
       
       - name: Get changed files
         id: changed-files
-        uses: g
+        uses: tj-actions/changed-files@v25
 
       - name: checkout repo content
         uses: actions/checkout@v2 # checkout the repository content to github runner.
@@ -44,6 +44,6 @@ jobs:
             
       - name: execute py script # run file
         run: |
-
+        
          echo "running validation on following files ${{ steps.changed-files.outputs.added_files }}"
          python3 scripts/dashboard/validate_dashboards_format.py ${{ steps.changed-files.outputs.added_files }}
