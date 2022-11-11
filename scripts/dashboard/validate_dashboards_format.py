@@ -2,83 +2,136 @@ import json
 import os
 import sys
 import yaml
-from google.cloud import monitoring_v3
 
-def check_json_in_metadata(path, file_id):
-  metadata_path = os.path.join(os.path.dirname(path), "metadata.yaml")
-  check_metadata_entries(metadata_path)
-  with open(metadata_path) as f:
-    data = yaml.safe_load(f)
-  for tmpl in data.get("sample_dashboards"):
-    if tmpl.get("id") == file_id:
-      return
-  raise Exception("{} does not have an entry in {}".format(path, metadata_path))
+def mapPaths(paths):
+    map = {}
 
-def check_metadata_entries(path):
+    print("mapping paths: {}".format(paths))
+
+    for path in paths:
+        print("processing path: {}".format(path))
+
+        pathParts = path.split('/')
+
+        # filter out non-dashboards files
+        if not 'dashboards' == pathParts[1]:
+            continue
+
+        if not pathParts[2] in map.keys():
+            print("new directory: {}".format(pathParts[2]))
+            map[pathParts[2]] = {
+                'metadataIds': {},
+                'metadataNames': {},
+                'jsonIds': {},
+                'jsonNames': {},
+                'jsonFiles': []
+            }
+
+        if pathParts[3].split('.')[-1] == "json":
+            print("adding {} to map".format(pathParts[3]))
+            map[pathParts[2]]['jsonFiles'].append(pathParts[3])
+
+
+    return map
+
+def get_sample_dashboards_json(path):
+  with open(path) as f:
+    try:
+      dashboards_dict = json.load(f)
+      dashboards_json = json.dumps(dashboards_dict)
+
+      return dashboards_dict
+
+    except:
+      raise Exception("{} content could not be loaded".format(path))
+
+def check_json_file_name(path, file_name_parts):
+  if len(file_name_parts) != 2:
+    raise Exception("{} file name not in <name>.json format".format(path))
+
+def mapJsonFiles(directory, pathMap):
+  # store json data into map
+  for jsonFile in pathMap[directory]['jsonFiles']:
+    jsonPath = os.path.join('.', 'dashboards', directory, jsonFile)
+    dashDict = get_sample_dashboards_json(jsonPath)
+
+    if not 'displayName' in dashDict.keys():
+      raise Exception("{} is missing displayName field".format(jsonFile))
+
+    pathMap[directory]['jsonNames'][dashDict['displayName']]=''
+
+    fileNameParts = jsonFile.split('.')
+    check_json_file_name(jsonFile, fileNameParts)
+
+    pathMap[directory]['jsonIds'][jsonFile.split('.')[0]]=''
+
+def check_metadata_entries(path, sample_dashboard):
+  required_fields = {"category", "id", "display_name", "description"}
+  missing_fields = required_fields - sample_dashboard.keys()
+  if missing_fields:
+    raise Exception("{} missing {}".format(path, missing_fields))
+
+def check_metadata(directory, pathMap):
+  print("checking metadata")
+  print(pathMap)
+  path = os.path.join('.', 'dashboards', directory, 'metadata.yaml')
   with open(path) as f:
     data = yaml.safe_load(f)
   sample_dashboards = data.get("sample_dashboards")
   if not sample_dashboards:
     raise Exception("sample_dashboards not defined in {}".format(path))
-  required_fields = {"category", "id", "display_name", "description"}
   for sample_dashboard in sample_dashboards:
-    missing_fields = required_fields - sample_dashboard.keys()
-    if missing_fields:
-      raise Exception("{} missing {}".format(path, missing_fields))
+    check_metadata_entries(path, sample_dashboard)
 
-def check_json_file_name(path, file_name_parts):
-  if len(file_name_parts) != 2:
-    raise Exception("{} file name not in <name>.json format".format(path))
-  file_version = file_name_parts[1]
+    dashboardId = sample_dashboard.get('id')
+    dashboardName = sample_dashboard.get('display_name')
 
-def check_sample_dashboards_json(path):
-  with open(path) as f:
-    try:
-      dashboards_dict = json.load(f)
-      dashboards_json = json.dumps(dashboards_dict)
-    except:
-      raise Exception("{} content could not be loaded".format(path))
+    pathMap[directory]['metadataIds'][dashboardId]=''
+    pathMap[directory]['metadataNames'][dashboardName]=''
 
-  try:
-    display_name = dashboards_dict["displayName"]
+    if not dashboardId in pathMap[directory]['jsonIds'].keys():
+      raise Exception("{} does not have a matching json file".format(dashboardId))
+    
+    if not dashboardName in pathMap[directory]['jsonNames'].keys():
+      raise Exception("{} does not have a matching json file".format(dashboardName))
 
-    if dashboards_dict["mosaicLayout"]["columns"] > 0:
-      tiles = dashboards_dict["mosaicLayout"]["tiles"]
+def check_json_in_metadata(directory, pathMap):
+  # continue working here
+  for jsonFile in pathMap[directory]['jsonFiles']:
+    jsonPath = os.path.join('.', 'dashboards', directory, jsonFile)
+    dashDict = get_sample_dashboards_json(jsonPath)
 
-      for tile in tiles:
-        if not ("width" in tile.keys() and "height" in tile.keys()):
-            raise Exception("{} content does not match expected sample dashboard format".format(path))
+    if not jsonFile.split('.')[0] in pathMap[directory]['metadataIds'].keys():
+      raise Exception("{} does not have a matching id in the metadata file".format(jsonFile))
+    
+    if not dashDict['displayName'] in pathMap[directory]['metadataNames'].keys():
+      raise Exception("{} does not have a matching display_name in the metadata file".format(jsonFile))
 
-        if "widget" in tile.keys():
-            if not "title" in tile["widget"]:
-                raise Exception("{} content does not match expected sample dashboard format".format(path))
+def check_directory(directory, pathMap):
+    # Process json files into path map
+    mapJsonFiles(directory, pathMap)
 
-  except:
-    raise Exception("{} content does not match expected sample dashboard format".format(path))
+    # Metadata file check
+    check_metadata(directory, pathMap)
+
+    # json file check
+    check_json_in_metadata(directory, pathMap)
 
 
 def main():
-  path = sys.argv[1]
-  # only run validation script on files added/changed in
-  # dashboards folder
-  if os.path.dirname(os.path.dirname(path)) != "dashboards":
-    sys.exit()
+  paths = sys.argv[1:]
+  print("running command for paths: {}".format(paths))
 
-  file_name = os.path.basename(path)
-  file_name_parts = file_name.split(".")
-  # metadata file added/changed would be checked for expected fields
-  if file_name == "metadata.yaml":
-    check_metadata_entries(path)
+  # process paths into dictionary
+  pathMap = mapPaths(paths)
 
-  # all json files added to dashboards folder must follow expected
-  # file hierarchy and naming
-  elif path.split(".")[-1] == "json":
-    # checking if json file name is in the correct format
-    check_json_file_name(path, file_name_parts)
-    # check if file has entry in metadata.yaml
-    check_json_in_metadata(path, file_name_parts[0])
-    # checking if json content is indeed sample dashboards
-    check_sample_dashboards_json(path)
+  # run checks for each directory
+  for directory in pathMap.keys():
+    print("path map before for {}".format(directory))
+    print(pathMap)
+    check_directory(directory, pathMap)
+    print("path map after for {}".format(directory))
+    print(pathMap)
 
 if __name__ == '__main__':
   main()
