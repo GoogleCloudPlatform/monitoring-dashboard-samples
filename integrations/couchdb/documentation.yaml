@@ -55,8 +55,8 @@ config_mods: |
   +       - containerPort: 9984
   +         name: prometheus
 additional_install_info: |
-  These instructions assume you already have a working {{app_name_short}}
-  installation and want to modify it to include an exporter.
+  Update the exporter's `COUCHDB_USERNAME` and `COUCHDB_PASSWORD` environment variables
+  to that of your monitoring user.
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
   kind: PodMonitoring
@@ -77,7 +77,4 @@ podmonitoring_config: |
     selector:
       matchLabels:
         app.kubernetes.io/name: couchdb
-additional_prereq_info: |
-  Update the exporter's `COUCHDB_USERNAME` and `COUCHDB_PASSWORD` environment variables
-  to that of your monitoring user.
 sample_promql_query: up{job="couchdb", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
