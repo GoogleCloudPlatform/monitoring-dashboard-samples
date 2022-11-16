@@ -61,8 +61,10 @@ config_mods: |
             - key: haproxy.cfg
               path: haproxy.cfg
 additional_install_info: |
-  These instructions assume you already have a working {{app_name_short}}
-  installation and want to modify it to include an exporter.
+  The recommended changes in haproxy.cfg defines a frontend with the "stats enable" directive 
+  and enables the {{app_name_short}} stats page. This frontend can be scraped by {{exporter_pkg_name}}.
+  See [this official blog](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/){:class=external}
+  for more information.
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
   kind: PodMonitoring
@@ -80,8 +82,4 @@ podmonitoring_config: |
     selector:
       matchLabels:
         app.kubernetes.io/name: haproxy
-additional_prereq_info: |
-  The {{app_name_short}} stats page must be enabled by defining a frontend with the "stats enable" directive.
-  This frontend can be scraped by {{exporter_pkg_name}}. See [this official blog](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/){:class=external}
-  for more information.
 sample_promql_query: up{job="haproxy", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
