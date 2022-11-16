@@ -1,0 +1,85 @@
+exporter_type: sidecar
+app_name_short: HAProxy
+app_name: {{app_name_short}}
+app_site_name: HAProxy
+app_site_url: https://www.haproxy.com/
+exporter_name: the HAProxy exporter
+exporter_pkg_name: haproxy_exporter
+exporter_repo_url: https://github.com/prometheus/haproxy_exporter
+dashboard_available: true
+minimum_exporter_version: v0.13.0
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+config_mods: |
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: haproxy
+  data:
+    haproxy.cfg: |
+  +   frontend stats
+  +     mode http
+  +     bind *:8404
+  +     stats enable
+  +     stats uri /stats
+  \-\-\-
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: haproxy
+  spec:
+    selector:
+      matchLabels:
+  +     app.kubernetes.io/name: haproxy
+    template:
+      metadata:
+        labels:
+  +       app.kubernetes.io/name: haproxy
+      spec:
+        containers:
+  +     - name: exporter
+  +       image: quay.io/prometheus/haproxy-exporter:v0.13.0
+  +       args:
+  +       - --haproxy.scrape-uri=http://localhost:8404/stats?stats;csv
+  +       ports:
+  +       - containerPort: 9101
+  +         name: prometheus
+        - name: haproxy
+          image: haproxy:2.3
+          ports:
+  +       - containerPort: 8404
+  +         name: stats
+          volumeMounts:
+          - mountPath: /usr/local/etc/haproxy/haproxy.cfg
+            subPath: haproxy.cfg
+            name: haproxy
+        volumes:
+        - name: haproxy
+          configMap:
+            name: haproxy
+            items:
+            - key: haproxy.cfg
+              path: haproxy.cfg
+additional_install_info: |
+  The recommended changes in haproxy.cfg defines a frontend with the "stats enable" directive 
+  and enables the {{app_name_short}} stats page. This frontend can be scraped by {{exporter_pkg_name}}.
+  See [this official blog](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/){:class=external}
+  for more information.
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: haproxy
+    labels:
+      app.kubernetes.io/name: haproxy
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: prometheus
+      scheme: http
+      interval: 60s
+      path: /metrics
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: haproxy
+sample_promql_query: up{job="haproxy", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
