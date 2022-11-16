@@ -1,0 +1,80 @@
+exporter_type: sidecar
+app_name_short: CouchDB
+app_name: {{app_name_short}}
+app_site_name: CouchDB
+app_site_url: https://couchdb.apache.org/
+exporter_name: the CouchDB exporter
+exporter_pkg_name: couchdb-prometheus-exporter
+exporter_repo_url: https://github.com/gesellix/couchdb-prometheus-exporter
+dashboard_available: true
+minimum_exporter_version: v30.4.3
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+config_mods: |
+  apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: couchdb
+  spec:
+    serviceName: couchdb
+    selector:
+      matchLabels:
+  +     app.kubernetes.io/name: couchdb
+    template:
+      metadata:
+        labels:
+  +       app.kubernetes.io/name: couchdb
+      spec:
+        containers:
+        - name: couchdb
+          image: couchdb:3.2.2
+          env:
+            - name: COUCHDB_USER
+              value: "otelu"
+            - name: COUCHDB_PASSWORD
+              value: "otelp"
+            - name: NODENAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: ERL_FLAGS
+              value: "-setcookie otel"
+          ports:
+          - containerPort: 5984
+  +     - name: couchdb-exporter
+  +       image: gesellix/couchdb-prometheus-exporter:v30.4.3
+  +       args:
+  +       - --couchdb.uri=http://localhost:5984
+  +       - --logtostderr
+  +       env:
+  +         - name: COUCHDB_USERNAME
+  +           value: "otelu"
+  +         - name: COUCHDB_PASSWORD
+  +           value: "otelp"
+  +       ports:
+  +       - containerPort: 9984
+  +         name: prometheus
+additional_install_info: |
+  Update the exporter's `COUCHDB_USERNAME` and `COUCHDB_PASSWORD` environment variables
+  to that of your monitoring user.
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: couchdb
+    labels:
+      app.kubernetes.io/name: couchdb
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: prometheus
+      scheme: http
+      interval: 60s
+      path: /metrics
+      params:
+        format: 
+          - prometheus
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: couchdb
+sample_promql_query: up{job="couchdb", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
