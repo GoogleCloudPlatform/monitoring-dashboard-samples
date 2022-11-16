@@ -1,0 +1,66 @@
+exporter_type: sidecar
+app_name_short: Aerospike
+app_name: {{app_name_short}}
+app_site_name: Aerospike
+app_site_url: https://aerospike.com/
+exporter_name: the Aerospike exporter
+exporter_pkg_name: aerospike-prometheus-exporter
+exporter_repo_url: https://github.com/aerospike/aerospike-prometheus-exporter
+dashboard_available: true
+minimum_exporter_version: "1.8.0"
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+config_mods: |
+  apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: aerospike
+    labels:
+      app.kubernetes.io/name: aerospike
+  spec:
+    serviceName: aerospike
+    replicas: 1
+    selector:
+      matchLabels:
+  +     app.kubernetes.io/name: aerospike
+    template:
+      metadata:
+        labels:
+  +       app.kubernetes.io/name: aerospike
+      spec:
+        containers:
+        - name: aerospike
+          image: aerospike/aerospike-server:6.0.0.2
+          ports:
+          - containerPort: 3000
+  +     - name: aerospike-prometheus-exporter
+  +       image: aerospike/aerospike-prometheus-exporter:1.8.0
+  +       ports:
+  +       - containerPort: 9145
+  +         name: prometheus
+  +       env:
+  +         - name: AS_HOST
+  +           value: localhost
+  +         - name: AS_PORT
+  +           value: "3000"
+additional_install_info: |
+  These instructions assume you already have a working {{app_name_short}}
+  installation and want to modify it to include an exporter. If you need to
+  also set up {{app_name_short}}, you can reference the
+  [Aerospike operator documentation](https://docs.aerospike.com/cloud/kubernetes/operator){:class=external}.
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: redis
+    labels:
+      app.kubernetes.io/name: redis
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: prometheus
+      interval: 60s
+    selector:
+      matchLabels:
+       app.kubernetes.io/name: aerospike
+sample_promql_query: up{job="aerospike", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
