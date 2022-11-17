@@ -1,15 +1,15 @@
 {
   "displayName": "High daily rate quota utilization - ${LIMIT_DISPLAY_NAME}",
   "documentation": {
-    "content": "Alerts when usage reaches 80% for 1 day. [View quotas](https://console.cloud.google.com/iam-admin/quotas",
+    "content": "Alerts when usage reaches 80%. [View and edit quotas](https://console.cloud.google.com/iam-admin/quotas?${URL_PARAMS})",
     "mimeType": "text/markdown"
   },
   "userLabels": {},
   "conditions": [
     {
-      "displayName": "Usage nearing dailiy rate quota limit",
+      "displayName": "Usage nearing daily rate quota limit",
       "conditionMonitoringQueryLanguage": {
-        "query": "fetch ${MONITORED_RESOURCE}| filter ${OUTER_FILTER}| {metric ${METRIC_USAGE_TYPE}| filter ${QUOTA_USAGE_FILTER}|map add [day: end().timestamp_to_string('%Y%m%d', 'America/Los_Angeles').string_to_int64]| group_by 1d, .sum| map add [current_day: end().timestamp_to_string('%Y%m%d', 'America/Los_Angeles').string_to_int64]| (current_day == day)| group_by []; metric ${METRIC_LIMIT_TYPE}| filter ${QUOTA_LIMIT_FILTER}| group_by [], .min}| ratio| window 1d| every 1m| condition gt(val(), 0.8 '1')",
+        "query": "fetch ${MONITORED_RESOURCE}| filter ${OUTER_FILTER}| {metric ${METRIC_USAGE_TYPE}| filter ${QUOTA_USAGE_FILTER}${OPTIONAL_USAGE_QUERY}|map add [day: end().timestamp_to_string('%Y%m%d', 'America/Los_Angeles').string_to_int64]| group_by 1d, .sum| map add [current_day: end().timestamp_to_string('%Y%m%d', 'America/Los_Angeles').string_to_int64]| (current_day == day)| group_by [${GROUPING}]; metric ${METRIC_LIMIT_TYPE}| filter ${QUOTA_LIMIT_FILTER}| group_by [${GROUPING}], .min}| ratio| window 1d| every 1m| condition gt(val(), 0.8 '1')",
         "duration": "60s",
         "trigger": {
           "count": 1
