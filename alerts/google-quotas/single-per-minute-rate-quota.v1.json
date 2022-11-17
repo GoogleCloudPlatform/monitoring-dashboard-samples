@@ -1,7 +1,7 @@
 {
   "displayName": "High per-minute rate quota utilization - ${LIMIT_DISPLAY_NAME}",
   "documentation": {
-    "content": "Alerts when usage reaches 80% for 1 minute. [View quotas](https://console.cloud.google.com/iam-admin/quotas",
+    "content": "Alerts when usage reaches 80%. [View and edit quotas](https://console.cloud.google.com/iam-admin/quotas?${URL_PARAMS})",
     "mimeType": "text/markdown"
   },
   "userLabels": {},
@@ -9,7 +9,7 @@
     {
       "displayName": "Usage nearing per-minute rate quota limit",
       "conditionMonitoringQueryLanguage": {
-        "query": "fetch ${MONITORED_RESOURCE}| filter ${OUTER_FILTER}| {metric ${METRIC_USAGE_TYPE}| filter ${QUOTA_USAGE_FILTER}| align delta_gauge(1m)| group_by [], sum(value.net_usage); metric ${METRIC_LIMIT_TYPE}| filter ${QUOTA_LIMIT_FILTER} | group_by [],sliding(1m), .min}| ratio| every 1m| condition gt(val(), 0.8 '1')",
+        "query": "fetch ${MONITORED_RESOURCE}| filter ${OUTER_FILTER}| {metric ${METRIC_USAGE_TYPE}| filter ${QUOTA_USAGE_FILTER}${OPTIONAL_USAGE_QUERY}| align delta_gauge(1m)| group_by [${GROUPING}], sum(value.net_usage); metric ${METRIC_LIMIT_TYPE}| filter ${QUOTA_LIMIT_FILTER} | group_by [${GROUPING}],sliding(1m), .min}| ratio| every 1m| condition gt(val(), 0.8 '1')",
         "duration": "60s",
         "trigger": {
           "count": 1
