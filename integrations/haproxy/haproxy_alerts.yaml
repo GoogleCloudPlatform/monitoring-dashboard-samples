@@ -1,0 +1,35 @@
+apiVersion: monitoring.googleapis.com/v1
+kind: Rules
+metadata:
+  name: haproxy-rules
+  labels:
+    app.kubernetes.io/component: rules
+    app.kubernetes.io/name: haproxy-rules
+    app.kubernetes.io/part-of: google-cloud-managed-prometheus
+spec:
+  groups:
+  - name: haproxy
+    interval: 30s
+    rules:
+    - alert: HAProxyDown
+      annotations:
+        description: |-
+          HAProxy instance is down 
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+        summary: HAProxy down (instance {{ $labels.instance }})
+      expr: haproxy_server_up{job="haproxy"} == 0
+      for: 5m
+      labels:
+        severity: critical
+    - alert: HAProxyTooManyConnections
+      annotations:
+        description: |-
+          HAProxy instance has too many connections
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+        summary: HAProxy too many connections (instance {{ $labels.instance }})
+      expr: haproxy_frontend_current_sessions{job="haproxy"} / haproxy_frontend_limit_sessions{job="haproxy"} * 100 > 90
+      for: 5m
+      labels:
+        severity: warning
