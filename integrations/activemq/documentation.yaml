@@ -122,3 +122,51 @@ additional_prereq_info: |
   ActiveMQ Brokers can be configured for [JMX](https://activemq.apache.org/jmx){:class=external} 
   by setting the `ACTIVEMQ_JMX` and `ACTIVEMQ_OPTS` environment variables.
 sample_promql_query: up{job="activemq", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: activemq-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: activemq-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: activemq
+      interval: 30s
+      rules:
+      - alert: ActiveMQNoConnections
+        annotations:
+          description: |-
+            ActiveMQ no connections
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: ActiveMQ down (instance {{ $labels.instance }})
+        expr: activemq_connections_total{job="activemq"} == 0
+        for: 5m
+        labels:
+          severity: warning
+      - alert: ActiveMQHighStoreUsage
+        annotations:
+          description: |-
+            ActiveMQ high store usage
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: ActiveMQ high store usage (instance {{ $labels.instance }})
+        expr: activemq_store_usage_ratio{job="activemq"} > 0.9
+        for: 5m
+        labels:
+          severity: warning
+      - alert: ActiveMQHighTempStoreUsage
+        annotations:
+          description: |-
+            ActiveMQ high temp store usage
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: ActiveMQ high temp store usage (instance {{ $labels.instance }})
+        expr: activemq_temp_usage_ratio{job="activemq"} > 0.9
+        for: 5m
+        labels:
+          severity: warning
+additional_alert_info: You can adjust the alert thresholds to suit your application.
