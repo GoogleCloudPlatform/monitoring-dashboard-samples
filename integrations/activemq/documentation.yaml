@@ -70,14 +70,14 @@ config_mods: |
         containers:
         - name: activemq
           image: rmohr/activemq:5.15.9-alpine
-  +     ports:
-  +       - containerPort: 1099
-  +         name: jmx
-  +     env:
-  +       - name: ACTIVEMQ_JMX
-  +         value: "1099"
-  +       - name: ACTIVEMQ_OPTS
-  +         value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.rmi.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
+  +       ports:
+  +         - containerPort: 1099
+  +           name: jmx
+  +       env:
+  +         - name: ACTIVEMQ_JMX
+  +           value: "1099"
+  +         - name: ACTIVEMQ_OPTS
+  +           value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.rmi.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
   +     - name: exporter
   +       image: bitnami/jmx-exporter:0.17.0
   +       command:
@@ -113,7 +113,7 @@ podmonitoring_config: |
     endpoints:
     - port: prometheus
       scheme: http
-      interval: 60s
+      interval: 30s
       path: /metrics
     selector:
       matchLabels:
