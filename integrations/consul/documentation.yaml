@@ -1,0 +1,89 @@
+exporter_type: included
+app_name_short: Consul
+app_name: {{app_name_short}}
+app_site_name: Consul
+app_site_url: https://www.consul.io/
+exporter_name: the Consul exporter
+exporter_pkg_name: consul
+exporter_repo_url: https://developer.hashicorp.com/consul/docs/agent/config/config-files#telemetry-parameters
+dashboard_available: true
+minimum_exporter_version: "1.13.3"
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+config_mods: |
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: consul-telemetry
+  data:
+  + metrics.hcl: |
+  +   telemetry {
+  +     prometheus_retention_time = "60s"
+  +     disable_hostname = true
+  +   }
+  ---
+  apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: consul
+  spec:
+    serviceName: consul
+    selector:
+      matchLabels:
+  +     app.kubernetes.io/name: consul
+    template:
+      metadata:
+        labels:
+  +       app.kubernetes.io/name: consul
+      spec:
+        containers:
+        - name: consul
+          image: consul:1.13.3
+          ports:
+          - containerPort: 8500
+            name: consul
+            protocol: TCP
+  +       volumeMounts:
+  +       - mountPath: /consul/config/metrics.hcl
+  +         subPath: metrics.hcl
+  +         name: consul-telemetry
+  +     volumes:
+  +     - name: consul-telemetry
+  +       configMap:
+  +         name: consul-telemetry
+  +         items:
+  +         - key: metrics.hcl
+  +           path: metrics.hcl
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: consul
+    labels:
+      app.kubernetes.io/name: consul
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+  + - port: 8500
+      scheme: http
+      interval: 30s
+  +   path: /v1/agent/metrics
+  +   params:
+  +     format: 
+  +       - prometheus
+    selector:
+      matchLabels:
+  +     app.kubernetes.io/name: consul
+additional_prereq_info: |
+  {{app_name_short}} exposes Prometheus-format metrics when the telemetry configuration options
+  `prometheus_retention_time` and `disable_hostname` are set. These options can be set by mounting
+  a configmap at `/consul/config/metrics.hcl`. Hashicorp recommends that a retention time twice 
+  that of the collection interval be used.
+
+   *  To determine if {{app_name_short}} is exposing metrics, run the following command:
+
+      <pre class="devsite-click-to-copy">
+      kubectl -n <namespace_name> port-forward <consul_pod_name> 8500
+      curl localhost:8500/v1/agent/metrics?format=prometheus
+      </pre>
+sample_promql_query: up{job="consul", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}

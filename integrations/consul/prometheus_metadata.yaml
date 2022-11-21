@@ -1,0 +1,56 @@
+platforms:
+  - type: GKE
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/consul_raft_apply/counter
+    launch_stage: GA
+    exporter_metadata:
+      name: Consul Prometheus Exporter
+      doc_url: https://developer.hashicorp.com/consul/docs/agent/config/config-files#telemetry-parameters
+      minimum_supported_version: "1.13.3"
+    default_metrics:
+      - name: prometheus.googleapis.com/consul_autopilot_healthy/gauge
+        prometheus_name: consul_autopilot_healthy
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/consul_runtime_sys_bytes/gauge
+        prometheus_name: consul_runtime_sys_bytes
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/consul_runtime_total_gc_pause_ns/gauge
+        prometheus_name: consul_runtime_total_gc_pause_ns
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/consul_raft_apply/counter
+        prometheus_name: consul_raft_apply
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/consul_kvs_apply/summary
+        prometheus_name: consul_kvs_apply
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/consul_raft_commitTime/summary
+        prometheus_name: consul_raft_commitTime
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/consul_client_rpc/counter
+        prometheus_name: consul_client_rpc
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/consul_client_rpc_exceeded/counter
+        prometheus_name: consul_client_rpc_exceeded
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/consul_client_rpc_failed/counter
+        prometheus_name: consul_client_rpc_failed
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/consul_raft_state_candidate/counter
+        prometheus_name: consul_raft_state_candidate
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/consul_raft_state_leader/counter
+        prometheus_name: consul_raft_state_leader
+        kind: CUMULATIVE
+        value_type: DOUBLE
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters
