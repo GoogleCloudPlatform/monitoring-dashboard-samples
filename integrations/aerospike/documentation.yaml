@@ -45,21 +45,21 @@ config_mods: |
   +           value: "3000"
 additional_install_info: |
   These instructions assume you already have a working {{app_name_short}}
-  installation and want to modify it to include an exporter. If you need to
-  also set up {{app_name_short}}, you can reference the
+  installation and want to modify it to include an exporter. For information
+  about setting up {{app_name_short}}, see the
   [Aerospike operator documentation](https://docs.aerospike.com/cloud/kubernetes/operator){:class=external}.
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
   kind: PodMonitoring
   metadata:
-    name: redis
+    name: aerospike
     labels:
-      app.kubernetes.io/name: redis
+      app.kubernetes.io/name: aerospike
       app.kubernetes.io/part-of: google-cloud-managed-prometheus
   spec:
     endpoints:
     - port: prometheus
-      interval: 60s
+      interval: 30s
     selector:
       matchLabels:
        app.kubernetes.io/name: aerospike

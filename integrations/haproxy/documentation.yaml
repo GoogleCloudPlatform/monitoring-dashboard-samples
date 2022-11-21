@@ -22,7 +22,7 @@ config_mods: |
   +     bind *:8404
   +     stats enable
   +     stats uri /stats
-  \-\-\-
+  ---
   apiVersion: apps/v1
   kind: Deployment
   metadata:
@@ -61,10 +61,9 @@ config_mods: |
             - key: haproxy.cfg
               path: haproxy.cfg
 additional_install_info: |
-  The recommended changes in haproxy.cfg defines a frontend with the "stats enable" directive 
+  The recommended changes in <code>haproxy.cfg</code> defines a frontend with the "stats enable" directive 
   and enables the {{app_name_short}} stats page. This frontend can be scraped by {{exporter_pkg_name}}.
-  See [this official blog](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/){:class=external}
-  for more information.
+  For more information, see [Exploring the HAProxy Stats page](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/){:class=external}.
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
   kind: PodMonitoring
@@ -77,7 +76,7 @@ podmonitoring_config: |
     endpoints:
     - port: prometheus
       scheme: http
-      interval: 60s
+      interval: 30s
       path: /metrics
     selector:
       matchLabels:
