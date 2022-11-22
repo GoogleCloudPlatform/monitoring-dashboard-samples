@@ -70,14 +70,14 @@ config_mods: |
         containers:
         - name: activemq
           image: rmohr/activemq:5.15.9-alpine
-  +     ports:
-  +       - containerPort: 1099
-  +         name: jmx
-  +     env:
-  +       - name: ACTIVEMQ_JMX
-  +         value: "1099"
-  +       - name: ACTIVEMQ_OPTS
-  +         value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.rmi.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
+  +       ports:
+  +         - containerPort: 1099
+  +           name: jmx
+  +       env:
+  +         - name: ACTIVEMQ_JMX
+  +           value: "1099"
+  +         - name: ACTIVEMQ_OPTS
+  +           value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.rmi.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
   +     - name: exporter
   +       image: bitnami/jmx-exporter:0.17.0
   +       command:
@@ -113,7 +113,7 @@ podmonitoring_config: |
     endpoints:
     - port: prometheus
       scheme: http
-      interval: 60s
+      interval: 30s
       path: /metrics
     selector:
       matchLabels:
@@ -122,3 +122,51 @@ additional_prereq_info: |
   ActiveMQ Brokers can be configured for [JMX](https://activemq.apache.org/jmx){:class=external} 
   by setting the `ACTIVEMQ_JMX` and `ACTIVEMQ_OPTS` environment variables.
 sample_promql_query: up{job="activemq", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: activemq-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: activemq-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: activemq
+      interval: 30s
+      rules:
+      - alert: ActiveMQNoConnections
+        annotations:
+          description: |-
+            ActiveMQ no connections
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: ActiveMQ down (instance {{ $labels.instance }})
+        expr: activemq_connections_total{job="activemq"} == 0
+        for: 5m
+        labels:
+          severity: warning
+      - alert: ActiveMQHighStoreUsage
+        annotations:
+          description: |-
+            ActiveMQ high store usage
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: ActiveMQ high store usage (instance {{ $labels.instance }})
+        expr: activemq_store_usage_ratio{job="activemq"} > 0.9
+        for: 5m
+        labels:
+          severity: warning
+      - alert: ActiveMQHighTempStoreUsage
+        annotations:
+          description: |-
+            ActiveMQ high temp store usage
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: ActiveMQ high temp store usage (instance {{ $labels.instance }})
+        expr: activemq_temp_usage_ratio{job="activemq"} > 0.9
+        for: 5m
+        labels:
+          severity: warning
+additional_alert_info: You can adjust the alert thresholds to suit your application.

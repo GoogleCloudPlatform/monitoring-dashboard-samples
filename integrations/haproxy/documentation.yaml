@@ -22,7 +22,7 @@ config_mods: |
   +     bind *:8404
   +     stats enable
   +     stats uri /stats
-  \-\-\-
+  ---
   apiVersion: apps/v1
   kind: Deployment
   metadata:
@@ -61,10 +61,9 @@ config_mods: |
             - key: haproxy.cfg
               path: haproxy.cfg
 additional_install_info: |
-  The recommended changes in haproxy.cfg defines a frontend with the "stats enable" directive 
+  The recommended changes in <code>haproxy.cfg</code> defines a frontend with the "stats enable" directive 
   and enables the {{app_name_short}} stats page. This frontend can be scraped by {{exporter_pkg_name}}.
-  See [this official blog](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/){:class=external}
-  for more information.
+  For more information, see [Exploring the HAProxy Stats page](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/){:class=external}.
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
   kind: PodMonitoring
@@ -77,9 +76,46 @@ podmonitoring_config: |
     endpoints:
     - port: prometheus
       scheme: http
-      interval: 60s
+      interval: 30s
       path: /metrics
     selector:
       matchLabels:
         app.kubernetes.io/name: haproxy
 sample_promql_query: up{job="haproxy", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: haproxy-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: haproxy-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: haproxy
+      interval: 30s
+      rules:
+      - alert: HAProxyDown
+        annotations:
+          description: |-
+            HAProxy instance is down 
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: HAProxy down (instance {{ $labels.instance }})
+        expr: haproxy_server_up{job="haproxy"} == 0
+        for: 5m
+        labels:
+          severity: critical
+      - alert: HAProxyTooManyConnections
+        annotations:
+          description: |-
+            HAProxy instance has too many connections
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: HAProxy too many connections (instance {{ $labels.instance }})
+        expr: haproxy_frontend_current_sessions{job="haproxy"} / haproxy_frontend_limit_sessions{job="haproxy"} * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+additional_alert_info: You can adjust the alert thresholds to suit your application.

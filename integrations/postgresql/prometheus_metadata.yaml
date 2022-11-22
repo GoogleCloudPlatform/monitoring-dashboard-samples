@@ -1,0 +1,68 @@
+platforms:
+  - type: GKE
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/pg_settings_max_connections/gauge
+    launch_stage: GA
+    exporter_metadata:
+      name: GKE Prometheus Exporter
+      doc_url: https://github.com/prometheus-community/postgres_exporter
+      minimum_supported_version: v0.11.1
+    default_metrics:
+      - name: prometheus.googleapis.com/pg_stat_database_numbackends/gauge
+        prometheus_name: pg_stat_database_numbackends
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/pg_settings_max_connections/gauge
+        prometheus_name: pg_settings_max_connections
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/pg_stat_database_tup_returned/counter
+        prometheus_name: pg_stat_database_tup_returned
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/pg_stat_database_tup_fetched/counter
+        prometheus_name: pg_stat_database_tup_fetched
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/pg_stat_database_tup_inserted/counter
+        prometheus_name: pg_stat_database_tup_inserted
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/pg_stat_database_tup_updated/counter
+        prometheus_name: pg_stat_database_tup_updated
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/pg_stat_database_tup_deleted/counter
+        prometheus_name: pg_stat_database_tup_deleted
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/pg_stat_bgwriter_buffers_checkpoint/counter
+        prometheus_name: pg_stat_bgwriter_buffers_checkpoint
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/pg_stat_bgwriter_buffers_clean/counter
+        prometheus_name: pg_stat_bgwriter_buffers_clean
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/pg_stat_bgwriter_buffers_backend/counter
+        prometheus_name: pg_stat_bgwriter_buffers_backend
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/pg_stat_bgwriter_checkpoints_req/counter
+        prometheus_name: pg_stat_bgwriter_checkpoints_req
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/pg_stat_bgwriter_checkpoints_timed/counter
+        prometheus_name: pg_stat_bgwriter_checkpoints_timed
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/pg_stat_database_blks_hit/counter
+        prometheus_name: pg_stat_database_blks_hit
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/pg_stat_database_blks_read/counter
+        prometheus_name: pg_stat_database_blks_read
+        kind: CUMULATIVE
+        value_type: DOUBLE
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/postgresql

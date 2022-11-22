@@ -3,6 +3,10 @@ platforms:
   launch_stage: GA
   install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/aerospike
   agent_requirement:
+    logs_minimum_supported_version:
+      major: 2
+      minor: 23
+      patch: 0
     metrics_minimum_supported_version:
       major: 2
       minor: 18
@@ -10,6 +14,12 @@ platforms:
   detections:
   - characteristic_metric:
       metric_type: workload.googleapis.com/aerospike.node.connection.open
+  default_logs:
+  - name: syslog
+    fields:
+    - name: jsonPayload.message
+      type: string
+      description: Aerospike application logs written to Journald.
   default_metrics:
   - name: workload.googleapis.com/aerospike.namespace.transaction.count
     value_type: INT64
