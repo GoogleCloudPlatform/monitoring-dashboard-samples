@@ -42,7 +42,7 @@ def map_paths(paths):
     if not 'dashboards' == path_parts[1] or len(path_parts) > 4:
       continue
 
-    if not path_parts[2] in map.keys():
+    if not path_parts[2] in map:
       map[path_parts[2]] = {
         'metadata': {
         },
@@ -161,7 +161,7 @@ def main():
   path_map = map_paths(paths)
 
   # run checks for each directory
-  for directory in path_map.keys():
+  for directory in path_map:
     check_directory(directory, path_map)
 
 if __name__ == '__main__':
