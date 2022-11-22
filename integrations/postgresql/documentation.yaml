@@ -66,3 +66,29 @@ additional_prereq_info: |
 additional_install_info: |
   Update the `DATA_SOURCE_NAME` environment variable with credentials that work with your {{app_name}} instance.
 sample_promql_query: up{job="postgresql", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: postgresql-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: postgresql-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: postgresql
+      interval: 30s
+      rules:
+      - alert: PostgreSQLDatabaseSizeTooLarge
+        annotations:
+          description: |-
+            PostgreSQL database size too large
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: PostgreSQL database size too large (instance {{ $labels.instance }})
+        expr: pg_database_size_bytes > 100000000000
+        for: 5m
+        labels:
+          severity: warning
+additional_alert_info: You can adjust the alert thresholds to suit your application.
