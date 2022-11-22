@@ -22,75 +22,83 @@ class JsonInMetadataMisMatchError(Exception):
   '''Raised when data in json file does not have matching data in a metadata file'''
   pass
 
-def mapPaths(paths):
+def validate_json(dashboards_data):
+  try:
+    json.dumps(dashboards_data)
+  except:
+    return False
+
+  return True
+
+def map_paths(paths):
   '''Takes in list of paths and returns dictionary of metadata and dashboard json data, 
   organized by directories'''
   map = {}
 
   for path in paths:
-    pathParts = path.split('/')
+    path_parts = path.split('/')
 
     # filter out non-dashboards files
-    if not 'dashboards' == pathParts[1]:
-        continue
+    if not 'dashboards' == path_parts[1] or len(path_parts) > 4:
+      continue
 
-    if not pathParts[2] in map.keys():
-      map[pathParts[2]] = {
-        'metadataIds': {},
-        'metadataNames': {},
-        'jsonIds': {},
-        'jsonNames': {},
-        'jsonFiles': []
+    if not path_parts[2] in map.keys():
+      map[path_parts[2]] = {
+        'metadata': {
+        },
+        'json_data': {
+        },
+        'json_files': []
       }
 
-    if pathParts[3].split('.')[-1] == "json":
-      map[pathParts[2]]['jsonFiles'].append(pathParts[3])
+    if path_parts[3].split('.')[-1] == "json":
+      map[path_parts[2]]['json_files'].append(path_parts[3])
 
   return map
 
 def get_sample_dashboards_json(path):
   '''Checks if file is in json format and returns data in dictionary form'''
   with open(path) as f:
-    try:
-      dashboards_dict = json.load(f)
-      dashboards_json = json.dumps(dashboards_dict)
+    dashboards_dict = json.load(f)
 
-      return dashboards_dict
+    if not validate_json(dashboards_dict):
+      raise JsonFormattingError("{} content could not be loaded".format(path))
 
-    except JsonFormattingError:
-      print("{} content could not be loaded".format(path))
+    return dashboards_dict
 
 def check_json_file_name(path, file_name_parts):
   '''Checks if json file name is in the proper format'''
   if len(file_name_parts) != 2:
     raise JsonFormattingError("{} file name not in <name>.json format".format(path))
 
-def mapJsonFiles(directory, pathMap):
+def map_json_files(directory, path_map):
   '''Stores json data into dictionary'''
-  for jsonFile in pathMap[directory]['jsonFiles']:
-    jsonPath = os.path.join('.', 'dashboards', directory, jsonFile)
-    dashDict = get_sample_dashboards_json(jsonPath)
+  for json_file in path_map[directory]['json_files']:
+    json_path = os.path.join('.', 'dashboards', directory, json_file)
+    dash_dict = get_sample_dashboards_json(json_path)
 
-    if not 'displayName' in dashDict.keys():
-      raise JsonFormattingError("{} is missing displayName field".format(jsonFile))
+    if not 'displayName' in dash_dict:
+      raise JsonFormattingError("{} is missing displayName field".format(json_file))
 
-    pathMap[directory]['jsonNames'][dashDict['displayName']]=''
+    file_name_parts = json_file.split('.')
+    check_json_file_name(json_file, file_name_parts)
 
-    fileNameParts = jsonFile.split('.')
-    check_json_file_name(jsonFile, fileNameParts)
-
-    pathMap[directory]['jsonIds'][fileNameParts[0]]=''
+    path_map[directory]['json_data'][file_name_parts[0]] = dash_dict['displayName']
 
 def check_metadata_entries(path, sample_dashboard):
-  '''Check if metadata file fields are as expected'''
+  '''Assert sample dashboard metadata entry has all required fields.'''
   required_fields = {"category", "id", "display_name", "description"}
   missing_fields = required_fields - sample_dashboard.keys()
   if missing_fields:
     raise MetadataFormattingError("{} missing {}".format(path, missing_fields))
 
-def check_metadata(directory, pathMap):
-  '''Checks metadata file in directory for correct fields and matching data in 
-  json files within the same directory'''
+def check_metadata(directory, path_map):
+  '''Make following assertions about metadata.yam files:
+      * At least 1 sample dashboard exists
+      * Each dashboard entry has all required fields
+      * Each dashboard entry has a corresponding json template with same name & id
+      
+    note: this function mutates the path_map dictionary'''
   path = os.path.join('.', 'dashboards', directory, 'metadata.yaml')
 
   with open(path) as f:
@@ -102,52 +110,59 @@ def check_metadata(directory, pathMap):
     # Call function to check metadata file fields
     check_metadata_entries(path, sample_dashboard)
 
-    dashboardId = sample_dashboard.get('id')
-    dashboardName = sample_dashboard.get('display_name')
+    dashboard_id = sample_dashboard.get('id')
+    dashboard_name = sample_dashboard.get('display_name')
 
-    pathMap[directory]['metadataIds'][dashboardId]=''
-    pathMap[directory]['metadataNames'][dashboardName]=''
+    path_map[directory]['metadata'][dashboard_id] = dashboard_name
 
-    if not dashboardId in pathMap[directory]['jsonIds'].keys():
-      raise MetadataInJsonMisMatchError("{} does not have a matching json file".format(dashboardId))
+    if not dashboard_id in path_map[directory]['json_data']:
+      raise MetadataInJsonMisMatchError("{} does not have a matching json file".format(dashboard_id))
     
-    if not dashboardName in pathMap[directory]['jsonNames'].keys():
-      raise MetadataInJsonMisMatchError("{} does not have a matching json file".format(dashboardName))
+    if not dashboard_name == path_map[directory]['json_data'][dashboard_id]:
+      raise MetadataInJsonMisMatchError("{} does not have a matching json file".format(dashboard_name))
 
-def check_json_in_metadata(directory, pathMap):
-  '''Checks json file data against metadata file of the same directory'''
-  for jsonFile in pathMap[directory]['jsonFiles']:
-    jsonPath = os.path.join('.', 'dashboards', directory, jsonFile)
-    dashDict = get_sample_dashboards_json(jsonPath)
+def check_json_in_metadata(directory, path_map):
+  '''Make following assertions about json template files:
+      * Template file name appears in metadata.yaml file
+      * Template display name matches corresponding id in metadata.yaml file
+      
+    note: this function mutates the path_map dictionary'''
+  for json_file in path_map[directory]['json_files']:
+    json_path = os.path.join('.', 'dashboards', directory, json_file)
+    dash_dict = get_sample_dashboards_json(json_path)
 
-    if not jsonFile.split('.')[0] in pathMap[directory]['metadataIds'].keys():
-      raise JsonInMetadataMisMatchError("{} does not have a matching id in the metadata file".format(jsonFile))
+    json_id = json_file.split('.')[0]
+
+    if not json_id in path_map[directory]['metadata']:
+      raise JsonInMetadataMisMatchError("{} does not have a matching id in the metadata file".format(json_file))
     
-    if not dashDict['displayName'] in pathMap[directory]['metadataNames'].keys():
-      raise JsonInMetadataMisMatchError("{} does not have a matching display_name in the metadata file".format(jsonFile))
+    if not dash_dict['displayName'] == path_map[directory]['metadata'][json_id]:
+      raise JsonInMetadataMisMatchError("{} does not have a matching display_name in the metadata file".format(json_file))
 
-def check_directory(directory, pathMap):
-  '''Parent function that calls top level processing and checking functions'''
+def check_directory(directory, path_map):
+  '''Parent function that calls top level processing and checking functions
+    
+    Functions are order-dependant as the path_map dictionary is mutated by each function.'''
 
   # Process json files into path map
-  mapJsonFiles(directory, pathMap)
+  map_json_files(directory, path_map)
 
   # Metadata file check
-  check_metadata(directory, pathMap)
+  check_metadata(directory, path_map)
 
   # json file check
-  check_json_in_metadata(directory, pathMap)
+  check_json_in_metadata(directory, path_map)
 
 
 def main():
   paths = sys.argv[1:]
 
   # process paths into dictionary
-  pathMap = mapPaths(paths)
+  path_map = map_paths(paths)
 
   # run checks for each directory
-  for directory in pathMap.keys():
-    check_directory(directory, pathMap)
+  for directory in path_map.keys():
+    check_directory(directory, path_map)
 
 if __name__ == '__main__':
   main()
