@@ -1,6 +1,25 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "stringValue": "",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "Istio Envoy Prometheus Overview",
+  "etag": "296ae79e661b1597d857e1a84efd45d8",
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -38,6 +57,7 @@
         "widget": {
           "scorecard": {
             "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
               "prometheusQuery": "avg(envoy_server_uptime)/60"
             }
@@ -113,10 +133,11 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "envoy_cluster_upstream_cx_active{envoy_cluster_name=~\"\",host=~\"()\"}"
+                  "prometheusQuery": "envoy_cluster_upstream_cx_active{envoy_cluster_name=~\"\",host=~\"()\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -141,10 +162,11 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "irate(envoy_cluster_upstream_rq_total[1m])"
+                  "prometheusQuery": "irate(envoy_cluster_upstream_rq_total{${Cluster},${Location},${Namespace}}[1m])"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -169,10 +191,11 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "envoy_server_memory_allocated"
+                  "prometheusQuery": "envoy_server_memory_allocated{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -197,10 +220,11 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "irate(envoy_cluster_upstream_cx_rx_bytes_total[5m])"
+                  "prometheusQuery": "irate(envoy_cluster_upstream_cx_rx_bytes_total{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -225,10 +249,11 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(envoy_cluster_manager_cds_update_attempt[5m])"
+                  "prometheusQuery": "rate(envoy_cluster_manager_cds_update_attempt{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -253,10 +278,11 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(envoy_cluster_manager_cds_update_success[5m])"
+                  "prometheusQuery": "rate(envoy_cluster_manager_cds_update_success{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -281,10 +307,11 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(envoy_cluster_manager_cds_update_failure[5m])"
+                  "prometheusQuery": "rate(envoy_cluster_manager_cds_update_failure{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -297,5 +324,6 @@
         "yPos": 8
       }
     ]
-  }
+  },
+  "name": "projects/685351563540/dashboards/2a2b31fd-a24a-4ac4-b91f-24005d56491b"
 }
