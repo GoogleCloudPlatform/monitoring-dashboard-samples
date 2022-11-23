@@ -71,3 +71,29 @@ additional_prereq_info: |
 additional_install_info:
   Update the `DATA_SOURCE_NAME` environment variable with credentials that work with your {{app_name}} instance.
 sample_promql_query: up{job="mysql", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: mysql-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: mysql-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: mysql
+      interval: 30s
+      rules:
+      - alert: MySQLConnectionErrors
+        annotations:
+          description: |-
+            MySQL connection errors
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: MySQL connection errors (instance {{ $labels.instance }})
+        expr: mysql_global_status_connection_errors_total > 0
+        for: 5m
+        labels:
+          severity: warning
+additional_alert_info: You can adjust the alert thresholds to suit your application.
