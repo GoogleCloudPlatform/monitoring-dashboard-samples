@@ -55,3 +55,51 @@ additional_install_info: |
   using the `ZOO_CFG_EXTRA` environment variable. This example configures {{app_name_short}}
   to expose Prometheus-format metrics on port `7000`.
 sample_promql_query: up{job="zookeeper", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: zookeeper-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: zookeeper-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: zookeeper
+      interval: 30s
+      rules:
+      - alert: ZooKeeperHighAverageLatency
+        annotations:
+          description: |-
+            ZooKeeper high average latency
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: ZooKeeper high average latency (instance {{ $labels.instance }})
+        expr: avg_latency > 100
+        for: 5m
+        labels:
+          severity: warning
+      - alert: ZooKeeperHighFsyncDuration
+        annotations:
+          description: |-
+            ZooKeeper high fsync duration
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: ZooKeeper high fsync duration (instance {{ $labels.instance }})
+        expr: fsynctime_sum > 100
+        for: 5m
+        labels:
+          severity: warning
+      - alert: ZooKeeperLowFreeFileDescriptors
+        annotations:
+          description: |-
+            ZooKeeper high fsync duration
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: ZooKeeper high fsync duration (instance {{ $labels.instance }})
+        expr: open_file_descriptor_count >= max_file_descriptor_count - 15
+        for: 5m
+        labels:
+          severity: critical
+additional_alert_info: You can adjust the alert thresholds to suit your application.
