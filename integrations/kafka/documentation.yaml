@@ -57,3 +57,40 @@ additional_install_info: |
   which can be set as container args. This example assumes Kafka is available via a ClusterIP service named `kafka`
   on port `9092`.
 sample_promql_query: up{job="kafka-exporter", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: kafka-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: kafka-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: kafka
+      interval: 30s
+      rules:
+      - alert: KafkaChangeInNumberOfISRs
+        annotations:
+          description: |-
+            Kafka change in number of isrs
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Kafka change in number of isrs (instance {{ $labels.instance }})
+        expr: kafka_topic_partition_in_sync_replica != 10
+        for: 5m
+        labels:
+          severity: critical
+      - alert: KafkaUnderReplicatedPartitions
+        annotations:
+          description: |-
+            Kafka under replicated partitions
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Kafka under replicated partitions (instance {{ $labels.instance }})
+        expr: kafka_topic_partition_under_replicated_partition > 0
+        for: 1m
+        labels:
+          severity: warning
+additional_alert_info: You can adjust the alert thresholds to suit your application.
