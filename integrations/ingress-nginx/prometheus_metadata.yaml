@@ -1,0 +1,40 @@
+platforms:
+  - type: GKE
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/nginx_ingress_controller_nginx_process_cpu_seconds_total/counter
+    launch_stage: GA
+    exporter_metadata:
+      name: Ingress NGINX Prometheus Exporter
+      doc_url: https://kubernetes.github.io/ingress-nginx/user-guide/monitoring/
+      minimum_supported_version: "1.4.0"
+    default_metrics:
+      - name: prometheus.googleapis.com/nginx_ingress_controller_requests/counter
+        prometheus_name: nginx_ingress_controller_requests
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/nginx_ingress_controller_nginx_process_connections/gauge
+        prometheus_name: nginx_ingress_controller_nginx_process_connections
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/nginx_ingress_controller_success/counter
+        prometheus_name: nginx_ingress_controller_success
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/nginx_ingress_controller_requests/counter
+        prometheus_name: nginx_ingress_controller_requests
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/nginx_ingress_controller_request_size/histogram
+        prometheus_name: nginx_ingress_controller_request_size
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/nginx_ingress_controller_nginx_process_resident_memory_bytes/gauge
+        prometheus_name: nginx_ingress_controller_nginx_process_resident_memory_bytes
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/nginx_ingress_controller_nginx_process_cpu_seconds_total/counter
+        prometheus_name: nginx_ingress_controller_nginx_process_cpu_seconds_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/nginx-ingress

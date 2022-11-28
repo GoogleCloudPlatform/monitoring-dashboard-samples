@@ -1,0 +1,91 @@
+exporter_type: included
+app_name_short: Ingress NGINX
+app_name: {{app_name_short}}
+app_site_name: Ingress NGINX
+app_site_url: https://kubernetes.github.io/ingress-nginx
+exporter_name: the Ingress NGINX exporter
+exporter_pkg_name: ingress-nginx
+exporter_repo_url: https://kubernetes.github.io/ingress-nginx/user-guide/monitoring/
+additional_prereq_info: |
+  {{app_name_short}} exposes Prometheus-format metrics automatically; you do not
+  have to install it separately. You can run the following checks to verify
+  that {{app_name_short}} is exposing Prometheus-format metrics.
+
+   *  To determine if {{exporter_name}} is exposing metrics, run the following command:
+
+      <pre class="devsite-click-to-copy">
+      kubectl -n ingress-nginx port-forward deploy/ingress-nginx-controller 10254
+      curl localhost:10254/metrics
+      </pre>
+dashboard_available: true
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: ingress-nginx
+    labels:
+      app.kubernetes.io/name: ingress-nginx
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+  + - port: 10254
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+  +     app.kubernetes.io/name: ingress-nginx
+additional_podmonitoring_info: |
+  Ensure that the port and matchLabels match that of the {{app_name_short}} pods you wish to monitor. By default,
+  {{app_name_short}} exposes metrics on port 10254 and has the label `app.kubernetes.io/name: ingress-nginx`.
+sample_promql_query: up{job="ingress-nginx", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: nginx-ingress-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: nginx-ingress-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: nginx-ingress
+      interval: 30s
+      rules:
+      - alert: NGINXIngressDroppedConnections
+        annotations:
+          description: |-
+            NGINX Ingress dropped connections
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: NGINX Ingress dropped connections (instance {{ $labels.instance }})
+        expr: (nginx_ingress_controller_nginx_process_connections_total{state="accepted"} - nginx_ingress_controller_nginx_process_connections_total{state="handled"}) > 0
+        for: 5m
+        labels:
+          severity: critical
+      - alert: NGINXIngressHighRequestRate
+        annotations:
+          description: |-
+            NGINX Ingress high request rate
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: NGINX Ingress high request rate (instance {{ $labels.instance }})
+        expr: rate(nginx_ingress_controller_requests[5m]) > 100
+        for: 5m
+        labels:
+          severity: warning
+      - alert: NGINXIngressLowRequestRate
+        annotations:
+          description: |-
+            NGINX Ingress low request rate
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: NGINX Ingress low request rate (instance {{ $labels.instance }})
+        expr: rate(nginx_ingress_controller_requests[5m]) < 10
+        for: 5m
+        labels:
+          severity: warning
+additional_alert_info: You can adjust the alert thresholds to suit your application.
