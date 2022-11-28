@@ -1,0 +1,71 @@
+exporter_type: included
+app_name_short: Airflow
+app_name: {{app_name_short}}
+app_site_name: Airflow
+app_site_url: https://airflow.apache.org/
+exporter_name: the Airflow exporter
+exporter_pkg_name: airflow
+exporter_repo_url: https://airflow.apache.org/docs/apache-airflow/stable/logging-monitoring/metrics.html
+additional_prereq_info: |
+  {{app_name_short}} exposes Prometheus-format metrics automatically; you do not
+  have to install it separately. You can run the following checks to verify
+  that {{app_name_short}} is exposing Prometheus-format metrics.
+
+   *  To determine if {{exporter_name}} is exposing metrics, run the following command:
+
+      <pre class="devsite-click-to-copy">
+      kubectl -n <namespace_name> port-forward <airflow_pod_name> 9102
+      curl localhost:9102/metrics
+      </pre>
+dashboard_available: true
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: airflow
+    labels:
+      app.kubernetes.io/name: airflow
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+  + - port: 9102
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+  +     tier: airflow
+  +     component: statsd
+  +     release: airflow
+additional_podmonitoring_info: |
+  Ensure that the port and matchLabels match that of the airflow pods you wish to monitor.
+  The values shown here are set by default when Airflow is deployed with [helm](https://airflow.apache.org/docs/helm-chart/){:class=external}.
+sample_promql_query: up{job="airflow", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: airflow-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: airflow-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: airflow
+      interval: 30s
+      rules:
+      - alert: AirflowDAGImportErrors
+        annotations:
+          description: |-
+            Airflow dag import errors
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Airflow dag import errors (instance {{ $labels.instance }})
+        expr: airflow_dag_processing_import_errors > 0
+        for: 5m
+        labels:
+          severity: critical
+additional_alert_info: You can adjust the alert thresholds to suit your application.
