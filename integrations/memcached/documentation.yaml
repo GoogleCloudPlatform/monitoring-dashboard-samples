@@ -54,3 +54,40 @@ podmonitoring_config: |
       matchLabels:
         app.kubernetes.io/name: memcached
 sample_promql_query: up{job="memcached", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: memcached-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: memcached-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: memcached
+      interval: 30s
+      rules:
+      - alert: MemcachedHighEvictions
+        annotations:
+          description: |-
+            Memcached high evictions
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Memcached high evictions (instance {{ $labels.instance }})
+        expr: memcached_items_evicted_total > 0
+        for: 5m
+        labels:
+          severity: warning
+      - alert: MemcachedNoConnections
+        annotations:
+          description: |-
+            Memcached no connections
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Memcached no connections (instance {{ $labels.instance }})
+        expr: memcached_current_connections == 0
+        for: 5m
+        labels:
+          severity: warning
+additional_alert_info: You can adjust the alert thresholds to suit your application.
