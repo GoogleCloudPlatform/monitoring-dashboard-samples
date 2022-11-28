@@ -1,0 +1,32 @@
+platforms:
+  - type: GKE
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/argo_workflows_count/gauge
+    launch_stage: GA
+    exporter_metadata:
+      name: Argo Workflows Controller Prometheus Exporter
+      doc_url: https://argoproj.github.io/argo-workflows/metrics/
+      minimum_supported_version: v3.4.3
+    default_metrics:
+      - name: prometheus.googleapis.com/argo_workflows_operation_duration_seconds_sum/counter
+        prometheus_name: argo_workflows_operation_duration_seconds_sum
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/argo_workflows_count/gauge
+        prometheus_name: argo_workflows_count
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/argo_workflows_queue_adds_count/counter
+        prometheus_name: argo_workflows_queue_adds_count
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/argo_workflows_queue_depth_count/gauge
+        prometheus_name: argo_workflows_queue_depth_count
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/argo_workflows_queue_latency_sum/counter
+        prometheus_name: argo_workflows_queue_latency_sum
+        kind: CUMULATIVE
+        value_type: DOUBLE
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/argo-workflows
