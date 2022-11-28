@@ -1,0 +1,40 @@
+platforms:
+  - type: GKE
+    launch_stage: GA
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/tomcat_bytessent_total/counter
+    exporter_metadata:
+      name: Tomcat Prometheus Exporter
+      doc_url: https://github.com/bitnami/containers/tree/main/bitnami/jmx-exporter
+      minimum_supported_version: "0.17.0"
+    default_metrics:
+      - name: prometheus.googleapis.com/tomcat_bytessent_total/counter
+        prometheus_name: tomcat_bytessent_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/tomcat_errorcount_total/counter
+        prometheus_name: mysql_up
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/tomcat_requestcount_total/counter
+        prometheus_name: tomcat_requestcount_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/tomcat_session_sessioncounter_total/counter
+        prometheus_name: tomcat_session_sessioncounter_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/tomcat_threadpool_currentthreadcount/gauge
+        prometheus_name: tomcat_threadpool_currentthreadcount
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/tomcat_session_processingtime_total/counter
+        prometheus_name: tomcat_session_processingtime_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/tomcat_processingtime_total/counter
+        prometheus_name: tomcat_processingtime_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/tomcat
