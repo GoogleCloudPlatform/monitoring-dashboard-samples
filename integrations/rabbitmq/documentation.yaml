@@ -1,0 +1,92 @@
+exporter_type: included
+app_name_short: RabbitMQ
+app_name: {{app_name_short}}
+app_site_name: RabbitMQ
+app_site_url: https://rabbitmq.com/
+exporter_name: the RabbitMQ exporter
+exporter_pkg_name: rabbitmq
+exporter_repo_url: https://rabbitmq.com/prometheus.html#overview-prometheus
+additional_prereq_info: |
+  {{app_name_short}} exposes Prometheus-format metrics automatically; you do not
+  have to install it separately. You can run the following checks to verify
+  that {{app_name_short}} is exposing Prometheus-format metrics.
+
+   *  To determine if {{exporter_name}} is exposing metrics, run the following command:
+
+      <pre class="devsite-click-to-copy">
+      kubectl -n <namespace_name> port-forward <rabbitmq_pod_name> 15692
+      curl localhost:15692/metrics
+      </pre>
+dashboard_available: true
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: rabbitmq
+    labels:
+      app.kubernetes.io/name: rabbitmq
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+  + - port: prometheus
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+  +     app.kubernetes.io/component: rabbitmq
+additional_podmonitoring_info: |
+  Ensure that the port and matchLabels match that of the rabbitmq pods you wish to monitor. When deploying
+  Rabbitmq with the [operator](https://www.rabbitmq.com/kubernetes/operator/operator-overview.html){:class=external},
+  the label `app.kubernetes.io/component: rabbitmq` is set by default.
+additional_alert_info: You can adjust the alert thresholds to suit your application.
+sample_promql_query: up{job="rabbitmq", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: rabbitmq-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: rabbitmq-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: rabbitmq
+      interval: 30s
+      rules:
+      - alert: RabbitMQHighUnacknowledgedMessages
+        annotations:
+          description: |-
+            RabbitMQ high unacknowledged messages 
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: RabbitMQ high unacknowledged messages (instance {{ $labels.instance }})
+        expr: rabbitmq_channel_messages_unacked > 5
+        for: 5m
+        labels:
+          severity: critical
+      - alert: RabbitMQHighUnroutableMessages
+        annotations:
+          description: |-
+            RabbitMQ high unroutable messages
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: RabbitMQ high unroutable messages (instance {{ $labels.instance }})
+        expr: rate(rabbitmq_channel_messages_unroutable_dropped_total[5m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+      - alert: RabbitMQLowDeliveredMessages
+        annotations:
+          description: |-
+            RabbitMQ low delivered messages
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: RabbitMQ low delivered messages (instance {{ $labels.instance }})
+        expr: rate(rabbitmq_channel_messages_delivered_total[5m]) < 10
+        for: 5m
+        labels:
+          severity: warning
