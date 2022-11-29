@@ -64,16 +64,16 @@ podmonitoring_config: |
       app.kubernetes.io/part-of: google-cloud-managed-prometheus
   spec:
     endpoints:
-  + - port: 8500
+    - port: 8500
       scheme: http
       interval: 30s
-  +   path: /v1/agent/metrics
-  +   params:
-  +     format: 
-  +       - prometheus
+      path: /v1/agent/metrics
+      params:
+        format: 
+          - prometheus
     selector:
       matchLabels:
-  +     app.kubernetes.io/name: consul
+        app.kubernetes.io/name: consul
 additional_prereq_info: |
   {{app_name_short}} exposes Prometheus-format metrics when the telemetry configuration options
   `prometheus_retention_time` and `disable_hostname` are set. These options can be set by mounting
