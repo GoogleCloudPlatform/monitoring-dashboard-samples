@@ -10,13 +10,14 @@ additional_prereq_info: |
   {{app_name_short}} exposes Prometheus-format metrics automatically; you do not
   have to install it separately. You can run the following checks to verify
   that {{app_name_short}} is exposing Prometheus-format metrics.
+additional_install_info: |
+  To determine if {{exporter_name}} is exposing metrics, access the metrics endpoint
+  with port forwarding and curl.
 
-   *  To determine if {{exporter_name}} is exposing metrics, run the following command:
+  In one terminal, configure port forwarding with `kubectl -n <namespace_name> port-forward <airflow_pod_name> 9102`.
+  The port forwarding command will allow access to port 9102 on your machine.
 
-      <pre class="devsite-click-to-copy">
-      kubectl -n <namespace_name> port-forward <airflow_pod_name> 9102
-      curl localhost:9102/metrics
-      </pre>
+  In a second terminal, curl the metrics endpoint with `curl localhost:9102/metrics`.
 dashboard_available: true
 multiple_dashboards: false
 dashboard_display_name: {{app_name_short}} Prometheus Overview
@@ -30,15 +31,15 @@ podmonitoring_config: |
       app.kubernetes.io/part-of: google-cloud-managed-prometheus
   spec:
     endpoints:
-  + - port: 9102
+    - port: 9102
       scheme: http
       interval: 30s
       path: /metrics
     selector:
       matchLabels:
-  +     tier: airflow
-  +     component: statsd
-  +     release: airflow
+        tier: airflow
+        component: statsd
+        release: airflow
 additional_podmonitoring_info: |
   Ensure that the port and matchLabels match that of the airflow pods you wish to monitor.
   The values shown here are set by default when Airflow is deployed with [helm](https://airflow.apache.org/docs/helm-chart/){:class=external}.
