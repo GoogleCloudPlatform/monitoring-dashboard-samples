@@ -77,13 +77,13 @@ podmonitoring_config: |
 additional_prereq_info: |
   {{app_name_short}} exposes Prometheus-format metrics when the telemetry configuration options
   `prometheus_retention_time` and `disable_hostname` are set. These options can be set by mounting
-  a configmap at `/consul/config/metrics.hcl`. Hashicorp recommends that a retention time twice 
-  that of the collection interval be used.
+  a configmap at `/consul/config/metrics.hcl`. Hashicorp recommends using a retention time twice that
+  of the collection interval.
+additional_install_info: |
+  To determine if {{app_name_short}} is exposing metrics, run the following command:
 
-   *  To determine if {{app_name_short}} is exposing metrics, run the following command:
-
-      <pre class="devsite-click-to-copy">
-      kubectl -n <namespace_name> port-forward <consul_pod_name> 8500
-      curl localhost:8500/v1/agent/metrics?format=prometheus
-      </pre>
+  <pre class="devsite-click-to-copy">
+  kubectl -n <namespace_name> port-forward <consul_pod_name> 8500
+  curl localhost:8500/v1/agent/metrics?format=prometheus
+  </pre>
 sample_promql_query: up{job="consul", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
