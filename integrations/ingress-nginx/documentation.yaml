@@ -11,12 +11,11 @@ additional_prereq_info: |
   have to install it separately. You can run the following checks to verify
   that {{app_name_short}} is exposing Prometheus-format metrics.
 
-   *  To determine if {{exporter_name}} is exposing metrics, run the following command:
+  To determine if {{exporter_name}} is exposing metrics, run the following command:
 
-      <pre class="devsite-click-to-copy">
-      kubectl -n ingress-nginx port-forward deploy/ingress-nginx-controller 10254
-      curl localhost:10254/metrics
-      </pre>
+  <pre class="devsite-click-to-copy">
+  kubectl exec -n {{ namespace }} deploy/ingress-nginx-controller -- curl http://localhost:10254/metrics
+  </pre>
 dashboard_available: true
 multiple_dashboards: false
 dashboard_display_name: {{app_name_short}} Prometheus Overview
@@ -30,13 +29,13 @@ podmonitoring_config: |
       app.kubernetes.io/part-of: google-cloud-managed-prometheus
   spec:
     endpoints:
-  + - port: 10254
+    - port: 10254
       scheme: http
       interval: 30s
       path: /metrics
     selector:
       matchLabels:
-  +     app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/name: ingress-nginx
 additional_podmonitoring_info: |
   Ensure that the port and matchLabels match that of the {{app_name_short}} pods you wish to monitor. By default,
   {{app_name_short}} exposes metrics on port 10254 and has the label `app.kubernetes.io/name: ingress-nginx`.
