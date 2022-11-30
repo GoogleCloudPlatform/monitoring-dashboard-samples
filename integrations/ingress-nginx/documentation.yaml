@@ -1,17 +1,15 @@
 exporter_type: included
 app_name_short: Ingress NGINX
-app_name: {{app_name_short}}
+app_name: {{app_name_short}} Controller
 app_site_name: Ingress NGINX
 app_site_url: https://kubernetes.github.io/ingress-nginx
-exporter_name: the Ingress NGINX exporter
+exporter_name: the Ingress NGINX Controller
 exporter_pkg_name: ingress-nginx
 exporter_repo_url: https://kubernetes.github.io/ingress-nginx/user-guide/monitoring/
 additional_prereq_info: |
   {{app_name_short}} exposes Prometheus-format metrics automatically; you do not
-  have to install it separately. You can run the following checks to verify
-  that {{app_name_short}} is exposing Prometheus-format metrics.
-
-  To determine if {{exporter_name}} is exposing metrics, run the following command:
+  have to install it separately. To verify that {{exporter_name}} is exposing
+  metrics, run the following command:
 
   <pre class="devsite-click-to-copy">
   kubectl exec -n {{ namespace }} deploy/ingress-nginx-controller -- curl http://localhost:10254/metrics
@@ -37,8 +35,8 @@ podmonitoring_config: |
       matchLabels:
         app.kubernetes.io/name: ingress-nginx
 additional_podmonitoring_info: |
-  Ensure that the port and matchLabels match that of the {{app_name_short}} pods you wish to monitor. By default,
-  {{app_name_short}} exposes metrics on port 10254 and has the label `app.kubernetes.io/name: ingress-nginx`.
+  Ensure that the port and matchLabels match that of the {{app_name_short}} pods you want to monitor. By default,
+  {{exporter_name}} exposes metrics on port 10254 and has the label `app.kubernetes.io/name: ingress-nginx`.
 sample_promql_query: up{job="ingress-nginx", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
 alerts_config: |
   apiVersion: monitoring.googleapis.com/v1
