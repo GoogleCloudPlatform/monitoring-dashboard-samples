@@ -8,12 +8,12 @@ exporter_pkg_name: airflow
 exporter_repo_url: https://airflow.apache.org/docs/apache-airflow/stable/logging-monitoring/metrics.html
 additional_install_info: |
   To determine if {{exporter_name}} is exposing metrics, access the metrics endpoint
-  with port forwarding and curl.
+  by using port forwarding and curl as follows:
 
-  In one terminal, configure port forwarding with `kubectl -n <namespace_name> port-forward <airflow_pod_name> 9102`.
-  The port forwarding command will allow access to port 9102 on your machine.
+  In one terminal, configure port forwarding by using `kubectl -n <namespace_name> port-forward <airflow_pod_name> 9102`.
+  The port forwarding command allows access to port 9102 on your machine.
 
-  In a second terminal, make a GET request to the metrics endpoint with `curl localhost:9102/metrics`.
+  In a second terminal, make a `GET` request to the metrics endpoint by using `curl localhost:9102/metrics`.
 dashboard_available: true
 multiple_dashboards: false
 dashboard_display_name: {{app_name_short}} Prometheus Overview
@@ -37,8 +37,9 @@ podmonitoring_config: |
         component: statsd
         release: airflow
 additional_podmonitoring_info: |
-  Ensure that the port and matchLabels match that of the airflow pods you wish to monitor.
-  The values shown here are set by default when Airflow is deployed with [helm](https://airflow.apache.org/docs/helm-chart/){:class=external}.
+  Ensure that the port and matchLabels match that of the {{app_name_short}} pods you wish to monitor.
+  The labels and values shown here are set by default when Airflow is deployed with
+  [Helm](https://airflow.apache.org/docs/helm-chart/){:class=external}.
 sample_promql_query: up{job="airflow", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
 alerts_config: |
   apiVersion: monitoring.googleapis.com/v1
