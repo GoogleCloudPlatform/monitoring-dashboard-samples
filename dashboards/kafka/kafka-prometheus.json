@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "Kafka Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -17,7 +35,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "kafka_topic_partitions"
+                  "prometheusQuery": "kafka_topic_partitions{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -45,7 +63,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "kafka_brokers"
+                  "prometheusQuery": "kafka_brokers{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -73,7 +91,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "kafka_topic_partition_leader"
+                  "prometheusQuery": "kafka_topic_partition_leader{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -91,7 +109,7 @@
       {
         "height": 4,
         "widget": {
-          "title": "Under Replicated Partition",
+          "title": "Under Replicated Partition{${Cluster},${Location},${Namespace}}",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -101,7 +119,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "kafka_topic_partition_under_replicated_partition"
+                  "prometheusQuery": "kafka_topic_partition_under_replicated_partition{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -129,7 +147,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "kafka_topic_partition_leader_is_preferred"
+                  "prometheusQuery": "kafka_topic_partition_leader_is_preferred{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -157,7 +175,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "kafka_topic_partition_replicas"
+                  "prometheusQuery": "kafka_topic_partition_replicas{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -185,7 +203,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "kafka_topic_partition_in_sync_replica"
+                  "prometheusQuery": "kafka_topic_partition_in_sync_replica{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -213,7 +231,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "kafka_topic_partition_current_offset"
+                  "prometheusQuery": "kafka_topic_partition_current_offset{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -241,7 +259,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "kafka_topic_partition_oldest_offset"
+                  "prometheusQuery": "kafka_topic_partition_oldest_offset{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
