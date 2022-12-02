@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "Nginx Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -17,7 +35,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(nginx_http_requests_total[5m])"
+                  "prometheusQuery": "rate(nginx_http_requests_total{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -45,7 +63,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "nginx_connections_active"
+                  "prometheusQuery": "nginx_connections_active{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -73,7 +91,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "nginx_connections_waiting"
+                  "prometheusQuery": "nginx_connections_waiting{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -101,7 +119,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "nginx_connections_accepted"
+                  "prometheusQuery": "nginx_connections_accepted{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -129,7 +147,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "nginx_connections_reading"
+                  "prometheusQuery": "nginx_connections_reading{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -157,7 +175,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "nginx_connections_writing"
+                  "prometheusQuery": "nginx_connections_writing{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
