@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "Airflow Scheduler Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -17,21 +35,21 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "airflow_scheduler_tasks_starving"
+                  "prometheusQuery": "airflow_scheduler_tasks_starving{${Cluster},${Location},${Namespace}}"
                 }
               },
               {
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "airflow_scheduler_tasks_executable"
+                  "prometheusQuery": "airflow_scheduler_tasks_executable{${Cluster},${Location},${Namespace}}"
                 }
               },
               {
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "airflow_scheduler_tasks_running"
+                  "prometheusQuery": "airflow_scheduler_tasks_running{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -59,7 +77,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "airflow_scheduler_heartbeat"
+                  "prometheusQuery": "airflow_scheduler_heartbeat{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -87,7 +105,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "airflow_scheduler_orphaned_tasks_cleared"
+                  "prometheusQuery": "airflow_scheduler_orphaned_tasks_cleared{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -115,7 +133,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "airflow_scheduler_orphaned_tasks_adopted"
+                  "prometheusQuery": "airflow_scheduler_orphaned_tasks_adopted{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -143,7 +161,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "airflow_scheduler_critical_section_duration"
+                  "prometheusQuery": "airflow_scheduler_critical_section_duration{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
