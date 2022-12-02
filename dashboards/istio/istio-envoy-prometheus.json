@@ -19,7 +19,6 @@
     }
   ],
   "displayName": "Istio Envoy Prometheus Overview",
-  "etag": "296ae79e661b1597d857e1a84efd45d8",
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -43,7 +42,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(envoy_server_live)"
+              "prometheusQuery": "sum(envoy_server_live{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Live Proxies"
@@ -59,7 +58,7 @@
             "blankView": {},
             "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "avg(envoy_server_uptime)/60"
+              "prometheusQuery": "avg(envoy_server_uptime{${Cluster},${Location},${Namespace}})/60"
             }
           },
           "title": "Average Uptime (minutes)"
@@ -74,7 +73,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "SUM(envoy_server_memory_allocated)"
+              "prometheusQuery": "SUM(envoy_server_memory_allocated{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Allocated Memory"
@@ -89,7 +88,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "SUM(envoy_server_memory_heap_size)"
+              "prometheusQuery": "SUM(envoy_server_memory_heap_size{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Heap Size"
@@ -111,7 +110,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "(sum(envoy_cluster_membership_healthy)  - sum(envoy_cluster_membership_total))"
+              "prometheusQuery": "(sum(envoy_cluster_membership_healthy{${Cluster},${Location},${Namespace}})  - sum(envoy_cluster_membership_total{${Cluster},${Location},${Namespace}}))"
             }
           },
           "title": "Unhealthy Proxies"
@@ -324,6 +323,5 @@
         "yPos": 8
       }
     ]
-  },
-  "name": "projects/685351563540/dashboards/2a2b31fd-a24a-4ac4-b91f-24005d56491b"
+  }
 }
