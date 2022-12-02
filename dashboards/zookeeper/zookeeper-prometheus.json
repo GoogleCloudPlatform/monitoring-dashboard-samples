@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "Zookeeper Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -32,7 +50,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "uptime / 86400 / 1000"
+              "prometheusQuery": "uptime{${Cluster},${Location},${Namespace}} / 86400 / 1000"
             }
           },
           "title": "Uptime (days)"
@@ -69,7 +87,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "znode_count"
+              "prometheusQuery": "znode_count{${Cluster},${Location},${Namespace}}"
             }
           },
           "title": "ZNodes"
@@ -100,7 +118,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "num_alive_connections"
+              "prometheusQuery": "num_alive_connections{${Cluster},${Location},${Namespace}}"
             }
           },
           "title": "Connections"
@@ -131,7 +149,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "approximate_data_size /1024"
+              "prometheusQuery": "approximate_data_size{${Cluster},${Location},${Namespace}} /1024"
             }
           },
           "title": "ZNodes Total Memory (GB)"
@@ -162,7 +180,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "watch_count"
+              "prometheusQuery": "watch_count{${Cluster},${Location},${Namespace}}"
             }
           },
           "title": "Watch Count"
@@ -193,7 +211,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "increase(election_time_count[5m])"
+              "prometheusQuery": "increase(election_time_count{${Cluster},${Location},${Namespace}}[5m])"
             }
           },
           "title": "Leader Elections Counter"
@@ -224,7 +242,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "open_file_descriptor_count"
+              "prometheusQuery": "open_file_descriptor_count{${Cluster},${Location},${Namespace}}"
             }
           },
           "title": "Open File Descriptors"
@@ -246,7 +264,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(fsynctime_sum[1m])"
+                  "prometheusQuery": "rate(fsynctime_sum{${Cluster},${Location},${Namespace}}[1m])"
                 }
               }
             ],
@@ -281,7 +299,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(snapshottime_sum[5m])"
+                  "prometheusQuery": "rate(snapshottime_sum{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -316,7 +334,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "avg_latency"
+                  "prometheusQuery": "avg_latency{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -351,7 +369,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "jvm_memory_bytes_used / jvm_memory_bytes_max{area=\"heap\"}"
+                  "prometheusQuery": "jvm_memory_bytes_used{${Cluster},${Location},${Namespace}} / jvm_memory_bytes_max{area=\"heap\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
