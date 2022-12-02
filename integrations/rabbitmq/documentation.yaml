@@ -8,15 +8,17 @@ exporter_pkg_name: rabbitmq
 exporter_repo_url: https://rabbitmq.com/prometheus.html#overview-prometheus
 additional_prereq_info: |
   {{app_name_short}} exposes Prometheus-format metrics automatically; you do not
-  have to install it separately. You can run the following checks to verify
-  that {{app_name_short}} is exposing Prometheus-format metrics.
+  have to install it separately. To verify that {{exporter_name}} is emitting metrics on the expected
+  endpoints, set up port-forwarding with the following command:
 
-   *  To determine if {{exporter_name}} is exposing metrics, run the following command:
+  To determine if {{exporter_name}} is exposing metrics, run the following command:
 
-      <pre class="devsite-click-to-copy">
-      kubectl -n <namespace_name> port-forward <rabbitmq_pod_name> 15692
-      curl localhost:15692/metrics
-      </pre>
+  <pre class="devsite-click-to-copy">
+  kubectl -n {{namespace_name}} port-forward {{pod_name}} 15692
+  </pre>
+
+  Access the endpoint `localhost:15692/metrics` by using the browser or curl in another terminal session
+  to verify that the metrics are being exposed by the exporter for scraping.
 dashboard_available: true
 multiple_dashboards: false
 dashboard_display_name: {{app_name_short}} Prometheus Overview
@@ -30,18 +32,17 @@ podmonitoring_config: |
       app.kubernetes.io/part-of: google-cloud-managed-prometheus
   spec:
     endpoints:
-  + - port: prometheus
+    - port: prometheus
       scheme: http
       interval: 30s
       path: /metrics
     selector:
       matchLabels:
-  +     app.kubernetes.io/component: rabbitmq
+        app.kubernetes.io/component: rabbitmq
 additional_podmonitoring_info: |
-  Ensure that the port and matchLabels match that of the rabbitmq pods you wish to monitor. When deploying
-  Rabbitmq with the [operator](https://www.rabbitmq.com/kubernetes/operator/operator-overview.html){:class=external},
-  the label `app.kubernetes.io/component: rabbitmq` is set by default.
-additional_alert_info: You can adjust the alert thresholds to suit your application.
+  Ensure that the values of the port and matchLabels match that of the {{app_name_short}} pods you want to monitor.
+  Rabbitmq deployed by the [operator](https://www.rabbitmq.com/kubernetes/operator/operator-overview.html){:class=external}
+  will contain the label `app.kubernetes.io/component: rabbitmq` and `prometheus` port.
 sample_promql_query: up{job="rabbitmq", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
 alerts_config: |
   apiVersion: monitoring.googleapis.com/v1
@@ -90,3 +91,4 @@ alerts_config: |
         for: 5m
         labels:
           severity: warning
+additional_alert_info: You can adjust the alert thresholds to suit your application.
