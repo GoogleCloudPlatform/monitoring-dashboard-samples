@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "RabbitMQ Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -10,7 +28,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(rabbitmq_queue_messages_ready * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"})"
+              "prometheusQuery": "sum(rabbitmq_queue_messages_ready{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Ready Messages"
@@ -27,7 +45,7 @@
               "sparkChartType": "SPARK_LINE"
             },
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(rate(rabbitmq_channel_messages_published_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"})"
+              "prometheusQuery": "sum(rate(rabbitmq_channel_messages_published_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Incoming Messages / second"
@@ -42,7 +60,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(rabbitmq_channels * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) - sum(rabbitmq_channel_consumers * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"})"
+              "prometheusQuery": "sum(rabbitmq_channels{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) - sum(rabbitmq_channel_consumers * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"})"
             }
           },
           "title": "Publishers"
@@ -57,7 +75,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(rabbitmq_connections * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"})"
+              "prometheusQuery": "sum(rabbitmq_connections{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Connections"
@@ -72,7 +90,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(rabbitmq_queues * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"})"
+              "prometheusQuery": "sum(rabbitmq_queues{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Queues"
@@ -87,7 +105,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(rabbitmq_queue_messages_unacked * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"})"
+              "prometheusQuery": "sum(rabbitmq_queue_messages_unacked{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Unacknowledged Messages"
@@ -104,7 +122,7 @@
               "sparkChartType": "SPARK_LINE"
             },
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(rate(rabbitmq_channel_messages_redelivered_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) +\nsum(rate(rabbitmq_channel_messages_delivered_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) +\nsum(rate(rabbitmq_channel_messages_delivered_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) +\nsum(rate(rabbitmq_channel_get_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) +\nsum(rate(rabbitmq_channel_get_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"})"
+              "prometheusQuery": "sum(rate(rabbitmq_channel_messages_redelivered_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) +\nsum(rate(rabbitmq_channel_messages_delivered_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) +\nsum(rate(rabbitmq_channel_messages_delivered_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) +\nsum(rate(rabbitmq_channel_get_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) +\nsum(rate(rabbitmq_channel_get_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Outgoing Messages / second"
@@ -119,7 +137,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(rabbitmq_channel_consumers * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"})"
+              "prometheusQuery": "sum(rabbitmq_channel_consumers{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Consumers"
@@ -134,7 +152,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(rabbitmq_channels * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"})"
+              "prometheusQuery": "sum(rabbitmq_channels{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Channels"
@@ -149,7 +167,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(rabbitmq_build_info * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"})"
+              "prometheusQuery": "sum(rabbitmq_build_info{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Nodes"
@@ -178,7 +196,7 @@
               {
                 "tableDisplayOptions": {},
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rabbitmq_build_info * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}"
+                  "prometheusQuery": "rabbitmq_build_info{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -203,7 +221,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(rabbitmq_resident_memory_limit_bytes * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) -\n(rabbitmq_process_resident_memory_bytes * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"})"
+                  "prometheusQuery": "(rabbitmq_resident_memory_limit_bytes{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) -\n(rabbitmq_process_resident_memory_bytes * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}})"
                 }
               }
             ],
@@ -231,7 +249,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rabbitmq_disk_space_available_bytes * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}"
+                  "prometheusQuery": "rabbitmq_disk_space_available_bytes{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -259,7 +277,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(rabbitmq_process_max_tcp_sockets * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) -\n(rabbitmq_process_open_tcp_sockets * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"})"
+                  "prometheusQuery": "(rabbitmq_process_max_tcp_sockets{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) -\n(rabbitmq_process_open_tcp_sockets * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}})"
                 }
               }
             ],
@@ -299,7 +317,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rabbitmq_queue_messages_ready * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rabbitmq_queue_messages_ready{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -327,7 +345,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rabbitmq_queue_messages_unacked * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rabbitmq_queue_messages_unacked{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -367,7 +385,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_published_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_published_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -395,7 +413,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_unconfirmed[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_unconfirmed{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -423,7 +441,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_queue_messages_published_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_queue_messages_published_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -451,7 +469,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_confirmed_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_confirmed_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -479,7 +497,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_unroutable_dropped_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_unroutable_dropped_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -507,7 +525,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_unroutable_returned_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_unroutable_returned_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -547,7 +565,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_get_empty_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_get_empty_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -575,7 +593,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_redelivered_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_redelivered_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -603,7 +621,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(\n  (rate(rabbitmq_channel_messages_delivered_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) +\n  (rate(rabbitmq_channel_messages_delivered_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"})\n) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(\n  (rate(rabbitmq_channel_messages_delivered_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) +\n  (rate(rabbitmq_channel_messages_delivered_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}})\n) by(rabbitmq_node)"
                 }
               }
             ],
@@ -631,7 +649,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_delivered_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_delivered_ack_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -659,7 +677,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_get_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_get_ack_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -687,7 +705,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_delivered_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_delivered_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -715,7 +733,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_acked_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_acked_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -743,7 +761,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_get_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_get_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -783,7 +801,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rabbitmq_queues * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}"
+                  "prometheusQuery": "rabbitmq_queues{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -811,7 +829,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_queues_created_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_queues_created_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -839,7 +857,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_queues_declared_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_queues_declared_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
@@ -867,7 +885,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_queues_deleted_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\"}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_queues_deleted_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{rabbitmq_cluster=\"rabbitmq\", namespace=\"default\",${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
                 }
               }
             ],
