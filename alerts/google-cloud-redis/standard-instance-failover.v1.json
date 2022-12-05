@@ -1,0 +1,35 @@
+{
+  "displayName": "OIC - Cloud Redis - Standard Instance Failover",
+  "documentation": {
+    "content": "This Alert fires if failover occurs for a standard tier instance",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {
+    "instance_id": "${INSTANCE_NAME}"
+  },
+  "conditions": [
+    {
+      "displayName": "Cloud Memorystore Redis Instance - Node Role",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_STDDEV"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"redis_instance\" AND resource.labels.instance_id = \"projects/${PROJECT_ID}/locations/${REGION}/instances/${INSTANCE_ID}\" AND metric.type = \"redis.googleapis.com/replication/role\"",
+        "thresholdValue": 0,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
