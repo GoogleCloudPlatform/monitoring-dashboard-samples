@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+    "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "JVM Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -17,7 +35,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "jvm_classes_loaded_total"
+                  "prometheusQuery": "jvm_classes_loaded_total{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -45,7 +63,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "jvm_threads_current"
+                  "prometheusQuery": "jvm_threads_current{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -73,7 +91,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(jvm_gc_collection_seconds_count[5m])"
+                  "prometheusQuery": "rate(jvm_gc_collection_seconds_count{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -101,7 +119,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(jvm_gc_collection_seconds_sum[5m])"
+                  "prometheusQuery": "rate(jvm_gc_collection_seconds_sum{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -129,7 +147,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "jvm_memory_bytes_committed"
+                  "prometheusQuery": "jvm_memory_bytes_committed{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -157,7 +175,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "jvm_memory_bytes_used"
+                  "prometheusQuery": "jvm_memory_bytes_used{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
