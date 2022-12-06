@@ -6,6 +6,7 @@ app_site_url: https://rabbitmq.com/
 exporter_name: the RabbitMQ exporter
 exporter_pkg_name: rabbitmq
 exporter_repo_url: https://rabbitmq.com/prometheus.html#overview-prometheus
+minimum_exporter_version: v3.8.0
 additional_prereq_info: |
   {{app_name_short}} exposes Prometheus-format metrics automatically; you do not
   have to install it separately. To verify that {{exporter_name}} is emitting metrics on the expected
@@ -41,7 +42,7 @@ podmonitoring_config: |
         app.kubernetes.io/component: rabbitmq
 additional_podmonitoring_info: |
   Ensure that the values of the port and matchLabels match that of the {{app_name_short}} pods you want to monitor.
-  Rabbitmq deployed by the [operator](https://www.rabbitmq.com/kubernetes/operator/operator-overview.html){:class=external}
+  {{app_name_short}} deployed by the [operator](https://www.rabbitmq.com/kubernetes/operator/operator-overview.html){:class=external}
   will contain the label `app.kubernetes.io/component: rabbitmq` and `prometheus` port.
 sample_promql_query: up{job="rabbitmq", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
 alerts_config: |
