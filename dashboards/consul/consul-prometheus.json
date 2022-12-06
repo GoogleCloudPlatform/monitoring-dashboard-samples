@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "Consul Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -17,7 +35,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "consul_kvs_apply"
+                  "prometheusQuery": "consul_kvs_apply{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -45,7 +63,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "consul_raft_commitTime"
+                  "prometheusQuery": "consul_raft_commitTime{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -97,7 +115,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "consul_raft_state_leader"
+                  "prometheusQuery": "consul_raft_state_leader{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -125,7 +143,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "consul_raft_state_candidate"
+                  "prometheusQuery": "consul_raft_state_candidate{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -153,7 +171,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "consul_autopilot_healthy"
+                  "prometheusQuery": "consul_autopilot_healthy{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -181,7 +199,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "consul_runtime_sys_bytes"
+                  "prometheusQuery": "consul_runtime_sys_bytes{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -209,7 +227,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(consul_runtime_total_gc_pause_ns[5m])"
+                  "prometheusQuery": "rate(consul_runtime_total_gc_pause_ns{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -249,7 +267,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(consul_client_rpc[1m])"
+                  "prometheusQuery": "rate(consul_client_rpc{${Cluster},${Location},${Namespace}}[1m])"
                 }
               }
             ],
@@ -277,7 +295,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(consul_client_rpc_exceeded[1m])"
+                  "prometheusQuery": "rate(consul_client_rpc_exceeded{${Cluster},${Location},${Namespace}}[1m])"
                 }
               }
             ],
@@ -305,7 +323,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(consul_client_rpc_failed[1m])"
+                  "prometheusQuery": "rate(consul_client_rpc_failed{${Cluster},${Location},${Namespace}}[1m])"
                 }
               }
             ],
@@ -333,7 +351,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(consul_raft_apply[5m])"
+                  "prometheusQuery": "rate(consul_raft_apply{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
