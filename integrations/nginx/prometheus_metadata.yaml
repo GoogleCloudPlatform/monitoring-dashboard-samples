@@ -1,0 +1,47 @@
+platforms:
+  - type: GKE
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/nginx_up/gauge
+    launch_stage: GA
+    exporter_metadata:
+      name: NGINX Prometheus Exporter
+      doc_url: https://github.com/nginxinc/nginx-prometheus-exporter
+      minimum_supported_version: 0.11.0
+    default_metrics:
+      - name: prometheus.googleapis.com/nginx_connections_accepted/counter
+        prometheus_name: nginx_connections_accepted
+        kind: Counter
+        value_type: INT64
+      - name: prometheus.googleapis.com/nginx_connections_active/gauge
+        prometheus_name: nginx_connections_active
+        kind: Gauge
+        value_type: INT64
+      - name: prometheus.googleapis.com/nginx_connections_reading/gauge
+        prometheus_name: nginx_connections_reading
+        kind: Gauge
+        value_type: INT64
+      - name: prometheus.googleapis.com/nginx_connections_waiting/gauge
+        prometheus_name: nginx_connections_waiting
+        kind: Gauge
+        value_type: INT64
+      - name: prometheus.googleapis.com/nginx_connections_writing/gauge
+        prometheus_name: nginx_connections_writing
+        kind: Gauge
+        value_type: INT64
+      - name: prometheus.googleapis.com/nginx_http_requests_total/counter
+        prometheus_name: nginx_http_requests_total
+        kind: Counter
+        value_type: INT64
+      - name: prometheus.googleapis.com/nginxexporter_build_info/gauge
+        prometheus_name: nginxexporter_build_info
+        kind: Gauge
+        value_type: INT64
+        labels:
+          - gitCommit
+          - version
+      - name: prometheus.googleapis.com/nginx_up/gauge
+        prometheus_name: nginx_up
+        kind: Gauge
+        value_type: INT64
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters
