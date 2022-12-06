@@ -1,0 +1,40 @@
+platforms:
+  - type: GKE
+    launch_stage: GA
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/airflow_scheduler_tasks_running/gauge
+    exporter_metadata:
+      name: Airflow Prometheus Exporter
+      doc_url: https://airflow.apache.org/docs/apache-airflow/stable/logging-monitoring/metrics.html
+      minimum_supported_version: "2.3.0"
+    default_metrics:
+      - name: prometheus.googleapis.com/airflow_scheduler_tasks_running/gauge
+        prometheus_name: airflow_scheduler_tasks_running
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/airflow_scheduler_tasks_starving/gauge
+        prometheus_name: airflow_scheduler_tasks_starving
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/airflow_scheduler_tasks_executable/gauge
+        prometheus_name: airflow_scheduler_tasks_executable
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/airflow_scheduler_heartbeat/counter
+        prometheus_name: airflow_scheduler_heartbeat
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/airflow_scheduler_orphaned_tasks_cleared/counter
+        prometheus_name: airflow_scheduler_orphaned_tasks_cleared
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/airflow_scheduler_orphaned_tasks_adopted/counter
+        prometheus_name: airflow_scheduler_orphaned_tasks_adopted
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/airflow_scheduler_critical_section_duration/summary
+        prometheus_name: airflow_scheduler_critical_section_duration
+        kind: GAUGE
+        value_type: DOUBLE
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/apache-airflow
