@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "MongoDB Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -17,7 +35,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_ss_opcounters"
+                  "prometheusQuery": "mongodb_ss_opcounters{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -45,7 +63,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_ss_opLatencies_latency"
+                  "prometheusQuery": "mongodb_ss_opLatencies_latency{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -73,7 +91,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_ss_connections{conn_type=\"available\"}"
+                  "prometheusQuery": "mongodb_ss_connections{conn_type=\"available\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -101,7 +119,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_ss_globalLock_currentQueue"
+                  "prometheusQuery": "mongodb_ss_globalLock_currentQueue{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -129,7 +147,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_ss_metrics_operation_scanAndOrder"
+                  "prometheusQuery": "mongodb_ss_metrics_operation_scanAndOrder{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -157,14 +175,14 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_sys_disks_sda_write_time_ms"
+                  "prometheusQuery": "mongodb_sys_disks_sda_write_time_ms{${Cluster},${Location},${Namespace}}"
                 }
               },
               {
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_sys_disks_sda_read_time_ms"
+                  "prometheusQuery": "mongodb_sys_disks_sda_read_time_ms{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -192,14 +210,14 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_sys_memory_MemFree_kb"
+                  "prometheusQuery": "mongodb_sys_memory_MemFree_kb{${Cluster},${Location},${Namespace}}"
                 }
               },
               {
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_sys_memory_MemTotal_kb"
+                  "prometheusQuery": "mongodb_sys_memory_MemTotal_kb{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
