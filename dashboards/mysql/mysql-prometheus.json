@@ -38,7 +38,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "mysql_global_status_uptime{${Cluster},${Location},${Namespace}} / 60"
+              "prometheusQuery": "sum(mysql_global_status_uptime{${Cluster},${Location},${Namespace}} / 60)"
             }
           },
           "title": "Global Status Uptime (minutes)"
@@ -131,7 +131,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "100 * mysql_global_status_threads_connected{${Cluster},${Location},${Namespace}} / mysql_global_variables_max_connections{${Cluster},${Location},${Namespace}}\n"
+              "prometheusQuery": "100 * sum(mysql_global_status_threads_connected{${Cluster},${Location},${Namespace}}) / sum(mysql_global_variables_max_connections{${Cluster},${Location},${Namespace}})\n"
             }
           },
           "title": "Available Connections"
@@ -146,7 +146,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "mysql_global_variables_open_files_limit{${Cluster},${Location},${Namespace}} - mysql_global_variables_innodb_open_files{${Cluster},${Location},${Namespace}}\n"
+              "prometheusQuery": "sum(mysql_global_variables_open_files_limit{${Cluster},${Location},${Namespace}}) - sum(mysql_global_variables_innodb_open_files{${Cluster},${Location},${Namespace}})\n"
             }
           },
           "title": "Open Files Available"
