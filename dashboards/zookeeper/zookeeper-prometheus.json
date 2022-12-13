@@ -50,10 +50,10 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "uptime{${Cluster},${Location},${Namespace}} / 86400 / 1000"
+              "prometheusQuery": "sum(uptime{${Cluster},${Location},${Namespace}}) / count(uptime{${Cluster},${Location},${Namespace}}) / 86400 / 1000"
             }
           },
-          "title": "Uptime (days)"
+          "title": "Average Uptime (days)"
         },
         "width": 2,
         "xPos": 0,
@@ -87,7 +87,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "znode_count{${Cluster},${Location},${Namespace}}"
+              "prometheusQuery": "sum(znode_count{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "ZNodes"
@@ -118,7 +118,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "num_alive_connections{${Cluster},${Location},${Namespace}}"
+              "prometheusQuery": "sum(num_alive_connections{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Connections"
@@ -149,7 +149,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "approximate_data_size{${Cluster},${Location},${Namespace}} /1024"
+              "prometheusQuery": "sum(approximate_data_size{${Cluster},${Location},${Namespace}} / 1024)"
             }
           },
           "title": "ZNodes Total Memory (GB)"
@@ -180,7 +180,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "watch_count{${Cluster},${Location},${Namespace}}"
+              "prometheusQuery": "sum(watch_count{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Watch Count"
@@ -211,7 +211,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "increase(election_time_count{${Cluster},${Location},${Namespace}}[5m])"
+              "prometheusQuery": "sum(increase(election_time_count{${Cluster},${Location},${Namespace}}[5m]))"
             }
           },
           "title": "Leader Elections Counter"
@@ -242,7 +242,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "open_file_descriptor_count{${Cluster},${Location},${Namespace}}"
+              "prometheusQuery": "sum(open_file_descriptor_count{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Open File Descriptors"
