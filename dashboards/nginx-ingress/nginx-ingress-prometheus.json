@@ -62,7 +62,7 @@
               "sparkChartType": "SPARK_LINE"
             },
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(nginx_ingress_controller_success{controller_pod=~\".*\",controller_class=~\".*\",controller_namespace=~\".*\",${Cluster},${Location},${Namespace}})"
+              "prometheusQuery": "sum(nginx_ingress_controller_success{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Config Reloads"
@@ -84,7 +84,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "round(sum(irate(nginx_ingress_controller_requests{controller_pod=~\".*\",controller_class=~\".*\",controller_namespace=~\".*\",ingress=~\".*\",${Cluster},${Location},${Namespace}}[2m])) by (ingress), 0.001)"
+                  "prometheusQuery": "round(sum(irate(nginx_ingress_controller_requests{ingress=~\".*\",${Cluster},${Location},${Namespace}}[2m])) by (ingress), 0.001)"
                 }
               }
             ],
@@ -140,7 +140,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(irate (nginx_ingress_controller_request_size_sum{controller_pod=~\".*\",controller_class=~\".*\",controller_namespace=~\".*\",${Cluster},${Location},${Namespace}}[2m]))"
+                  "prometheusQuery": "(irate (nginx_ingress_controller_request_size_sum{${Cluster},${Location},${Namespace}}[2m]))"
                 }
               }
             ],
