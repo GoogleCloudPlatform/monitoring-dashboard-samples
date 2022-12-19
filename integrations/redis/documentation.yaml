@@ -67,6 +67,88 @@ podmonitoring_config: |
     selector:
       matchLabels:
         app.kubernetes.io/name: redis
-#alerts_config: {% includecode content_path="stackdriver/docs/managed-prometheus/exporters/configs/redis_alerts.yaml" %}
-#additional_alert_info: You can adjust the alert thresholds to suit your application.
 sample_promql_query: up{job="redis", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: redis-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: redis-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: redis
+      interval: 30s
+      rules:
+      - alert: RedisDown
+        annotations:
+          description: |-
+            Redis instance is down
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Redis down (instance {{ $labels.instance }})
+        expr: redis_up{job="redis"} == 0
+        for: 5m
+        labels:
+          severity: critical
+      - alert: RedisOutOfMemory
+        annotations:
+          description: |-
+            Redis is running out of memory (> 90%)
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Redis out of memory (instance {{ $labels.instance }})
+        expr: redis_memory_used_bytes{job="redis"} / redis_total_system_memory_bytes{job="redis"}
+          * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+      - alert: RedisTooManyConnections
+        annotations:
+          description: |-
+            Redis instance has too many connections
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Redis too many connections (instance {{ $labels.instance }})
+        expr: redis_connected_clients{job="redis"} > 100
+        for: 5m
+        labels:
+          severity: warning
+      - alert: RedisClusterSlotFail
+        annotations:
+          description: |-
+            Redis cluster has slots fail
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Number of hash slots mapping to a node in FAIL state (instance {{ $labels.instance }})
+        expr: redis_cluster_slots_fail{job="redis"} > 0
+        for: 5m
+        labels:
+          severity: warning
+      - alert: RedisClusterSlotPfail
+        annotations:
+          description: |-
+            Redis cluster has slots pfail
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Number of hash slots mapping to a node in PFAIL state (instance {{ $labels.instance }})
+        expr: redis_cluster_slots_pfail{job="redis"} > 0
+        for: 5m
+        labels:
+          severity: warning
+      - alert: RedisClusterStateNotOk
+        annotations:
+          description: |-
+            Redis cluster is not ok
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Redis cluster state is not ok (instance {{ $labels.instance }})
+        expr: redis_cluster_state{job="redis"} == 0
+        for: 5m
+        labels:
+          severity: critical
+      - expr: redis_memory_used_rss_bytes{job="redis"} / redis_memory_used_bytes{job="redis"}
+        record: redis_memory_fragmentation_ratio
+additional_alert_info: You can adjust the alert thresholds to suit your application.
