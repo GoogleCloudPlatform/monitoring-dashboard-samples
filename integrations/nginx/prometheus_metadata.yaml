@@ -1,0 +1,48 @@
+platforms:
+  - type: GKE
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/nginx_up/gauge
+    launch_stage: GA
+    exporter_metadata:
+      name: NGINX Prometheus Exporter
+      doc_url: https://github.com/nginxinc/nginx-prometheus-exporter
+      minimum_supported_version: v0.10.0
+    default_metrics:
+      - name: prometheus.googleapis.com/nginx_connections_accepted/counter
+        prometheus_name: nginx_connections_accepted
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/nginx_connections_active/gauge
+        prometheus_name: nginx_connections_active
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/nginx_connections_handled/counter
+        prometheus_name: nginx_connections_handled
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/nginx_connections_reading/gauge
+        prometheus_name: nginx_connections_reading
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/nginx_connections_waiting/gauge
+        prometheus_name: nginx_connections_waiting
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/nginx_connections_writing/gauge
+        prometheus_name: nginx_connections_writing
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/nginx_http_requests_total/counter
+        prometheus_name: nginx_http_requests_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/nginx_up/gauge
+        prometheus_name: nginx_up
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/nginxexporter_build_info/gauge
+        prometheus_name: nginxexporter_build_info
+        kind: GAUGE
+        value_type: DOUBLE
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/nginx
