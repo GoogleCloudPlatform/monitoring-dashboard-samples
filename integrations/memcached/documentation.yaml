@@ -1,0 +1,93 @@
+exporter_type: sidecar
+app_name_short: Memcached
+app_name: {{app_name_short}}
+app_site_name: Memcached
+app_site_url: https://memcached.org/
+exporter_name: the Memcached exporter
+exporter_pkg_name: memcached_exporter
+exporter_repo_url: https://github.com/prometheus/memcached_exporter
+dashboard_available: true
+minimum_exporter_version: v0.10.0
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+config_mods: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: memcached
+  spec:
+    selector:
+      matchLabels:
+  +     app.kubernetes.io/name: memcached
+    template:
+      metadata:
+        labels:
+  +       app.kubernetes.io/name: memcached
+      spec:
+        containers:
+        - name: memcached
+          image: ubuntu/memcached:1.6-22.04_beta
+          ports:
+          - containerPort: 11211
+            name: memcached
+            protocol: TCP
+  +     - name: memcached-exporter
+  +       image: quay.io/prometheus/memcached-exporter:v0.10.0
+  +       ports:
+  +       - containerPort: 9150
+  +         name: prometheus
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: memcached
+    labels:
+      app.kubernetes.io/name: memcached
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: prometheus
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: memcached
+sample_promql_query: up{job="memcached", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: memcached-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: memcached-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: memcached
+      interval: 30s
+      rules:
+      - alert: MemcachedHighEvictions
+        annotations:
+          description: |-
+            Memcached high evictions
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Memcached high evictions (instance {{ $labels.instance }})
+        expr: memcached_items_evicted_total > 0
+        for: 5m
+        labels:
+          severity: warning
+      - alert: MemcachedNoConnections
+        annotations:
+          description: |-
+            Memcached no connections
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Memcached no connections (instance {{ $labels.instance }})
+        expr: memcached_current_connections == 0
+        for: 5m
+        labels:
+          severity: warning
+additional_alert_info: You can adjust the alert thresholds to suit your application.
