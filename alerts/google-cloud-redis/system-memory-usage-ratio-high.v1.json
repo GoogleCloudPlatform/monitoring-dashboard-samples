@@ -1,0 +1,38 @@
+{
+  "displayName": "Cloud Redis - System Memory Usage Ratio High for ${INSTANCE_ID}(${REGION})",
+  "documentation": {
+    "content": "This Alert fires if the instance's system memory usage ratio is above threshold.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {
+    "context": "${CONTEXT}",
+    "resource_type": "${RESOURCE_TYPE}",
+    "instance_id": "${INSTANCE_NAME}"
+  },
+  "conditions": [
+    {
+      "displayName": "Cloud Memorystore Redis Instance - System Memory Usage Ratio",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"redis_instance\" AND resource.labels.instance_id = \"projects/${PROJECT_ID}/locations/${REGION}/instances/${INSTANCE_ID}\" AND metric.type = \"redis.googleapis.com/stats/memory/system_memory_usage_ratio\"",
+        "thresholdValue": 0.8,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
+

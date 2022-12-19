@@ -1,0 +1,36 @@
+platforms:
+  - type: GKE
+    launch_stage: GA
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/memcached_commands_total/counter
+    exporter_metadata:
+      name: Memcached Prometheus Exporter
+      doc_url: https://github.com/prometheus/memcached_exporter
+      minimum_supported_version: v0.10.0
+    default_metrics:
+      - name: prometheus.googleapis.com/memcached_commands_total/counter
+        prometheus_name: memcached_commands_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/memcached_current_connections/gauge
+        prometheus_name: memcached_current_connections
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/memcached_items_reclaimed_total/counter
+        prometheus_name: memcached_items_reclaimed_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/memcached_written_bytes_total/counter
+        prometheus_name: memcached_written_bytes_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/memcached_current_bytes/gauge
+        prometheus_name: memcached_current_bytes
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/memcached_current_items/gauge
+        prometheus_name: memcached_current_items
+        kind: GAUGE
+        value_type: DOUBLE
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/memcached
