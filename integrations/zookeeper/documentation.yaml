@@ -1,0 +1,105 @@
+exporter_type: included
+app_name_short: Zookeeper
+app_name: Apache  {{app_name_short}}
+app_site_name: Zookeeper
+app_site_url: https://zookeeper.apache.org/
+exporter_name: the Zookeeper exporter
+exporter_pkg_name: zookeeper
+exporter_repo_url: https://zookeeper.apache.org/doc/r3.8.0/zookeeperMonitor.html
+dashboard_available: true
+minimum_exporter_version: "3.8.0"
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+config_mods: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: zookeeper
+  spec:
+    selector:
+      matchLabels:
+  +     app.kubernetes.io/name: zookeeper
+    template:
+      metadata:
+        labels:
+  +       app.kubernetes.io/name: zookeeper
+      spec:
+        containers:
+        - name: zookeeper
+          image: zookeeper:3.8.0
+  +       env:
+  +       - name: ZOO_CFG_EXTRA
+  +         value: "metricsProvider.className=org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvider metricsProvider.httpPort=7000 metricsProvider.exportJvmInfo=true"
+  +       ports:
+  +       - containerPort: 7000
+  +         name: prometheus
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: zookeeper
+    labels:
+      app.kubernetes.io/name: zookeeper
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: prometheus
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: zookeeper
+additional_install_info: |
+  {{app_name_short}} exposes Prometheus-format metrics automatically when configured
+  to use the `ZOO_CFG_EXTRA` environment variable. This example configures {{app_name_short}}
+  to expose Prometheus-format metrics on port `7000`.
+sample_promql_query: up{job="zookeeper", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: zookeeper-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: zookeeper-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: zookeeper
+      interval: 30s
+      rules:
+      - alert: ZooKeeperHighAverageLatency
+        annotations:
+          description: |-
+            ZooKeeper high average latency
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: ZooKeeper high average latency (instance {{ $labels.instance }})
+        expr: avg_latency > 100
+        for: 5m
+        labels:
+          severity: warning
+      - alert: ZooKeeperHighFsyncDuration
+        annotations:
+          description: |-
+            ZooKeeper high fsync duration
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: ZooKeeper high fsync duration (instance {{ $labels.instance }})
+        expr: fsynctime_sum > 100
+        for: 5m
+        labels:
+          severity: warning
+      - alert: ZooKeeperLowFreeFileDescriptors
+        annotations:
+          description: |-
+            ZooKeeper high fsync duration
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: ZooKeeper high fsync duration (instance {{ $labels.instance }})
+        expr: open_file_descriptor_count >= max_file_descriptor_count - 15
+        for: 5m
+        labels:
+          severity: critical
+additional_alert_info: You can adjust the alert thresholds to suit your application.

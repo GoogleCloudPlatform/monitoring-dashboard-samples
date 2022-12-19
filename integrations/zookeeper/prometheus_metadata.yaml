@@ -1,0 +1,60 @@
+platforms:
+  - type: GKE
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/znode_count/gauge
+    launch_stage: GA
+    exporter_metadata:
+      name: ZooKeeper Prometheus Exporter
+      doc_url: https://zookeeper.apache.org/doc/r3.8.0/zookeeperMonitor.html
+      minimum_supported_version: "3.8.0"
+    default_metrics:
+      - name: prometheus.googleapis.com/uptime/gauge
+        prometheus_name: uptime
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/approximate_data_size/gauge
+        prometheus_name: approximate_data_size
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/znode_count/gauge
+        prometheus_name: znode_count
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/num_alive_connections/gauge
+        prometheus_name: num_alive_connections
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/watch_count/gauge
+        prometheus_name: watch_count
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/election_time_count/summary
+        prometheus_name: election_time_count
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/open_file_descriptor_count/gauge
+        prometheus_name: open_file_descriptor_count
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/fsynctime_sum/summary:counter
+        prometheus_name: fsynctime_sum
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/avg_latency/gauge
+        prometheus_name: avg_latency
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/snapshottime_sum/summary:counter
+        prometheus_name: snapshottime_sum
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/jvm_memory_bytes_used/gauge
+        prometheus_name: jvm_memory_bytes_used
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/jvm_memory_bytes_max/gauge
+        prometheus_name: jvm_memory_bytes_max
+        kind: GAUGE
+        value_type: DOUBLE
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/zookeeper
