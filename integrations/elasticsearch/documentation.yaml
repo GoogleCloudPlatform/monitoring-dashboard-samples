@@ -1,0 +1,107 @@
+exporter_type: standalone
+app_name_short: Elasticsearch
+app_name: {{app_name_short}}
+app_site_name: Elasticsearch
+app_site_url: https://www.elastic.co/elasticsearch/
+exporter_name: the Elasticsearch exporter
+exporter_pkg_name: elasticsearch_exporter
+exporter_repo_url: https://github.com/prometheus-community/elasticsearch_exporter
+dashboard_available: true
+minimum_exporter_version: v1.3.0
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+standalone_config: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: elasticsearch-exporter
+    labels:
+      app.kubernetes.io/name: elasticsearch-exporter
+  spec:
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: elasticsearch-exporter
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: elasticsearch-exporter
+      spec:
+        containers:
+        - name: exporter
+          image: quay.io/prometheuscommunity/elasticsearch-exporter:v1.3.0
+          args:
+          - '--es.uri=https://user:password@elasticsearch-es-internal-http:9200'
+          ports:
+          - containerPort: 9114
+            name: prometheus
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: elasticsearch
+    labels:
+      app.kubernetes.io/name: elasticsearch
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: prometheus
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: elasticsearch-exporter
+additional_install_info: |
+  The {{app_name_short}} exporter is configurable with [flags](https://github.com/prometheus-community/elasticsearch_exporter#configuration){:class=external},
+  which can be set as container args. You can adjust your exporter's configuration to suit your {{app_name_short}} configuration.
+
+  Update the `--es.uri` flag to match your environment's username, password, and clusterIP service name.
+sample_promql_query: up{job="elasticsearch", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: elasticsearch-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: elasticsearch-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: elasticsearch
+      interval: 30s
+      rules:
+      - alert: ElasticsearchHighJVMMemoryUsage
+        annotations:
+          description: |-
+            Elasticsearch high jvm memory usage
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Elasticsearch high jvm memory usage (instance {{ $labels.instance }})
+        expr: (elasticsearch_jvm_memory_used_bytes / elasticsearch_jvm_memory_max_bytes) > 0.9
+        for: 5m
+        labels:
+          severity: critical
+      - alert: ElasticsearchRedClusterStatus
+        annotations:
+          description: |-
+            Elasticsearch red cluster status
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Elasticsearch red cluster status (instance {{ $labels.instance }})
+        expr: sum(elasticsearch_cluster_health_status{color="red"}) > 0
+        for: 5m
+        labels:
+          severity: critical
+      - alert: ElasticsearchYellowClusterStatus
+        annotations:
+          description: |-
+            Elasticsearch yellow cluster status
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Elasticsearch yellow cluster status (instance {{ $labels.instance }})
+        expr: sum(elasticsearch_cluster_health_status{color="yellow"}) > 0
+        for: 5m
+        labels:
+          severity: warning
+additional_alert_info: You can adjust the alert thresholds to suit your application.
