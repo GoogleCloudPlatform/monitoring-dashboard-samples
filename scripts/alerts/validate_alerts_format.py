@@ -21,7 +21,7 @@ def check_metadata_entries(path):
   templates_metadata = data.get("alert_policy_templates")
   if not templates_metadata:
     raise Exception("alert_policy_templates not defined in {}".format(path))
-  required_fields = {"id", "version", "display_name", "description"}
+  required_fields = {"id", "version", "description"}
   for template_metadata in templates_metadata:
     missing_fields = required_fields - template_metadata.keys()
     if missing_fields:
