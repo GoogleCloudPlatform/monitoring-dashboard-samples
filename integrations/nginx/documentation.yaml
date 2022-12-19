@@ -1,0 +1,167 @@
+exporter_type: sidecar
+app_name_short: Nginx
+app_name: {{app_name_short}}
+app_site_name: Nginx
+app_site_url: https://www.nginx.com/
+exporter_name: the Nginx exporter
+exporter_pkg_name: nginx-prometheus-exporter
+exporter_repo_url: https://github.com/nginxinc/nginx-prometheus-exporter
+dashboard_available: true
+minimum_exporter_version: v0.10.0
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+config_mods: |
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: nginx
+  data:
+    default.conf: |
+      server {
+          listen       80 default_server;
+          server_name  _;
+          location / {
+              root   /usr/share/nginx/html;
+              index  index.html index.htm;
+          }
+          error_page   500 502 503 504  /50x.html;
+          location = /50x.html {
+              root   /usr/share/nginx/html;
+          }
+  +       location /status {
+  +           stub_status on;
+  +           access_log off;
+  +           allow 127.0.0.1;
+  +           allow 10.0.0.0/8;
+  +           allow 172.16.0.0/12;
+  +           allow 192.168.0.0/16;
+  +           deny all;
+  +       }
+      }
+  \-\-\-
+  apiVersion: apps/v1
+  kind: Deployment
+  spec:
+    ...
+    template:
+      metadata:
+        labels:
+  +       app.kubernetes.io/name: nginx
+      spec:
+        containers:
+  +     - name: nginx-exporter
+  +       image: nginx/nginx-prometheus-exporter:0.10.0
+  +       args:
+  +       - "-nginx.scrape-uri=http://localhost/status"
+  +       ports:
+  +       - containerPort: 9113
+  +         name: prometheus
+  +       readinessProbe:
+  +         httpGet:
+  +           path: /metrics
+  +           port: prometheus
+  +       livenessProbe:
+  +         httpGet:
+  +           path: /metrics
+  +           port: prometheus
+        - name: nginx
+          image: nginx:1.14.2
+  +       ports:
+  +       - containerPort: 80
+  +         name: http
+  +       readinessProbe:
+  +         httpGet:
+  +           path: /status
+  +           port: http
+  +       livenessProbe:
+  +         httpGet:
+  +           path: /status
+  +           port: http
+  +       volumeMounts:
+  +       - mountPath: /etc/nginx/conf.d/default.conf
+  +         subPath: default.conf
+  +         name: config
+  +     volumes:
+  +     - name: config
+  +       configMap:
+  +         name: nginx
+  +         items:
+  +         - key: default.conf
+  +           path: default.conf
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: nginx
+    labels:
+      app.kubernetes.io/name: nginx
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: prometheus
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+      app.kubernetes.io/name: nginx
+sample_promql_query: up{job="nginx", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: nginx-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: nginx-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: nginx
+      interval: 30s
+      rules:
+      - alert: NginxDown
+        annotations:
+          description: |-
+            Nginx instance is down
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Nginx down (instance {{ $labels.instance }})
+        expr: nginx_up{job="nginx"} == 0
+        for: 5m
+        labels:
+          severity: critical
+      - alert: NginxDroppedConnections
+        annotations:
+          description: |-
+          Too many dropped connections (> 5%)
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Number of dropped connections is high (instance {{ $labels.instance }})
+        expr: (rate(nginx_connections_accepted{job="nginx"}[1m]) - rate(nginx_connections_handled{job="nginx"}[1m])) / rate(nginx_connections_accepted{job="nginx"}[1m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+      - alert: NginxTrafficSpike
+        annotations:
+          description: |-
+            Increase in total number of HTTP requests received (> 20%)
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Spike in HTTP traffic (instance {{ $labels.instance }})
+        expr: rate(nginx_http_requests_total{job="nginx"}[1m])/ rate(nginx_http_requests_total{job="nginx"}[1m] offset 5m) > 1.2
+        for: 5m
+        labels:
+          severity: warning
+      - alert: NginxTrafficDrop
+        annotations:
+          description: |-
+            Decrease in total number of HTTP requests received (> 20%)
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Drop in HTTP traffic (instance {{ $labels.instance }})
+        expr: rate(nginx_http_requests_total{job="nginx"}[1m])/ rate(nginx_http_requests_total{job="nginx"}[1m] offset 5m) < 0.8
+        for: 5m
+        labels:
+          severity: warning
+additional_alert_info: You can adjust the alert thresholds to suit your application.
