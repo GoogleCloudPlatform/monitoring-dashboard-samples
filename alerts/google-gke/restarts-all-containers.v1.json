@@ -1,0 +1,30 @@
+{
+  "displayName": "GKE Container - Restarts",
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "GKE container has restarted",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "60s",
+            "perSeriesAligner": "ALIGN_DELTA",
+            "crossSeriesReducer": "REDUCE_NONE"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"k8s_container\" AND metric.type = \"kubernetes.io/container/restart_count\"",
+        "thresholdValue": 0,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
