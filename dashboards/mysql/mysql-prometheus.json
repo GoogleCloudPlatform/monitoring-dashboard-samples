@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "MySQL Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -20,7 +38,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "mysql_global_status_uptime / 60"
+              "prometheusQuery": "sum(mysql_global_status_uptime{${Cluster},${Location},${Namespace}} / 60)"
             }
           },
           "title": "Global Status Uptime (minutes)"
@@ -42,7 +60,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mysql_up"
+                  "prometheusQuery": "mysql_up{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -70,7 +88,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(mysql_global_status_connection_errors_total[5m])"
+                  "prometheusQuery": "rate(mysql_global_status_connection_errors_total{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -113,7 +131,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "100 * mysql_global_status_threads_connected / mysql_global_variables_max_connections\n"
+              "prometheusQuery": "100 * sum(mysql_global_status_threads_connected{${Cluster},${Location},${Namespace}}) / sum(mysql_global_variables_max_connections{${Cluster},${Location},${Namespace}})\n"
             }
           },
           "title": "Available Connections"
@@ -128,7 +146,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "mysql_global_variables_open_files_limit - mysql_global_variables_innodb_open_files\n"
+              "prometheusQuery": "sum(mysql_global_variables_open_files_limit{${Cluster},${Location},${Namespace}}) - sum(mysql_global_variables_innodb_open_files{${Cluster},${Location},${Namespace}})\n"
             }
           },
           "title": "Open Files Available"
@@ -150,7 +168,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(mysql_global_status_slow_queries[5m])"
+                  "prometheusQuery": "rate(mysql_global_status_slow_queries{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -178,7 +196,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(mysql_global_status_table_open_cache_hits[5m]) /\n(rate(mysql_global_status_table_open_cache_hits[5m]) + rate(mysql_global_status_table_open_cache_misses[5m]))"
+                  "prometheusQuery": "rate(mysql_global_status_table_open_cache_hits{${Cluster},${Location},${Namespace}}[5m]) /\n(rate(mysql_global_status_table_open_cache_hits{${Cluster},${Location},${Namespace}}[5m]) + rate(mysql_global_status_table_open_cache_misses{${Cluster},${Location},${Namespace}}[5m]))"
                 }
               }
             ],
@@ -206,7 +224,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(rate(mysql_global_status_innodb_buffer_pool_read_requests[5m]) -\nrate(mysql_global_status_innodb_buffer_pool_reads[5m])) / rate(mysql_global_status_innodb_buffer_pool_read_requests[5m])"
+                  "prometheusQuery": "(rate(mysql_global_status_innodb_buffer_pool_read_requests{${Cluster},${Location},${Namespace}}[5m]) -\nrate(mysql_global_status_innodb_buffer_pool_reads{${Cluster},${Location},${Namespace}}[5m])) / rate(mysql_global_status_innodb_buffer_pool_read_requests{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -234,7 +252,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(mysql_global_status_select_full_join[5m])"
+                  "prometheusQuery": "rate(mysql_global_status_select_full_join{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -262,7 +280,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(mysql_global_status_select_full_range_join[5m])"
+                  "prometheusQuery": "rate(mysql_global_status_select_full_range_join{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -290,7 +308,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(mysql_global_status_select_range_check[5m])"
+                  "prometheusQuery": "rate(mysql_global_status_select_range_check{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -318,7 +336,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(mysql_global_status_select_scan[5m])"
+                  "prometheusQuery": "rate(mysql_global_status_select_scan{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
