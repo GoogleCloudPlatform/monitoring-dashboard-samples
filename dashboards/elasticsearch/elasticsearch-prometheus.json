@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "Elasticsearch Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -12,7 +30,7 @@
               {
                 "tableDisplayOptions": {},
                 "timeSeriesQuery": {
-                  "prometheusQuery": "elasticsearch_cluster_health_status"
+                  "prometheusQuery": "elasticsearch_cluster_health_status{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -46,7 +64,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "count(elasticsearch_breakers_tripped)"
+              "prometheusQuery": "count(elasticsearch_breakers_tripped{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Tripped Breakers"
@@ -77,7 +95,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum (elasticsearch_process_cpu_percent ) / count (elasticsearch_process_cpu_percent )"
+              "prometheusQuery": "sum (elasticsearch_process_cpu_percent{${Cluster},${Location},${Namespace}} ) / count (elasticsearch_process_cpu_percent{${Cluster},${Location},${Namespace}} )"
             }
           },
           "title": "CPU Avg Usage %"
@@ -108,7 +126,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "avg(elasticsearch_jvm_memory_used_bytes / elasticsearch_jvm_memory_max_bytes * 100)"
+              "prometheusQuery": "avg(elasticsearch_jvm_memory_used_bytes{${Cluster},${Location},${Namespace}} / elasticsearch_jvm_memory_max_bytes{${Cluster},${Location},${Namespace}} * 100)"
             }
           },
           "title": "JVM Memory Avg Usage %"
@@ -123,7 +141,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(elasticsearch_cluster_health_number_of_nodes)"
+              "prometheusQuery": "sum(elasticsearch_cluster_health_number_of_nodes{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "ES Nodes"
@@ -138,7 +156,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(elasticsearch_cluster_health_number_of_data_nodes)"
+              "prometheusQuery": "sum(elasticsearch_cluster_health_number_of_data_nodes{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "ES Data Nodes"
@@ -153,7 +171,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(elasticsearch_cluster_health_number_of_pending_tasks)"
+              "prometheusQuery": "sum(elasticsearch_cluster_health_number_of_pending_tasks{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Pending Tasks"
@@ -170,7 +188,7 @@
               {
                 "tableDisplayOptions": {},
                 "timeSeriesQuery": {
-                  "prometheusQuery": "elasticsearch_process_open_files_count"
+                  "prometheusQuery": "elasticsearch_process_open_files_count{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -195,7 +213,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "elasticsearch_os_load15"
+                  "prometheusQuery": "elasticsearch_os_load15{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -223,7 +241,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "elasticsearch_process_cpu_percent"
+                  "prometheusQuery": "elasticsearch_process_cpu_percent{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -251,14 +269,14 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "elasticsearch_jvm_memory_pool_peak_used_bytes"
+                  "prometheusQuery": "elasticsearch_jvm_memory_pool_peak_used_bytes{${Cluster},${Location},${Namespace}}"
                 }
               },
               {
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "elasticsearch_jvm_memory_max_bytes"
+                  "prometheusQuery": "elasticsearch_jvm_memory_max_bytes{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -286,7 +304,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "100 * (1-(elasticsearch_filesystem_data_available_bytes/elasticsearch_filesystem_data_size_bytes))"
+                  "prometheusQuery": "100 * (1-(elasticsearch_filesystem_data_available_bytes{${Cluster},${Location},${Namespace}}/elasticsearch_filesystem_data_size_bytes{${Cluster},${Location},${Namespace}}))"
                 }
               }
             ],
@@ -314,14 +332,14 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "irate(elasticsearch_transport_rx_size_bytes_total[5m])"
+                  "prometheusQuery": "irate(elasticsearch_transport_rx_size_bytes_total{${Cluster},${Location},${Namespace}}[5m])"
                 }
               },
               {
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "irate(elasticsearch_transport_tx_size_bytes_total[5m])"
+                  "prometheusQuery": "irate(elasticsearch_transport_tx_size_bytes_total{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -349,7 +367,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "irate(elasticsearch_thread_pool_rejected_count[5m])"
+                  "prometheusQuery": "irate(elasticsearch_thread_pool_rejected_count{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
