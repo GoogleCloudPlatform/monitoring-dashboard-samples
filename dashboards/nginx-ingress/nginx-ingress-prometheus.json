@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "NGINX Ingress Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -10,7 +28,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "round(sum(irate(nginx_ingress_controller_requests[2m])), 0.001)"
+              "prometheusQuery": "round(sum(irate(nginx_ingress_controller_requests{${Cluster},${Location},${Namespace}}[2m])), 0.001)"
             }
           },
           "title": "Controller Request Volume"
@@ -27,7 +45,7 @@
               "sparkChartType": "SPARK_LINE"
             },
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(avg_over_time(nginx_ingress_controller_nginx_process_connections[2m]))\n"
+              "prometheusQuery": "sum(avg_over_time(nginx_ingress_controller_nginx_process_connections{${Cluster},${Location},${Namespace}}[2m]))\n"
             }
           },
           "title": "Controller Connections"
@@ -44,7 +62,7 @@
               "sparkChartType": "SPARK_LINE"
             },
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(nginx_ingress_controller_success{controller_pod=~\".*\",controller_class=~\".*\",controller_namespace=~\".*\"})"
+              "prometheusQuery": "sum(nginx_ingress_controller_success{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Config Reloads"
@@ -66,7 +84,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "round(sum(irate(nginx_ingress_controller_requests{controller_pod=~\".*\",controller_class=~\".*\",controller_namespace=~\".*\",ingress=~\".*\"}[2m])) by (ingress), 0.001)"
+                  "prometheusQuery": "round(sum(irate(nginx_ingress_controller_requests{ingress=~\".*\",${Cluster},${Location},${Namespace}}[2m])) by (ingress), 0.001)"
                 }
               }
             ],
@@ -94,7 +112,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(nginx_ingress_controller_requests[2m])"
+                  "prometheusQuery": "rate(nginx_ingress_controller_requests{${Cluster},${Location},${Namespace}}[2m])"
                 }
               }
             ],
@@ -122,7 +140,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(irate (nginx_ingress_controller_request_size_sum{controller_pod=~\".*\",controller_class=~\".*\",controller_namespace=~\".*\"}[2m]))"
+                  "prometheusQuery": "(irate (nginx_ingress_controller_request_size_sum{${Cluster},${Location},${Namespace}}[2m]))"
                 }
               }
             ],
@@ -150,7 +168,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "nginx_ingress_controller_nginx_process_resident_memory_bytes"
+                  "prometheusQuery": "nginx_ingress_controller_nginx_process_resident_memory_bytes{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -178,7 +196,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate (nginx_ingress_controller_nginx_process_cpu_seconds_total[2m])"
+                  "prometheusQuery": "rate (nginx_ingress_controller_nginx_process_cpu_seconds_total{${Cluster},${Location},${Namespace}}[2m])"
                 }
               }
             ],
