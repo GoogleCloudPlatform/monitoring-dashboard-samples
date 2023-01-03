@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "HAProxy Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -17,7 +35,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "haproxy_frontend_http_responses_total"
+                  "prometheusQuery": "haproxy_frontend_http_responses_total{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -45,7 +63,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "haproxy_backend_http_responses_total"
+                  "prometheusQuery": "haproxy_backend_http_responses_total{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -73,7 +91,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "haproxy_frontend_bytes_in_total"
+                  "prometheusQuery": "haproxy_frontend_bytes_in_total{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -101,7 +119,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "haproxy_frontend_bytes_out_total"
+                  "prometheusQuery": "haproxy_frontend_bytes_out_total{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -129,7 +147,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "haproxy_backend_bytes_in_total"
+                  "prometheusQuery": "haproxy_backend_bytes_in_total{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -157,7 +175,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "haproxy_backend_bytes_out_total"
+                  "prometheusQuery": "haproxy_backend_bytes_out_total{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -185,7 +203,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "haproxy_frontend_connections_total"
+                  "prometheusQuery": "haproxy_frontend_connections_total{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -213,7 +231,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(haproxy_backend_connection_errors_total[10m])"
+                  "prometheusQuery": "rate(haproxy_backend_connection_errors_total{${Cluster},${Location},${Namespace}}[10m])"
                 }
               }
             ],
@@ -241,7 +259,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "haproxy_frontend_current_sessions"
+                  "prometheusQuery": "haproxy_frontend_current_sessions{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -269,7 +287,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (instance) (rate(haproxy_frontend_http_requests_total[10m]))"
+                  "prometheusQuery": "sum by (instance) (rate(haproxy_frontend_http_requests_total{${Cluster},${Location},${Namespace}}[10m]))"
                 }
               }
             ],
@@ -297,7 +315,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "haproxy_backend_current_sessions"
+                  "prometheusQuery": "haproxy_backend_current_sessions{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -325,7 +343,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (instance) (rate(haproxy_frontend_request_errors_total[10m]))"
+                  "prometheusQuery": "sum by (instance) (rate(haproxy_frontend_request_errors_total{${Cluster},${Location},${Namespace}}[10m]))"
                 }
               }
             ],
@@ -353,7 +371,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (instance) (rate(haproxy_frontend_requests_denied_total[10m]))"
+                  "prometheusQuery": "sum by (instance) (rate(haproxy_frontend_requests_denied_total{${Cluster},${Location},${Namespace}}[10m]))"
                 }
               }
             ],
@@ -381,7 +399,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (instance) (rate(haproxy_backend_retry_warnings_total[10m]))"
+                  "prometheusQuery": "sum by (instance) (rate(haproxy_backend_retry_warnings_total{${Cluster},${Location},${Namespace}}[10m]))"
                 }
               }
             ],
@@ -409,7 +427,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (instance) (rate(haproxy_backend_http_responses_total[10m]))"
+                  "prometheusQuery": "sum by (instance) (rate(haproxy_backend_http_responses_total{${Cluster},${Location},${Namespace}}[10m]))"
                 }
               }
             ],
@@ -437,7 +455,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (instance) (rate(haproxy_backend_response_errors_total[10m]))"
+                  "prometheusQuery": "sum by (instance) (rate(haproxy_backend_response_errors_total{${Cluster},${Location},${Namespace}}[10m]))"
                 }
               }
             ],
