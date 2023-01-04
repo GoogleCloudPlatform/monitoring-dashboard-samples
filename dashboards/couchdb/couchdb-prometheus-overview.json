@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "CouchDB Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -17,7 +35,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(couchdb_httpd_request_methods[5m])"
+                  "prometheusQuery": "rate(couchdb_httpd_request_methods{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -46,7 +64,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "avg(couchdb_httpd_request_time)"
+                  "prometheusQuery": "avg(couchdb_httpd_request_time{${Cluster},${Location},${Namespace}})"
                 }
               }
             ],
@@ -74,7 +92,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "couchdb_httpd_view_reads"
+                  "prometheusQuery": "couchdb_httpd_view_reads{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -102,7 +120,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(couchdb_httpd_status_codes[5m])"
+                  "prometheusQuery": "rate(couchdb_httpd_status_codes{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -131,7 +149,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "couchdb_httpd_bulk_requests"
+                  "prometheusQuery": "couchdb_httpd_bulk_requests{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -159,14 +177,14 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "couchdb_httpd_database_reads"
+                  "prometheusQuery": "couchdb_httpd_database_reads{${Cluster},${Location},${Namespace}}"
                 }
               },
               {
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "couchdb_httpd_database_writes"
+                  "prometheusQuery": "couchdb_httpd_database_writes{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -194,7 +212,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "couchdb_httpd_open_os_files"
+                  "prometheusQuery": "couchdb_httpd_open_os_files{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -222,7 +240,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "couchdb_httpd_open_databases"
+                  "prometheusQuery": "couchdb_httpd_open_databases{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
