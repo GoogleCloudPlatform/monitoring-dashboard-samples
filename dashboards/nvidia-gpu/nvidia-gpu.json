@@ -1,7 +1,7 @@
 {
   "category": "CUSTOM",
   "dashboardFilters": [],
-  "displayName": "GPU Metrics (via NVML and DCGM)",
+  "displayName": "NVIDIA GPU Dashboard (Ops Agent Reported)",
   "labels": {},
   "mosaicLayout": {
     "columns": 12,
@@ -9,7 +9,7 @@
       {
         "height": 3,
         "widget": {
-          "title": "NVML - GPU Utilization",
+          "title": "GPU Utilization (NVML reported)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -52,12 +52,12 @@
         },
         "width": 6,
         "xPos": 0,
-        "yPos": 4
+        "yPos": 19
       },
       {
         "height": 3,
         "widget": {
-          "title": "NVML - GPU Memory Usage",
+          "title": "GPU Memory Usage (NVML reported)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -81,7 +81,7 @@
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/gpu/memory/bytes_used\" resource.type=\"gce_instance\"",
+                    "filter": "metric.type=\"workload.googleapis.com/gpu/memory/bytes_used\" resource.type=\"gce_instance\" metric.label.\"memory_state\"=\"used\"",
                     "secondaryAggregation": {
                       "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_NONE",
@@ -101,12 +101,12 @@
         },
         "width": 6,
         "xPos": 6,
-        "yPos": 4
+        "yPos": 19
       },
       {
         "height": 3,
         "widget": {
-          "title": "DCGM - Pipe Utilization",
+          "title": "Pipe Utilization (DCGM reported)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -122,7 +122,7 @@
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
                         "metric.label.\"pipe\"",
                         "metric.label.\"gpu_number\"",
@@ -130,7 +130,7 @@
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/dcgm.gpu.profiling.pipe_utilization\" resource.type=\"gce_instance\"",
+                    "filter": "metric.type=\"workload.googleapis.com/dcgm.gpu.pipe_utilization\" resource.type=\"gce_instance\"",
                     "secondaryAggregation": {
                       "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_NONE",
@@ -150,12 +150,12 @@
         },
         "width": 6,
         "xPos": 0,
-        "yPos": 15
+        "yPos": 25
       },
       {
         "height": 3,
         "widget": {
-          "title": "DCGM -  PCIe Traffic Rate ",
+          "title": "PCIe Traffic Rate (DCGM reported)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -179,7 +179,7 @@
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/dcgm.gpu.profiling.pcie_traffic_rate\" resource.type=\"gce_instance\"",
+                    "filter": "metric.type=\"workload.googleapis.com/dcgm.gpu.pcie_traffic_rate\" resource.type=\"gce_instance\"",
                     "secondaryAggregation": {
                       "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_NONE",
@@ -199,19 +199,19 @@
         },
         "width": 6,
         "xPos": 6,
-        "yPos": 15
+        "yPos": 25
       },
       {
         "height": 3,
         "widget": {
-          "title": "DCGM - NVLink Traffic Rate",
+          "title": "NVLink Traffic Rate (DCGM reported)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
-                "legendTemplate": "${metadata.system_labels\\.name} GPU ${metric.labels.gpu_number} Direction ${metric.labels.direction} ",
+                "legendTemplate": "${metadata.system_labels\\.name} GPU ${metric.labels.gpu_number} Direction ${metric.labels.direction}",
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
@@ -220,7 +220,7 @@
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
                         "metric.label.\"gpu_number\"",
                         "metric.label.\"direction\"",
@@ -228,7 +228,7 @@
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/dcgm.gpu.profiling.nvlink_traffic_rate\" resource.type=\"gce_instance\"",
+                    "filter": "metric.type=\"workload.googleapis.com/dcgm.gpu.nvlink_traffic_rate\" resource.type=\"gce_instance\"",
                     "secondaryAggregation": {
                       "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_NONE",
@@ -248,7 +248,7 @@
         },
         "width": 6,
         "xPos": 6,
-        "yPos": 12
+        "yPos": 22
       },
       {
         "height": 5,
@@ -271,17 +271,17 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/gpu/processes/lifetime_utilization'\n| map [Instance: metadata.system.name,\n    GPU: metric.gpu_number,\n    PID: metric.pid,\n    Owner: metric.owner,\n    Command: metric.command_line]"
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/gpu/processes/utilization'\n| map [Instance: metadata.system.name,\n    GPU: metric.gpu_number,\n    PID: metric.pid,\n    Owner: metric.owner,\n    Command: metric.command_line]"
                 }
               }
             ],
             "metricVisualization": "NUMBER"
           },
-          "title": "NVML - Recent Running Processes - Lifetime GPU Utilization"
+          "title": "Recently Observed GPU Processes - Lifetime GPU Utilization (NVML reported)"
         },
         "width": 6,
         "xPos": 0,
-        "yPos": 7
+        "yPos": 4
       },
       {
         "height": 5,
@@ -296,11 +296,11 @@
             ],
             "metricVisualization": "NUMBER"
           },
-          "title": "NVML - Recent Running Processes - Lifetime Max GPU Memory Used"
+          "title": "Recently Observed GPU Processes - Lifetime Max GPU Memory Used (NVML reported)"
         },
         "width": 6,
         "xPos": 6,
-        "yPos": 7
+        "yPos": 4
       },
       {
         "height": 3,
@@ -312,28 +312,10 @@
             },
             "dataSets": [
               {
-                "legendTemplate": "${metadata.system_labels\\.name} CPU Non-idle",
-                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_MEAN",
-                      "groupByFields": [
-                        "metadata.system_labels.\"name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"compute.googleapis.com/instance/cpu/utilization\" resource.type=\"gce_instance\"",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_NONE"
-                    }
-                  }
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'compute.googleapis.com/instance/cpu/utilization'\n| group_by 1m, [value_utilization_mean: mean(value.utilization)]\n| every 1m\n| group_by [metadata.system.name: metadata.system_labels.name],\n    [value_utilization_mean_mean: mean(value_utilization_mean)]"
                 }
               }
             ],
@@ -347,7 +329,7 @@
         },
         "width": 6,
         "xPos": 0,
-        "yPos": 1
+        "yPos": 16
       },
       {
         "height": 3,
@@ -396,19 +378,19 @@
         },
         "width": 6,
         "xPos": 6,
-        "yPos": 1
+        "yPos": 16
       },
       {
         "height": 3,
         "widget": {
-          "title": "DCGM - SM Utilization and SM occupancy",
+          "title": "SM Utilization and SM occupancy (DCGM reported)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
-                "legendTemplate": "${metadata.system_labels\\.name} GPU ${metric.labels.gpu_number} SM Utilization",
+                "legendTemplate": "${metadata.system_labels\\.name} GPU ${metric.labels.gpu_number} SM utilization",
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
@@ -417,14 +399,14 @@
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
                         "metric.label.\"gpu_number\"",
                         "metadata.system_labels.\"name\""
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/dcgm.gpu.profiling.sm_utilization\" resource.type=\"gce_instance\"",
+                    "filter": "metric.type=\"workload.googleapis.com/dcgm.gpu.sm_utilization\" resource.type=\"gce_instance\"",
                     "secondaryAggregation": {
                       "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_NONE",
@@ -434,7 +416,7 @@
                 }
               },
               {
-                "legendTemplate": "${metadata.system_labels\\.name} GPU ${metric.labels.gpu_number} SM Occupancy",
+                "legendTemplate": "${metadata.system_labels\\.name} GPU ${metric.labels.gpu_number} SM occpancy",
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
@@ -443,14 +425,14 @@
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
                         "metric.label.\"gpu_number\"",
                         "metadata.system_labels.\"name\""
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/dcgm.gpu.profiling.sm_occupancy\" resource.type=\"gce_instance\"",
+                    "filter": "metric.type=\"workload.googleapis.com/dcgm.gpu.sm_occupancy\" resource.type=\"gce_instance\"",
                     "secondaryAggregation": {
                       "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_NONE",
@@ -470,7 +452,7 @@
         },
         "width": 6,
         "xPos": 0,
-        "yPos": 12
+        "yPos": 22
       },
       {
         "height": 1,
@@ -479,11 +461,68 @@
             "content": "",
             "format": "MARKDOWN"
           },
-          "title": "Ops Agent - GPU Metrics (via NVML and DCGM)"
+          "title": "NVIDIA GPU Dashboard (Ops Agent reported)"
         },
         "width": 12,
         "xPos": 0,
         "yPos": 0
+      },
+      {
+        "height": 3,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/gpu/utilization'\n| map [Model: metric.model, Instance: metadata.system.name, GPU: metric.gpu_number]\n| value [value.utilization: 1.0]\n| group_by [Model], [capacity: sum(value.utilization)]"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Observed GPU capacity"
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 1
+      },
+      {
+        "height": 3,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/gpu/utilization'\n| map [Model: metric.model, Instance: metadata.system.name, GPU: metric.gpu_number]\n| group_by [Model], [capacity: sum(value.utilization)]"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Observed GPU utilization (NVML reported)"
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 1
+      },
+      {
+        "height": 7,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/gpu/utilization'\n| map [Model: metric.model, UUID: metric.uuid, Instance: metadata.system.name, GPU: metric.gpu_number]"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Observed GPU utilization per GPU (NVML reported)"
+        },
+        "width": 12,
+        "xPos": 0,
+        "yPos": 9
       }
     ]
   }
