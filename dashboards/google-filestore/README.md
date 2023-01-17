@@ -1,4 +1,4 @@
-### Dashboards for CloudSQL
+### Dashboards for Cloud Filestore
 
 #### Notes
 
