@@ -3,20 +3,23 @@ app_name_short: Velero
 app_name: {{app_name_short}}
 app_site_name: Velero
 app_site_url: https://velero.io/
-exporter_name: the elero exporter
+exporter_name: the Velero Prometheus exporter
 exporter_pkg_name: velero
 exporter_repo_url: https://velero.io/docs/
+minimum_exporter_version: v1.3.0
 additional_prereq_info: |
   {{app_name_short}} exposes Prometheus-format metrics automatically; you do not
-  have to install it separately. You can run the following checks to verify
-  that {{app_name_short}} is exposing Prometheus-format metrics.
+  have to install it separately. To verify that {{exporter_name}} is emitting
+  metrics on the expected endpoints, do the following:
 
-   *  To determine if {{app_name_short}} is exposing metrics, run the following command:
+  Set up port forwarding by using the following command:
 
-      <pre class="devsite-click-to-copy">
-      kubectl -n velero port-forward deploy/velero 8085
-      curl localhost:8085/metrics
-      </pre>
+  <pre class="devsite-click-to-copy">
+  kubectl -n velero port-forward deploy/velero 8085
+  </pre>
+
+  Access the endpoint `localhost:8085/metrics` by using the browser
+  or the `curl` utility in another terminal session.
 dashboard_available: true
 multiple_dashboards: false
 dashboard_display_name: {{app_name_short}} Prometheus Overview
@@ -30,16 +33,17 @@ podmonitoring_config: |
       app.kubernetes.io/part-of: google-cloud-managed-prometheus
   spec:
     endpoints:
-  + - port: metrics
+    - port: metrics
       scheme: http
       interval: 30s
       path: /metrics
     selector:
       matchLabels:
-  +     deploy: velero
+        deploy: velero
 additional_podmonitoring_info: |
-  Ensure that the port and matchLabels match that of the {{app_name_short}} pods you wish to monitor.
-  {{app_name_short}} installations include the `metrics` named port and label `deploy: velero` by default.
+  Ensure that the values pf the `port` and `matchLabels` fields match those of the
+  {{app_name_short}} pods you want to monitor. By default, {{app_name_short}} installations
+  include a `port` value of `metrics` and a `deploy` label with the value `velero`.
 additional_alert_info: You can adjust the alert thresholds to suit your application.
 sample_promql_query: up{job="velero", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
 alerts_config: |
