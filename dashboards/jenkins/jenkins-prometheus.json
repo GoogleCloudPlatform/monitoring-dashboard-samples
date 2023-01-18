@@ -84,7 +84,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "jenkins_executor_free_value{${Cluster},${Location},${Namespace}}"
+              "prometheusQuery": "sum(jenkins_executor_free_value)"
             }
           },
           "title": "Executor Free"
@@ -155,7 +155,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "jenkins_executor_in_use_value{${Cluster},${Location},${Namespace}}"
+              "prometheusQuery": "sum(jenkins_executor_in_use_value)"
             }
           },
           "title": "Executor In Use"
@@ -167,20 +167,27 @@
       {
         "height": 2,
         "widget": {
-          "scorecard": {
-            "thresholds": [
+          "title": "Health Check",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
               {
-                "color": "RED",
-                "direction": "BELOW",
-                "label": "",
-                "value": 1
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "jenkins_health_check_score"
+                }
               }
             ],
-            "timeSeriesQuery": {
-              "prometheusQuery": "jenkins_health_check_score{${Cluster},${Location},${Namespace}}"
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
             }
-          },
-          "title": "Health Check"
+          }
         },
         "width": 3,
         "xPos": 0,
@@ -192,7 +199,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "jenkins_plugins_failed{${Cluster},${Location},${Namespace}}"
+              "prometheusQuery": "sum(jenkins_plugins_failed)"
             }
           },
           "title": "Plugins Failed"
@@ -207,7 +214,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "jenkins_node_offline_value{${Cluster},${Location},${Namespace}}"
+              "prometheusQuery": "sum(jenkins_node_offline_value)"
             }
           },
           "title": "Nodes Offline"
