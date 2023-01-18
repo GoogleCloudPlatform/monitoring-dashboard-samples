@@ -7,16 +7,18 @@ exporter_name: the Jenkins exporter
 exporter_pkg_name: jenkins
 exporter_repo_url: https://github.com/jenkinsci/prometheus-plugin
 additional_prereq_info: |
-  {{exporter_name}} exposes Prometheus-format metrics when the [metrics](https://plugins.jenkins.io/metrics/)
-  and [prometheus](https://plugins.jenkins.io/prometheus/) plugins are installed.
-  You can run the following checks to verify that {{app_name_short}} is exposing Prometheus-format metrics.
+  {{app_name_short}} exposes Prometheus-format metrics only after you install
+  {{exporter_name}} plugin. To install the plugin, follow the [installation instructions](https://plugins.jenkins.io/prometheus).
+  To verify that {{exporter_name}} is emitting metrics on the expected endpoints,
+  set up port-forwarding with the following command:
 
-   *  To determine if {{exporter_name}} is exposing metrics, run the following command:
+  <pre class="devsite-click-to-copy">
+  kubectl -n {{namespace_name}} port-forward {{pod_name}} 8080
+  </pre>
 
-      <pre class="devsite-click-to-copy">
-      kubectl -n <namespace_name> port-forward <jenkins_pod_name> <jenkins_port>
-      curl localhost:<jenkins_port>/prometheus
-      </pre>
+  Access the endpoint `localhost:5601/_prometheus/metrics` by using the browser
+  or curl in another terminal session to verify that the metrics are being exposed
+  by the exporter for scraping.
 dashboard_available: true
 multiple_dashboards: false
 dashboard_display_name: {{app_name_short}} Prometheus Overview
