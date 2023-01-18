@@ -1,0 +1,34 @@
+{
+  "displayName": "GKE Container - Restarts (all containers)",
+  "documentation": {
+    "content": "- Container restarts are commonly caused by memory/cpu usage issues and application failures.\n- By default, this alert notifies an incident on every container restart and resolves the incident immediately. If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [View Documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth).",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "GKE container has restarted",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "60s",
+            "perSeriesAligner": "ALIGN_DELTA",
+            "crossSeriesReducer": "REDUCE_NONE"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"k8s_container\" AND metric.type = \"kubernetes.io/container/restart_count\"",
+        "thresholdValue": 0,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
