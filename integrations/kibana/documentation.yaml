@@ -3,20 +3,24 @@ app_name_short: Kibana
 app_name: {{app_name_short}}
 app_site_name: Kibana
 app_site_url: https://www.elastic.co/kibana/
-exporter_name: the Kibana exporter
+exporter_name: the Kibana Prometheus exporter
 exporter_pkg_name: kibana-prometheus-exporter
 exporter_repo_url: https://github.com/pjhampton/kibana-prometheus-exporter
+minimum_exporter_version: "8.0.0"
 additional_prereq_info: |
-  {{app_name_short}} exposes Prometheus-format metrics when the [prometheus plugin](https://github.com/pjhampton/kibana-prometheus-exporter) 
-  is installed. You can run the following checks to verify
-  that {{app_name_short}} is exposing Prometheus-format metrics.
+  {{app_name_short}} exposes Prometheus-format metrics only after you install
+  {{exporter_name}} plugin. To install the plugin, follow the [installation instructions]({{exporter_repo_url}}).
 
-   *  To determine if {{exporter_name}} is exposing metrics, run the following command:
+  To verify that {{exporter_name}} is emitting metrics on the expected endpoints,
+  set up port-forwarding with the following command:
 
-      <pre class="devsite-click-to-copy">
-      kubectl -n <namespace_name> port-forward <kibana_pod_name> 5601
-      curl localhost:5601/_prometheus/metrics
-      </pre>
+  <pre class="devsite-click-to-copy">
+  kubectl -n {{namespace_name}} port-forward {{pod_name}} 5601
+  </pre>
+
+  Access the endpoint `localhost:5601/_prometheus/metrics` by using the browser
+  or curl in another terminal session to verify that the metrics are being exposed
+  by the exporter for scraping.
 dashboard_available: true
 multiple_dashboards: false
 dashboard_display_name: {{app_name_short}} Prometheus Overview
@@ -30,13 +34,13 @@ podmonitoring_config: |
       app.kubernetes.io/part-of: google-cloud-managed-prometheus
   spec:
     endpoints:
-  + - port: 5601
+    - port: 5601
       scheme: http
       interval: 30s
       path: /_prometheus/metrics
     selector:
       matchLabels:
-  +     app.kubernetes.io/name: kibana
+        app.kubernetes.io/name: kibana
 sample_promql_query: up{job="kibana", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
 alerts_config: |
   apiVersion: monitoring.googleapis.com/v1
