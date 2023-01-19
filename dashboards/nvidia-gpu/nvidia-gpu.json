@@ -1,7 +1,7 @@
 {
   "category": "CUSTOM",
   "dashboardFilters": [],
-  "displayName": "NVIDIA GPU Dashboard (Ops Agent Reported)",
+  "displayName": "NVIDIA GPU Dashboard (Ops Agent reported)",
   "labels": {},
   "mosaicLayout": {
     "columns": 12,
@@ -162,30 +162,10 @@
             },
             "dataSets": [
               {
-                "legendTemplate": "${metadata.system_labels\\.name} GPU ${metric.labels.gpu_number} Direction ${metric.labels.direction}",
-                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "metric.label.\"gpu_number\"",
-                        "metric.label.\"direction\"",
-                        "metadata.system_labels.\"name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"workload.googleapis.com/dcgm.gpu.pcie_traffic_rate\" resource.type=\"gce_instance\"",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_NONE"
-                    }
-                  }
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/dcgm.gpu.pcie_traffic_rate'\n| group_by 1m, [value_pcie_traffic_rate_mean: mean(cast_units(value.pcie_traffic_rate, \"By/s\"))]\n| every 1m\n| group_by\n    [Instance: metadata.system_labels.name, GPU: metric.gpu_number, Direction: metric.direction,\n     ],\n    [value_pcie_traffic_rate_mean_aggregate:\n       aggregate(value_pcie_traffic_rate_mean)]"
                 }
               }
             ],
@@ -211,30 +191,10 @@
             },
             "dataSets": [
               {
-                "legendTemplate": "${metadata.system_labels\\.name} GPU ${metric.labels.gpu_number} Direction ${metric.labels.direction}",
-                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "metric.label.\"gpu_number\"",
-                        "metric.label.\"direction\"",
-                        "metadata.system_labels.\"name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"workload.googleapis.com/dcgm.gpu.nvlink_traffic_rate\" resource.type=\"gce_instance\"",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_NONE"
-                    }
-                  }
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/dcgm.gpu.nvlink_traffic_rate'\n| group_by 1m, [value_nvlink_traffic_rate_mean: mean(cast_units(value.nvlink_traffic_rate, \"By/s\"))]\n| every 1m\n| group_by\n    [Instance: metadata.system_labels.name, GPU: metric.gpu_number, Direction: metric.direction,\n     ],\n    [value_nvlink_traffic_rate_mean_aggregate:\n       aggregate(value_nvlink_traffic_rate_mean)]"
                 }
               }
             ],
@@ -271,7 +231,7 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/gpu/processes/utilization'\n| map [Instance: metadata.system.name,\n    GPU: metric.gpu_number,\n    PID: metric.pid,\n    Owner: metric.owner,\n    Command: metric.command_line]"
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/gpu/processes/utilization'\n| map [Instance: metadata.system.name,\n    GPU: metric.gpu_number,\n    PID: metric.pid,\n    Owner: metric.owner,\n    Command: metric.command_line], \n| value cast_units(int_round(value.utilization), \"%\")"
                 }
               }
             ],
@@ -455,20 +415,7 @@
         "yPos": 22
       },
       {
-        "height": 1,
-        "widget": {
-          "text": {
-            "content": "",
-            "format": "MARKDOWN"
-          },
-          "title": "NVIDIA GPU Dashboard (Ops Agent reported)"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 0
-      },
-      {
-        "height": 3,
+        "height": 4,
         "widget": {
           "timeSeriesTable": {
             "dataSets": [
@@ -484,16 +431,16 @@
         },
         "width": 6,
         "xPos": 0,
-        "yPos": 1
+        "yPos": 0
       },
       {
-        "height": 3,
+        "height": 4,
         "widget": {
           "timeSeriesTable": {
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/gpu/utilization'\n| map [Model: metric.model, Instance: metadata.system.name, GPU: metric.gpu_number]\n| group_by [Model], [capacity: sum(value.utilization)]"
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/gpu/utilization'\n| map [Model: metric.model, Instance: metadata.system.name, GPU: metric.gpu_number]\n| group_by [Model], [capacity: sum(cast_units(value.utilization/100.0, \"1\"))]"
                 }
               }
             ],
@@ -503,7 +450,7 @@
         },
         "width": 6,
         "xPos": 6,
-        "yPos": 1
+        "yPos": 0
       },
       {
         "height": 7,
@@ -512,7 +459,7 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/gpu/utilization'\n| map [Model: metric.model, UUID: metric.uuid, Instance: metadata.system.name, GPU: metric.gpu_number]"
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/gpu/utilization'\n| map [Model: metric.model, UUID: metric.uuid, Instance: metadata.system.name, GPU: metric.gpu_number]\n| value cast_units(int_round(value.utilization), \"%\")"
                 }
               }
             ],
@@ -525,5 +472,5 @@
         "yPos": 9
       }
     ]
-  }
+  },
 }

@@ -10,12 +10,4 @@
 |NVIDIA GPU Overview|
 |:------------------|
 |Filename: [nvidia-gpu.json](nvidia-gpu.json)|
-
-This dashboard contains the following:
-- Tables for project-wide GPU aggregated capacity and utiization by model (NVML reported).
-- Tables for active GPU processes, including their GPU utilization and max used GPU memory (NVML reported).
-- Table for GPU utilization per GPU in project (NVML reported).
-- Graphs for CPU utilization (Hypervisor reported) and NIC traffic rate (Ops Agent reported)
-- Graphs for non-idle GPU utilization (NVML reported) and GPU used memory (NVML reported)
-- Graphs for `SM utilization` and `SM occupancy` and GPU `Pipe Utilization` (e.g. tensor, fp64, fp32, fp16) (DCGM reported)
-- Graphs for `PCIe traffic` and `NVLink traffic` (both tx, rx from GPU point of view) (DCGM reporteD).
+|This dashboard has charts for viewing NVIDIA GPUs when monitored by Google's GPU enabled Ops Agent. It displays GPU utilization, GPU used memory, active GPU processes, Streaming Multiprocessor (SM) block utilization, SM occupancy, SM pipe utilization, PCIe traffic, and NVLink traffic.|
