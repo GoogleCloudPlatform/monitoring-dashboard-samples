@@ -18,10 +18,10 @@ config_mods: |
   data:
     httpd.conf: |
       ...
-      <Location "/server-status">
-          SetHandler server-status
-      </Location>
-      LoadModule status_module modules/mod_status.so
+  +   <Location "/server-status">
+  +       SetHandler server-status
+  +   </Location>
+  +   LoadModule status_module modules/mod_status.so
       ...
   ---
   apiVersion: apps/v1
@@ -64,7 +64,9 @@ config_mods: |
   +           path: httpd.conf 
 additional_install_info: |
   These instructions assume you already have a working {{app_name_short}}
-  installation and want to modify it to include an exporter.
+  installation and want to modify it to include an exporter. Apache HTTP server
+  can be configured to serve metrics on `/server-status` by modifying the configuration
+  with a new Location directive and by loading the [status_module](https://httpd.apache.org/docs/2.4/mod/mod_status.html){:class=external}.
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
   kind: PodMonitoring
@@ -83,8 +85,7 @@ podmonitoring_config: |
       matchLabels:
         app.kubernetes.io/name: httpd
 additional_prereq_info: |
-  Apache HTTP can be [configured to expose metrics using the `mod_status` module.](https://httpd.apache.org/docs/trunk/en/misc/perf-scaling.html)
-  These metrics are exposed at the `/server-status` endpoint and can be scraped by the exporter.
+  Ensure that the values of the `port` and `matchLabels` fields match those of the {{app_name_short}} pods you want to monitor.
 alerts_config: {% includecode content_path="stackdriver/docs/managed-prometheus/exporters/configs/httpd_alerts.yaml" %}
 additional_alert_info: You can adjust the alert thresholds to suit your application.
 sample_promql_query: up{job="httpd", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
