@@ -1,7 +1,7 @@
 exporter_type: sidecar
 app_name_short: Hadoop
 app_name: {{app_name_short}}
-app_site_name: Hadoop
+app_site_name: Apache Hadoop
 app_site_url: https://hadoop.apache.org/
 exporter_name: the JMX exporter
 exporter_pkg_name: jmx-exporter
@@ -81,14 +81,15 @@ podmonitoring_config: |
       app.kubernetes.io/part-of: google-cloud-managed-prometheus
   spec:
     endpoints:
-  + - port: prometheus
+    - port: prometheus
       scheme: http
       interval: 30s
       path: /metrics
     selector:
       matchLabels:
-  +     app.kubernetes.io/name: hadoop
+        app.kubernetes.io/name: hadoop
 additional_prereq_info: |
+  Ensure that the values of the `port` and `matchLabels` fields match those of the {{app_name_short}} pods you want to monitor.
   NameNodes and DataNodes must be configured to accept remote JMX connections.
   This can be done by setting `NAMENODE_HDFS_OPTS` and `DATANODE_HDFS_OPTS` [accordingly](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/UnixShellGuide.html).
 sample_promql_query: up{job="hadoop", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
