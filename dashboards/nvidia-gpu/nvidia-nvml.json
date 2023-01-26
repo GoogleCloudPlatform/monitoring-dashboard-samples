@@ -1,0 +1,308 @@
+{
+  "category": "CUSTOM",
+  "dashboardFilters": [],
+  "displayName": "NVIDIA GPU Monitoring",
+  "labels": {},
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 3,
+        "widget": {
+          "title": "GPU Utilization",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "${metadata.system_labels\\.name} GPU ${metric.labels.gpu_number} Non-Idle",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [
+                        "metric.label.\"gpu_number\"",
+                        "metadata.system_labels.\"name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"agent.googleapis.com/gpu/utilization\" resource.type=\"gce_instance\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_NONE"
+                    }
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 21
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "GPU Memory Usage",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "${metadata.system_labels\\.name} GPU ${metric.labels.gpu_number} ${metric.labels.memory_state}",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"memory_state\"",
+                        "metric.label.\"gpu_number\"",
+                        "metadata.system_labels.\"name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"agent.googleapis.com/gpu/memory/bytes_used\" resource.type=\"gce_instance\" metric.label.\"memory_state\"=\"used\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_NONE"
+                    }
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 21
+      },
+      {
+        "height": 5,
+        "widget": {
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "column": "Name (from instance_id)",
+                "visible": true
+              },
+              {
+                "column": "zone",
+                "visible": true
+              },
+              {
+                "column": "instance_name",
+                "visible": true
+              }
+            ],
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/gpu/processes/utilization'\n| map [Instance: metadata.system.name,\n    GPU: metric.gpu_number,\n    PID: metric.pid,\n    Owner: metric.owner,\n    Command: metric.command_line], \n| value cast_units(int_round(value.utilization), \"%\")"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Recently Observed GPU Processes - Lifetime GPU Utilization"
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 6
+      },
+      {
+        "height": 5,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/gpu/processes/max_bytes_used'\n| map [Instance: metadata.system.name,\n    GPU: metric.gpu_number,\n    PID: metric.pid,\n    Owner: metric.owner,\n    Command: metric.command_line]"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Recently Observed GPU Processes - Lifetime Max GPU Memory Used"
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 6
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "CPU Utilization (Hypervisor Reported)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'compute.googleapis.com/instance/cpu/utilization'\n| group_by 1m, [value_utilization_mean: mean(value.utilization)]\n| every 1m\n| group_by [metadata.system.name: metadata.system_labels.name],\n    [value_utilization_mean_mean: mean(value_utilization_mean)]"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 18
+      },
+      {
+        "height": 3,
+        "widget": {
+          "title": "NIC Traffic Rate (OS reported)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "${metadata.system_labels\\.name} Device ${metric.labels.device} Direction ${metric.labels.direction} NIC ",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"agent.googleapis.com/interface/traffic\" resource.type=\"gce_instance\" metric.label.\"device\"!=\"lo\" metric.label.\"device\"!=\"docker0\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"device\"",
+                        "metric.label.\"direction\"",
+                        "metadata.system_labels.\"name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_NONE"
+                    }
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 18
+      },
+      {
+        "height": 6,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/gpu/utilization'\n| map [Model: metric.model, Instance: metadata.system.name, GPU: metric.gpu_number]\n| value [value.utilization: 1.0]\n| group_by [Model], [capacity: sum(value.utilization)]"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Observed GPU capacity"
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 0
+      },
+      {
+        "height": 4,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/gpu/utilization'\n| map [Model: metric.model, Instance: metadata.system.name, GPU: metric.gpu_number]\n| group_by [Model], [capacity: sum(cast_units(value.utilization/100.0, \"1\"))]"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Observed GPU utilization"
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 2
+      },
+      {
+        "height": 7,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/gpu/utilization'\n| map [Model: metric.model, UUID: metric.uuid, Instance: metadata.system.name, GPU: metric.gpu_number]\n| value cast_units(int_round(value.utilization), \"%\")"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          },
+          "title": "Observed GPU utilization per GPU"
+        },
+        "width": 12,
+        "xPos": 0,
+        "yPos": 11
+      },
+      {
+        "height": 2,
+        "widget": {
+          "text": {
+            "content": "Displays GPU utilization as emitted from the NVIDIA Management Library (NVML). For advanced GPU metrics like SM utilization or PCIe and NVLink traffic, please see instructions for configuring the Ops Agent with the NVIDIA DataCenter GPU Manager (DCGM) and use the NVIDIA GPU Monitoring with DataCenter GPU Manager dashboard.",
+            "format": "RAW"
+          },
+          "title": "NVIDIA GPU Monitoring"
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 0
+      }
+    ]
+  },
+}
