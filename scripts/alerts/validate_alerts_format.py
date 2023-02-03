@@ -44,8 +44,7 @@ def check_is_alert_policy_json(path):
       raise Exception("{} content could not be loaded".format(path))
     monitoring_v3.AlertPolicy.from_json(policy_json)
 
-def main():
-  path = sys.argv[1]
+def validate_path(path):
   # only run validation script on files added/changed in
   # alerts folder
   if os.path.dirname(os.path.dirname(path)) != "alerts":
@@ -66,6 +65,9 @@ def main():
     check_json_in_metadata(path, file_name_parts[0], file_name_parts[1])
     # checking if json content is indeed an alert policy
     check_is_alert_policy_json(path)
+
+def main():
+  path = sys.argv[1]
 
 if __name__ == '__main__':
   main()
