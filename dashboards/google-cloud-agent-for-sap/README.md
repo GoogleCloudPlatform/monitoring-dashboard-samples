@@ -3,7 +3,7 @@
 
 |Agent for SAP HANA Status Overview|
 |:------------------|
-|Filename: [agent-for-sap-hana-overview.json](agent-for-sap-hana-status-overview.json)|
+|Filename: [agent-for-sap-hana-overview.json](agent-for-sap-hana-overview.json)|
 |This dashboard is based on [Google Cloud Agent for SAP](https://cloud.google.com/solutions/sap/docs/agent-for-sap/latest/all-guides) and has status overview charts displaying `HANA Availability`, `HANA High Availability`, `HANA HA Replication`, `HANA Service Status`, `HA Cluster - Node State`,`HA Cluster - Resource State` for SAP HANA Instances. The charts in this dashboard indicate the status of the entities with a value of `1` indicating healthy status.|
 
 
