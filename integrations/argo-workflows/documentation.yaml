@@ -8,15 +8,17 @@ exporter_pkg_name: argo-workflows
 exporter_repo_url: https://github.com/argoproj/argo-workflows/
 additional_prereq_info: |
   {{app_name_short}} exposes Prometheus-format metrics automatically; you do not
-  have to install it separately. You can run the following checks to verify
-  that {{exporter_name}} is exposing Prometheus-format metrics.
+  have to install it separately. To verify that {{exporter_name}} is emitting 
+  metrics on the expected endpoints, do the following:
 
-   *  To determine if {{app_name_short}} is exposing metrics, run the following command:
+  Set up port forwarding by using the following command:
 
-      <pre class="devsite-click-to-copy">
-      kubectl -n argo port-forward deploy/workflow-controller 9090
-      curl localhost:9090/metrics
-      </pre>
+  <pre class="devsite-click-to-copy">
+  kubectl -n {{namespace_name}} port-forward {{pod_name}} 9090
+  </pre>
+
+  Access the endpoint `localhost:9090/metrics` by using the browser
+  or the `curl` utility in another terminal session.
 dashboard_available: true
 minimum_exporter_version: v3.4.3
 multiple_dashboards: false
