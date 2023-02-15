@@ -8,15 +8,17 @@ exporter_pkg_name: etcd
 exporter_repo_url: https://etcd.io/docs/v3.1/op-guide/monitoring/
 additional_prereq_info: |
   {{app_site_name}} exposes Prometheus-format metrics automatically; you do not
-  have to install it separately. You can run the following checks to verify
-  that etcd is exposing Prometheus-format metrics.
+  have to install it separately. To verify that {{exporter_name}} is emitting 
+  metrics on the expected endpoints, do the following:
 
-   *  To determine if {{app_site_name}} is exposing metrics, run the following command:
+  Set up port forwarding by using the following command:
 
-      <pre class="devsite-click-to-copy">
-      kubectl -n <namespace_name> port-forward <etcd_pod_name> 2379
-      curl localhost:2379/metrics
-      </pre>
+  <pre class="devsite-click-to-copy">
+  kubectl -n {{namespace_name}} port-forward {{pod_name}} 2379
+  </pre>
+
+  Access the endpoint `localhost:2379/metrics` by using the browser
+  or the `curl` utility in another terminal session.
 dashboard_available: true
 multiple_dashboards: false
 dashboard_display_name: {{app_name_short}} Prometheus Overview
