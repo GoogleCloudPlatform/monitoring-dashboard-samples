@@ -1,0 +1,177 @@
+{
+  "category": "CUSTOM",
+  "displayName": "Agent for SAP - HANA Raw Metrics",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 4,
+        "widget": {
+          "title": "HA Cluster - Node State [Raw Metrics]",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "# Indicates the state of the Linux HA cluster state.# \n# -1: unclean state\n# 0: shutdown\n# 1: standby\n# 2: online\n# -10: unknown\n\nfetch gce_instance\n| metric 'workload.googleapis.com/sap/cluster/nodes'\n| every 1m"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 0
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "HA Cluster - Resource State [Raw Metrics]",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "# Indicates if the Linux HA cluster resource is up and running.\n# 3: Master|Slave|Started\n# 2: Starting\n# 1: Stopped\n# 0: Failed\n# -10: Unknown\n\nfetch gce_instance\n| metric 'workload.googleapis.com/sap/cluster/resources'\n| every 1m\n"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 0
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "HANA Availability [Raw Metrics]",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "# Numeric Response code for HANA system availability, designated by SAP System ID and SAP Instance Number.\n# 1 = All processes are GREEN,\n# 0 = One or more process not GREEN\n\nfetch gce_instance\n| metric 'workload.googleapis.com/sap/hana/availability'\n| every 1m\n"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 4
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "HANA HA Availability [Raw Metrics]",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "# Numeric Response code for HANA system high availability state, designated by SAP System ID and SAP Instance Number.\n# 4 = Primary online with replication running\n# 3 = Primary online but replication is not fully functional\n# 2 = Primary has error\n# 1 = Current node is Secondary\n# 0 = Unknown state\n\n\nfetch gce_instance\n| metric 'workload.googleapis.com/sap/hana/ha/availability'\n| every 1m\n"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 4
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "HANA HA Replication [Raw Metrics]",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "# Numeric Response code for HANA system replication.\n# 0 = Error occurred\n# 10 = Replication is off (standalone mode)\n#  12 = Replication is Active, this is a secondary node\n# 15 = Replication is Active, Initialization or sync with the primary is complete and the secondary is continuously replicating.\n\nfetch gce_instance\n| metric 'workload.googleapis.com/sap/hana/ha/replication'\n| every 1m\n"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 8
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "HANA Service Status",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "# Numeric Response code for HANA service availability.\n# Response code 0 = Service is not running\n# Response code 1 = Service is running \n\n fetch gce_instance::workload.googleapis.com/sap/hana/service\n| window 1m\n"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 8
+      }
+    ]
+  }
+}
