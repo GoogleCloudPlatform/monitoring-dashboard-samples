@@ -1,0 +1,120 @@
+exporter_type: included
+app_name_short: Flink
+app_name: Apache {{app_name_short}}
+app_site_name: Apache Flink
+app_site_url: https://flink.apache.org/
+exporter_name: the Flink exporter
+exporter_pkg_name: Apache Flink
+minimum_exporter_version: "1.15"
+exporter_repo_url: https://flink.apache.org/features/2019/03/11/prometheus-monitoring.html
+additional_prereq_info: |
+  {{app_name_short}} exposes Prometheus-format metrics when configured with
+  `metrics.reporter.prom.class: org.apache.flink.metrics.prometheus.PrometheusReporter`.
+
+  If you deployed Flink with the official [getting started manifests](https://nightlies.apache.org/flink/flink-docs-master/docs/deployment/resource-providers/standalone/kubernetes/){:external},
+  add this new option to the ConfigMap:
+
+  <pre class="devsite-click-to-copy">
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: flink-config
+    labels:
+      app: flink
+  data:
+    flink-conf.yaml: |+
+      ...
+  +   metrics.reporter.prom.class: org.apache.flink.metrics.prometheus.PrometheusReporter
+  </pre>
+
+  If you deployed Flink with the official [operator](https://nightlies.apache.org/flink/flink-kubernetes-operator-docs-main/docs/try-flink-kubernetes-operator/quick-start/){:external},
+  add this new option to the FlinkDeployment's `spec.flinkConfiguration` field:
+
+  <pre class="devsite-click-to-copy">
+  apiVersion: flink.apache.org/v1beta1
+  kind: FlinkDeployment
+  metadata:
+    name: basic-example
+  spec:
+    image: flink:1.15
+    flinkVersion: v1_15
+    flinkConfiguration:
+      taskmanager.numberOfTaskSlots: "2"
+  +   metrics.reporter.prom.class: org.apache.flink.metrics.prometheus.PrometheusReporter
+  </pre>
+
+  Alternatively, you can specify the Prometheus reporter as a default option within the [Flink operator
+  configuration](https://nightlies.apache.org/flink/flink-kubernetes-operator-docs-main/docs/operations/configuration/){:external}.
+
+
+  To verify that {{exporter_name}} is emitting metrics on the expected endpoints, do the following:
+
+  1. Set up port forwarding by using the following command:
+
+    <pre class="devsite-click-to-copy">
+    kubectl -n {{namespace_name}} port-forward {{pod_name}} 9249
+    </pre>
+
+  2. Access the endpoint `localhost:9249/metrics` by using the browser
+     or the `curl` utility in another terminal session.
+dashboard_available: true
+multiple_dashboards: true
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: flink
+    labels:
+      app.kubernetes.io/name: flink
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: 9249
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: flink
+additional_podmonitoring_info: |
+  Ensure that the values of the `port` and `matchLabels` fields match those of the {{app_name_short}} pods you want to monitor.
+  {{app_name_short}} exposes metrics on port 9249 by default when metrics are enabled.
+sample_promql_query: up{job="flink", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: flink-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: flink-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: flink
+      interval: 30s
+      rules:
+      - alert: FlinkHighJVMMemoryNonHeapUsage
+        annotations:
+          description: |-
+            Flink high jvm memory non-heap usage 
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Flink high jvm memory non-heap usage (instance {{ $labels.instance }})
+        expr: (flink_jobmanager_Status_JVM_Memory_NonHeap_Used/flink_jobmanager_Status_JVM_Memory_NonHeap_Max) >= 0.9
+        for: 5m
+        labels:
+          severity: critical
+      - alert: FlinkHighJVMMemoryHeapUsage
+        annotations:
+          description: |-
+            Flink high jvm memory heap usage
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Flink high jvm memory heap usage (instance {{ $labels.instance }})
+        expr: (flink_jobmanager_Status_JVM_Memory_Heap_Used/flink_jobmanager_Status_JVM_Memory_Heap_Max) >= 0.9
+        for: 5m
+        labels:
+          severity: warning
+additional_alert_info: You can adjust the alert thresholds to suit your application.
