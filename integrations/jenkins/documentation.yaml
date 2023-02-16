@@ -1,0 +1,109 @@
+exporter_type: included
+app_name_short: Jenkins
+app_name: {{app_name_short}}
+app_site_name: Jenkins
+app_site_url: https://www.jenkins.io/
+exporter_name: the Jenkins exporter
+exporter_pkg_name: jenkins
+exporter_repo_url: https://github.com/jenkinsci/prometheus-plugin
+minimum_exporter_version: "2.0.11"
+additional_prereq_info: |
+  {{app_name_short}} exposes Prometheus-format metrics only after you install
+  the [Metrics](https://plugins.jenkins.io/metrics/){:class=external} and
+  [Prometheus](https://plugins.jenkins.io/prometheus/){:class=external} plugins.
+
+  If you installed the [Jenkins community helm chart](https://github.com/jenkinsci/helm-charts/tree/main/charts/jenkins){:class=external}, you may append the Metrics and Prometheus plugins
+  in the controller.installPlugins values field:
+
+  <pre class="devsite-click-to-copy">
+  controller:
+    installPlugins:
+      - kubernetes:3734.v562b_b_a_627ea_c
+      - workflow-aggregator:590.v6a_d052e5a_a_b_5
+      - git:4.13.0
+      - configuration-as-code:1569.vb_72405b_80249
+      - metrics
+      - prometheus:2.0.11
+  </pre>
+
+  Alternatively, you may create your own {{app_name_short}} container image with the following Dockerfile:
+
+  <pre class="devsite-click-to-copy">
+  FROM jenkins/jenkins:lts
+  RUN jenkins-plugin-cli --plugins prometheus metrics
+  </pre>
+  
+  To verify that {{exporter_name}} is emitting metrics on the expected endpoints,
+  do the following:
+
+  1. Set up port-forwarding with the following command:
+
+  <pre class="devsite-click-to-copy">
+  kubectl -n {{namespace_name}} port-forward {{pod_name}} 8080
+  </pre>
+
+  2. Access the endpoint `localhost:8080/prometheus` by using the browser
+  or curl in another terminal session to verify that the metrics are being exposed
+  by the exporter for scraping.
+dashboard_available: true
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: jenkins
+    labels:
+      app.kubernetes.io/name: jenkins
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: http
+      scheme: http
+      interval: 30s
+      path: /prometheus
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: jenkins
+additional_podmonitoring_info: |
+  Ensure that the values pf the `port` and `matchLabels` fields match those of the
+  {{app_name_short}} pods you want to monitor. By default, {{app_name_short}} [Helm installations](https://github.com/jenkinsci/helm-charts/tree/main/charts/jenkins){:class=external}
+  include a `port` value of `http` and a `app.kubernetes.io/name` label with the value `jenkins`.
+sample_promql_query: up{job="jenkins", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: jenkins-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: jenkins-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: jenkins
+      interval: 30s
+      rules:
+      - alert: JenkinsHealthScoreBelowOne
+        annotations:
+          description: |-
+            Jenkins health score below one
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Jenkins health score below one (instance {{ $labels.instance }})
+        expr: jenkins_health_check_score < 1
+        for: 5m
+        labels:
+          severity: critical
+      - alert: JenkinsPluginFailure
+        annotations:
+          description: |-
+            Jenkins plugin failure
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Jenkins plugin failure (instance {{ $labels.instance }})
+        expr: jenkins_plugins_failed > 0
+        for: 5m
+        labels:
+          severity: critical
+additional_alert_info: You can adjust the alert thresholds to suit your application.
