@@ -1,0 +1,95 @@
+exporter_type: included
+app_name_short: Velero
+app_name: {{app_name_short}}
+app_site_name: Velero
+app_site_url: https://velero.io/
+exporter_name: the Velero Prometheus exporter
+exporter_pkg_name: velero
+exporter_repo_url: https://velero.io/docs/
+minimum_exporter_version: v1.3.0
+additional_prereq_info: |
+  {{app_name_short}} exposes Prometheus-format metrics automatically; you do not
+  have to install it separately. To verify that {{exporter_name}} is emitting
+  metrics on the expected endpoints, do the following:
+
+  1. Set up port forwarding by using the following command:
+
+  <pre class="devsite-click-to-copy">
+  kubectl -n {{namespace_name}} port-forward deploy/velero 8085
+  </pre>
+
+  2. Access the endpoint `localhost:8085/metrics` by using the browser
+  or the `curl` utility in another terminal session.
+dashboard_available: true
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: velero
+    labels:
+      app.kubernetes.io/name: velero
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: metrics
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+        deploy: velero
+additional_podmonitoring_info: |
+  Ensure that the values of the `port` and `matchLabels` fields match those of the
+  {{app_name_short}} pods you want to monitor. By default, {{app_name_short}} installations
+  include a `port` value of `metrics` and a `deploy` label with the value `velero`.
+additional_alert_info: You can adjust the alert thresholds to suit your application.
+sample_promql_query: up{job="velero", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: velero-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: velero-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: velero
+      interval: 30s
+      rules:
+      - alert: VeleroBackupFailure
+        annotations:
+          description: |-
+            Velero backup failure
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Velero backup failure (instance {{ $labels.instance }})
+        expr: velero_backup_failure_total > 0
+        for: 5m
+        labels:
+          severity: critical
+      - alert: VeleroPartialBackupFailure
+        annotations:
+          description: |-
+            Velero partial backup failure
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Velero partial backup failure (instance {{ $labels.instance }})
+        expr: velero_backup_partial_failure_total > 0
+        for: 5m
+        labels:
+          severity: warning
+      - alert: VeleroRestoreFailure
+        annotations:
+          description: |-
+            Velero restore failure
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Velero restore failure (instance {{ $labels.instance }})
+        expr: velero_restore_failed_total > 0
+        for: 5m
+        labels:
+          severity: critical
