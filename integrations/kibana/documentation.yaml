@@ -1,0 +1,136 @@
+exporter_type: included
+app_name_short: Kibana
+app_name: {{app_name_short}}
+app_site_name: Kibana
+app_site_url: https://www.elastic.co/kibana/
+exporter_name: the Kibana Prometheus exporter
+exporter_pkg_name: kibana-prometheus-exporter
+exporter_repo_url: https://github.com/pjhampton/kibana-prometheus-exporter
+minimum_exporter_version: "8.0.0"
+additional_prereq_info: |
+  {{app_name_short}} exposes Prometheus-format metrics only after you install
+  {{exporter_name}} plugin. To install the plugin, follow the [installation instructions]({{exporter_repo_url}}).
+
+  The installation process requries the use of `bin/kibana-plugin install <plugin>`. One way to do this is 
+  to define a custom Kibana docker image, please reference the example below.
+
+  ```Dockerfile
+  FROM kibana:<KIBANA_VERSION>
+  RUN bin/kibana-plugin install https://github.com/pjhampton/kibana-prometheus-exporter/releases/download/<PLUGIN_VERSION>/kibanaPrometheusExporter-<PLUGIN_VERSION>.zip
+  ```
+
+  After building the image and pushing it to a remote repository, it can be used within the Kubernetes deployment.
+
+  ```yaml
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: kibana
+  data:
+    kibana.yml: |
+      server.name: kibana
+      server.host: "0.0.0.0"
+      # Update this with credentials to match your Elasticsearch instance
+      elasticsearch.hosts: http://username:password@elasticsearch-service-name:9200
+  ---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: kibana
+    labels:
+      app.kubernetes.io/name: kibana
+  spec:
+    ...
+    template:
+      ...
+      spec:
+        containers:
+        - name: kibana
+          image: <CUSTOM_IMAGE>
+          ports:
+          - containerPort: 5601
+            name: kibana
+            protocol: TCP
+          volumeMounts:
+          - mountPath: /usr/share/kibana/config/kibana.yml
+            subPath: kibana.yml
+            name: kibana
+        volumes:
+        - name: kibana
+          configMap:
+            name: kibana
+            items:
+            - key: kibana.yml
+              path: kibana.yml
+  ```
+
+  To verify that {{exporter_name}} is emitting metrics on the expected endpoints,
+  do the following:
+
+  1. Set up port-forwarding with the following command:
+
+  <pre class="devsite-click-to-copy">
+  kubectl -n {{namespace_name}} port-forward {{pod_name}} 5601
+  </pre>
+
+  2. Access the endpoint `localhost:5601/_prometheus/metrics` by using the browser
+  or curl in another terminal session to verify that the metrics are being exposed
+  by the exporter for scraping.
+dashboard_available: true
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: kibana
+    labels:
+      app.kubernetes.io/name: kibana
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: 5601
+      scheme: http
+      interval: 30s
+      path: /_prometheus/metrics
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: kibana
+sample_promql_query: up{job="kibana", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: kibana-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: kibana-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: kibana
+      interval: 30s
+      rules:
+      - alert: KibanaHighCPUUsage
+        annotations:
+          description: |-
+            Kibana high cpu usage
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Kibana high cpu usage (instance {{ $labels.instance }})
+        expr: kibana_os_load5 >= 90
+        for: 5m
+        labels:
+          severity: critical
+      - alert: KibanaHighMemoryUsage
+        annotations:
+          description: |-
+            Kibana high memory usage
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Kibana high memory usage (instance {{ $labels.instance }})
+        expr: kibana_os_mem_bytes_used / kibana_os_mem_bytes_total >= 0.9
+        for: 5m
+        labels:
+          severity: critical
+additional_alert_info: You can adjust the alert thresholds to suit your application.
