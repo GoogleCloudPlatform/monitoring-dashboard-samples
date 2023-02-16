@@ -22,12 +22,26 @@ additional_prereq_info: |
   After building the image and pushing it to a remote repository, it can be used within the Kubernetes deployment.
 
   ```yaml
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: kibana
+  data:
+    kibana.yml: |
+      server.name: kibana
+      server.host: "0.0.0.0"
+      elasticsearch.hosts: http://es-kibana:9200
+  ---
   apiVersion: apps/v1
   kind: Deployment
   metadata:
     name: kibana
+    labels:
+      app.kubernetes.io/name: kibana
   spec:
     ...
+    template:
+      ...
       spec:
         containers:
         - name: kibana
