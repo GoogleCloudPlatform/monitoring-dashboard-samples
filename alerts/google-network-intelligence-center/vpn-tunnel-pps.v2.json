@@ -11,7 +11,7 @@
       "displayName": "Tunnel traffic",
       "conditionMonitoringQueryLanguage": {
         "duration": "0s",
-        "query": "fetch vpn_gateway\n| { metric vpn.googleapis.com/network/sent_packets_count\n; metric vpn.googleapis.com/network/received_packets_count }\n| align rate (1m)\n| group_by [metric.tunnel_name]\n| outer_join 0,0\n| value val(0) + val(1)\n| condition val() > 125000 \"{packets}/s\"",
+        "query": "fetch vpn_gateway\n| { metric vpn.googleapis.com/network/sent_packets_count\n; metric vpn.googleapis.com/network/received_packets_count }\n| align rate (30s)\n| group_by [metric.tunnel_name]\n| outer_join 0,0\n| value val(0) + val(1)\n| condition val() > 125000 \"{packets}/s\"",
         "trigger": {
           "count": 1
         }

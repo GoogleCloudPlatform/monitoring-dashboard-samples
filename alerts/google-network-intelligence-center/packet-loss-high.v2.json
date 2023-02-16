@@ -9,7 +9,7 @@
     {
       "displayName": "Packet Loss higher than 5%",
       "conditionMonitoringQueryLanguage": {
-        "query": "fetch gce_zone_network_health :: networking.googleapis.com/cloud_netslo/active_probing/probe_count\n | {\n   filter metric.result = 'failure'\n   | group_by [resource.region, metric.remote_region], 60s, .sum\n ;\n   group_by [\n     resource.region,\n     metric.remote_region\n   ], 60s, .sum\n   | filter val() >= 1 '1'\n }\n | ratio | condition val() > 0.05",
+        "query": "fetch gce_zone_network_health :: networking.googleapis.com/cloud_netslo/active_probing/probe_count\n | {\n   filter metric.result = 'failure'\n   | group_by [resource.region, metric.remote_region], 30s, .sum\n ;\n   group_by [\n     resource.region,\n     metric.remote_region\n   ], 30s, .sum\n   | filter val() >= 1 '1'\n }\n | ratio | condition val() > 0.05",
         "duration": "300s",
         "trigger": {
           "count": 1
