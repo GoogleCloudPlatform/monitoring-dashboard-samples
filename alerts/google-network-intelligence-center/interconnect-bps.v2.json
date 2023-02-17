@@ -1,0 +1,26 @@
+{
+  "name": "projects/cn-fe-playground/alertPolicies/11047006517865447867",
+  "displayName": "High interconnect usage",
+  "documentation": {
+    "content": "Alerts when the sum of ingress and egress bytes exceeds 70% of interconnect attachment's capacity.",
+    "mimeType": "text/markdown"
+  },
+  "conditions": [
+    {
+      "name": "projects/cn-fe-playground/alertPolicies/11047006517865447867/conditions/11047006517865447448",
+      "displayName": "Interconnect attachment usage",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "0s",
+        "query": "fetch interconnect_attachment\n| {\n    {\n      metric 'interconnect.googleapis.com/network/attachment/received_bytes_count' ;\n      metric 'interconnect.googleapis.com/network/attachment/sent_bytes_count'\n    } | align rate(30s) | join | add ;\n  metric 'interconnect.googleapis.com/network/attachment/capacity'\n  | group_by 30s, [value_capacity_mean: mean(value.capacity)]\n}\n| ratio\n| condition val() > 0.70 '1'",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}

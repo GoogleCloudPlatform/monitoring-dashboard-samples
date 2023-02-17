@@ -1,0 +1,25 @@
+{
+  "displayName": "High packet loss alert policy",
+  "documentation": {
+    "content": "This alert indicates that the Packet Loss exceeded 5% for 5 minutes for a specific region pair.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Packet Loss higher than 5%",
+      "conditionMonitoringQueryLanguage": {
+        "query": "fetch gce_zone_network_health :: networking.googleapis.com/cloud_netslo/active_probing/probe_count\n | {\n   filter metric.result = 'failure'\n   | group_by [resource.region, metric.remote_region], 30s, .sum\n ;\n   group_by [\n     resource.region,\n     metric.remote_region\n   ], 30s, .sum\n   | filter val() >= 1 '1'\n }\n | ratio | condition val() > 0.05",
+        "duration": "300s",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
