@@ -4,17 +4,15 @@ app_name: Apache {{app_name_short}}
 app_site_name: Apache Flink
 app_site_url: https://flink.apache.org/
 exporter_name: the Flink exporter
-exporter_pkg_name: Apache Flink
+exporter_pkg_name: flink
 minimum_exporter_version: "1.15"
 exporter_repo_url: https://flink.apache.org/features/2019/03/11/prometheus-monitoring.html
 additional_prereq_info: |
   {{app_name_short}} exposes Prometheus-format metrics when configured with
   `metrics.reporter.prom.class: org.apache.flink.metrics.prometheus.PrometheusReporter`.
-
-  If you deployed Flink with the official [getting started manifests](https://nightlies.apache.org/flink/flink-docs-master/docs/deployment/resource-providers/standalone/kubernetes/){:external},
+  If you deployed Flink with the official [getting started manifests](https://nightlies.apache.org/flink/flink-docs-master/docs/deployment/resource-providers/standalone/kubernetes/){:class="external"},
   add this new option to the ConfigMap:
-
-  <pre class="devsite-click-to-copy">
+  <pre>
   apiVersion: v1
   kind: ConfigMap
   metadata:
@@ -26,11 +24,9 @@ additional_prereq_info: |
       ...
   +   metrics.reporter.prom.class: org.apache.flink.metrics.prometheus.PrometheusReporter
   </pre>
-
-  If you deployed Flink with the official [operator](https://nightlies.apache.org/flink/flink-kubernetes-operator-docs-main/docs/try-flink-kubernetes-operator/quick-start/){:external},
+  If you deployed Flink with the official [operator](https://nightlies.apache.org/flink/flink-kubernetes-operator-docs-main/docs/try-flink-kubernetes-operator/quick-start/){:class="external"},
   add this new option to the FlinkDeployment's `spec.flinkConfiguration` field:
-
-  <pre class="devsite-click-to-copy">
+  <pre>
   apiVersion: flink.apache.org/v1beta1
   kind: FlinkDeployment
   metadata:
@@ -42,20 +38,14 @@ additional_prereq_info: |
       taskmanager.numberOfTaskSlots: "2"
   +   metrics.reporter.prom.class: org.apache.flink.metrics.prometheus.PrometheusReporter
   </pre>
-
   Alternatively, you can specify the Prometheus reporter as a default option within the [Flink operator
-  configuration](https://nightlies.apache.org/flink/flink-kubernetes-operator-docs-main/docs/operations/configuration/){:external}.
-
-
+  configuration](https://nightlies.apache.org/flink/flink-kubernetes-operator-docs-main/docs/operations/configuration/){:class="external"}.
   To verify that {{exporter_name}} is emitting metrics on the expected endpoints, do the following:
-
   1. Set up port forwarding by using the following command:
-
     <pre class="devsite-click-to-copy">
     kubectl -n {{namespace_name}} port-forward {{pod_name}} 9249
     </pre>
-
-  2. Access the endpoint `localhost:9249/metrics` by using the browser
+  1. Access the endpoint `localhost:9249/metrics` by using the browser
      or the `curl` utility in another terminal session.
 dashboard_available: true
 multiple_dashboards: true
@@ -98,7 +88,7 @@ alerts_config: |
       - alert: FlinkHighJVMMemoryNonHeapUsage
         annotations:
           description: |-
-            Flink high jvm memory non-heap usage 
+            Flink high jvm memory non-heap usage
               VALUE = {{ $value }}
               LABELS: {{ $labels }}
           summary: Flink high jvm memory non-heap usage (instance {{ $labels.instance }})
