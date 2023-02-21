@@ -11,10 +11,8 @@ additional_prereq_info: |
   {{app_name_short}} exposes Prometheus-format metrics only after you install
   the [Metrics](https://plugins.jenkins.io/metrics/){:class=external} and
   [Prometheus](https://plugins.jenkins.io/prometheus/){:class=external} plugins.
-
-  If you installed the [Jenkins community helm chart](https://github.com/jenkinsci/helm-charts/tree/main/charts/jenkins){:class=external}, you may append the Metrics and Prometheus plugins
-  in the controller.installPlugins values field:
-
+  If you installed the [Jenkins community helm chart](https://github.com/jenkinsci/helm-charts/tree/main/charts/jenkins){:class=external}, you can append the Metrics and Prometheus plugins
+  in the `controller.installPlugins` values field:
   <pre class="devsite-click-to-copy">
   controller:
     installPlugins:
@@ -25,26 +23,19 @@ additional_prereq_info: |
       - metrics
       - prometheus:2.0.11
   </pre>
-
-  Alternatively, you may create your own {{app_name_short}} container image with the following Dockerfile:
-
+  Alternatively, you can create your own {{app_name_short}} container image with the following Dockerfile:
   <pre class="devsite-click-to-copy">
   FROM jenkins/jenkins:lts
   RUN jenkins-plugin-cli --plugins prometheus metrics
   </pre>
-  
   To verify that {{exporter_name}} is emitting metrics on the expected endpoints,
   do the following:
-
   1. Set up port-forwarding with the following command:
-
   <pre class="devsite-click-to-copy">
   kubectl -n {{namespace_name}} port-forward {{pod_name}} 8080
   </pre>
-
-  2. Access the endpoint `localhost:8080/prometheus` by using the browser
-  or curl in another terminal session to verify that the metrics are being exposed
-  by the exporter for scraping.
+  1. Access the endpoint `localhost:8080/prometheus` by using the browser
+  or the `curl` utility in another terminal session.
 dashboard_available: true
 multiple_dashboards: false
 dashboard_display_name: {{app_name_short}} Prometheus Overview
@@ -66,7 +57,7 @@ podmonitoring_config: |
       matchLabels:
         app.kubernetes.io/name: jenkins
 additional_podmonitoring_info: |
-  Ensure that the values pf the `port` and `matchLabels` fields match those of the
+  Ensure that the values of the `port` and `matchLabels` fields match those of the
   {{app_name_short}} pods you want to monitor. By default, {{app_name_short}} [Helm installations](https://github.com/jenkinsci/helm-charts/tree/main/charts/jenkins){:class=external}
   include a `port` value of `http` and a `app.kubernetes.io/name` label with the value `jenkins`.
 sample_promql_query: up{job="jenkins", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}

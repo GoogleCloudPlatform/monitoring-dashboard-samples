@@ -9,18 +9,15 @@ exporter_repo_url: https://github.com/pjhampton/kibana-prometheus-exporter
 minimum_exporter_version: "8.0.0"
 additional_prereq_info: |
   {{app_name_short}} exposes Prometheus-format metrics only after you install
-  {{exporter_name}} plugin. To install the plugin, follow the [installation instructions]({{exporter_repo_url}}).
-
-  The installation process requries the use of `bin/kibana-plugin install <plugin>`. One way to do this is 
-  to define a custom Kibana docker image, please reference the example below.
-
+  {{exporter_name}} plugin. To install the plugin, follow the
+  <a href="{{exporter_repo_url}}#installing" class="external">installation instructions</a>.
+  The installation process requires the use of `bin/kibana-plugin install {{plugin_var}}`. One way to install the plugin is
+  to define a custom Kibana Docker image; see the following example:
   ```Dockerfile
-  FROM kibana:<KIBANA_VERSION>
-  RUN bin/kibana-plugin install https://github.com/pjhampton/kibana-prometheus-exporter/releases/download/<PLUGIN_VERSION>/kibanaPrometheusExporter-<PLUGIN_VERSION>.zip
+  FROM kibana:{{kibana_version_var}}
+  RUN bin/kibana-plugin install https://github.com/pjhampton/kibana-prometheus-exporter/releases/download/{{plugin_version_var}}/kibanaPrometheusExporter-{{plugin_version_var}}.zip
   ```
-
-  After building the image and pushing it to a remote repository, it can be used within the Kubernetes deployment.
-
+  After building the image and pushing it to a remote repository, it can be used within the Kubernetes deployment. For example:
   ```yaml
   apiVersion: v1
   kind: ConfigMap
@@ -46,7 +43,7 @@ additional_prereq_info: |
       spec:
         containers:
         - name: kibana
-          image: <CUSTOM_IMAGE>
+          image: {{custom_image_var}}
           ports:
           - containerPort: 5601
             name: kibana
@@ -63,19 +60,14 @@ additional_prereq_info: |
             - key: kibana.yml
               path: kibana.yml
   ```
-
   To verify that {{exporter_name}} is emitting metrics on the expected endpoints,
   do the following:
-
   1. Set up port-forwarding with the following command:
-
   <pre class="devsite-click-to-copy">
   kubectl -n {{namespace_name}} port-forward {{pod_name}} 5601
   </pre>
-
-  2. Access the endpoint `localhost:5601/_prometheus/metrics` by using the browser
-  or curl in another terminal session to verify that the metrics are being exposed
-  by the exporter for scraping.
+  1. Access the endpoint `localhost:5601/_prometheus/metrics` by using the
+     browser or the `curl` utility in another terminal session.
 dashboard_available: true
 multiple_dashboards: false
 dashboard_display_name: {{app_name_short}} Prometheus Overview
