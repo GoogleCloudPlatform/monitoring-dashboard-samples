@@ -3,29 +3,26 @@
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
-      "labelKey": "project_id",
-      "templateVariable": "Project"
+      "labelKey": "project_id"
     },
     {
       "filterType": "RESOURCE_LABEL",
-      "labelKey": "environment_name",
-      "templateVariable": "Cluster"
+      "labelKey": "environment_name"
     }
   ],
-  "displayName": "sb-data-projects-composer-load-test-v1",
-  "etag": "07c4608fd0b2623bfdb5c444238ba2fb",
+  "displayName": "cloud-composer-monitor",
   "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
       {
-        "height": 1,
+        "height": 3,
         "widget": {
           "text": {
-            "content": "",
-            "format": "RAW"
+            "content": "- This dashboard is useful to detect over-utilization as well as under-sizing issues with Cloud Composer clusters in a given GCP Project. \n- Moreover, this would act as a one pager monitoring solution to look only at the critical areas of a given Cloud Composer environment. \n- Below is the list and a quick info about the charts included in this Dashboard. \n\n- Task Queue Length : gives the # of tasks in queue per 60 seconds in the Cluster. useful to understand processing bottlenecks. \n- Dagbag Size: gives the # of DAGs in queue/bag. useful to determine if we have undersized cluster. \n- Celery Workers : gives the # of Workers active or dead in the Composer cluster. \n- Running Tasks : shows the # of tasks running for all running DAGs at a given point in time. again, useful for understanding cluster overloads. \n- Database CPU : shows the average CPU utilisation of the Cloud SQL database behind the Composer cluster. useful to detect heavy operations. \n- Worker Pod Evictions : shows the instances where workers were evicted from the cluster. useful to identify overloaded cluster. \n- Database disk : shows the amount of disk usage in Cloud SQL database behind the cluster. useful to decide whether to run cleanup scripts, etc. \n- Workflow Run Durations : shows the amount of time it took to execute workflows. useful to understand long running workloads. \n- Zombie Tasks Killed : shows the instances where tasks were marked as \"zombie\" and (hence) were killed. indication of cluster undersizing. ",
+            "format": "MARKDOWN"
           },
-          "title": "COMPOSER MONITOR"
+          "title": "Cloud Composer Monitor"
         },
         "width": 12,
         "xPos": 0,
@@ -54,12 +51,7 @@
                       "groupByFields": [],
                       "perSeriesAligner": "ALIGN_MIN"
                     },
-                    "filter": "metric.type=\"composer.googleapis.com/environment/num_celery_workers\" resource.type=\"cloud_composer_environment\" resource.label.\"environment_name\"=\"sb-data-projects-composer-load-test\" resource.label.\"location\"=\"us-central1\" ${Cluster}",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_NONE"
-                    }
+                    "filter": "metric.type=\"composer.googleapis.com/environment/num_celery_workers\" resource.type=\"cloud_composer_environment\" resource.label.\"environment_name\"=\"sb-data-projects-composer-load-test\" resource.label.\"location\"=\"us-central1\""
                   }
                 }
               },
@@ -77,12 +69,7 @@
                       "groupByFields": [],
                       "perSeriesAligner": "ALIGN_MIN"
                     },
-                    "filter": "metric.type=\"composer.googleapis.com/environment/worker/min_workers\" resource.type=\"cloud_composer_environment\" resource.label.\"environment_name\"=\"sb-data-projects-composer-load-test\" resource.label.\"location\"=\"us-central1\" ${Cluster}",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_NONE"
-                    }
+                    "filter": "metric.type=\"composer.googleapis.com/environment/worker/min_workers\" resource.type=\"cloud_composer_environment\" resource.label.\"environment_name\"=\"sb-data-projects-composer-load-test\" resource.label.\"location\"=\"us-central1\""
                   }
                 }
               },
@@ -100,12 +87,7 @@
                       "groupByFields": [],
                       "perSeriesAligner": "ALIGN_MIN"
                     },
-                    "filter": "metric.type=\"composer.googleapis.com/environment/worker/max_workers\" resource.type=\"cloud_composer_environment\" resource.label.\"environment_name\"=\"sb-data-projects-composer-load-test\" resource.label.\"location\"=\"us-central1\" ${Project} ${Cluster}",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_NONE"
-                    }
+                    "filter": "metric.type=\"composer.googleapis.com/environment/worker/max_workers\" resource.type=\"cloud_composer_environment\" resource.label.\"environment_name\"=\"sb-data-projects-composer-load-test\" resource.label.\"location\"=\"us-central1\""
                   }
                 }
               }
@@ -120,7 +102,7 @@
         },
         "width": 4,
         "xPos": 8,
-        "yPos": 1
+        "yPos": 3
       },
       {
         "height": 3,
@@ -149,7 +131,7 @@
         },
         "width": 4,
         "xPos": 4,
-        "yPos": 1
+        "yPos": 3
       },
       {
         "height": 3,
@@ -178,7 +160,7 @@
         },
         "width": 4,
         "xPos": 4,
-        "yPos": 4
+        "yPos": 6
       },
       {
         "height": 3,
@@ -207,7 +189,7 @@
         },
         "width": 4,
         "xPos": 0,
-        "yPos": 7
+        "yPos": 9
       },
       {
         "height": 3,
@@ -236,22 +218,31 @@
         },
         "width": 4,
         "xPos": 0,
-        "yPos": 4
+        "yPos": 6
       },
       {
         "height": 3,
         "widget": {
-          "title": "VM Instance - CPU utilization",
+          "title": "Task Queue Length",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'compute.googleapis.com/instance/cpu/utilization'\n| group_by 1m, [value_utilization_mean: mean(value.utilization)]\n| every 1m"
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"composer.googleapis.com/environment/task_queue_length\" resource.type=\"cloud_composer_environment\""
+                  }
                 }
               }
             ],
@@ -265,7 +256,7 @@
         },
         "width": 4,
         "xPos": 0,
-        "yPos": 1
+        "yPos": 3
       },
       {
         "height": 3,
@@ -294,7 +285,7 @@
         },
         "width": 4,
         "xPos": 8,
-        "yPos": 7
+        "yPos": 9
       },
       {
         "height": 3,
@@ -317,12 +308,7 @@
                       "crossSeriesReducer": "REDUCE_NONE",
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"composer.googleapis.com/workflow/run_duration\" resource.type=\"cloud_composer_workflow\" ${Project}",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_NONE"
-                    }
+                    "filter": "metric.type=\"composer.googleapis.com/workflow/run_duration\" resource.type=\"cloud_composer_workflow\""
                   }
                 }
               }
@@ -337,7 +323,7 @@
         },
         "width": 4,
         "xPos": 4,
-        "yPos": 7
+        "yPos": 9
       },
       {
         "height": 3,
@@ -360,7 +346,7 @@
                       "crossSeriesReducer": "REDUCE_NONE",
                       "perSeriesAligner": "ALIGN_RATE"
                     },
-                    "filter": "metric.type=\"composer.googleapis.com/environment/worker/pod_eviction_count\" resource.type=\"cloud_composer_environment\" ${Project} ${Cluster}",
+                    "filter": "metric.type=\"composer.googleapis.com/environment/worker/pod_eviction_count\" resource.type=\"cloud_composer_environment\"",
                     "secondaryAggregation": {
                       "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_MEAN",
@@ -381,9 +367,8 @@
         },
         "width": 4,
         "xPos": 8,
-        "yPos": 4
+        "yPos": 6
       }
     ]
-  },
-  "name": "projects/211465975746/dashboards/dfdd2946-5801-4821-9bcf-78a85e6b0e4f"
+  }
 }
