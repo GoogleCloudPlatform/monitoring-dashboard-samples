@@ -30,6 +30,7 @@
         "widget": {
           "scorecard": {
             "gaugeView": {
+              "lowerBound": 0,
               "upperBound": 100
             },
             "thresholds": [
@@ -53,7 +54,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "{ t_0:\n   fetch k8s_node\n   | metric 'kubernetes.io/node/cpu/core_usage_time'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n   | align rate(1m)\n   | every 1m\n   | group_by [], [value_core_usage_time_aggregate: aggregate(value.core_usage_time)]; \n   t_1:\nfetch k8s_node\n| metric 'kubernetes.io/node/cpu/allocatable_cores'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_allocatable_cores_mean: mean(value.allocatable_cores)]\n| every 1m\n| group_by [], [value_allocatable_cores_mean_aggregate: sum(value_allocatable_cores_mean)]}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_core_usage_time_aggregate,\n          t_1.value_allocatable_cores_mean_aggregate) * 100,\n        \"%\")]"
+              "timeSeriesQueryLanguage": "{ t_0:\n   fetch k8s_node\n   | metric 'kubernetes.io/node/cpu/core_usage_time'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n   | align rate(1m)\n   | every 1m\n   | group_by [], [value_core_usage_time_aggregate: aggregate(value.core_usage_time)]; \n   t_1:\nfetch k8s_node\n| metric 'kubernetes.io/node/cpu/total_cores'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_total_cores_mean: mean(value.total_cores)]\n| every 1m\n| group_by [], [value_total_cores_mean_aggregate: sum(value_total_cores_mean)]}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_core_usage_time_aggregate,\n          t_1.value_total_cores_mean_aggregate) * 100,\n        \"%\")]"
             }
           },
           "title": "CPU Utilization"
@@ -67,8 +68,9 @@
         "widget": {
           "scorecard": {
             "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "{ t_0:\n   fetch k8s_node\n   | metric 'kubernetes.io/node/cpu/core_usage_time'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n   | align rate(1m)\n   | every 1m\n   | group_by [], [value_core_usage_time_aggregate: aggregate(value.core_usage_time)]; \n   t_1:\nfetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_cores'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_request_cores_mean: mean(value.request_cores)]\n| every 1m\n| group_by [],\n    [value_request_cores_mean_aggregate: aggregate(value_request_cores_mean)]}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_core_usage_time_aggregate,\n          t_1.value_request_cores_mean_aggregate) * 100,\n        \"%\")]"
+              "timeSeriesQueryLanguage": "{ t_0:\n   fetch k8s_container\n   | metric 'kubernetes.io/container/cpu/core_usage_time'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n   | align rate(1m)\n   | every 1m\n   | group_by [], [value_core_usage_time_aggregate: aggregate(value.core_usage_time)]; \n   t_1:\nfetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_cores'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_request_cores_mean: mean(value.request_cores)]\n| every 1m\n| group_by [],\n    [value_request_cores_mean_aggregate: aggregate(value_request_cores_mean)]}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_core_usage_time_aggregate,\n          t_1.value_request_cores_mean_aggregate) * 100,\n        \"%\")]"
             }
           },
           "title": "CPU Request Utilization"
@@ -82,8 +84,9 @@
         "widget": {
           "scorecard": {
             "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "{ t_0:\n   fetch k8s_node\n   | metric 'kubernetes.io/node/cpu/core_usage_time'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n   | align rate(1m)\n   | every 1m\n   | group_by [], [value_core_usage_time_aggregate: aggregate(value.core_usage_time)]; \n   t_1:\nfetch k8s_container\n| metric 'kubernetes.io/container/cpu/limit_cores'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_limit_cores_mean: mean(value.limit_cores)]\n| every 1m\n| group_by [],\n    [value_limit_cores_mean_aggregate: aggregate(value_limit_cores_mean)]\n    }\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_core_usage_time_aggregate,\n          t_1.value_limit_cores_mean_aggregate) * 100,\n        \"%\")]"
+              "timeSeriesQueryLanguage": "{ t_0:\n   fetch k8s_container\n   | metric 'kubernetes.io/container/cpu/core_usage_time'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n   | align rate(1m)\n   | every 1m\n   | group_by [], [value_core_usage_time_aggregate: aggregate(value.core_usage_time)]; \n   t_1:\nfetch k8s_container\n| metric 'kubernetes.io/container/cpu/limit_cores'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_limit_cores_mean: mean(value.limit_cores)]\n| every 1m\n| group_by [],\n    [value_limit_cores_mean_aggregate: aggregate(value_limit_cores_mean)]\n    }\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_core_usage_time_aggregate,\n          t_1.value_limit_cores_mean_aggregate) * 100,\n        \"%\")]"
             }
           },
           "title": "CPU Limit Utilization"
@@ -97,6 +100,7 @@
         "widget": {
           "scorecard": {
             "gaugeView": {
+              "lowerBound": 0,
               "upperBound": 100
             },
             "thresholds": [
@@ -114,7 +118,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "{ t_0:\nfetch k8s_node\n| metric 'kubernetes.io/node/memory/used_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_used_bytes_mean: mean(value.used_bytes)]\n| every 1m\n| group_by [],\n    [value_used_bytes_mean_aggregate: aggregate(value_used_bytes_mean)]\n\n   ; \n   t_1:\nfetch k8s_node\n| metric 'kubernetes.io/node/memory/allocatable_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_allocatable_bytes_mean: mean(value.allocatable_bytes)]\n| every 1m\n| group_by [],\n    [value_allocatable_bytes_mean_aggregate: aggregate(value_allocatable_bytes_mean)]}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_used_bytes_mean_aggregate,\n          t_1.value_allocatable_bytes_mean_aggregate) * 100,\n        \"%\")]\n"
+              "timeSeriesQueryLanguage": "{ t_0:\nfetch k8s_node\n| metric 'kubernetes.io/node/memory/used_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_used_bytes_mean: mean(value.used_bytes)]\n| every 1m\n| group_by [],\n    [value_used_bytes_mean_aggregate: aggregate(value_used_bytes_mean)]\n\n   ; \n   t_1:\nfetch k8s_node\n| metric 'kubernetes.io/node/memory/total_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_total_bytes_mean: mean(value.total_bytes)]\n| every 1m\n| group_by [],\n    [value_total_bytes_mean_aggregate: aggregate(value_total_bytes_mean)]}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_used_bytes_mean_aggregate,\n          t_1.value_total_bytes_mean_aggregate) * 100,\n        \"%\")]\n"
             }
           },
           "title": "Memory Utilization"
@@ -128,8 +132,9 @@
         "widget": {
           "scorecard": {
             "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "{ t_0:\nfetch k8s_node\n| metric 'kubernetes.io/node/memory/used_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_used_bytes_mean: mean(value.used_bytes)]\n| every 1m\n| group_by [],\n    [value_used_bytes_mean_aggregate: aggregate(value_used_bytes_mean)]\n\n   ; \n   t_1:\nfetch k8s_container\n| metric 'kubernetes.io/container/memory/request_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_request_bytes_mean: mean(value.request_bytes)]\n| every 1m\n| group_by [], [value_request_bytes_mean_aggregate: aggregate(value_request_bytes_mean)]}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_used_bytes_mean_aggregate,\n          t_1.value_request_bytes_mean_aggregate) * 100,\n        \"%\")]\n"
+              "timeSeriesQueryLanguage": "{ t_0:\nfetch k8s_container\n| metric 'kubernetes.io/container/memory/used_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_used_bytes_mean: mean(value.used_bytes)]\n| every 1m\n| group_by [],\n    [value_used_bytes_mean_aggregate: aggregate(value_used_bytes_mean)]\n\n   ; \n   t_1:\nfetch k8s_container\n| metric 'kubernetes.io/container/memory/request_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_request_bytes_mean: mean(value.request_bytes)]\n| every 1m\n| group_by [], [value_request_bytes_mean_aggregate: aggregate(value_request_bytes_mean)]}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_used_bytes_mean_aggregate,\n          t_1.value_request_bytes_mean_aggregate) * 100,\n        \"%\")]\n"
             }
           },
           "title": "Memory Request Utilization"
@@ -143,8 +148,9 @@
         "widget": {
           "scorecard": {
             "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "{ t_0:\nfetch k8s_node\n| metric 'kubernetes.io/node/memory/used_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_used_bytes_mean: mean(value.used_bytes)]\n| every 1m\n| group_by [],\n    [value_used_bytes_mean_aggregate: aggregate(value_used_bytes_mean)]\n\n   ; \n   t_1:\nfetch k8s_container\n| metric 'kubernetes.io/container/memory/limit_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_limit_bytes_mean: mean(value.limit_bytes)]\n| every 1m\n| group_by [], [value_limit_bytes_mean_aggregate: aggregate(value_limit_bytes_mean)]}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_used_bytes_mean_aggregate,\n          t_1.value_limit_bytes_mean_aggregate) * 100,\n        \"%\")]\n"
+              "timeSeriesQueryLanguage": "{ t_0:\nfetch k8s_container\n| metric 'kubernetes.io/container/memory/used_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_used_bytes_mean: mean(value.used_bytes)]\n| every 1m\n| group_by [],\n    [value_used_bytes_mean_aggregate: aggregate(value_used_bytes_mean)]\n\n   ; \n   t_1:\nfetch k8s_container\n| metric 'kubernetes.io/container/memory/limit_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m, [value_limit_bytes_mean: mean(value.limit_bytes)]\n| every 1m\n| group_by [], [value_limit_bytes_mean_aggregate: aggregate(value_limit_bytes_mean)]}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_used_bytes_mean_aggregate,\n          t_1.value_limit_bytes_mean_aggregate) * 100,\n        \"%\")]\n"
             }
           },
           "title": "Memory Limit Utilization"
@@ -187,6 +193,7 @@
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -227,6 +234,7 @@
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -265,7 +273,7 @@
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
                         "resource.label.\"namespace_name\"",
-                        "metadata.system_labels.\"component_name\""
+                        "metadata.system_labels.\"top_level_controller_name\""
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     }
@@ -273,6 +281,7 @@
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -311,7 +320,7 @@
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
                         "resource.label.\"namespace_name\"",
-                        "metadata.system_labels.\"component_name\""
+                        "metadata.system_labels.\"top_level_controller_name\""
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     }
@@ -319,6 +328,7 @@
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -333,7 +343,7 @@
       {
         "height": 4,
         "widget": {
-          "title": "Average container bandwidth: received",
+          "title": "Average pod bandwidth: received",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -357,7 +367,7 @@
                       "crossSeriesReducer": "REDUCE_MEAN",
                       "groupByFields": [
                         "resource.label.\"namespace_name\"",
-                        "metadata.system_labels.\"component_name\""
+                        "metadata.system_labels.\"top_level_controller_name\""
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     }
@@ -365,6 +375,7 @@
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -379,7 +390,7 @@
       {
         "height": 4,
         "widget": {
-          "title": "Average container bandwidth: transmitted",
+          "title": "Average pod bandwidth: transmitted",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -403,7 +414,7 @@
                       "crossSeriesReducer": "REDUCE_MEAN",
                       "groupByFields": [
                         "resource.label.\"namespace_name\"",
-                        "metadata.system_labels.\"component_name\""
+                        "metadata.system_labels.\"top_level_controller_name\""
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     }
@@ -411,6 +422,7 @@
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -468,6 +480,7 @@
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
@@ -513,6 +526,7 @@
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "label": "y1Axis",
