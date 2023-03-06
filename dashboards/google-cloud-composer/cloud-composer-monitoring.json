@@ -3,14 +3,16 @@
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
-      "labelKey": "project_id"
+      "labelKey": "project_id",
+      "templateVariable": ""
     },
     {
       "filterType": "RESOURCE_LABEL",
-      "labelKey": "environment_name"
+      "labelKey": "environment_name",
+      "templateVariable": ""
     }
   ],
-  "displayName": "cloud-composer-monitor",
+  "displayName": "cloud-composer-monitoring",
   "labels": {},
   "mosaicLayout": {
     "columns": 12,
@@ -22,7 +24,7 @@
             "content": "- This dashboard is useful to detect over-utilization as well as under-sizing issues with Cloud Composer clusters in a given GCP Project. \n- Moreover, this would act as a one pager monitoring solution to look only at the critical areas of a given Cloud Composer environment. \n- Below is the list and a quick info about the charts included in this Dashboard. \n\n- Task Queue Length : gives the # of tasks in queue per 60 seconds in the Cluster. useful to understand processing bottlenecks. \n- Dagbag Size: gives the # of DAGs in queue/bag. useful to determine if we have undersized cluster. \n- Celery Workers : gives the # of Workers active or dead in the Composer cluster. \n- Running Tasks : shows the # of tasks running for all running DAGs at a given point in time. again, useful for understanding cluster overloads. \n- Database CPU : shows the average CPU utilisation of the Cloud SQL database behind the Composer cluster. useful to detect heavy operations. \n- Worker Pod Evictions : shows the instances where workers were evicted from the cluster. useful to identify overloaded cluster. \n- Database disk : shows the amount of disk usage in Cloud SQL database behind the cluster. useful to decide whether to run cleanup scripts, etc. \n- Workflow Run Durations : shows the amount of time it took to execute workflows. useful to understand long running workloads. \n- Zombie Tasks Killed : shows the instances where tasks were marked as \"zombie\" and (hence) were killed. indication of cluster undersizing. ",
             "format": "MARKDOWN"
           },
-          "title": "Cloud Composer Monitor"
+          "title": "Cloud Composer Monitoring"
         },
         "width": 12,
         "xPos": 0,
@@ -51,7 +53,7 @@
                       "groupByFields": [],
                       "perSeriesAligner": "ALIGN_MIN"
                     },
-                    "filter": "metric.type=\"composer.googleapis.com/environment/num_celery_workers\" resource.type=\"cloud_composer_environment\" resource.label.\"environment_name\"=\"sb-data-projects-composer-load-test\" resource.label.\"location\"=\"us-central1\""
+                    "filter": "metric.type=\"composer.googleapis.com/environment/num_celery_workers\" resource.type=\"cloud_composer_environment\""
                   }
                 }
               },
@@ -69,7 +71,7 @@
                       "groupByFields": [],
                       "perSeriesAligner": "ALIGN_MIN"
                     },
-                    "filter": "metric.type=\"composer.googleapis.com/environment/worker/min_workers\" resource.type=\"cloud_composer_environment\" resource.label.\"environment_name\"=\"sb-data-projects-composer-load-test\" resource.label.\"location\"=\"us-central1\""
+                    "filter": "metric.type=\"composer.googleapis.com/environment/worker/min_workers\" resource.type=\"cloud_composer_environment\""
                   }
                 }
               },
@@ -87,7 +89,7 @@
                       "groupByFields": [],
                       "perSeriesAligner": "ALIGN_MIN"
                     },
-                    "filter": "metric.type=\"composer.googleapis.com/environment/worker/max_workers\" resource.type=\"cloud_composer_environment\" resource.label.\"environment_name\"=\"sb-data-projects-composer-load-test\" resource.label.\"location\"=\"us-central1\""
+                    "filter": "metric.type=\"composer.googleapis.com/environment/worker/max_workers\" resource.type=\"cloud_composer_environment\""
                   }
                 }
               }
@@ -114,10 +116,19 @@
             },
             "dataSets": [
               {
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch\n  cloud_composer_environment::composer.googleapis.com/environment/dagbag_size"
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"composer.googleapis.com/environment/dagbag_size\" resource.type=\"cloud_composer_environment\""
+                  }
                 }
               }
             ],
@@ -143,10 +154,19 @@
             },
             "dataSets": [
               {
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch\n  cloud_composer_environment ::\n  composer.googleapis.com/environment/database/cpu/utilization"
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"composer.googleapis.com/environment/database/cpu/utilization\" resource.type=\"cloud_composer_environment\""
+                  }
                 }
               }
             ],
@@ -172,10 +192,19 @@
             },
             "dataSets": [
               {
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch\n  cloud_composer_environment ::\n  composer.googleapis.com/environment/database/disk/utilization"
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"composer.googleapis.com/environment/database/disk/utilization\" resource.type=\"cloud_composer_environment\""
+                  }
                 }
               }
             ],
@@ -201,10 +230,19 @@
             },
             "dataSets": [
               {
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch\n  cloud_composer_environment ::\n  composer.googleapis.com/environment/executor/running_tasks"
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"composer.googleapis.com/environment/executor/running_tasks\" resource.type=\"cloud_composer_environment\""
+                  }
                 }
               }
             ],
