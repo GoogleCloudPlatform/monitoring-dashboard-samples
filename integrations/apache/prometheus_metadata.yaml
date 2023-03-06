@@ -1,0 +1,44 @@
+platforms:
+  - type: GKE
+    launch_stage: HIDDEN
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/apache_connections/gauge
+    exporter_metadata:
+      name: Apache HTTP Prometheus Exporter
+      doc_url: https://github.com/Lusitaniae/apache_exporter
+      minimum_supported_version: v0.11.0
+    default_metrics:
+      - name: prometheus.googleapis.com/apache_sent_kilobytes_total/counter
+        prometheus_name: apache_sent_kilobytes_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/apache_duration_ms_total/counter
+        prometheus_name: apache_duration_ms_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/apache_connections/gauge
+        prometheus_name: apache_connections
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/apache_scoreboard/gauge
+        prometheus_name: apache_scoreboard
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/apache_workers/gauge
+        prometheus_name: apache_workers
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/apache_processes/gauge
+        prometheus_name: apache_processes
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/apache_cpuload/gauge
+        prometheus_name: apache_cpuload
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/apache_load/gauge
+        prometheus_name: apache_load
+        kind: GAUGE
+        value_type: DOUBLE
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/apache
