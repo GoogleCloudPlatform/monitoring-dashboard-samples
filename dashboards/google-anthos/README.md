@@ -29,7 +29,7 @@
 
 &nbsp;
 
-|Anthos Cluster vSphere VM Health|
+|Anthos Cluster on VMware VM Status|
 |:---------------------|
-|Filename: [anthos-cluster-vSphere-vm-health.json](anthos-cluster-vSphere-vm-health.json)|
-|This dashboard has 4 charts to indicate the health of vSphere VMs, including CPU readiness per vCPU, Memory page-fault latency, Average virtual disk read latency, and Average virtual disk write latency.|
+|Filename: [anthos-cluster-on-vmware-vm-status.json](anthos-cluster-on-vmware-vm-status.json)|
+|This dashboard has 4 charts to indicate the health of VMware VMs, including CPU readiness per vCPU, Memory page-fault latency, Average virtual disk read latency, and Average virtual disk write latency.|
