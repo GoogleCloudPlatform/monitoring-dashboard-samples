@@ -1,0 +1,146 @@
+exporter_type: sidecar
+app_name_short: Hadoop
+app_name: Apache {{app_name_short}}
+app_site_name: Apache Hadoop
+app_site_url: https://hadoop.apache.org/
+exporter_name: the JMX exporter
+exporter_pkg_name: jmx-exporter
+exporter_repo_url: https://github.com/bitnami/containers/tree/main/bitnami/jmx-exporter
+dashboard_available: true
+minimum_exporter_version: "0.17.0"
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+config_mods: |
+  + apiVersion: v1
+  + kind: ConfigMap
+  + metadata:
+  +   name: hadoop-exporter
+  + data:
+  +   config.yaml: |
+  +     hostPort: localhost:1026
+  +     lowercaseOutputName: true
+  +     lowercaseOutputLabelNames: true
+  ---
+  apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: hadoop-hdfs
+  spec:
+    serviceName: hadoop-hdfs
+    selector:
+      matchLabels:
+  +     app.kubernetes.io/name: hadoop
+    template:
+      metadata:
+        labels:
+  +       app.kubernetes.io/name: hadoop
+      spec:
+        containers:
+        - name: hadoop-hdfs
+          image: "farberg/apache-hadoop:3.3.2"
+  +       env:
+  +         - name: HDFS_NAMENODE_OPTS
+  +           value: "-Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=1026"
+          command:
+          - "/bin/bash"
+          - "/tmp/hadoop-config/bootstrap.sh"
+          - "-d"
+  +       ports:
+  +       - containerPort: 1026
+  +         name: jmx
+  +     - name: exporter
+  +       image: bitnami/jmx-exporter:0.17.0
+  +       command:
+  +         - java
+  +         - -jar
+  +         - jmx_prometheus_httpserver.jar
+  +       args:
+  +         - "9900" 
+  +         - config.yaml
+  +       ports:
+  +       - containerPort: 9900
+  +         name: prometheus
+  +       volumeMounts:
+  +       - mountPath: /opt/bitnami/jmx-exporter/config.yaml
+  +         subPath: config.yaml
+  +         name: hadoop-exporter
+  +     volumes:
+  +     - name: hadoop-exporter
+  +       configMap:
+  +         name: hadoop-exporter
+  +         items:
+  +         - key: config.yaml
+  +           path: config.yaml
+additional_install_info: |
+  These instructions are based on changes made to a [helm chart](https://artifacthub.io/packages/helm/apache-hadoop-helm/hadoop).
+  The templates can be downloaded and altered. The example above is shown as if everything was in a single YAML file. 
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: hadoop
+    labels:
+      app.kubernetes.io/name: hadoop
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: prometheus
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: hadoop
+additional_prereq_info: |
+  Ensure that the values of the `port` and `matchLabels` fields match those of the {{app_name_short}} pods you want to monitor.
+  NameNodes and DataNodes must be configured to accept remote JMX connections.
+  This can be done by setting `NAMENODE_HDFS_OPTS` and `DATANODE_HDFS_OPTS` [accordingly](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/UnixShellGuide.html).
+sample_promql_query: up{job="hadoop", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: hadoop-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: hadoop-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: hadoop
+      interval: 30s
+      rules:
+      - alert: HadoopDown
+        annotations:
+          description: |-
+            Hadoop instance is down
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Hadoop down (instance {{ $labels.instance }})
+        expr: hadoop_namenode_numdeaddatanodes > 0
+        for: 5m
+        labels:
+          severity: critical
+      - alert: HadoopLowAvailableCapacity
+        annotations:
+          description: |-
+            Hadoop low available capacity
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Hadoop low available capacity (instance {{ $labels.instance }})
+        expr: (hadoop_namenode_capacityused/hadoop_namenode_capacitytotal) > 0.8
+        for: 5m
+        labels:
+          severity: critical
+      - alert: HadoopVolumeFailure
+        annotations:
+          description: |-
+            Hadoop volume failure
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Hadoop volume failure (instance {{ $labels.instance }})
+        expr: hadoop_namenode_volumefailurestotal > 0
+        for: 5m
+        labels:
+          severity: critical
+additional_alert_info: You can adjust the alert thresholds to suit your application.
