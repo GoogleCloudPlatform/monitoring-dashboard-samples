@@ -138,12 +138,12 @@ config_mods: |
   spec:
     selector:
       matchLabels:
-  +     app.kubernetes.io/name: jetty
+  +      app.kubernetes.io/name: jetty
     replicas: 1
     template:
       metadata:
         labels:
-  +       app.kubernetes.io/name: jetty
+  +        app.kubernetes.io/name: jetty
       spec:
         containers:
         - name: jetty
@@ -157,29 +157,29 @@ config_mods: |
   +        args:
   +        - "--module=jmx"
   +        - "jetty.threadPool.maxThreads=500"
-  +     - name: exporter
-  +       image: bitnami/jmx-exporter:0.17.0
-  +       ports:
-  +       - containerPort: 9000
-  +         name: prometheus
-  +       command:
-  +         - java
-  +         - -jar
-  +         - jmx_prometheus_httpserver.jar
-  +       args:
-  +         - "9000"
-  +         - /opt/jmx_exporter/config.yaml
-  +       volumeMounts:
-  +       - mountPath: /opt/jmx_exporter/config.yaml
-  +         subPath: config.yaml
-  +         name: jetty-exporter
-  +     volumes:
-  +     - name: jetty-exporter
-  +       configMap:
-  +         name: jetty-exporter
-  +         items:
-  +         - key: config.yaml
-  +           path: config.yaml
+  +      - name: exporter
+  +        image: bitnami/jmx-exporter:0.17.2
+  +        ports:
+  +        - containerPort: 9000
+  +          name: prometheus
+  +        command:
+  +          - java
+  +          - -jar
+  +          - jmx_prometheus_httpserver.jar
+  +        args:
+  +          - "9000"
+  +          - /opt/jmx_exporter/config.yaml
+  +        volumeMounts:
+  +        - mountPath: /opt/jmx_exporter/config.yaml
+  +          subPath: config.yaml
+  +          name: jetty-exporter
+  +      volumes:
+  +      - name: jetty-exporter
+  +        configMap:
+  +          name: jetty-exporter
+  +          items:
+  +          - key: config.yaml
+  +            path: config.yaml
 ---
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
