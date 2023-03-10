@@ -7,7 +7,7 @@
     "columns": 12,
     "tiles": [
       {
-        "height": 20,
+        "height": 24,
         "widget": {
           "collapsibleGroup": {
             "collapsed": false
@@ -28,7 +28,7 @@
         },
         "width": 12,
         "xPos": 0,
-        "yPos": 20
+        "yPos": 24
       },
       {
         "height": 4,
@@ -43,13 +43,14 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n  | { t_0:\n      metric 'custom.googleapis.com/opencensus/grpc.io/client/completed_rpcs'\n        | filter (metric.grpc_client_status != 'OK')\n        | align delta(1m)\n        | every 1m\n        | group_by drop [metric.grpc_client_status],\n            [error_rpcs_aggregate: aggregate(value.completed_rpcs)]\n      ; t_1:\n      metric 'custom.googleapis.com/opencensus/grpc.io/client/completed_rpcs'\n        | align delta(1m)\n        | every 1m\n        | group_by drop [metric.grpc_client_status],\n            [completed_rpcs_aggregate: aggregate(value.completed_rpcs)] }\n  | outer_join [0]\n  | value [concurrent_rpcs: div(t_0.error_rpcs_aggregate, t_1.completed_rpcs_aggregate)]\n"
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n  | { t_0:\n      metric 'custom.googleapis.com/opencensus/grpc.io/client/completed_rpcs'\n        | align delta(1m)\n        | every 1m\n        | group_by ignore [metric.grpc_client_status],\n            [completed_rpcs_aggregate: aggregate(value.completed_rpcs)]\n      ; t_1:\n      metric 'custom.googleapis.com/opencensus/grpc.io/client/completed_rpcs'\n        | filter (metric.grpc_client_status != 'OK')\n        | align delta(1m)\n        | every 1m }\n  | outer_join [0]\n  | value [error_rpc_ratio: div(t_1.completed_rpcs, t_0.completed_rpcs_aggregate)]\n"
                 }
               }
             ],
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "y1Axis",
               "scale": "LINEAR"
             }
           }
@@ -78,6 +79,7 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -106,6 +108,7 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -134,6 +137,7 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -155,20 +159,21 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n  | { t_0:\n      metric 'custom.googleapis.com/opencensus/grpc.io/server/completed_rpcs'\n        | filter (metric.grpc_server_status != 'OK')\n        | align delta(1m)\n        | every 1m\n        | group_by drop [metric.grpc_server_status],\n            [error_rpcs_aggregate: aggregate(value.completed_rpcs)]\n      ; t_1:\n      metric 'custom.googleapis.com/opencensus/grpc.io/server/completed_rpcs'\n        | align delta(1m)\n        | every 1m\n        | group_by drop [metric.grpc_server_status],\n            [completed_rpcs_aggregate: aggregate(value.completed_rpcs)] }\n  | outer_join [0]\n  | value [concurrent_rpcs: div(t_0.error_rpcs_aggregate, t_1.completed_rpcs_aggregate)]\n"
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n  | { t_0:\n      metric 'custom.googleapis.com/opencensus/grpc.io/server/completed_rpcs'\n        | align delta(1m)\n        | every 1m\n        | group_by drop [metric.grpc_server_status],\n            [completed_rpcs_aggregate: aggregate(value.completed_rpcs)]\n      ; t_1:\n      metric 'custom.googleapis.com/opencensus/grpc.io/server/completed_rpcs'\n        | filter (metric.grpc_server_status != 'OK')\n        | align delta(1m)\n        | every 1m }\n  | outer_join [0]\n  | value [error_rpc_ratio: div(t_1.completed_rpcs, t_0.completed_rpcs_aggregate)]\n"
                 }
               }
             ],
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "y1Axis",
               "scale": "LINEAR"
             }
           }
         },
         "width": 6,
         "xPos": 6,
-        "yPos": 24
+        "yPos": 28
       },
       {
         "height": 4,
@@ -190,13 +195,14 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
         "width": 6,
         "xPos": 6,
-        "yPos": 20
+        "yPos": 24
       },
       {
         "height": 4,
@@ -218,13 +224,14 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
         "width": 6,
         "xPos": 0,
-        "yPos": 20
+        "yPos": 24
       },
       {
         "height": 4,
@@ -246,13 +253,14 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
         "width": 6,
         "xPos": 0,
-        "yPos": 24
+        "yPos": 28
       },
       {
         "height": 4,
@@ -274,6 +282,7 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -302,6 +311,7 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -330,13 +340,14 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
         "width": 6,
         "xPos": 0,
-        "yPos": 12
+        "yPos": 16
       },
       {
         "height": 4,
@@ -358,13 +369,14 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
         "width": 6,
         "xPos": 6,
-        "yPos": 12
+        "yPos": 16
       },
       {
         "height": 4,
@@ -386,13 +398,14 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
         "width": 6,
         "xPos": 6,
-        "yPos": 16
+        "yPos": 20
       },
       {
         "height": 4,
@@ -414,13 +427,14 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
         "width": 6,
         "xPos": 0,
-        "yPos": 16
+        "yPos": 20
       },
       {
         "height": 4,
@@ -442,13 +456,14 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
         "width": 6,
         "xPos": 0,
-        "yPos": 32
+        "yPos": 36
       },
       {
         "height": 4,
@@ -470,13 +485,14 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
         "width": 6,
         "xPos": 6,
-        "yPos": 36
+        "yPos": 40
       },
       {
         "height": 4,
@@ -498,13 +514,14 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
         "width": 6,
         "xPos": 0,
-        "yPos": 36
+        "yPos": 40
       },
       {
         "height": 4,
@@ -526,13 +543,14 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
         "width": 6,
         "xPos": 6,
-        "yPos": 32
+        "yPos": 36
       },
       {
         "height": 4,
@@ -554,13 +572,14 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
         "width": 6,
         "xPos": 0,
-        "yPos": 28
+        "yPos": 32
       },
       {
         "height": 4,
@@ -582,13 +601,72 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
         "width": 6,
         "xPos": 6,
-        "yPos": 28
+        "yPos": 32
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Client API Latency",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n    | metric custom.googleapis.com/opencensus/grpc.io/client/api_latency\n    | group_by 1m, [api_latency_aligned: aggregate(value.api_latency)]\n    | every 1m\n    | group_by [], [api_latency_aggregated: aggregate(api_latency_aligned)]\n    | { t_0:\n          group_by [], [api_latency_stats_value: percentile(api_latency_aggregated, 50)]\n            | map add[api_latency_stats_tag: '50 percentile']\n      ; t_1:\n          group_by [], [api_latency_stats_value: percentile(api_latency_aggregated, 95)]\n            | map add[api_latency_stats_tag: '95 percentile']\n      ; t_2:\n          group_by [], [api_latency_stats_value: percentile(api_latency_aggregated, 99)]\n            | map add[api_latency_stats_tag: '99 percentile']\n      ; t_3:\n          group_by [], [api_latency_stats_value: mean(api_latency_aggregated)]\n            | map add[api_latency_stats_tag: 'mean']}\n    | union\n"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 0,
+        "yPos": 12
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Client API Latency",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "HEATMAP",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n  | metric custom.googleapis.com/opencensus/grpc.io/client/api_latency\n  | align delta(1m)\n  | every 1m\n  | group_by [], [api_latency_aggregate: aggregate(value.api_latency)]\n  | map add[legend_tag: 'Client API Latency']"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 12
       }
     ]
   }
