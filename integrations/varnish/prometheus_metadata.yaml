@@ -1,0 +1,60 @@
+platforms:
+  - type: GKE
+    launch_stage: HIDDEN
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/varnish_main_sessions/counter
+    exporter_metadata:
+      name: Varnish Prometheus Exporter
+      doc_url: https://github.com/jonnenauha/prometheus_varnish_exporter
+      minimum_supported_version: "1.6.1"
+    default_metrics:
+      - name: prometheus.googleapis.com/varnish_backend_conn/gauge
+        prometheus_name: varnish_backend_conn
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/varnish_backend_fail/gauge
+        prometheus_name: varnish_backend_fail
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/varnish_main_sessions/counter
+        prometheus_name: varnish_main_sessions
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/varnish_main_client_req/counter
+        prometheus_name: varnish_main_client_req
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/varnish_main_client_req_400/counter
+        prometheus_name: varnish_main_client_req_400
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/varnish_main_threads/gauge
+        prometheus_name: varnish_main_threads
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/varnish_main_threads_failed/counter
+        prometheus_name: varnish_main_threads_failed
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/varnish_main_cache_hit/counter
+        prometheus_name: varnish_main_cache_hit
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/varnish_main_cache_miss/counter
+        prometheus_name: varnish_main_cache_miss
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/varnish_main_n_expired/counter
+        prometheus_name: varnish_main_n_expired
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/varnish_main_n_object/gauge
+        prometheus_name: varnish_main_n_object
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/varnish_main_n_obj_purged/gauge
+        prometheus_name: varnish_main_n_obj_purged
+        kind: CUMULATIVE
+        value_type: DOUBLE
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/varnish

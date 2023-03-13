@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "Varnish Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -17,7 +35,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "varnish_backend_conn"
+                  "prometheusQuery": "varnish_backend_conn{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -44,7 +62,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(varnish_main_sessions{type=\"conn\"}[5m])"
+                  "prometheusQuery": "rate(varnish_main_sessions{type=\"conn\",${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -71,7 +89,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(varnish_main_client_req[5m])"
+                  "prometheusQuery": "rate(varnish_main_client_req{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -98,7 +116,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "varnish_main_client_req_400"
+                  "prometheusQuery": "varnish_main_client_req_400{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -125,7 +143,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "varnish_main_threads"
+                  "prometheusQuery": "varnish_main_threads{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -152,14 +170,14 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(varnish_main_cache_hit[5m])"
+                  "prometheusQuery": "rate(varnish_main_cache_hit{${Cluster},${Location},${Namespace}}[5m])"
                 }
               },
               {
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(varnish_main_cache_miss[5m])"
+                  "prometheusQuery": "rate(varnish_main_cache_miss{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -186,7 +204,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "varnish_main_n_expired"
+                  "prometheusQuery": "varnish_main_n_expired{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -213,7 +231,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "varnish_main_n_object"
+                  "prometheusQuery": "varnish_main_n_object{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
