@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "Apache Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -17,7 +35,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "apache_connections"
+                  "prometheusQuery": "apache_connections{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -44,7 +62,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(apache_sent_kilobytes_total[5m])"
+                  "prometheusQuery": "rate(apache_sent_kilobytes_total{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -71,7 +89,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(apache_duration_ms_total[5m])"
+                  "prometheusQuery": "rate(apache_duration_ms_total{${Cluster},${Location},${Namespace}}[5m])"
                 }
               }
             ],
@@ -98,7 +116,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "apache_scoreboard"
+                  "prometheusQuery": "apache_scoreboard{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -125,7 +143,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "apache_workers"
+                  "prometheusQuery": "apache_workers{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -152,7 +170,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "apache_cpuload"
+                  "prometheusQuery": "apache_cpuload{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -179,7 +197,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "apache_load"
+                  "prometheusQuery": "apache_load{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -206,7 +224,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "apache_processes"
+                  "prometheusQuery": "apache_processes{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
