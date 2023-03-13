@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "Solr Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -17,7 +35,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "solr_core_Value{category=\"SEARCHER\",scope=\"searcher\",name=\"numDocs\"}"
+                  "prometheusQuery": "solr_core_Value{category=\"SEARCHER\",scope=\"searcher\",name=\"numDocs\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -44,7 +62,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "solr_core_Value{category=\"INDEX\", name=\"sizeInBytes\"}"
+                  "prometheusQuery": "solr_core_Value{category=\"INDEX\", name=\"sizeInBytes\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -71,14 +89,14 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "solr_core_cumulative_hits{name=\"queryResultCache\"}"
+                  "prometheusQuery": "solr_core_cumulative_hits{name=\"queryResultCache\",${Cluster},${Location},${Namespace}}"
                 }
               },
               {
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "solr_core_cumulative_lookups{name=\"queryResultCache\"}"
+                  "prometheusQuery": "solr_core_cumulative_lookups{name=\"queryResultCache\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -105,7 +123,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "solr_core_size{name=\"queryResultCache\"}"
+                  "prometheusQuery": "solr_core_size{name=\"queryResultCache\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -132,7 +150,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "solr_core_Count{name=\"requests\", category=\"QUERY\"}"
+                  "prometheusQuery": "solr_core_Count{name=\"requests\", category=\"QUERY\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -159,7 +177,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "solr_core_Count{name=\"errors\", category=\"QUERY\"}"
+                  "prometheusQuery": "solr_core_Count{name=\"errors\", category=\"QUERY\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -186,7 +204,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "solr_core_Mean{name=\"requestTimes\", category=\"QUERY\"}"
+                  "prometheusQuery": "solr_core_Mean{name=\"requestTimes\", category=\"QUERY\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -213,7 +231,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "solr_core_Count{name=\"requests\", category=\"UPDATE\"}"
+                  "prometheusQuery": "solr_core_Count{name=\"requests\", category=\"UPDATE\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -240,7 +258,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "solr_core_Count{name=\"errors\", category=\"UPDATE\"}"
+                  "prometheusQuery": "solr_core_Count{name=\"errors\", category=\"UPDATE\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -267,7 +285,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "solr_core_Mean{name=\"requestTimes\", category=\"UPDATE\"}"
+                  "prometheusQuery": "solr_core_Mean{name=\"requestTimes\", category=\"UPDATE\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
