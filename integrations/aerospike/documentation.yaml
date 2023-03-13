@@ -64,3 +64,51 @@ podmonitoring_config: |
       matchLabels:
        app.kubernetes.io/name: aerospike
 sample_promql_query: up{job="aerospike", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: aerospike-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: aerospike-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: aerospike
+      interval: 30s
+      rules:
+      - alert: AerospikeHighMemoryUtilization
+        annotations:
+          description: |-
+            Aerospike high memory utilization
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Aerospike high memory utilization (instance {{ $labels.instance }})
+        expr: aerospike_node_stats_system_free_mem_pct < 5
+        for: 5m
+        labels:
+          severity: critical
+      - alert: AerospikeHighNamespaceDiskUtilization
+        annotations:
+          description: |-
+            Aerospike high namespace disk utilization
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Aerospike high namespace disk utilization (instance {{ $labels.instance }})
+        expr: aerospike_namespace_device_available_pct < 5
+        for: 5m
+        labels:
+          severity: warning
+      - alert: AerospikeHighNamespaceMemoryUtilization
+        annotations:
+          description: |-
+            Aerospike high namespace memory utilization
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Aerospike high namespace memory utilization (instance {{ $labels.instance }})
+        expr: aerospike_namespace_memory_free_pct < 5
+        for: 5m
+        labels:
+          severity: warning
+additional_alert_info: You can adjust the alert thresholds to suit your application.
