@@ -78,3 +78,51 @@ podmonitoring_config: |
       matchLabels:
         app.kubernetes.io/name: couchdb
 sample_promql_query: up{job="couchdb", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: couchdb-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: couchdb-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: couchdb
+      interval: 30s
+      rules:
+      - alert: CouchDBHighRequestRate
+        annotations:
+          description: |-
+            CouchDB high request rate
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: CouchDB high request rate (instance {{ $labels.instance }})
+        expr: rate(couchdb_httpd_requests[5m]) > 100
+        for: 5m
+        labels:
+          severity: warning
+      - alert: CouchDBHighServerErrorRate
+        annotations:
+          description: |-
+            CouchDB high server error rate
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: CouchDB high server error rate (instance {{ $labels.instance }})
+        expr: rate(couchdb_httpd_status_codes{code="500"}[5m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+      - alert: CouchDBLowRequestRate
+        annotations:
+          description: |-
+            CouchDB low request rate
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: CouchDB low request rate (instance {{ $labels.instance }})
+        expr: rate(couchdb_httpd_requests[5m]) < 10
+        for: 5m
+        labels:
+          severity: warning
+additional_alert_info: You can adjust the alert thresholds to suit your application.
