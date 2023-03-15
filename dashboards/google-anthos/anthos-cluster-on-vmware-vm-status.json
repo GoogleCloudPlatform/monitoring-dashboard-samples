@@ -9,7 +9,7 @@
           "dataSets": [
             {
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "{ fetch k8s_pod::kubernetes.io/anthos/vm_cpu_ready_seconds | align rate(1m) | add[cluster_name: if(re_full_match(resource.namespace_name, 'kube-system'), resource.cluster_name, resource.namespace_name), ]| every 1m | group_by [resource.project_id, cluster_name, resource.location, metric.node], [value_vm_cpu_ready_seconds_aggregate: aggregate(value.vm_cpu_ready_seconds)]; fetch k8s_container::kubernetes.io/anthos/kube_node_status_capacity | filter (metric.resource == 'cpu') | every 1m | add[cluster_name: resource.cluster_name ] | group_by [resource.project_id, resource.location, cluster_name, metric.node], [value_kube_node_status_capacity_cpu_cores_aggregate: aggregate(value.kube_node_status_capacity)] } | join | div | mul (100)"
+                "timeSeriesQueryLanguage": "{ fetch k8s_pod::kubernetes.io/anthos/vm_cpu_ready_seconds\n  | align rate(1m)\n  | add\n      [cluster_name:\n         if(re_full_match(resource.namespace_name, 'kube-system'),\n           resource.cluster_name, resource.namespace_name)]\n  | every 1m\n  | group_by\n      [resource.project_id, cluster_name, resource.location, metric.node],\n      [value_vm_cpu_ready_seconds_aggregate:\n         aggregate(value.vm_cpu_ready_seconds)]\n; fetch k8s_container::kubernetes.io/anthos/kube_node_status_capacity\n  | filter (metric.resource == 'cpu')\n  | every 1m\n  | add [cluster_name: resource.cluster_name]\n  | group_by\n      [resource.project_id, resource.location, cluster_name, metric.node],\n      [value_kube_node_status_capacity_cpu_cores_aggregate:\n         aggregate(value.kube_node_status_capacity)] }\n| join\n| div\n| mul (100)"
               },
               "plotType": "LINE"
             }
@@ -66,7 +66,7 @@
           "dataSets": [
             {
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "{ fetch k8s_pod::'kubernetes.io/anthos/vm_virtualdisk_read_latency_seconds' | align rate(1m) | every 1m | group_by [resource.project_id, resource.cluster_name, resource.location, metric.node],  [value_vm_virtualdisk_read_latency_seconds_sum: sum(value.vm_virtualdisk_read_latency_seconds)] ; fetch k8s_pod::'kubernetes.io/anthos/vm_number_virtualdisk' | every 1m | group_by [resource.project_id, resource.cluster_name, resource.location, metric.node], [value_vm_number_virtualdisk_sum: sum(value.vm_number_virtualdisk)] } | join | div"
+                "timeSeriesQueryLanguage": "{ fetch k8s_pod::kubernetes.io/anthos/vm_virtualdisk_read_latency_seconds\n  | align rate(1m)\n  | every 1m\n  | group_by\n      [resource.project_id, resource.cluster_name, resource.location,\n       metric.node],\n      [value_vm_virtualdisk_read_latency_seconds_sum:\n         sum(value.vm_virtualdisk_read_latency_seconds)]\n; fetch k8s_pod::kubernetes.io/anthos/vm_number_virtualdisk\n  | every 1m\n  | group_by\n      [resource.project_id, resource.cluster_name, resource.location,\n       metric.node],\n      [value_vm_number_virtualdisk_sum: sum(value.vm_number_virtualdisk)] }\n| join\n| div"
               },
               "plotType": "LINE"
             }
@@ -87,7 +87,7 @@
           "dataSets": [
             {
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "{ fetch k8s_pod::'kubernetes.io/anthos/vm_virtualdisk_write_latency_seconds' | align rate(1m) | every 1m | group_by [resource.project_id, resource.cluster_name, resource.location, metric.node], [value_vm_virtualdisk_write_latency_seconds_sum: sum(value.vm_virtualdisk_write_latency_seconds)] ; fetch k8s_pod::'kubernetes.io/anthos/vm_number_virtualdisk' | every 1m | group_by [resource.project_id, resource.cluster_name, resource.location, metric.node], [value_vm_number_virtualdisk_sum: sum(value.vm_number_virtualdisk)] } | join | div"
+                "timeSeriesQueryLanguage": "{ fetch k8s_pod::kubernetes.io/anthos/vm_virtualdisk_write_latency_seconds\n  | align rate(1m)\n  | every 1m\n  | group_by\n      [resource.project_id, resource.cluster_name, resource.location,\n       metric.node],\n      [value_vm_virtualdisk_write_latency_seconds_sum:\n         sum(value.vm_virtualdisk_write_latency_seconds)]\n; fetch k8s_pod::kubernetes.io/anthos/vm_number_virtualdisk\n  | every 1m\n  | group_by\n      [resource.project_id, resource.cluster_name, resource.location,\n       metric.node],\n      [value_vm_number_virtualdisk_sum: sum(value.vm_number_virtualdisk)] }\n| join\n| div"
               },
               "plotType": "LINE"
             }
