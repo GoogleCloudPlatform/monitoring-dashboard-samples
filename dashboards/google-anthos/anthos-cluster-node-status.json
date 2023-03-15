@@ -15,23 +15,7 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesFilter": {
-                  "aggregation": {
-                    "alignmentPeriod": "60s",
-                    "crossSeriesReducer": "REDUCE_SUM",
-                    "groupByFields": [
-                      "resource.label.\"project_id\"",
-                      "resource.label.\"location\"",
-                      "resource.label.\"cluster_name\"",
-                      "metric.label.\"node\"",
-                      "metric.label.\"condition\"",
-                      "metric.label.\"status\""
-                    ],
-                    "perSeriesAligner": "ALIGN_MEAN"
-                  },
-                  "filter": "metric.type=\"kubernetes.io/anthos/kube_node_status_condition\" resource.type=\"k8s_container\" metric.label.\"status\"!=\"false\""
-                },
-                "unitOverride": "1"
+                "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/anthos/kube_node_status_condition'\n| filter (metric.status != 'false')\n| group_by 1m,\n    [value_kube_node_status_condition_mean:\n       mean(value.kube_node_status_condition)]\n| every 1m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     metric.node, metric.condition, metric.status],\n    [value_kube_node_status_condition_mean_aggregate:\n       aggregate(value_kube_node_status_condition_mean)]"
               }
             }
           ],
@@ -98,13 +82,7 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesFilter": {
-                  "aggregation": {
-                    "alignmentPeriod": "60s",
-                    "perSeriesAligner": "ALIGN_MEAN"
-                  },
-                  "filter": "metric.type=\"kubernetes.io/anthos/node/memory/used_bytes\" resource.type=\"k8s_node\""
-                }
+                "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'kubernetes.io/anthos/node/memory/used_bytes'\n| group_by 1m, [value_used_bytes_mean: mean(value.used_bytes)]\n| every 1m"
               }
             }
           ],
@@ -171,13 +149,7 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesFilter": {
-                  "aggregation": {
-                    "alignmentPeriod": "60s",
-                    "perSeriesAligner": "ALIGN_MEAN"
-                  },
-                  "filter": "metric.type=\"kubernetes.io/anthos/node/memory/allocatable_utilization\" resource.type=\"k8s_node\""
-                }
+                "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'kubernetes.io/anthos/node/memory/allocatable_utilization'\n| group_by 1m,\n    [value_allocatable_utilization_mean: mean(value.allocatable_utilization)]\n| every 1m\n| scale '%'"
               }
             }
           ],
@@ -200,13 +172,7 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesFilter": {
-                  "aggregation": {
-                    "alignmentPeriod": "60s",
-                    "perSeriesAligner": "ALIGN_MEAN"
-                  },
-                  "filter": "metric.type=\"kubernetes.io/anthos/node/cpu/allocatable_utilization\" resource.type=\"k8s_node\""
-                }
+                "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'kubernetes.io/anthos/node/cpu/allocatable_utilization'\n| group_by 1m,\n    [value_allocatable_utilization_mean: mean(value.allocatable_utilization)]\n| every 1m\n| scale '%'"
               }
             }
           ],

@@ -9,25 +9,7 @@
           "dataSets": [
             {
               "timeSeriesQuery": {
-                "timeSeriesFilter": {
-                  "filter": "metric.type=\"kubernetes.io/anthos/container/uptime\" resource.type=\"k8s_container\" resource.label.\"container_name\"=monitoring.regex.full_match(\"kube-apiserver\")",
-                  "aggregation": {
-                    "alignmentPeriod": "60s",
-                    "perSeriesAligner": "ALIGN_MEAN",
-                    "crossSeriesReducer": "REDUCE_MEAN",
-                    "groupByFields": [
-                      "resource.label.\"project_id\"",
-                      "resource.label.\"location\"",
-                      "resource.label.\"cluster_name\"",
-                      "resource.label.\"namespace_name\"",
-                      "resource.label.\"pod_name\"",
-                      "resource.label.\"container_name\""
-                    ]
-                  },
-                  "secondaryAggregation": {
-                    "alignmentPeriod": "60s"
-                  }
-                }
+                "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/anthos/container/uptime'\n| filter (resource.container_name =~ 'kube-apiserver')\n| group_by 1m, [value_uptime_mean: mean(value.uptime)]\n| every 1m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name, resource.pod_name, resource.container_name],\n    [value_uptime_mean_mean: mean(value_uptime_mean)]"
               },
               "plotType": "LINE",
               "minAlignmentPeriod": "60s",
@@ -50,25 +32,7 @@
           "dataSets": [
             {
               "timeSeriesQuery": {
-                "timeSeriesFilter": {
-                  "filter": "metric.type=\"kubernetes.io/anthos/container/uptime\" resource.type=\"k8s_container\" resource.label.\"container_name\"=monitoring.regex.full_match(\"kube-scheduler\")",
-                  "aggregation": {
-                    "alignmentPeriod": "60s",
-                    "perSeriesAligner": "ALIGN_MEAN",
-                    "crossSeriesReducer": "REDUCE_MEAN",
-                    "groupByFields": [
-                      "resource.label.\"project_id\"",
-                      "resource.label.\"location\"",
-                      "resource.label.\"cluster_name\"",
-                      "resource.label.\"namespace_name\"",
-                      "resource.label.\"pod_name\"",
-                      "resource.label.\"container_name\""
-                    ]
-                  },
-                  "secondaryAggregation": {
-                    "alignmentPeriod": "60s"
-                  }
-                }
+                "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/anthos/container/uptime'\n| filter (resource.container_name =~ 'kube-scheduler')\n| group_by 1m, [value_uptime_mean: mean(value.uptime)]\n| every 1m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name, resource.pod_name, resource.container_name],\n    [value_uptime_mean_mean: mean(value_uptime_mean)]"
               },
               "plotType": "LINE",
               "minAlignmentPeriod": "60s",
@@ -91,25 +55,7 @@
           "dataSets": [
             {
               "timeSeriesQuery": {
-                "timeSeriesFilter": {
-                  "filter": "metric.type=\"kubernetes.io/anthos/container/uptime\" resource.type=\"k8s_container\" resource.label.\"container_name\"=monitoring.regex.full_match(\"kube-controller-manager\")",
-                  "aggregation": {
-                    "alignmentPeriod": "60s",
-                    "perSeriesAligner": "ALIGN_MEAN",
-                    "crossSeriesReducer": "REDUCE_MEAN",
-                    "groupByFields": [
-                      "resource.label.\"project_id\"",
-                      "resource.label.\"location\"",
-                      "resource.label.\"cluster_name\"",
-                      "resource.label.\"namespace_name\"",
-                      "resource.label.\"pod_name\"",
-                      "resource.label.\"container_name\""
-                    ]
-                  },
-                  "secondaryAggregation": {
-                    "alignmentPeriod": "60s"
-                  }
-                }
+                "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/anthos/container/uptime'\n| filter (resource.container_name =~ 'kube-controller-manager')\n| group_by 1m, [value_uptime_mean: mean(value.uptime)]\n| every 1m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name, resource.pod_name, resource.container_name],\n    [value_uptime_mean_mean: mean(value_uptime_mean)]"
               },
               "plotType": "LINE",
               "minAlignmentPeriod": "60s",
@@ -132,25 +78,7 @@
           "dataSets": [
             {
               "timeSeriesQuery": {
-                "timeSeriesFilter": {
-                  "filter": "metric.type=\"kubernetes.io/anthos/container/uptime\" resource.type=\"k8s_container\" resource.label.\"container_name\"=monitoring.regex.full_match(\".*etcd.*\")",
-                  "aggregation": {
-                    "alignmentPeriod": "60s",
-                    "perSeriesAligner": "ALIGN_MEAN",
-                    "crossSeriesReducer": "REDUCE_MEAN",
-                    "groupByFields": [
-                      "resource.label.\"project_id\"",
-                      "resource.label.\"location\"",
-                      "resource.label.\"cluster_name\"",
-                      "resource.label.\"namespace_name\"",
-                      "resource.label.\"pod_name\"",
-                      "resource.label.\"container_name\""
-                    ]
-                  },
-                  "secondaryAggregation": {
-                    "alignmentPeriod": "60s"
-                  }
-                }
+                "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/anthos/container/uptime'\n| filter (resource.container_name =~ '.*etcd.*')\n| group_by 1m, [value_uptime_mean: mean(value.uptime)]\n| every 1m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name, resource.pod_name, resource.container_name],\n    [value_uptime_mean_mean: mean(value_uptime_mean)]"
               },
               "plotType": "LINE",
               "minAlignmentPeriod": "60s",

@@ -3,7 +3,7 @@
 
 |Anthos Cluster Control Plane Uptime|
 |:---------------------|
-|Filename: [anthos-cluster-control-plane-time.json](anthos-cluster-control-plane-time.json)|
+|Filename: [anthos-cluster-control-plane-uptime.json](anthos-cluster-control-plane-uptime.json)|
 |This dashboard has 4 charts to indicate the uptime of control plane components including API Server, Scheduler, ETCD and Controller Manager.|
 
 &nbsp;
@@ -11,7 +11,7 @@
 |Anthos Cluster Node Status|
 |:---------------------|
 |Filename: [anthos-cluster-node-status.json](anthos-cluster-node-status.json)|
-|This dashboard has 8 charts to indicate the status of node, including node condition, CPU usage, allocatable CPU cores, CPU allocatable utilization, memory usage, allocatable memory, memory allocatable utilization and available filesystem size.|
+|This dashboard has 8 charts to indicate the status of node, including Node condition, CPU usage, Allocatable CPU cores, CPU allocatable utilization, Memory usage, Allocatable memory, Memory allocatable utilization and Available filesystem size.|
 
 &nbsp;
 
@@ -25,7 +25,7 @@
 |Anthos Cluster Utilization Metering|
 |:---------------------|
 |Filename: [anthos-cluster-utilization-metering.json](anthos-cluster-utilization-metering.json)|
-|This dashboard has 6 charts to indicate the requests and consumptions of cpu, memory, and ephemeral storage per cluster.|
+|This dashboard has 6 charts to indicate the requests and consumption of CPU, Memory, and Ephemeral storage per cluster.|
 
 &nbsp;
 
