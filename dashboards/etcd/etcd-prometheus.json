@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "etcd Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -17,7 +35,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "etcd_server_leader_changes_seen_total"
+                  "prometheusQuery": "etcd_server_leader_changes_seen_total{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -44,7 +62,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "etcd_server_proposals_committed_total"
+                  "prometheusQuery": "etcd_server_proposals_committed_total{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -71,7 +89,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "etcd_server_proposals_applied_total"
+                  "prometheusQuery": "etcd_server_proposals_applied_total{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -98,7 +116,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "etcd_server_proposals_committed_total - etcd_server_proposals_applied_total"
+                  "prometheusQuery": "etcd_server_proposals_committed_total{${Cluster},${Location},${Namespace}} - etcd_server_proposals_applied_total{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -125,7 +143,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "etcd_server_proposals_pending"
+                  "prometheusQuery": "etcd_server_proposals_pending{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -152,7 +170,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "etcd_server_proposals_failed_total"
+                  "prometheusQuery": "etcd_server_proposals_failed_total{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
@@ -179,7 +197,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "histogram_quantile(0.95, rate(etcd_disk_wal_fsync_duration_seconds_bucket[5m]))"
+                  "prometheusQuery": "histogram_quantile(0.95, rate(etcd_disk_wal_fsync_duration_seconds_bucket{${Cluster},${Location},${Namespace}}[5m]))"
                 }
               }
             ],
@@ -206,7 +224,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "histogram_quantile(0.95, rate(etcd_disk_backend_commit_duration_seconds_bucket[5m]))"
+                  "prometheusQuery": "histogram_quantile(0.95, rate(etcd_disk_backend_commit_duration_seconds_bucket{${Cluster},${Location},${Namespace}}[5m]))"
                 }
               }
             ],
@@ -233,7 +251,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(etcd_network_client_grpc_sent_bytes_total[1m])"
+                  "prometheusQuery": "rate(etcd_network_client_grpc_sent_bytes_total{${Cluster},${Location},${Namespace}}[1m])"
                 }
               }
             ],
@@ -260,7 +278,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(etcd_network_client_grpc_received_bytes_total[1m])"
+                  "prometheusQuery": "rate(etcd_network_client_grpc_received_bytes_total{${Cluster},${Location},${Namespace}}[1m])"
                 }
               }
             ],

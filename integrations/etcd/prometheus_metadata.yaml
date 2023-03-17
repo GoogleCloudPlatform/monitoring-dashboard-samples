@@ -1,0 +1,48 @@
+platforms:
+  - type: GKE
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/etcd_server_leader_changes_seen_total/counter
+    launch_stage: HIDDEN
+    exporter_metadata:
+      name: Etcd Prometheus Exporter
+      doc_url: https://hub.docker.com/r/bitnami/etcd/
+      minimum_supported_version: "3.5"
+    default_metrics:
+      - name: prometheus.googleapis.com/etcd_server_leader_changes_seen_total/counter
+        prometheus_name: etcd_server_leader_changes_seen_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/etcd_server_proposals_committed_total/gauge
+        prometheus_name: etcd_server_proposals_committed_total
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/etcd_server_proposals_applied_total/gauge
+        prometheus_name: etcd_server_proposals_applied_total
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/etcd_network_client_grpc_received_bytes_total/counter
+        prometheus_name: etcd_network_client_grpc_received_bytes_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/etcd_network_client_grpc_sent_bytes_total/counter
+        prometheus_name: etcd_network_client_grpc_sent_bytes_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/etcd_server_proposals_pending/gauge
+        prometheus_name: etcd_server_proposals_pending
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/etcd_server_proposals_failed_total/counter
+        prometheus_name: etcd_server_proposals_failed_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/etcd_disk_wal_fsync_duration_seconds_bucket/counter
+        prometheus_name: etcd_disk_wal_fsync_duration_seconds_bucket
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/etcd_disk_backend_commit_duration_seconds_bucket/counter
+        prometheus_name: etcd_disk_backend_commit_duration_seconds_bucket
+        kind: CUMULATIVE
+        value_type: DOUBLE
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/etcd
