@@ -32,13 +32,13 @@ podmonitoring_config: |
       app.kubernetes.io/part-of: google-cloud-managed-prometheus
   spec:
     endpoints:
-  + - port: 2379
+    - port: 2379
       scheme: http
       interval: 30s
       path: /metrics
     selector:
       matchLabels:
-  +     app.kubernetes.io/name: etcd
+        app.kubernetes.io/name: etcd
 sample_promql_query: up{job="etcd", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
 alerts_config: |
   apiVersion: monitoring.googleapis.com/v1
