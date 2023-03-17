@@ -87,4 +87,15 @@ alerts_config: |
         for: 5m
         labels:
           severity: warning
+      - alert: MongoDBDown
+        annotations:
+          description: |-
+            MongoDB is down
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: MongoDB is down (instance {{ $labels.instance }})
+        expr: mongodb_up < 1
+        for: 5m
+        labels:
+          severity: critical
 additional_alert_info: You can adjust the alert thresholds to suit your application.
