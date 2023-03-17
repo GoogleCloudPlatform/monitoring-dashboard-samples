@@ -39,6 +39,8 @@ additional_install_info: |
   The {{app_name_short}} exporter is configurable with [flags]({{exporter_repo_url}}#configuration){:class=external},
   which can be set as container args. You can adjust your exporter's configuration to suit your {{app_name_short}} configuration.
   Update the `--mongodb.uri` flag to match your environment's username, password, and clusterIP service name.
+
+  The exporter does not support scraping metrics from MongoDB 6.0.4, at this time.
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
   kind: PodMonitoring
@@ -56,11 +58,6 @@ podmonitoring_config: |
     selector:
       matchLabels:
         app.kubernetes.io/name: mongodb-exporter
-additional_prereq_info: |
-  The {{app_name_short}} exporter is configurable with [flags](https://hub.docker.com/r/percona/mongodb_exporter){:class=external},
-  which can be set as container args. You can adjust your exporter's configuration to suit your {{app_name_short}} configuration.
-
-  Update the `--mongodb.uri` flag to match your environment's username, password, and clusterIP service.
 sample_promql_query: up{job="mongodb", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
 alerts_config: |
   apiVersion: monitoring.googleapis.com/v1
