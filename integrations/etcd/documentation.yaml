@@ -39,6 +39,10 @@ podmonitoring_config: |
     selector:
       matchLabels:
         app.kubernetes.io/name: etcd
+additional_podmonitoring_info: |
+  Ensure that the values of the `port` and `matchLabels` fields match those of the {{app_name_short}} pods you want to monitor.
+  Deploying {{app_name_short}} using this [example](https://github.com/etcd-io/etcd/tree/main/hack/kubernetes-deploy){:class=external}
+  will contain the label `app: etcd` and `client` port.
 sample_promql_query: up{job="etcd", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
 alerts_config: |
   apiVersion: monitoring.googleapis.com/v1
