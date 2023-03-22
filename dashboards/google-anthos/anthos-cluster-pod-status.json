@@ -14,7 +14,7 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/anthos/container/restart_count'\n| align rate(1m)\n| every 1m\n"
+                "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/anthos/container/restart_count'\n| align delta(2m)\n| every 2m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.container_name],\n    [value_restart_count_aggregate: aggregate(value.restart_count)]"
               }
             }
           ],
