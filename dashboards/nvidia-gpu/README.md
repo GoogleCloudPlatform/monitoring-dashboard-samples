@@ -20,4 +20,4 @@
 |GCE & GKE GPU Utilization|
 |:------------------|
 |Filename: [gce-gke-gpu-utilization.json](gce-gke-gpu-utilization.json)|
-|This dashboard combines GCE and GKE GPU counts and utilization.|
+|This dashboard shows the count of GPUs and their utilization, across both GCE and GKE. GCE metrics require Google's GPU enabled Ops Agent.|
