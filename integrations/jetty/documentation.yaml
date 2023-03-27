@@ -1,7 +1,7 @@
 exporter_type: sidecar
 app_name_short: Jetty
 app_name: {{app_name_short}}
-app_site_name: Jetty
+app_site_name: {{app_name}}
 app_site_url: https://www.eclipse.org/jetty/
 exporter_name: the JMX exporter
 exporter_pkg_name: jmx-exporter
@@ -191,13 +191,13 @@ podmonitoring_config: |
       app.kubernetes.io/part-of: google-cloud-managed-prometheus
   spec:
     endpoints:
-  + - port: prometheus
+    - port: prometheus
       scheme: http
       interval: 30s
       path: /metrics
     selector:
       matchLabels:
-  +     app.kubernetes.io/name: jetty
+        app.kubernetes.io/name: jetty
 sample_promql_query: up{job="jetty", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
 alerts_config: |
   apiVersion: monitoring.googleapis.com/v1

@@ -1,7 +1,7 @@
 exporter_type: sidecar
 app_name_short: Hadoop
 app_name: Apache {{app_name_short}}
-app_site_name: Apache Hadoop
+app_site_name: {{app_name}}
 app_site_url: https://hadoop.apache.org/
 exporter_name: the JMX exporter
 exporter_pkg_name: jmx-exporter
@@ -55,7 +55,7 @@ config_mods: |
   +         - -jar
   +         - jmx_prometheus_httpserver.jar
   +       args:
-  +         - "9900" 
+  +         - "9900"
   +         - config.yaml
   +       ports:
   +       - containerPort: 9900
@@ -72,8 +72,8 @@ config_mods: |
   +         - key: config.yaml
   +           path: config.yaml
 additional_install_info: |
-  These instructions are based on changes made to a [helm chart](https://artifacthub.io/packages/helm/apache-hadoop-helm/hadoop).
-  The templates can be downloaded and altered. The example above is shown as if everything was in a single YAML file. 
+  These instructions are based on changes made to a [helm chart](https://artifacthub.io/packages/helm/apache-hadoop-helm/hadoop){:class="external"}.
+  The templates can be downloaded and altered. The preceding example assumes everything is in a single YAML file.
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
   kind: PodMonitoring
@@ -94,7 +94,7 @@ podmonitoring_config: |
 additional_prereq_info: |
   Ensure that the values of the `port` and `matchLabels` fields match those of the {{app_name_short}} pods you want to monitor.
   NameNodes and DataNodes must be configured to accept remote JMX connections.
-  This can be done by setting `NAMENODE_HDFS_OPTS` and `DATANODE_HDFS_OPTS` [accordingly](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/UnixShellGuide.html).
+  This configuration can be done by setting the `NAMENODE_HDFS_OPTS` and `DATANODE_HDFS_OPTS` environment variables as described in the {{app_name_short}} [Unix Shell Guide](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/UnixShellGuide.html){:class="external"}.
 sample_promql_query: up{job="hadoop", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
 alerts_config: |
   apiVersion: monitoring.googleapis.com/v1
