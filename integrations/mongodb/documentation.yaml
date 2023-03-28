@@ -3,6 +3,7 @@ app_name_short: MongoDB
 app_name: {{app_name_short}}
 app_site_name: {{app_name_short}}
 app_site_url: https://www.mongodb.com/
+exporter_name: {{app_name_short}}
 exporter_pkg_name: mongodb_exporter
 exporter_repo_url: https://github.com/percona/mongodb_exporter
 dashboard_available: true
@@ -28,7 +29,7 @@ standalone_config: |
       spec:
         containers:
         - name: exporter
-          image: percona/mongodb_exporter:0.20 
+          image: percona/mongodb_exporter:0.20
           args:
           - --mongodb.uri=mongodb://user:password@mongodb-service-name:27017
           ports:
@@ -36,11 +37,15 @@ standalone_config: |
             containerPort: 9216
             protocol: TCP
 additional_install_info: |
-  The {{app_name_short}} exporter is configurable with [flags]({{exporter_repo_url}}#configuration){:class=external},
-  which can be set as container args. You can adjust your exporter's configuration to suit your {{app_name_short}} configuration.
-  Update the `--mongodb.uri` flag to match your environment's username, password, and clusterIP service name.
+  The {{app_name_short}} exporter is configurable with
+  [flags]({{exporter_repo_url}}#configuration){:class="external"},
+  which can be set as container args. You can adjust your exporter's configuration
+  to suit your {{app_name_short}} configuration.
+  Update the `--mongodb.uri` flag to match your environment's username, password,
+  and clusterIP service name.
 
-  The exporter does not support scraping metrics from MongoDB 6.0.4, at this time.
+  The exporter does not support scraping metrics from MongoDB 6.0.4.
+
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
   kind: PodMonitoring

@@ -1,7 +1,7 @@
 exporter_type: sidecar
 app_name_short: Tomcat
 app_name: Apache {{app_name_short}}
-app_site_name: Apache Tomcat
+app_site_name: {{app_name}}
 app_site_url: https://tomcat.apache.org/
 exporter_name: the JMX exporter
 exporter_pkg_name: jmx-exporter
@@ -17,7 +17,7 @@ config_mods: |
     name: tomcat-exporter
   data:
     config.yml: |
-      hostPort: 127.0.0.1:9010 
+      hostPort: 127.0.0.1:9010
       lowercaseOutputLabelNames: true
       lowercaseOutputName: true
       rules:
@@ -96,7 +96,7 @@ config_mods: |
   +             - key: config.yml
   +               path: config.yml
 additional_prereq_info: |
-  Tomcat supports JMX and can be enabled by configuring `CATALINA_OPTS`
+  Tomcat supports JMX, which can be enabled by configuring the `CATALINA_OPTS`
   environment variable.
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
@@ -108,13 +108,13 @@ podmonitoring_config: |
       app.kubernetes.io/part-of: google-cloud-managed-prometheus
   spec:
     endpoints:
-  + - port: prometheus
+    - port: prometheus
       scheme: http
       interval: 30s
       path: /metrics
     selector:
       matchLabels:
-  +     app.kubernetes.io/name: tomcat
+        app.kubernetes.io/name: tomcat
 sample_promql_query: up{job="tomcat", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
 alerts_config: |
   apiVersion: monitoring.googleapis.com/v1
@@ -159,7 +159,7 @@ alerts_config: |
               VALUE = {{ $value }}
               LABELS: {{ $labels }}
           summary: Tomcat high error rate (instance {{ $labels.instance }})
-        expr: rate(tomcat_errorcount_total[5m]) > 100 
+        expr: rate(tomcat_errorcount_total[5m]) > 100
         for: 5m
         labels:
           severity: warning
