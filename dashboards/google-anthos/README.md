@@ -22,6 +22,13 @@
 
 &nbsp;
 
+|Anthos Cluster KubeVirt VM Status|
+|:---------------------|
+|Filename: [anthos-cluster-kubevirt-vm-status.json](anthos-cluster-kubevirt-vm-status.json)|
+|This dashboard has 13 charts to indicate the status of KubeVirt VMs, including CPU, Memory and Network usage.|
+
+&nbsp;
+
 |Anthos Cluster Utilization Metering|
 |:---------------------|
 |Filename: [anthos-cluster-utilization-metering.json](anthos-cluster-utilization-metering.json)|
