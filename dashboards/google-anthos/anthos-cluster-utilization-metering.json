@@ -61,7 +61,7 @@
                   "filter": "metric.type=\"kubernetes.io/anthos/container/cpu/core_usage_time\" resource.type=\"k8s_container\"",
                   "secondaryAggregation": {
                     "alignmentPeriod": "60s",
-                    "crossSeriesReducer": "REDUCE_MEAN",
+                    "crossSeriesReducer": "REDUCE_SUM",
                     "groupByFields": [
                       "resource.label.\"project_id\"",
                       "resource.label.\"location\"",
@@ -92,11 +92,10 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "apiSource": "DEFAULT_CLOUD",
                 "timeSeriesFilter": {
                   "aggregation": {
                     "alignmentPeriod": "60s",
-                    "crossSeriesReducer": "REDUCE_MEAN",
+                    "crossSeriesReducer": "REDUCE_SUM",
                     "groupByFields": [
                       "resource.label.\"project_id\"",
                       "resource.label.\"location\"",
@@ -128,11 +127,10 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "apiSource": "DEFAULT_CLOUD",
                 "timeSeriesFilter": {
                   "aggregation": {
                     "alignmentPeriod": "60s",
-                    "crossSeriesReducer": "REDUCE_MEAN",
+                    "crossSeriesReducer": "REDUCE_SUM",
                     "groupByFields": [
                       "resource.label.\"project_id\"",
                       "resource.label.\"location\"",
@@ -160,10 +158,24 @@
           },
           "dataSets": [
             {
+              "minAlignmentPeriod": "60s",
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/anthos/container/ephemeral_storage/request_bytes'\n| group_by 1m, [value_request_bytes_mean: mean(value.request_bytes)]\n| every 1m\n| group_by [resource.project_id, resource.location, resource.cluster_name],\n    [value_request_bytes_mean_aggregate: aggregate(value_request_bytes_mean)]"
+                "apiSource": "DEFAULT_CLOUD",
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "resource.label.\"project_id\"",
+                      "resource.label.\"location\"",
+                      "resource.label.\"cluster_name\""
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"kubernetes.io/anthos/container/ephemeral_storage/request_bytes\" resource.type=\"k8s_container\""
+                }
               }
             }
           ],
