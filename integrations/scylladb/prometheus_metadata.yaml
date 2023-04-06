@@ -5,6 +5,9 @@ platforms:
       name: ScyllaDB Prometheus Exporter
       doc_url: https://monitoring.docs.scylladb.com/stable/reference/monitoring_apis.html
       minimum_supported_version: "5.0"
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/scylla_node_operation_mode/gauge
     default_metrics:
       - name: prometheus.googleapis.com/scylla_node_operation_mode/gauge
         prometheus_name: scylla_node_operation_mode
@@ -52,6 +55,18 @@ platforms:
         value_type: DOUBLE
       - name: prometheus.googleapis.com/scylla_cache_partition_misses/counter
         prometheus_name: scylla_cache_partition_misses
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/scylla_scheduler_shares/gauge
+        prometheus_name: scylla_scheduler_shares
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/scylla_cql_prepared_cache_evictions/counter
+        prometheus_name: scylla_cql_prepared_cache_evictions
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/scylla_cql_authorized_prepared_statements_cache_evictions/counter
+        prometheus_name: scylla_cql_authorized_prepared_statements_cache_evictions
         kind: CUMULATIVE
         value_type: DOUBLE
     install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/scylladb
