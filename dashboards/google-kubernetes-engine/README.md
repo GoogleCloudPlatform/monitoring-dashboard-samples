@@ -1,5 +1,11 @@
 ### Dashboards for Google Kubernetes Engine
 
+|GKE Workloads at Risk|
+|:---------------------|
+|Filename: [gke-workloads-at-risk.json](gke-workloads-at-risk.json)|
+|This dashboard has 12 charts using the related [Kubernetes metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes) to show workloads which are at reliability and performance risks due to BestEffort and Burstable workloads running above request for CPU and memory.|
+
+&nbsp;
 
 |GKE Cluster Monitoring|
 |:---------------------|
