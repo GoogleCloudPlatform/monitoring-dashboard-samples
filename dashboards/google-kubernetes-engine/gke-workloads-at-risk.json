@@ -1,6 +1,25 @@
 {
   "category": "CUSTOM",
-  "dashboardFilters": [],
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "project_id",
+      "stringValue": "",
+      "templateVariable": "project_id"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "stringValue": "",
+      "templateVariable": "location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster_name",
+      "stringValue": "",
+      "templateVariable": "cluster_name"
+    }
+  ],
   "displayName": "GKE Workloads at Risk ",
   "labels": {},
   "mosaicLayout": {
@@ -13,10 +32,10 @@
             "blankView": {},
             "thresholds": [],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_cores'\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system'\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name,\n     metadata.system.top_level_controller_name:\n       metadata.system_labels.top_level_controller_name],\n    [value_core_request_mean: mean(value.request_cores)]\n| every 5m\n| group_by [], [row_count: row_count()]"
+              "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_cores'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system'\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name,\n     metadata.system.top_level_controller_name:\n       metadata.system_labels.top_level_controller_name],\n    [value_core_request_mean: mean(value.request_cores)]\n| every 5m\n| group_by [], [row_count: row_count()]"
             }
           },
-          "title": "workloads analyzed"
+          "title": "Workloads analyzed"
         },
         "width": 2,
         "xPos": 8,
@@ -59,10 +78,10 @@
               }
             ],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/request_bytes'\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system'\n| group_by 5m, [value_request_bytes_mean: mean(value.request_bytes)]\n| every 5m\n| group_by\n    [resource.cluster_name, resource.location, resource.project_id,\n     resource.namespace_name, metadata.system.top_level_controller_name,\n     metadata.system.top_level_controller_type]\n| { all_workloads:\n      ident\n      | group_by [], [row_count()]\n  ; best_effort_workloads:\n      filter val() == 0\n      | group_by [], [row_count()] }\n| join\n| window 5m\n| value\n    [v_0:\n       scale(div(best_effort_workloads.row_count, all_workloads.row_count), '%')]"
+              "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/request_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system'\n| group_by 5m, [value_request_bytes_mean: mean(value.request_bytes)]\n| every 5m\n| group_by\n    [resource.cluster_name, resource.location, resource.project_id,\n     resource.namespace_name, metadata.system.top_level_controller_name,\n     metadata.system.top_level_controller_type]\n| { all_workloads:\n      ident\n      | group_by [], [row_count()]\n  ; best_effort_workloads:\n      filter val() == 0\n      | group_by [], [row_count()] }\n| join\n| window 5m\n| value\n    [v_0:\n       scale(div(best_effort_workloads.row_count, all_workloads.row_count), '%')]"
             }
           },
-          "title": "MEM not set"
+          "title": "Memory not set"
         },
         "width": 2,
         "xPos": 0,
@@ -81,7 +100,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_cores'\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system'\n| group_by 5m, [value_request_bytes_mean: mean(value.request_cores)]\n| every 5m\n| group_by\n    [resource.cluster_name, resource.location, resource.project_id,\n     resource.namespace_name, metadata.system.top_level_controller_name]\n| { all_workloads:\n      ident\n      | group_by [], [row_count()]\n  ; best_effort_workloads:\n      filter val() == 0\n      | group_by [], [row_count()] }\n| join\n| window 5m\n| value\n    [v_0:\n       scale(div(best_effort_workloads.row_count, all_workloads.row_count), '%')]"
+              "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_cores'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system'\n| group_by 5m, [value_request_bytes_mean: mean(value.request_cores)]\n| every 5m\n| group_by\n    [resource.cluster_name, resource.location, resource.project_id,\n     resource.namespace_name, metadata.system.top_level_controller_name]\n| { all_workloads:\n      ident\n      | group_by [], [row_count()]\n  ; best_effort_workloads:\n      filter val() == 0\n      | group_by [], [row_count()] }\n| join\n| window 5m\n| value\n    [v_0:\n       scale(div(best_effort_workloads.row_count, all_workloads.row_count), '%')]"
             }
           },
           "title": "CPU not set"
@@ -94,7 +113,7 @@
         "height": 2,
         "widget": {
           "text": {
-            "content": "**Reliability Risk**: For **memory**: kubelet can stop your Pods anytime and mark them as failed. For **CPU**: can be throttled to 0, causing your workloads to become unresponsive. [Set appropriate resource requests and limits](https://cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke#set_appropriate_resource_requests_and_limits)",
+            "content": "Not setting CPU or memory requests constitutes a reliability risk. When memory is unset, the kubelet can stop your pods anytime and mark them as failed. When CPU is unset, your Pods' CPU can be throttled to 0, causing your workloads to become unresponsive[Set appropriate resource requests and limits](https://cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke#set_appropriate_resource_requests_and_limits)",
             "format": "MARKDOWN"
           },
           "title": "Best Effort workloads at risk"
@@ -120,7 +139,7 @@
         "height": 2,
         "widget": {
           "text": {
-            "content": "**Performance Reliability Risk**: For **memory**: when workloads are running above requests, it has the same problem as best effort pods (can be killed at any time). For **CPU**: when workloads are running above requests, slowing down the workload\n [Set appropriate resource requests and limits](https://cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke#set_appropriate_resource_requests_and_limits)",
+            "content": "Pods using more memory than requested constitute a reliability risk. Like Best Effort pods above, they can be stopped by the kubelet anytime. When workloads consume more CPU than requested, they can be throttled, slowing down the workload.\n [Set appropriate resource requests and limits](https://cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke#set_appropriate_resource_requests_and_limits)",
             "format": "MARKDOWN"
           },
           "title": "Burstable workloads at risk"
@@ -142,7 +161,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "{ all_non_besteffort_workloads:\n    fetch k8s_container\n    | metric 'kubernetes.io/container/cpu/request_cores'\n    | filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system'\n    | group_by 5m, [value_request_cores_mean: mean(value.request_cores)]\n    | every 5m\n    | group_by\n        [resource.project_id, resource.location, resource.cluster_name,\n         resource.namespace_name,\n         metadata.system.top_level_controller_name:\n           metadata.system_labels.top_level_controller_name,\n         metadata.system.top_level_controller_type:\n           metadata.system_labels.top_level_controller_type]\n           ,[value_request_cores_mean_aggregate: mean(value_request_cores_mean)]\n    | filter val() != 0\n    | group_by [], [row_count: row_count()]\n; burstable_workload_risk:\n    fetch k8s_container\n    | metric 'kubernetes.io/container/cpu/request_utilization'\n    | filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system'\n    | group_by 5m,\n        [value_request_utilization_mean: mean(value.request_utilization)]\n    | every 5m\n    | group_by\n        [resource.project_id, resource.location, resource.cluster_name,\n         resource.namespace_name,\n         metadata.system.top_level_controller_name:\n           metadata.system_labels.top_level_controller_name,\n         metadata.system.top_level_controller_type:\n           metadata.system_labels.top_level_controller_type], [value_request_utilization_mean_aggregate:\n       mean(value_request_utilization_mean)]\n    | filter val() >= 1 \n    | group_by [], [row_count: row_count()]}\n| join\n| value [v_0: scale(div(burstable_workload_risk.row_count, all_non_besteffort_workloads.row_count),'%')]\n"
+              "timeSeriesQueryLanguage": "{ all_non_besteffort_workloads:\n    fetch k8s_container\n    | metric 'kubernetes.io/container/cpu/request_cores'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n    | filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system'\n    | group_by 5m, [value_request_cores_mean: mean(value.request_cores)]\n    | every 5m\n    | group_by\n        [resource.project_id, resource.location, resource.cluster_name,\n         resource.namespace_name,\n         metadata.system.top_level_controller_name:\n           metadata.system_labels.top_level_controller_name,\n         metadata.system.top_level_controller_type:\n           metadata.system_labels.top_level_controller_type]\n           ,[value_request_cores_mean_aggregate: mean(value_request_cores_mean)]\n    | filter val() != 0\n    | group_by [], [row_count: row_count()]\n; burstable_workload_risk:\n    fetch k8s_container\n    | metric 'kubernetes.io/container/cpu/request_utilization'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n    | filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system'\n    | group_by 5m,\n        [value_request_utilization_mean: mean(value.request_utilization)]\n    | every 5m\n    | group_by\n        [resource.project_id, resource.location, resource.cluster_name,\n         resource.namespace_name,\n         metadata.system.top_level_controller_name:\n           metadata.system_labels.top_level_controller_name,\n         metadata.system.top_level_controller_type:\n           metadata.system_labels.top_level_controller_type], [value_request_utilization_mean_aggregate:\n       mean(value_request_utilization_mean)]\n    | filter val() >= 1 \n    | group_by [], [row_count: row_count()]}\n| join\n| value [v_0: scale(div(burstable_workload_risk.row_count, all_non_besteffort_workloads.row_count),'%')]\n"
             }
           },
           "title": "CPU under-provisioned"
@@ -164,10 +183,10 @@
               }
             ],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "{ all_non_besteffort_workloads:\n    fetch k8s_container\n    | metric 'kubernetes.io/container/memory/request_bytes'\n    | filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system'\n    | group_by 5m, [value_request_bytes_mean: mean(value.request_bytes)]\n    | every 5m\n    | group_by\n        [resource.project_id, resource.location, resource.cluster_name,\n         resource.namespace_name,\n         metadata.system.top_level_controller_name:\n           metadata.system_labels.top_level_controller_name],\n        [value_request_bytes_mean_mean: mean(value_request_bytes_mean)]\n    | filter val() != 0\n    | group_by [], [row_count: row_count()]\n; burstable_workload_risk:\n    fetch k8s_container\n    | metric 'kubernetes.io/container/memory/request_utilization'\n    | filter\n        (resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system'\n         && metric.memory_type == 'non-evictable')\n    | group_by 3d,\n        [value_request_utilization_mean: mean(value.request_utilization)]\n    | every 5m\n    | group_by\n        [resource.project_id, resource.location, resource.cluster_name,\n         resource.namespace_name,\n         metadata.system_labels.top_level_controller_name,\n         metadata.system_labels.top_level_controller_type],\n        [value_request_utilization_mean: mean(value_request_utilization_mean)]\n    | filter val() >= 1\n    | group_by [], [row_count: row_count()] }\n| join\n| value\n    [v_0:\n       scale(\n         div(burstable_workload_risk.row_count,\n           all_non_besteffort_workloads.row_count),\n         '%')]"
+              "timeSeriesQueryLanguage": "{ all_non_besteffort_workloads:\n    fetch k8s_container\n    | metric 'kubernetes.io/container/memory/request_bytes'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n    | filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system'\n    | group_by 5m, [value_request_bytes_mean: mean(value.request_bytes)]\n    | every 5m\n    | group_by\n        [resource.project_id, resource.location, resource.cluster_name,\n         resource.namespace_name,\n         metadata.system.top_level_controller_name:\n           metadata.system_labels.top_level_controller_name],\n        [value_request_bytes_mean_mean: mean(value_request_bytes_mean)]\n    | filter val() != 0\n    | group_by [], [row_count: row_count()]\n; burstable_workload_risk:\n    fetch k8s_container\n    | metric 'kubernetes.io/container/memory/request_utilization'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}    \n    | filter\n        (resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system'\n         && metric.memory_type == 'non-evictable')\n    | group_by 3d,\n        [value_request_utilization_mean: mean(value.request_utilization)]\n    | every 5m\n    | group_by\n        [resource.project_id, resource.location, resource.cluster_name,\n         resource.namespace_name,\n         metadata.system_labels.top_level_controller_name,\n         metadata.system_labels.top_level_controller_type],\n        [value_request_utilization_mean: mean(value_request_utilization_mean)]\n    | filter val() >= 1\n    | group_by [], [row_count: row_count()] }\n| join\n| value\n    [v_0:\n       scale(\n         div(burstable_workload_risk.row_count,\n           all_non_besteffort_workloads.row_count),\n         '%')]"
             }
           },
-          "title": "MEM under-provisioned"
+          "title": "Memory under-provisioned"
         },
         "width": 2,
         "xPos": 4,
@@ -202,13 +221,13 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/request_bytes'\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system'\n| group_by 5m, [value_request_bytes_mean: mean(value.request_bytes)]\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name,\n     metadata.system.top_level_controller_name:\n       metadata.system_labels.top_level_controller_name,\n     metadata.system.top_level_controller_type:\n       metadata.system_labels.top_level_controller_type],\n    [value_request_bytes_mean_mean: mean(value_request_bytes_mean)]\n| filter val() == 0"
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/request_bytes'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system'\n| group_by 5m, [value_request_bytes_mean: mean(value.request_bytes)]\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name,\n     metadata.system.top_level_controller_name:\n       metadata.system_labels.top_level_controller_name,\n     metadata.system.top_level_controller_type:\n       metadata.system_labels.top_level_controller_type],\n    [value_request_bytes_mean_mean: mean(value_request_bytes_mean)]\n| filter val() == 0"
                 }
               }
             ],
             "metricVisualization": "NUMBER"
           },
-          "title": "Memory (reliability risk) - workloads without memory requested"
+          "title": "Workloads without memory requested"
         },
         "width": 6,
         "xPos": 0,
@@ -247,13 +266,13 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_cores'\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system'\n| group_by 5m, [value_request_cores_mean: mean(value.request_cores)]\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name,\n     metadata.system.top_level_controller_name:\n       metadata.system_labels.top_level_controller_name,\n     metadata.system.top_level_controller_type:\n       metadata.system_labels.top_level_controller_type],\n    [value_request_bytes_mean_mean: mean(value_request_cores_mean)]\n| filter val() == 0"
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_cores'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system'\n| group_by 5m, [value_request_cores_mean: mean(value.request_cores)]\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name,\n     metadata.system.top_level_controller_name:\n       metadata.system_labels.top_level_controller_name,\n     metadata.system.top_level_controller_type:\n       metadata.system_labels.top_level_controller_type],\n    [value_request_bytes_mean_mean: mean(value_request_cores_mean)]\n| filter val() == 0"
                 }
               }
             ],
             "metricVisualization": "NUMBER"
           },
-          "title": "CPU (reliability risk) - workloads without CPU requested"
+          "title": "Workloads without CPU requested"
         },
         "width": 6,
         "xPos": 6,
@@ -266,13 +285,13 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_utilization'\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system'\n| group_by 5m, [value_request_utilization_mean: mean(value.request_utilization)]\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name,\n     metadata.system.top_level_controller_name:\n       metadata.system_labels.top_level_controller_name],\n    [value_request_utilization_mean_aggregate:\n       mean(value_request_utilization_mean)]\n| filter val() >= 1\n| scale '%'"
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_utilization'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system'\n| group_by 5m, [value_request_utilization_mean: mean(value.request_utilization)]\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name,\n     metadata.system.top_level_controller_name:\n       metadata.system_labels.top_level_controller_name],\n    [value_request_utilization_mean_aggregate:\n       mean(value_request_utilization_mean)]\n| filter val() >= 1\n| scale '%'"
                 }
               }
             ],
             "metricVisualization": "NUMBER"
           },
-          "title": "CPU (performance risk) - workloads running above requested for CPU"
+          "title": "Workloads using more CPU than requested"
         },
         "width": 6,
         "xPos": 6,
@@ -285,13 +304,13 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/request_utilization'\n| filter\n    (resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system'\n     && metric.memory_type == 'non-evictable')\n| group_by 5m, [value_request_utilization_mean: mean(value.request_utilization)]\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name, metadata.system_labels.top_level_controller_name,\n     metadata.system_labels.top_level_controller_type],\n    [value_request_utilization_mean: mean(value_request_utilization_mean)]\n| filter val() >= 1\n| scale '%'"
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/request_utilization'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n| filter\n    (resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system'\n     && metric.memory_type == 'non-evictable')\n| group_by 5m, [value_request_utilization_mean: mean(value.request_utilization)]\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name, metadata.system_labels.top_level_controller_name,\n     metadata.system_labels.top_level_controller_type],\n    [value_request_utilization_mean: mean(value_request_utilization_mean)]\n| filter val() >= 1\n| scale '%'"
                 }
               }
             ],
             "metricVisualization": "NUMBER"
           },
-          "title": "Memory (reliability risk) - workloads running above requested for memory"
+          "title": "Workloads using more memory than requested"
         },
         "width": 6,
         "xPos": 0,
@@ -303,7 +322,7 @@
           "collapsibleGroup": {
             "collapsed": false
           },
-          "title": "14-day Peak Recommendations (Deployments only)"
+          "title": "Workload right-sizing recommendations (for deployments only)"
         },
         "width": 12,
         "xPos": 0,
@@ -316,13 +335,13 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_scale\n| metric\n    'kubernetes.io/autoscaler/container/memory/per_replica_recommended_request_bytes'\n| group_by 14d,\n    [value_per_replica_recommended_request_bytes_mean:\n       max(value.per_replica_recommended_request_bytes)]\n| every 5m\n\n"
+                  "timeSeriesQueryLanguage": "fetch k8s_scale\n| metric\n    'kubernetes.io/autoscaler/container/memory/per_replica_recommended_request_bytes'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n| group_by 14d,\n    [value_per_replica_recommended_request_bytes_mean:\n       max(value.per_replica_recommended_request_bytes)]\n| every 5m\n\n"
                 }
               }
             ],
             "metricVisualization": "NUMBER"
           },
-          "title": "MEM Recommended per replica request bytes [MAX]"
+          "title": "Memory request bytes recommended per replica"
         },
         "width": 6,
         "xPos": 0,
@@ -335,13 +354,13 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_scale\n| metric\n    'kubernetes.io/autoscaler/container/cpu/per_replica_recommended_request_cores'\n| group_by 14d,\n    [value_per_replica_recommended_request_cores_mean:\n       max(value.per_replica_recommended_request_cores)]\n| every 5m"
+                  "timeSeriesQueryLanguage": "fetch k8s_scale\n| metric\n    'kubernetes.io/autoscaler/container/cpu/per_replica_recommended_request_cores'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n| group_by 14d,\n    [value_per_replica_recommended_request_cores_mean:\n       max(value.per_replica_recommended_request_cores)]\n| every 5m"
                 }
               }
             ],
             "metricVisualization": "NUMBER"
           },
-          "title": "CPU Recommended per replica request cores [MAX] "
+          "title": "CPU request cores recommended per replica"
         },
         "width": 6,
         "xPos": 6,
@@ -351,10 +370,9 @@
         "height": 2,
         "widget": {
           "text": {
-            "content": "Recommended resource requests for CPU and memory requirements, ensuring efficient resource based on VPA recommendations.\n\n**Want to see workload recommendations at scale?**\n[Right-size your GKE workloads](https://cloud.google.com/blog/products/containers-kubernetes/optimize-gke-workloads-at-scale)",
+            "content": "Refer to the following recommended resource requests for CPU and memory requirements that ensuring efficient resource allocation based on VPA recommendations. They are calculated as 14 day peak recommendations.\n**Want to see workload recommendations at scale?**\n[Right-size your GKE workloads](https://cloud.google.com/blog/products/containers-kubernetes/optimize-gke-workloads-at-scale)",
             "format": "MARKDOWN"
-          },
-          "title": "Workload Rightsizing"
+          }
         },
         "width": 12,
         "xPos": 0,
