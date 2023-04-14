@@ -114,7 +114,7 @@
         }
       },
       {
-        "title": "Pod Phase",
+        "title": "Pod Count by Phase",
         "xyChart": {
           "chartOptions": {
             "mode": "COLOR"
@@ -124,7 +124,7 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/anthos/kube_pod_status_phase'\n| group_by 1m,\n    [value_kube_pod_status_phase_mean: mean(value.kube_pod_status_phase)]\n| every 1m\n| group_by\n    [metric.phase, resource.project_id, resource.location,\n     resource.cluster_name],\n    [value_kube_pod_status_phase_mean_aggregate:\n       aggregate(value_kube_pod_status_phase_mean)]"
+                "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric 'kubernetes.io/anthos/kube_pod_status_phase'\n  | add [cluster: resource.cluster_name]\n  | group_by 1m, [value_phase_mean: mean(value.kube_pod_status_phase)]\n  | every 1m\n  | group_by [metric.phase, resource.project_id, resource.location, cluster],\n      [value_phase_mean_aggregate: aggregate(value_phase_mean)]\n; fetch prometheus_target\n  | metric 'kubernetes.io/anthos/kube_pod_status_phase/gauge'\n  | add [cluster: resource.cluster]\n  | group_by 1m, [value_phase_mean: mean(value.gauge)]\n  | every 1m\n  | group_by [metric.phase, resource.project_id, resource.location, cluster],\n      [value_phase_mean_aggregate: aggregate(value_phase_mean)] }\n| union"
               }
             }
           ],
