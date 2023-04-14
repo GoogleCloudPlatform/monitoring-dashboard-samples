@@ -1,0 +1,21 @@
+{
+  "displayName": "GKE Pod - FailedScheduling Log Event (${CLUSTER_NAME})",
+  "documentation": {
+    "content":
+        "- A \"FailedScheduling\" event occurs when a pending pod cannot be scheduled, This alert fires when an event with reason \"FailedSceduling\" occurs in the logs; limited to notifying once per hour.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [{
+    "displayName":
+        "${CLUSTER_NAME} cluster has a FailedScheduling Log Event",
+    "conditionMatchedLog": {
+      "filter":
+          "resource.type=\"k8s_pod\" AND resource.labels.cluster_name=\"${CLUSTER_NAME}\" AND jsonPayload.reason=\"FailedScheduling\""
+    }
+  }],
+  "alertStrategy":
+      {"notificationRateLimit": {"period": "3600s"}, "autoClose": "604800s"},
+  "combiner": "OR",
+  "enabled": true
+}
