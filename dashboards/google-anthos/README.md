@@ -11,14 +11,14 @@
 |Anthos Cluster Node Status|
 |:---------------------|
 |Filename: [anthos-cluster-node-status.json](anthos-cluster-node-status.json)|
-|This dashboard has 8 charts to indicate the status of node, including Node condition, CPU usage, Allocatable CPU cores, CPU allocatable utilization, Memory usage, Allocatable memory, Memory allocatable utilization and Available filesystem size.|
+|This dashboard has 8 charts to indicate the status of node, including Node count, CPU usage, Allocatable CPU cores, CPU allocatable utilization, Memory usage, Allocatable memory, Memory allocatable utilization and Available filesystem size.|
 
 &nbsp;
 
 |Anthos Cluster Pod Status|
 |:---------------------|
 |Filename: [anthos-cluster-pod-status.json](anthos-cluster-pod-status.json)|
-|This dashboard has 11 charts to indicate the status of pod, including Number of restarts per container, Container memory usage per container, Container CPU usage per container, Network ingress (bytes) per pod, Network egress (bytes) per pod and Pod phase.|
+|This dashboard has 11 charts to indicate the status of pod, including Number of restarts per container, Container memory usage per container, Container CPU usage per container, Network ingress (bytes) per pod, Network egress (bytes) per pod and Pod count.|
 
 &nbsp;
 
