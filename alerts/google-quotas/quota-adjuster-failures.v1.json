@@ -1,0 +1,25 @@
+{
+  "displayName": "QuotaAdjuster Failure",
+  "documentation": {
+    "content": "Alert to signal any failures for any QIR's submitted by QuotaAdjuster",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Log match condition",
+      "conditionMatchedLog": {
+        "filter": "log_id(\"cloudaudit.googleapis.com/system_event\") \nresource.labels.service = \"quotaadjuster.googleapis.com\"\nprotoPayload.serviceName=\"quotaadjuster.googleapis.com\" \nprotoPayload.metadata.quota_change_event.event_status=\"FAILURE\""
+      }
+    }
+  ],
+  "alertStrategy": {
+    "notificationRateLimit": {
+      "period": "3600s"
+    },
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
