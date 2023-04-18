@@ -221,11 +221,11 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/request_bytes'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system'\n| group_by 5m, [value_request_bytes_mean: mean(value.request_bytes)]\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name,\n     metadata.system.top_level_controller_name:\n       metadata.system_labels.top_level_controller_name,\n     metadata.system.top_level_controller_type:\n       metadata.system_labels.top_level_controller_type],\n    [value_request_bytes_mean_mean: mean(value_request_bytes_mean)]\n| filter val() == 0"
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| filter (resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system')\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| {\n  metric 'kubernetes.io/container/memory/used_bytes'\n  | filter metric.memory_type == 'non-evictable'\n  | group_by 5m, [value_used_bytes_mean: mean(value.used_bytes)]\n  | every 5m\n  | group_by\n      [resource.project_id, resource.location, resource.cluster_name,\n       resource.namespace_name,\n       metadata.system.top_level_controller_name:\n         metadata.system_labels.top_level_controller_name,\n       metadata.system.top_level_controller_type:\n         metadata.system_labels.top_level_controller_type],[value_used_bytes_mean_aggregate: aggregate(value_used_bytes_mean)];\n  metric 'kubernetes.io/container/memory/request_bytes'\n  | group_by 5m, [value_request_bytes_mean: mean(value.request_bytes)]\n  | every 5m\n  | group_by\n      [resource.project_id, resource.location, resource.cluster_name,\n       resource.namespace_name,\n       metadata.system.top_level_controller_name:\n         metadata.system_labels.top_level_controller_name,\n       metadata.system.top_level_controller_type:\n         metadata.system_labels.top_level_controller_type],\n      [value_request_bytes_mean_mean: mean(value_request_bytes_mean)]\n  | filter val() == 0\n} \n| join"
                 }
               }
             ],
-            "metricVisualization": "NUMBER"
+            "metricVisualization": "BAR"
           },
           "title": "Workloads without memory requested"
         },
@@ -266,11 +266,11 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_cores'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system'\n| group_by 5m, [value_request_cores_mean: mean(value.request_cores)]\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name,\n     metadata.system.top_level_controller_name:\n       metadata.system_labels.top_level_controller_name,\n     metadata.system.top_level_controller_type:\n       metadata.system_labels.top_level_controller_type],\n    [value_request_bytes_mean_mean: mean(value_request_cores_mean)]\n| filter val() == 0"
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| filter\n    resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system'\n| { metric 'kubernetes.io/container/cpu/core_usage_time'\n| align rate(5m)\n| every 5m\n    | group_by\n        [resource.project_id, resource.location, resource.cluster_name,\n         resource.namespace_name,\n         metadata.system.top_level_controller_name:\n           metadata.system_labels.top_level_controller_name,\n         metadata.system.top_level_controller_type:\n           metadata.system_labels.top_level_controller_type], [value_core_usage_time_aggregate: aggregate(value.core_usage_time)]\n  ; metric 'kubernetes.io/container/cpu/request_cores'\n    | group_by 5m, [value_request_cores_mean: mean(value.request_cores)]\n    | every 5m\n    | group_by\n        [resource.project_id, resource.location, resource.cluster_name,\n         resource.namespace_name,\n         metadata.system.top_level_controller_name:\n           metadata.system_labels.top_level_controller_name,\n         metadata.system.top_level_controller_type:\n           metadata.system_labels.top_level_controller_type],\n        [value_request_bytes_mean_mean: mean(value_request_cores_mean)]\n    | filter val() == 0 }\n| join"
                 }
               }
             ],
-            "metricVisualization": "NUMBER"
+            "metricVisualization": "BAR"
           },
           "title": "Workloads without CPU requested"
         },
@@ -289,7 +289,7 @@
                 }
               }
             ],
-            "metricVisualization": "NUMBER"
+            "metricVisualization": "BAR"
           },
           "title": "Workloads using more CPU than requested"
         },
@@ -308,7 +308,7 @@
                 }
               }
             ],
-            "metricVisualization": "NUMBER"
+            "metricVisualization": "BAR"
           },
           "title": "Workloads using more memory than requested"
         },
