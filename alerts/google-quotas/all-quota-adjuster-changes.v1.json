@@ -1,0 +1,25 @@
+{
+  "displayName":"All Adjustments by Quota Adjuster",
+  "documentation":{
+      "content":"Alert to signal any change made by Quota Adjuster",
+      "mimeType":"text/markdown"
+  },
+  "userLabels":{},
+  "conditions":[
+      {
+          "displayName":"Log match condition",
+          "conditionMatchedLog":{
+              "filter":"log_id(\"cloudaudit.googleapis.com/system_event\")\nresource.labels.service = \"quotaadjuster.googleapis.com\"\nprotoPayload.serviceName=\"quotaadjuster.googleapis.com\"\n"
+          }
+      }
+  ],
+  "alertStrategy":{
+      "notificationRateLimit":{
+          "period": "3600s"
+      },
+      "autoClose": "604800s"
+  },
+  "combiner" :"OR",
+  "enabled": true,
+  "notificationChannels": []
+}
