@@ -132,6 +132,13 @@
               "timeSeriesQuery": {
                 "timeSeriesQueryLanguage": "fetch k8s_pod\n| metric 'kubernetes.io/anthos/pod/network/sent_bytes_count'\n| align rate(1m)\n| every 1m\n"
               }
+            },
+            {
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesQueryLanguage": "fetch k8s_pod\n| metric 'kubernetes.io/pod/network/sent_bytes_count'\n filter (resource.cluster_name =~ '^(awsClusters|azureClusters)\/.*$')\n| align rate(1m)\n| every 1m\n"
+              }
             }
           ],
           "timeshiftDuration": "0s",
