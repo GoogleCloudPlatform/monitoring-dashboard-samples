@@ -1,6 +1,6 @@
 exporter_type: sidecar
-app_name_short: Apache HTTP
-app_name: {{app_name_short}}
+app_name_short: Apache Web Server
+app_name: {{app_name_short}} (httpd)
 app_site_name: Apache HTTP
 app_site_url: https://httpd.apache.org/
 exporter_name: the Apache HTTP exporter
@@ -61,12 +61,12 @@ config_mods: |
   +         name: httpd
   +         items:
   +         - key: httpd.conf
-  +           path: httpd.conf 
+  +           path: httpd.conf
 additional_install_info: |
   These instructions assume you already have a working {{app_name_short}}
   installation and want to modify it to include an exporter. Apache HTTP server
   can be configured to serve metrics on `/server-status` by modifying the configuration
-  with a new Location directive and by loading the [status_module](https://httpd.apache.org/docs/2.4/mod/mod_status.html){:class=external}.
+  with a new `Location` directive and by loading the [status_module](https://httpd.apache.org/docs/2.4/mod/mod_status.html){:class=external}.
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
   kind: PodMonitoring
@@ -84,6 +84,4 @@ podmonitoring_config: |
     selector:
       matchLabels:
         app.kubernetes.io/name: httpd
-additional_prereq_info: |
-  Ensure that the values of the `port` and `matchLabels` fields match those of the {{app_name_short}} pods you want to monitor.
 sample_promql_query: up{job="httpd", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
