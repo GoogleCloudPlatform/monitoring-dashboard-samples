@@ -1,7 +1,7 @@
 {
   "category": "CUSTOM",
   "dashboardFilters": [],
-  "displayName": "Microservices (gRPC) Monitoring",
+  "displayName": "GKE Microservices (gRPC) Monitoring",
   "labels": {},
   "mosaicLayout": {
     "columns": 12,
@@ -43,7 +43,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch\n  k8s_container::custom.googleapis.com/opencensus/grpc.io/client/completed_rpcs\n| align delta(1m)\n| every 1m\n| { t_0: filter (metric.grpc_client_status != 'OK')\n  ; t_1:\n      group_by drop[metric.grpc_client_status],\n        [completed_rpcs_aggregate: aggregate(value.completed_rpcs)] }\n| ratio"
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n  | metric custom.googleapis.com/opencensus/grpc.io/client/completed_rpcs\n| align delta(1m)\n| every 1m\n| { t_0: filter (metric.grpc_client_status != 'OK')\n  ; t_1:\n      group_by drop[metric.grpc_client_status],\n        [completed_rpcs_aggregate: aggregate(value.completed_rpcs)] }\n| ratio"
                 }
               }
             ],
@@ -143,7 +143,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch\n  k8s_container::custom.googleapis.com/opencensus/grpc.io/server/completed_rpcs\n| align delta(1m)\n| every 1m\n| { t_0: filter (metric.grpc_server_status != 'OK')\n  ; t_1:\n      group_by drop[metric.grpc_server_status],\n        [completed_rpcs_aggregate: aggregate(value.completed_rpcs)] }\n| ratio\n"
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n  | metric custom.googleapis.com/opencensus/grpc.io/server/completed_rpcs\n| align delta(1m)\n| every 1m\n| { t_0: filter (metric.grpc_server_status != 'OK')\n  ; t_1:\n      group_by drop[metric.grpc_server_status],\n        [completed_rpcs_aggregate: aggregate(value.completed_rpcs)] }\n| ratio\n"
                 }
               }
             ],
