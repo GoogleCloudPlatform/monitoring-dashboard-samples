@@ -201,7 +201,7 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n\nfetch gce_instance\n | metric 'agent.googleapis.com/gpu/utilization'\n | group_by [metric.model], [row_count: row_count()]\n | add [Platform: 'GCE']\n\n;\n\nfetch k8s_node\n | metric 'kubernetes.io/node/accelerator/duty_cycle'\n | group_by [metric.model], [row_count: row_count()]\n | add [Platform: 'GKE']\n\n} \n | union\n | group_by [metric.model, Platform]\n | map rename [Model: metric.model]"
+                  "timeSeriesQueryLanguage": "{\n\nfetch gce_instance\n | metric 'agent.googleapis.com/gpu/utilization'\n | group_by [metric.model], [row_count: row_count()]\n | add [Platform: 'GCE']\n | window(5m)\n;\n\nfetch k8s_node\n | metric 'kubernetes.io/node/accelerator/duty_cycle'\n | group_by [metric.model], [row_count: row_count()]\n | add [Platform: 'GKE']\n | window(5m)\n\n} \n | union\n | group_by [metric.model, Platform]\n | map rename [Model: metric.model]\n\n"
                 }
               }
             ],
@@ -294,7 +294,7 @@
           "collapsibleGroup": {
             "collapsed": false
           },
-          "title": "GPU SM Utilization"
+          "title": "GPU Utilization"
         },
         "width": 12,
         "yPos": 10
