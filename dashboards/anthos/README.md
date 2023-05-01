@@ -1,3 +1,8 @@
+# Deprecation Warning
+
+Dashboards under this directory have been deprecated. New dashboards are
+available under `google-anthos` [directory](../google-anthos).
+
 ### Dashboards for Anthos
 
 | (Deprecated) Anthos cluster control plane uptime|
