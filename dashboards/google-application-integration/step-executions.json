@@ -1,0 +1,587 @@
+{
+    "category": "CUSTOM",
+    "dashboardFilters": [
+      {
+        "filterType": "RESOURCE_LABEL",
+        "labelKey": "location",
+        "stringValue": "",
+        "templateVariable": ""
+      },
+      {
+        "filterType": "RESOURCE_LABEL",
+        "labelKey": "integration",
+        "stringValue": "",
+        "templateVariable": ""
+      },
+      {
+        "filterType": "RESOURCE_LABEL",
+        "labelKey": "version",
+        "stringValue": "",
+        "templateVariable": ""
+      },
+      {
+        "filterType": "METRIC_LABEL",
+        "labelKey": "step_type",
+        "templateVariable": ""
+      }
+    ],
+    "displayName": "Step (Task/Trigger) Executions",
+    "labels": {},
+    "mosaicLayout": {
+      "columns": 12,
+      "tiles": [
+        {
+          "height": 8,
+          "widget": {
+            "title": "Successful step executions (per hour)",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "minAlignmentPeriod": "3600s",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "apiSource": "DEFAULT_CLOUD",
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "3600s",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [
+                          "metric.label.\"step_type\""
+                        ],
+                        "perSeriesAligner": "ALIGN_SUM"
+                      },
+                      "filter": "metric.type=\"integrations.googleapis.com/step/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"status\"=\"SUCCEEDED\""
+                    }
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 7,
+          "xPos": 0,
+          "yPos": 3
+        },
+        {
+          "height": 4,
+          "widget": {
+            "timeSeriesTable": {
+              "columnSettings": [
+                {
+                  "column": "step_type",
+                  "visible": true
+                },
+                {
+                  "column": "step_name",
+                  "visible": true
+                },
+                {
+                  "column": "is_step_external",
+                  "visible": true
+                },
+                {
+                  "column": "value",
+                  "visible": true
+                }
+              ],
+              "dataSets": [
+                {
+                  "minAlignmentPeriod": "86400s",
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "86400s",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [
+                          "metric.label.\"step_name\"",
+                          "metric.label.\"is_step_external\""
+                        ],
+                        "perSeriesAligner": "ALIGN_SUM"
+                      },
+                      "filter": "metric.type=\"integrations.googleapis.com/step/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"status\"=\"SUCCEEDED\" metric.label.\"step_type\"=\"TASK\"",
+                      "pickTimeSeriesFilter": {
+                        "direction": "TOP",
+                        "numTimeSeries": 5,
+                        "rankingMethod": "METHOD_MEAN"
+                      }
+                    }
+                  }
+                }
+              ],
+              "metricVisualization": "BAR"
+            },
+            "title": "Tasks with high execution success"
+          },
+          "width": 5,
+          "xPos": 7,
+          "yPos": 3
+        },
+        {
+          "height": 8,
+          "widget": {
+            "title": "Unsuccessful task executions (per minute)",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "minAlignmentPeriod": "60s",
+                  "plotType": "STACKED_AREA",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "apiSource": "DEFAULT_CLOUD",
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [
+                          "metric.label.\"status\""
+                        ],
+                        "perSeriesAligner": "ALIGN_SUM"
+                      },
+                      "filter": "metric.type=\"integrations.googleapis.com/step/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"status\"!=\"SUCCEEDED\""
+                    }
+                  }
+                }
+              ],
+              "thresholds": [
+                {
+                  "label": "",
+                  "targetAxis": "Y2",
+                  "value": 0
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 7,
+          "xPos": 0,
+          "yPos": 12
+        },
+        {
+          "height": 4,
+          "widget": {
+            "timeSeriesTable": {
+              "columnSettings": [
+                {
+                  "column": "step_name",
+                  "visible": true
+                },
+                {
+                  "column": "is_step_external",
+                  "visible": true
+                },
+                {
+                  "column": "value",
+                  "visible": true
+                }
+              ],
+              "dataSets": [
+                {
+                  "minAlignmentPeriod": "86400s",
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "86400s",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [
+                          "metric.label.\"step_name\"",
+                          "metric.label.\"is_step_external\""
+                        ],
+                        "perSeriesAligner": "ALIGN_SUM"
+                      },
+                      "filter": "metric.type=\"integrations.googleapis.com/step/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"status\"!=\"SUCCEEDED\" metric.label.\"step_type\"=\"TASK\"",
+                      "pickTimeSeriesFilter": {
+                        "direction": "TOP",
+                        "numTimeSeries": 5,
+                        "rankingMethod": "METHOD_MEAN"
+                      }
+                    }
+                  }
+                }
+              ],
+              "metricVisualization": "BAR"
+            },
+            "title": "Tasks with high unsuccessful executions"
+          },
+          "width": 5,
+          "xPos": 7,
+          "yPos": 12
+        },
+        {
+          "height": 2,
+          "widget": {
+            "scorecard": {
+              "blankView": {},
+              "thresholds": [],
+              "timeSeriesQuery": {
+                "apiSource": "DEFAULT_CLOUD",
+                "outputFullDuration": true,
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [],
+                    "perSeriesAligner": "ALIGN_SUM"
+                  },
+                  "filter": "metric.type=\"integrations.googleapis.com/step/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"status\"=\"SUCCEEDED\""
+                }
+              }
+            },
+            "title": "Total successful steps"
+          },
+          "width": 4,
+          "xPos": 0,
+          "yPos": 0
+        },
+        {
+          "height": 2,
+          "widget": {
+            "scorecard": {
+              "blankView": {},
+              "thresholds": [],
+              "timeSeriesQuery": {
+                "apiSource": "DEFAULT_CLOUD",
+                "outputFullDuration": true,
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [],
+                    "perSeriesAligner": "ALIGN_SUM"
+                  },
+                  "filter": "metric.type=\"integrations.googleapis.com/step/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"status\"!=\"SUCCEEDED\""
+                }
+              }
+            },
+            "title": "Total unsuccessful steps"
+          },
+          "width": 4,
+          "xPos": 4,
+          "yPos": 0
+        },
+        {
+          "height": 2,
+          "widget": {
+            "scorecard": {
+              "blankView": {},
+              "thresholds": [],
+              "timeSeriesQuery": {
+                "apiSource": "DEFAULT_CLOUD",
+                "outputFullDuration": true,
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [],
+                    "perSeriesAligner": "ALIGN_SUM"
+                  },
+                  "filter": "metric.type=\"integrations.googleapis.com/step/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"is_retry\"=\"true\""
+                }
+              }
+            },
+            "title": "Total step retries"
+          },
+          "width": 4,
+          "xPos": 8,
+          "yPos": 0
+        },
+        {
+          "height": 7,
+          "widget": {
+            "title": "Task failures (per minute)",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "minAlignmentPeriod": "60s",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "apiSource": "DEFAULT_CLOUD",
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [
+                          "metric.label.\"step_name\"",
+                          "metric.label.\"step_id\""
+                        ],
+                        "perSeriesAligner": "ALIGN_SUM"
+                      },
+                      "filter": "metric.type=\"integrations.googleapis.com/step/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"status\"=\"FAILED\""
+                    }
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 12,
+          "xPos": 0,
+          "yPos": 20
+        },
+        {
+          "height": 4,
+          "widget": {
+            "timeSeriesTable": {
+              "columnSettings": [
+                {
+                  "column": "error_enum",
+                  "visible": true
+                },
+                {
+                  "column": "value",
+                  "visible": true
+                }
+              ],
+              "dataSets": [
+                {
+                  "minAlignmentPeriod": "86400s",
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "86400s",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [
+                          "metric.label.\"error_enum\""
+                        ],
+                        "perSeriesAligner": "ALIGN_SUM"
+                      },
+                      "filter": "metric.type=\"integrations.googleapis.com/step/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"error_enum\"!=\"ERROR_ENUM_UNSPECIFIED\"",
+                      "pickTimeSeriesFilter": {
+                        "direction": "TOP",
+                        "numTimeSeries": 5,
+                        "rankingMethod": "METHOD_MEAN"
+                      }
+                    }
+                  }
+                }
+              ],
+              "metricVisualization": "BAR"
+            },
+            "title": "Top task execution errors"
+          },
+          "width": 5,
+          "xPos": 7,
+          "yPos": 16
+        },
+        {
+          "height": 7,
+          "widget": {
+            "title": "Task retries (per minute)",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "minAlignmentPeriod": "60s",
+                  "plotType": "STACKED_AREA",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "apiSource": "DEFAULT_CLOUD",
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [
+                          "metric.label.\"step_name\""
+                        ],
+                        "perSeriesAligner": "ALIGN_SUM"
+                      },
+                      "filter": "metric.type=\"integrations.googleapis.com/step/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"is_retry\"=\"true\""
+                    }
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 7,
+          "xPos": 0,
+          "yPos": 28
+        },
+        {
+          "height": 4,
+          "widget": {
+            "timeSeriesTable": {
+              "columnSettings": [
+                {
+                  "column": "step_name",
+                  "visible": true
+                },
+                {
+                  "column": "value",
+                  "visible": true
+                }
+              ],
+              "dataSets": [
+                {
+                  "minAlignmentPeriod": "86400s",
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "86400s",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [
+                          "metric.label.\"step_name\"",
+                          "metric.label.\"is_step_external\""
+                        ],
+                        "perSeriesAligner": "ALIGN_SUM"
+                      },
+                      "filter": "metric.type=\"integrations.googleapis.com/step/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"step_type\"=\"TASK\" metric.label.\"is_retry\"=\"true\"",
+                      "pickTimeSeriesFilter": {
+                        "direction": "TOP",
+                        "numTimeSeries": 5,
+                        "rankingMethod": "METHOD_MEAN"
+                      }
+                    }
+                  }
+                }
+              ],
+              "metricVisualization": "BAR"
+            },
+            "title": "Tasks with high execution retries"
+          },
+          "width": 5,
+          "xPos": 7,
+          "yPos": 28
+        },
+        {
+          "height": 4,
+          "widget": {
+            "timeSeriesTable": {
+              "columnSettings": [
+                {
+                  "column": "step_name",
+                  "visible": true
+                },
+                {
+                  "column": "value",
+                  "visible": true
+                }
+              ],
+              "dataSets": [
+                {
+                  "minAlignmentPeriod": "86400s",
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "86400s",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [
+                          "metric.label.\"step_name\""
+                        ],
+                        "perSeriesAligner": "ALIGN_SUM"
+                      },
+                      "filter": "metric.type=\"integrations.googleapis.com/step/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"status\"=\"SUCCEEDED\" metric.label.\"step_type\"=\"TRIGGER\"",
+                      "pickTimeSeriesFilter": {
+                        "direction": "TOP",
+                        "numTimeSeries": 5,
+                        "rankingMethod": "METHOD_MEAN"
+                      }
+                    }
+                  }
+                }
+              ],
+              "metricVisualization": "BAR"
+            },
+            "title": "Triggers with high execution success"
+          },
+          "width": 5,
+          "xPos": 7,
+          "yPos": 7
+        },
+        {
+          "height": 1,
+          "widget": {
+            "text": {
+              "content": "",
+              "format": "RAW",
+              "style": {
+                "backgroundColor": "",
+                "fontSize": "FS_LARGE",
+                "horizontalAlignment": "H_LEFT",
+                "padding": "P_EXTRA_SMALL",
+                "textColor": "#000000",
+                "verticalAlignment": "V_TOP"
+              }
+            },
+            "title": "Successful step executions"
+          },
+          "width": 12,
+          "xPos": 0,
+          "yPos": 2
+        },
+        {
+          "height": 1,
+          "widget": {
+            "text": {
+              "content": "",
+              "format": "RAW",
+              "style": {
+                "backgroundColor": "",
+                "fontSize": "FS_LARGE",
+                "horizontalAlignment": "H_LEFT",
+                "padding": "P_EXTRA_SMALL",
+                "textColor": "#000000",
+                "verticalAlignment": "V_TOP"
+              }
+            },
+            "title": "Unsuccessful step executions"
+          },
+          "width": 12,
+          "xPos": 0,
+          "yPos": 11
+        },
+        {
+          "height": 1,
+          "widget": {
+            "text": {
+              "content": "",
+              "format": "RAW",
+              "style": {
+                "backgroundColor": "",
+                "fontSize": "FS_LARGE",
+                "horizontalAlignment": "H_LEFT",
+                "padding": "P_EXTRA_SMALL",
+                "textColor": "#000000",
+                "verticalAlignment": "V_TOP"
+              }
+            },
+            "title": "Task retries"
+          },
+          "width": 12,
+          "xPos": 0,
+          "yPos": 27
+        }
+      ]
+    }
+  }
