@@ -1,6 +1,11 @@
 ### Dashboards for Microservices (gRPC)
 
-|Microservices (gRPC) Monitoring|
+|GKE Microservices (gRPC) Monitoring|
 |:--------------------|
-|Filename: [microservices-grpc-monitoring.json](microservices-grpc-monitoring.json)|
-|This dashboard has charts for Microservices gRPC metrics, including requests, errors, latency, and bytes.|
+|Filename: [microservices-grpc-monitoring-gke.json](microservices-grpc-monitoring-gke.json)|
+|This dashboard has charts for monitoring Microservices gRPC metrics of GKE workload. The metrics include requests, errors, latency, and bytes.|
+
+|GCE Microservices (gRPC) Monitoring|
+|:--------------------|
+|Filename: [microservices-grpc-monitoring-gce.json](microservices-grpc-monitoring-gce.json)|
+|This dashboard has charts for monitoring Microservices gRPC metrics of GCE workload. The metrics include requests, errors, latency, and bytes.|
