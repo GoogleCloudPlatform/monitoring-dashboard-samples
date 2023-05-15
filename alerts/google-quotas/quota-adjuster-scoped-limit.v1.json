@@ -1,0 +1,25 @@
+{
+  "displayName": "All adjustments by Quota Adjuster for limit",
+  "documentation": {
+    "content": "Alert to signal any quota increases for a limit in all locations",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Log match condition",
+      "conditionMatchedLog": {
+        "filter": "log_id(\"cloudaudit2.googleapis.com/system_event\")\nresource.labels.service=\"quotaadjuster.googleapis.com\" \nprotoPayload.serviceName=\"quotaadjuster.googleapis.com\" \nprotoPayload.metadata.quota_change_event.event_type=\"UPSCALE_QUOTA\" \nprotoPayload.metadata.quota_change_event.limit_name=\"${LIMIT_NAME}\"\n"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "notificationRateLimit": {
+      "period": "3600s"
+    },
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
