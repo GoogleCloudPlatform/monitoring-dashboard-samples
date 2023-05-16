@@ -1,0 +1,35 @@
+{
+    "displayName": "High integration execution latency",
+    "documentation": {
+      "content": "This alert is fired when mean integration execution latency surpasses a certain threshold. You can drill down further in the Cloud Monitoring metrics to know the specific integration executions taking longer time, and can also check the execution logs of the integration for more details.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "High integration execution latency alert condition",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "900s",
+              "crossSeriesReducer": "REDUCE_MEAN",
+              "perSeriesAligner": "ALIGN_DELTA"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"integrations.googleapis.com/IntegrationVersion\" AND metric.type = \"integrations.googleapis.com/integration/execution_latencies\"",
+          "thresholdValue": 1000,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "86400s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }
