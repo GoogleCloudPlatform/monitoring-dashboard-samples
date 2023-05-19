@@ -1,0 +1,34 @@
+{
+    "displayName": "High data usage",
+    "documentation": {
+      "content": "This alert is fired when data processed by any single integration execution surpasses a certain threshold. You can check the execution logs of the integration for more details.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "High data usage alert condition",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "900s",
+              "perSeriesAligner": "ALIGN_SUM"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"integrations.googleapis.com/IntegrationVersion\" AND metric.type = \"integrations.googleapis.com/processed_bytes_count\"",
+          "thresholdValue": 10000,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "86400s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }
