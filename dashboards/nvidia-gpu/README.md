@@ -10,7 +10,7 @@
 |NVIDIA GPU Monitoring Overview (GCE & GKE)|
 |:------------------|
 |Filename: [nvidia-overview.json](nvidia-overview.json)|
-|Displays GPU metrics for both GKE Nodes and GCE VMs.  GPU metrics for the GCE VMs require the Ops Agent to be installed.|
+|Displays GPU metrics for both GKE Nodes and GCE VMs.  GPU metrics for the GCE VMs require the Ops Agent to be installed and running.|
 
 |NVIDIA GPU Monitoring Advanced DCGM Metrics (GCE Only)|
 |:------------------|
