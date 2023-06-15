@@ -1,0 +1,35 @@
+{
+    "displayName": "Multiple task suspension",
+    "documentation": {
+      "content": "This alert is fired when too many tasks across the integration executions goes in suspended state within a certain timeframe. You can drill down further in the Cloud Monitoring metrics to know the specific integrations having such issues, and can also check the execution logs of the integration for more details.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Multiple task suspension alert condition",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "900s",
+              "crossSeriesReducer": "REDUCE_SUM",
+              "perSeriesAligner": "ALIGN_SUM"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"integrations.googleapis.com/IntegrationVersion\" AND metric.type = \"integrations.googleapis.com/step/execution_count\" AND metric.labels.status = \"SUSPENDED\"",
+          "thresholdValue": 10,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "86400s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }
