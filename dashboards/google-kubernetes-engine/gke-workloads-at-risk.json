@@ -185,7 +185,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "fetch k8s_container::kubernetes.io/container/cpu/request_utilization\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system'\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name,\n     metadata.system.top_level_controller_name:\n       metadata.system_labels.top_level_controller_name,\n     metadata.system.top_level_controller_type:\n       metadata.system_labels.top_level_controller_type],\n    [value_request_utilization_mean_mean: mean(value.request_utilization)]\n| { filter value_request_utilization_mean_mean >= 1\n| row_count\n  ; ident | row_count}\n| ratio\n| scale '%'"
+              "timeSeriesQueryLanguage": "fetch k8s_container::kubernetes.io/container/cpu/request_utilization\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| filter resource.namespace_name !~ ''(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs''\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name,\n     metadata.system.top_level_controller_name:\n       metadata.system_labels.top_level_controller_name,\n     metadata.system.top_level_controller_type:\n       metadata.system_labels.top_level_controller_type],\n    [value_request_utilization_mean_mean: mean(value.request_utilization)]\n| { filter value_request_utilization_mean_mean >= 1\n| row_count\n  ; ident | row_count}\n| ratio\n| scale '%'"
             }
           },
           "title": "CPU under-provisioned"
@@ -207,7 +207,7 @@
               }
             ],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "fetch k8s_container::kubernetes.io/container/memory/request_utilization\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| filter (resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system' && metric.memory_type == 'non-evictable')\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name,\n     metadata.system.top_level_controller_name:\n       metadata.system_labels.top_level_controller_name,\n     metadata.system.top_level_controller_type:\n       metadata.system_labels.top_level_controller_type],\n    [value_request_utilization_mean_mean: mean(value.request_utilization)]\n| { filter value_request_utilization_mean_mean >= 1\n| row_count\n  ; ident | row_count}\n| ratio\n| scale '%'"
+              "timeSeriesQueryLanguage": "fetch k8s_container::kubernetes.io/container/memory/request_utilization\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| filter (resource.namespace_name !~ ''(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'' && metric.memory_type == 'non-evictable')\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name,\n     metadata.system.top_level_controller_name:\n       metadata.system_labels.top_level_controller_name,\n     metadata.system.top_level_controller_type:\n       metadata.system_labels.top_level_controller_type],\n    [value_request_utilization_mean_mean: mean(value.request_utilization)]\n| { filter value_request_utilization_mean_mean >= 1\n| row_count\n  ; ident | row_count}\n| ratio\n| scale '%'"
             }
           },
           "title": "Memory under-provisioned"
