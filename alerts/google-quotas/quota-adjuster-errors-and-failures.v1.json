@@ -1,7 +1,7 @@
 {
   "displayName": "Quota Adjuster errors and failures",
   "documentation": {
-    "content": "Alert to signal any failures for any QIR's submitted by QuotaAdjuster",
+    "content": "Log-based alert detected an QuotaAdjuster increase failure involving limit ${log.extracted_label.limit_name} at location ${log.extracted_label.location}.",
     "mimeType": "text/markdown"
   },
   "userLabels": {},
@@ -9,7 +9,11 @@
     {
       "displayName": "Log match condition",
       "conditionMatchedLog": {
-        "filter": "log_id(\"cloudaudit.googleapis.com/system_event\") \nresource.labels.service = \"quotaadjuster.googleapis.com\"\nprotoPayload.serviceName=\"quotaadjuster.googleapis.com\" \nprotoPayload.metadata.quota_change_event.event_status=\"FAILURE\""
+        "filter": "log_id(\"cloudaudit.googleapis.com/system_event\") \nresource.labels.service = \"quotaadjuster.googleapis.com\"\nprotoPayload.serviceName=\"quotaadjuster.googleapis.com\" \nprotoPayload.metadata.quota_change_event.event_status=\"FAILURE\"",
+        "labelExtractors": {
+          "limit_name":"EXTRACT(protoPayload.metadata.quota_change_event.limit_name)",
+          "location":"EXTRACT(protoPayload.metadata.quota_change_event.location)"
+        }
       }
     }
   ],
