@@ -1,5 +1,5 @@
 {
-  "displayName": "Quota Adjuster errors and failures",
+  "displayName": "Quota Adjuster < ${SERVICE_TITLE} - ${LIMIT_DISPLAY_NAME}",
   "documentation": {
     "content": "Log-based alerting detected that QuotaAdjuster attempted to change the limit ${log.extracted_label.limit_name} in location ${log.extracted_label.location}.The change has failed.",
     "mimeType": "text/markdown"
@@ -9,7 +9,7 @@
     {
       "displayName": "Log match condition",
       "conditionMatchedLog": {
-        "filter": "log_id(\"cloudaudit.googleapis.com/system_event\") \nresource.labels.service = \"quotaadjuster.googleapis.com\"\nprotoPayload.serviceName=\"quotaadjuster.googleapis.com\" \nprotoPayload.metadata.quota_change_event.event_status=\"FAILURE\"",
+        "filter": "log_id(\"cloudaudit.googleapis.com/system_event\") \nresource.labels.service = \"quotaadjuster.googleapis.com\"\nprotoPayload.serviceName=\"quotaadjuster.googleapis.com\" \nprotoPayload.metadata.quota_change_event.event_status=\"FAILURE\" \nprotoPayload.metadata.quota_change_event.limit_name=\"${LIMIT_NAME}\"\n",
         "labelExtractors": {
           "limit_name":"EXTRACT(protoPayload.metadata.quota_change_event.limit_name)",
           "location":"EXTRACT(protoPayload.metadata.quota_change_event.location)"
