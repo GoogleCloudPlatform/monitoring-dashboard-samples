@@ -1,0 +1,249 @@
+{
+  "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "project_id",
+      "templateVariable": "project_id"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster_name",
+      "templateVariable": "cluster_name"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "location"
+    }
+  ],
+  "displayName": "GKE Optimization Golden Signals",
+  "labels": {},
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "timeSeriesQueryLanguage": "{ fetch k8s_scale\n  | metric\n      'kubernetes.io/autoscaler/container/memory/per_replica_recommended_request_bytes'\n  | filter\n      namespace_name\n      !~\n      '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n  | group_by [], .aggregate\n; fetch k8s_container\n  | metric 'kubernetes.io/container/memory/request_bytes'\n  | filter\n      namespace_name\n      !~\n      '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n  | group_by [], .aggregate \n  }\n| join\n| value val(0) / val(1)\n| scale '%'",
+              "unitOverride": ""
+            }
+          },
+          "title": "Workload rightsizing MEM [Deployments]"
+        },
+        "width": 2,
+        "xPos": 10,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "timeSeriesQueryLanguage": "fetch k8s_node\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| metric 'kubernetes.io/node/cpu/allocatable_utilization'\n| group_by [],.mean\n| scale '%'",
+              "unitOverride": ""
+            }
+          },
+          "title": "Demand based downscaling"
+        },
+        "width": 2,
+        "xPos": 0,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "timeSeriesQueryLanguage": "{ fetch k8s_container::kubernetes.io/container/cpu/request_cores\n| filter\n    resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n    | group_by [], .aggregate()\n    ;\n fetch k8s_node::kubernetes.io/node/cpu/allocatable_cores\n| ${project_id}\n| ${location}\n| ${cluster_name}\n | group_by [], .aggregate()\n} \n| join\n| value val(0) / val(1)\n| scale '%'",
+              "unitOverride": ""
+            }
+          },
+          "title": "Cluster bin packing CPU"
+        },
+        "width": 2,
+        "xPos": 2,
+        "yPos": 0
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "timeSeriesQueryLanguage": "{ fetch k8s_scale\n  | metric\n      'kubernetes.io/autoscaler/container/cpu/per_replica_recommended_request_cores'\n  | filter\n      namespace_name\n      !~\n      '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n  | group_by [], .aggregate()\n; fetch k8s_container\n  | metric 'kubernetes.io/container/cpu/request_cores'\n  | filter\n      namespace_name\n      !~\n      '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n  | group_by [], .aggregate() \n  }\n| join\n| value val(0) / val(1)\n| scale '%'",
+              "unitOverride": ""
+            }
+          },
+          "title": "Workload rightsizing CPU [Deployments]"
+        },
+        "width": 2,
+        "xPos": 8,
+        "yPos": 0
+      },
+      {
+        "height": 5,
+        "widget": {
+          "title": "AVG Recommended CPU vs AVG CPU Request [Deployments]",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_scale::kubernetes.io/autoscaler/container/cpu/per_replica_recommended_request_cores\n| filter namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name} \n| group_by [cluster_name], .aggregate;\n fetch k8s_container::kubernetes.io/container/cpu/request_cores\n | filter namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs' \n| ${project_id}\n| ${location}\n| ${cluster_name}\n | group_by [cluster_name], .aggregate\n}\n| ratio\n",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 3,
+        "xPos": 6,
+        "yPos": 2
+      },
+      {
+        "height": 5,
+        "widget": {
+          "title": "AVG Recommended MEM vs AVG MEM Request [Deployments]",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch\n    k8s_scale ::\n    kubernetes.io/autoscaler/container/memory/per_replica_recommended_request_bytes\n  | filter\n      namespace_name\n      !~\n      '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n  | group_by [cluster_name], .aggregate\n; fetch k8s_container::kubernetes.io/container/memory/request_bytes\n  | filter\n      namespace_name\n      !~\n      '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n  | group_by [cluster_name], .aggregate\n  }\n| ratio",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 3,
+        "xPos": 9,
+        "yPos": 2
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "timeSeriesQueryLanguage": "{ fetch k8s_container::kubernetes.io/container/memory/request_bytes\n| filter\n    resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n    | group_by [], .aggregate()\n;\n fetch k8s_node::kubernetes.io/node/memory/allocatable_bytes\n| ${project_id}\n| ${location}\n| ${cluster_name}\n | group_by [], .aggregate()\n} \n| join\n| value val(0) / val(1)\n| scale '%'\n",
+              "unitOverride": ""
+            }
+          },
+          "title": "Cluster bin packing Memory"
+        },
+        "width": 2,
+        "xPos": 4,
+        "yPos": 0
+      },
+      {
+        "height": 5,
+        "widget": {
+          "title": "AVG MEM Request vs AVG MEM Allocatable",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container::kubernetes.io/container/memory/request_bytes;\n fetch k8s_node::kubernetes.io/node/memory/allocatable_bytes\n} \n| ${project_id}\n| ${location}\n| ${cluster_name}\n| join\n| group_by [project_id, location, cluster_name], sum(val(0)) / sum(val(1))",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 3,
+        "xPos": 3,
+        "yPos": 2
+      },
+      {
+        "height": 5,
+        "widget": {
+          "title": "AVG CPU Request vs AVG CPU Allocatable",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container::kubernetes.io/container/memory/request_bytes;\n fetch k8s_node::kubernetes.io/node/memory/allocatable_bytes\n} \n| ${project_id}\n| ${location}\n| ${cluster_name}\n| join\n| group_by [project_id, location, cluster_name], sum(val(0)) / sum(val(1))",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 3,
+        "xPos": 0,
+        "yPos": 2
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "timeSeriesQueryLanguage": "fetch k8s_node::kubernetes.io/node/cpu/core_usage_time\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by [],\n    sum(\n      if(metadata.user_labels.c'cloud.google.com/gke-spot' = 'true', val(), 0.0))\n    / .sum()\n| scale '%'",
+              "unitOverride": ""
+            }
+          },
+          "title": "Spot Discount Node"
+        },
+        "width": 2,
+        "xPos": 6,
+        "yPos": 0
+      }
+    ]
+  }
+}
