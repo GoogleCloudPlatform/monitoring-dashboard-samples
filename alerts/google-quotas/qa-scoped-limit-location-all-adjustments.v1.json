@@ -1,0 +1,31 @@
+{
+  "displayName": "Quota Adjuster < ${SERVICE_TITLE} - ${LIMIT_DISPLAY_NAME} - ${LOCATION}",
+  "documentation": {
+    "content": "Log-based alerting detected a QuotaAdjuster change for limit ${log.extracted_label.limit_name} in location ${log.extracted_label.location}, which increased the quota from ${log.extracted_label.current_quota_limit} to ${log.extracted_label.new_quota_limit}.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Log match condition",
+      "conditionMatchedLog": {
+        "filter": "log_id(\"cloudaudit2.googleapis.com/system_event\")\nresource.labels.service=\"quotaadjuster.googleapis.com\" \nprotoPayload.serviceName=\"quotaadjuster.googleapis.com\" \nprotoPayload.metadata.quota_change_event.event_status=\"SUCCESS\" \nprotoPayload.metadata.quota_change_event.limit_name=\"${LIMIT_NAME}\" \n protoPayload.metadata.quota_change_event.location = \"${LOCATION}\"",
+        "labelExtractors": {
+          "current_quota_limit":"EXTRACT(protoPayload.metadata.quota_change_event.current_quota_limit)",
+          "new_quota_limit":"EXTRACT(protoPayload.metadata.quota_change_event.success_details.new_quota_limit)",
+          "limit_name":"EXTRACT(protoPayload.metadata.quota_change_event.limit_name)",
+          "location":"EXTRACT(protoPayload.metadata.quota_change_event.location)"
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "notificationRateLimit": {
+      "period": "3600s"
+    },
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
