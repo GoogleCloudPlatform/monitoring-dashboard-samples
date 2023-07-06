@@ -9,7 +9,7 @@ minimum_exporter_version: "1.15"
 exporter_repo_url: https://flink.apache.org/features/2019/03/11/prometheus-monitoring.html
 additional_prereq_info: |
   {{app_name_short}} exposes Prometheus-format metrics when configured with
-  `metrics.reporter.prom.class: org.apache.flink.metrics.prometheus.PrometheusReporter`.
+  `metrics.reporter.prom.factory.class: org.apache.flink.metrics.prometheus.PrometheusReporterFactory`.
   If you deployed Flink with the official [getting started manifests](https://nightlies.apache.org/flink/flink-docs-master/docs/deployment/resource-providers/standalone/kubernetes/){:class="external"},
   add this new option to the ConfigMap:
   <pre>
@@ -22,7 +22,7 @@ additional_prereq_info: |
   data:
     flink-conf.yaml: |+
       ...
-  +   metrics.reporter.prom.class: org.apache.flink.metrics.prometheus.PrometheusReporter
+  +   metrics.reporter.prom.factory.class: org.apache.flink.metrics.prometheus.PrometheusReporterFactory
   </pre>
   If you deployed Flink with the official [operator](https://nightlies.apache.org/flink/flink-kubernetes-operator-docs-main/docs/try-flink-kubernetes-operator/quick-start/){:class="external"},
   add this new option to the FlinkDeployment's `spec.flinkConfiguration` field:
@@ -36,7 +36,7 @@ additional_prereq_info: |
     flinkVersion: v1_15
     flinkConfiguration:
       taskmanager.numberOfTaskSlots: "2"
-  +   metrics.reporter.prom.class: org.apache.flink.metrics.prometheus.PrometheusReporter
+  +   metrics.reporter.prom.factory.class: org.apache.flink.metrics.prometheus.PrometheusReporterFactory
   </pre>
   Alternatively, you can specify the Prometheus reporter as a default option within the [Flink operator
   configuration](https://nightlies.apache.org/flink/flink-kubernetes-operator-docs-main/docs/operations/configuration/){:class="external"}.
