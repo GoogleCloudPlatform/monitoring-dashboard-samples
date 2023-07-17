@@ -1,61 +1,35 @@
-exporter_type: sidecar
+exporter_type: included
 app_name_short: HAProxy
 app_name: {{app_name_short}}
 app_site_name: HAProxy
 app_site_url: https://www.haproxy.com/
-exporter_name: the HAProxy exporter
-exporter_pkg_name: haproxy_exporter
-exporter_repo_url: https://github.com/prometheus/haproxy_exporter
+exporter_name: the HAProxy promex exporter
+exporter_pkg_name: haproxy_promex
+exporter_repo_url: https://github.com/haproxy/haproxy/blob/master/addons/promex/README
 dashboard_available: true
 minimum_exporter_version: "2.4"
 multiple_dashboards: false
 dashboard_display_name: {{app_name_short}} Prometheus Overview
-config_mods: |
+additional_prereq_info: |
+  {{app_name_short}} exposes Prometheus-format metrics only when it is 
+  [built with the service enabled](https://github.com/haproxy/haproxy/blob/master/addons/promex/README) and an appropriate `frontend` is included in the configuration.
+  Most of the official docker images for versions greater than or equal to 2.4 are built with this service enabled.
+  The following example was built referencing [HAProxy Enterprise documentation](https://www.haproxy.com/documentation/hapee/latest/observability/metrics/prometheus/).
+  It works with the community edition and can be modified to suit specific needs:
+  <pre>
   apiVersion: v1
   kind: ConfigMap
   metadata:
     name: haproxy
   data:
     haproxy.cfg: |
+      ...
   +   frontend prometheus
   +     mode http
   +     bind *:8404
   +     http-request use-service prometheus-exporter if { path /metrics }
-  ---
-  apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    name: haproxy
-  spec:
-    selector:
-      matchLabels:
-  +     app.kubernetes.io/name: haproxy
-    template:
-      metadata:
-        labels:
-  +       app.kubernetes.io/name: haproxy
-      spec:
-        containers:
-        - name: haproxy
-          image: haproxy:2.4
-          ports:
-  +       - containerPort: 8404
-  +         name: prometheus
-          volumeMounts:
-          - mountPath: /usr/local/etc/haproxy/haproxy.cfg
-            subPath: haproxy.cfg
-            name: haproxy
-        volumes:
-        - name: haproxy
-          configMap:
-            name: haproxy
-            items:
-            - key: haproxy.cfg
-              path: haproxy.cfg
-additional_install_info: |
-  The recommended changes in <code>haproxy.cfg</code> defines a frontend with the "stats enable" directive 
-  and enables the {{app_name_short}} stats page. This frontend can be scraped by {{exporter_pkg_name}}.
-  For more information, see [Exploring the HAProxy Stats page](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/){:class=external}.
+      ...
+  </pre>
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
   kind: PodMonitoring
@@ -66,13 +40,16 @@ podmonitoring_config: |
       app.kubernetes.io/part-of: google-cloud-managed-prometheus
   spec:
     endpoints:
-    - port: prometheus
+    - port: 8404
       scheme: http
       interval: 30s
       path: /metrics
     selector:
       matchLabels:
         app.kubernetes.io/name: haproxy
+additional_podmonitoring_info: |
+  Ensure that the values of the `port` and `matchLabels` fields match those of the {{app_name_short}} pods you want to monitor.
+  {{app_name_short}} exposes metrics from targets defined in the `bind` configuration option. This option requires a user to define the IP address and port to be listened on for scraping metrics.
 sample_promql_query: up{job="haproxy", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
 alerts_config: |
   apiVersion: monitoring.googleapis.com/v1
