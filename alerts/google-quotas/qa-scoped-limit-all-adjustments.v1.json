@@ -1,7 +1,7 @@
 {
   "displayName": "Quota Adjuster < ${SERVICE_TITLE} - ${LIMIT_DISPLAY_NAME}",
   "documentation": {
-    "content": "Log-based alerting detected a QuotaAdjuster change for limit ${log.extracted_label.limit_name} in location ${log.extracted_label.location}, which increased the quota from ${log.extracted_label.current_quota_limit} to ${log.extracted_label.new_quota_limit}.",
+    "content": "Log-based alerting detected a QuotaAdjuster change for service ${log.extracted_label.service_name} limit ${LIMIT_DISPLAY_NAME} in location ${log.extracted_label.location}, which increased the quota from ${log.extracted_label.current_quota_limit} to ${log.extracted_label.new_quota_limit}.",
     "mimeType": "text/markdown"
   },
   "userLabels": {},
@@ -9,12 +9,13 @@
     {
       "displayName": "Log match condition",
       "conditionMatchedLog": {
-        "filter": "log_id(\"cloudaudit2.googleapis.com/system_event\")\nresource.labels.service=\"quotaadjuster.googleapis.com\" \nprotoPayload.serviceName=\"quotaadjuster.googleapis.com\" \nprotoPayload.metadata.quota_change_event.event_status=\"SUCCESS\" \nprotoPayload.metadata.quota_change_event.limit_name=\"${LIMIT_NAME}\"\n",
+        "filter": "log_id(\"cloudaudit.googleapis.com/system_event\")\nprotoPayload.methodName=\"google.cloud.quotaadjuster.v1main.QuotaAdjusterService.AutoAdjustQuota\"\nprotoPayload.metadeta.service=\"${SERVICE_NAME}\"  \nprotoPayload.metadata.state=\"SUCCEEDED\" \nprotoPayload.metadata.limit=\"${LIMIT_NAME}\"\n",
         "labelExtractors": {
-          "current_quota_limit":"EXTRACT(protoPayload.metadata.quota_change_event.current_quota_limit)",
-          "new_quota_limit":"EXTRACT(protoPayload.metadata.quota_change_event.success_details.new_quota_limit)",
-          "limit_name":"EXTRACT(protoPayload.metadata.quota_change_event.limit_name)",
-          "location":"EXTRACT(protoPayload.metadata.quota_change_event.location)"
+          "current_quota_limit":"EXTRACT(protoPayload.metadata.currentQuotaLimit)",
+          "new_quota_limit":"EXTRACT(protoPayload.metadata.success_Details.newQuotaLimit)",
+          "limit_name":"EXTRACT(protoPayload.metadata.limit)",
+          "service_name":"EXTRACT(protoPayload.metadata.service)",
+          "location":"EXTRACT(protoPayload.metadata.location)"
         }
       }
     }
