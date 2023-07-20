@@ -29,9 +29,10 @@ standalone_config: |
       spec:
         containers:
         - name: exporter
-          image: percona/mongodb_exporter:0.20
+          image: percona/mongodb_exporter:0.39
           args:
           - --mongodb.uri=mongodb://user:password@mongodb-service-name:27017
+          - --collect-all
           ports:
           - name: prometheus
             containerPort: 9216
@@ -43,8 +44,8 @@ additional_install_info: |
   to suit your {{app_name_short}} configuration.
   Update the `--mongodb.uri` flag to match your environment's username, password,
   and clusterIP service name.
-
-  The exporter does not support scraping metrics from MongoDB 6.0.4.
+  The flag `--collect-all` is specified in the example and there are [other flags 
+  available](https://github.com/percona/mongodb_exporter/blob/main/REFERENCE.md#flags) to tune metric collection.
 
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
