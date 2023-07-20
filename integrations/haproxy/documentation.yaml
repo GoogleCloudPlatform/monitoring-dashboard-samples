@@ -29,7 +29,45 @@ additional_prereq_info: |
   +     bind *:8404
   +     http-request use-service prometheus-exporter if { path /metrics }
       ...
+  ---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: haproxy
+  spec:
+    selector:
+      matchLabels:
+  +     app.kubernetes.io/name: haproxy
+    template:
+      metadata:
+        labels:
+  +       app.kubernetes.io/name: haproxy
+      spec:
+        containers:
+        - name: haproxy
+          image: haproxy:2.8
+          ports:
+          - containerPort: 8404
+            name: prometheus
+          volumeMounts:
+          - mountPath: /usr/local/etc/haproxy/haproxy.cfg
+            subPath: haproxy.cfg
+            name: haproxy
+        volumes:
+        - name: haproxy
+          configMap:
+            name: haproxy
+            items:
+            - key: haproxy.cfg
+              path: haproxy.cfg
   </pre>
+  To verify that {{exporter_name}} is emitting metrics on the expected endpoints, do the following:
+  1. Set up port forwarding by using the following command:
+    <pre class="devsite-click-to-copy">
+    kubectl -n {{namespace_name}} port-forward {{pod_name}} 8404
+    </pre>
+  2. Access the endpoint `localhost:8404/metrics` by using the browser
+     or the `curl` utility in another terminal session.
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
   kind: PodMonitoring
@@ -40,7 +78,7 @@ podmonitoring_config: |
       app.kubernetes.io/part-of: google-cloud-managed-prometheus
   spec:
     endpoints:
-    - port: 8404
+    - port: prometheus
       scheme: http
       interval: 30s
       path: /metrics
