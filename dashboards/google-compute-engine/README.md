@@ -11,3 +11,10 @@
 |:-------------------------|
 |Filename: [gce-vm-instance-monitoring.json](gce-vm-instance-monitoring.json)|
 |This dashboard has 10 charts for the related [GCE VM metrics](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-compute), including metrics for CPU, disk read/write, and network.|
+
+&nbsp;
+
+|GCE VM Lifecycle Events Monitoring|
+|:-------------------------|
+|Filename: [vm-lifecycle-dashboard.json](vm-lifecycle-dashboard.json)|
+|This dashboard enables you to visualize [system events and admin activities](https://cloud.google.com/logging/docs/audit#types) to monitor VM lifecycle events (including shutdowns, reboots, and host errors). For more information on how to use this dashboard see [Monitor VM Lifecycle Events](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-reboots#monitor-events).|

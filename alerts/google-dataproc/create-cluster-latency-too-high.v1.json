@@ -1,0 +1,29 @@
+{
+  "displayName": "Dataproc Cluster - CREATE_CLUSTER operation latency too high",
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Dataproc Cluster - CREATE_CLUSTER operation latency too high",
+      "conditionAbsent": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "60s",
+            "crossSeriesReducer": "REDUCE_SUM",
+            "perSeriesAligner": "ALIGN_SUM"
+          }
+        ],
+        "duration": "1200s",
+        "filter": "resource.type = \"cloud_dataproc_cluster\" AND metric.type = \"dataproc.googleapis.com/cluster/operation/completion_time\"",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}

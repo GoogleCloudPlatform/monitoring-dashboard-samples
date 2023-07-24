@@ -1,0 +1,111 @@
+{
+    "dashboardFilters": [
+      {
+        "filterType": "SYSTEM_METADATA_LABEL",
+        "labelKey": "name",
+        "stringValue": "",
+        "templateVariable": ""
+      }
+    ],
+    "displayName": "VM Lifecycle Events",
+    "labels": {},
+    "mosaicLayout": {
+      "columns": 12,
+      "tiles": [
+        {
+          "height": 3,
+          "widget": {
+            "title": "VM Lifecycle Timeline",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "legendTemplate": "${metric.labels.instance_name} availability",
+                  "minAlignmentPeriod": "60s",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "perSeriesAligner": "ALIGN_RATE"
+                      },
+                      "filter": "metric.type=\"compute.googleapis.com/instance/uptime\" resource.type=\"gce_instance\"",
+                      "secondaryAggregation": {
+                        "alignmentPeriod": "60s",
+                        "perSeriesAligner": "ALIGN_MEAN"
+                      }
+                    }
+                  }
+                },
+                {
+                  "legendTemplate": "${metric.labels.method} ",
+                  "minAlignmentPeriod": "60s",
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "perSeriesAligner": "ALIGN_MEAN"
+                      },
+                      "filter": "metric.type=\"logging.googleapis.com/user/vm-lifecycle-events\" resource.type=\"gce_instance\"",
+                      "secondaryAggregation": {
+                        "alignmentPeriod": "60s",
+                        "perSeriesAligner": "ALIGN_NONE"
+                      }
+                    }
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "",
+                "scale": "LOG10"
+              }
+            }
+          },
+          "width": 9
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "VM Lifecycle Events",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "legendTemplate": "${metric.labels.method}",
+                  "minAlignmentPeriod": "60s",
+                  "plotType": "STACKED_BAR",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "perSeriesAligner": "ALIGN_SUM"
+                      },
+                      "filter": "metric.type=\"logging.googleapis.com/user/vm-lifecycle-events\" resource.type=\"gce_instance\""
+                    }
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "y1Axis",
+                "scale": "LOG10"
+              }
+            }
+          },
+          "width": 9,
+          "yPos": 3
+        }
+      ]
+    }
+    }

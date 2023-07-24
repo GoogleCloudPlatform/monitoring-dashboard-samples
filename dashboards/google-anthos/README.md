@@ -4,7 +4,7 @@
 |Anthos Cluster Control Plane Uptime|
 |:---------------------|
 |Filename: [anthos-cluster-control-plane-uptime.json](anthos-cluster-control-plane-uptime.json)|
-|This dashboard has 4 charts to indicate the uptime of control plane components including API Server, Scheduler, ETCD and Controller Manager.|
+|This dashboard has 8 charts to indicate the uptime of control plane components including API Server, Scheduler, ETCD and Controller Manager, as well as webhook and request latencies for API Server.|
 
 &nbsp;
 
