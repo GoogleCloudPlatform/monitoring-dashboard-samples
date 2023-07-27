@@ -9,11 +9,11 @@
     {
       "displayName": "Log match condition",
       "conditionMatchedLog": {
-        "filter": "log_id(\"cloudaudit.googleapis.com/system_event\")\nprotoPayload.methodName=\"google.cloud.quotaadjuster.v1main.QuotaAdjusterService.AutoAdjustQuota\"\nlabels.event_state=\"FAILED\" \nlabels.service=\"${SERVICE_NAME}\"\nlabels.limit=\"${LIMIT_NAME}\"\nlabels.location =\"${LOCATION}\"",
+        "filter": "log_id(\"cloudaudit.googleapis.com/system_event\")\nprotoPayload.methodName=\"google.cloud.quotaadjuster.v1main.QuotaAdjusterService.AutoAdjustQuota\"\nlabels.event_state=\"FAILED\"\nlabels.service=\"${SERVICE_NAME}\"\nlabels.limit=\"${LIMIT_NAME}\"\nlabels.location =\"${LOCATION}\"",
         "labelExtractors": {
-          "limit_name":"EXTRACT(protoPayload.metadata.limit)",
-          "service_name":"EXTRACT(protoPayload.metadata.service)",
-          "location":"EXTRACT(protoPayload.metadata.location)"
+          "limit_name":"EXTRACT(labels.limit)",
+          "service_name":"EXTRACT(labels.service)",
+          "location":"EXTRACT(labels.location)"
         }
       }
     }
