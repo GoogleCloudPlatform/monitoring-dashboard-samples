@@ -47,12 +47,7 @@
                       "groupByFields": [],
                       "perSeriesAligner": "ALIGN_SUM"
                     },
-                    "filter": "metric.type=\"integrations.googleapis.com/integration/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"status\"=\"SUCCEEDED\"",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_NONE"
-                    }
+                    "filter": "metric.type=\"integrations.googleapis.com/integration/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"status\"=\"SUCCEEDED\""
                   }
                 }
               }
@@ -91,11 +86,6 @@
                       "direction": "TOP",
                       "numTimeSeries": 5,
                       "rankingMethod": "METHOD_MEAN"
-                    },
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_NONE"
                     }
                   }
                 }
@@ -191,11 +181,6 @@
                       "direction": "TOP",
                       "numTimeSeries": 5,
                       "rankingMethod": "METHOD_MEAN"
-                    },
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_NONE"
                     }
                   }
                 }
@@ -231,7 +216,7 @@
           },
           "title": "Total successful executions"
         },
-        "width": 4,
+        "width": 3,
         "xPos": 0,
         "yPos": 0
       },
@@ -257,8 +242,8 @@
           },
           "title": "Total failed executions"
         },
-        "width": 4,
-        "xPos": 4,
+        "width": 3,
+        "xPos": 3,
         "yPos": 0
       },
       {
@@ -283,8 +268,8 @@
           },
           "title": "Total canceled executions"
         },
-        "width": 4,
-        "xPos": 8,
+        "width": 3,
+        "xPos": 6,
         "yPos": 0
       },
       {
@@ -358,11 +343,6 @@
                       "direction": "TOP",
                       "numTimeSeries": 5,
                       "rankingMethod": "METHOD_MEAN"
-                    },
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_NONE"
                     }
                   }
                 }
@@ -377,9 +357,9 @@
         "yPos": 10
       },
       {
-        "height": 7,
+        "height": 4,
         "widget": {
-          "title": "Integration executions triggered per hour",
+          "title": "Integration executions triggered (per hour)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -413,9 +393,229 @@
             }
           }
         },
-        "width": 7,
+        "width": 6,
         "xPos": 0,
         "yPos": 14
+      },
+      {
+        "height": 2,
+        "widget": {
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "apiSource": "DEFAULT_CLOUD",
+              "outputFullDuration": true,
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "crossSeriesReducer": "REDUCE_SUM",
+                  "groupByFields": [],
+                  "perSeriesAligner": "ALIGN_SUM"
+                },
+                "filter": "metric.type=\"integrations.googleapis.com/integration/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"is_retry\"=\"true\""
+              }
+            }
+          },
+          "title": "Total execution retries"
+        },
+        "width": 3,
+        "xPos": 9,
+        "yPos": 0
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Integration executions by status (per hour)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "3600s",
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "3600s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"status\""
+                      ],
+                      "perSeriesAligner": "ALIGN_SUM"
+                    },
+                    "filter": "metric.type=\"integrations.googleapis.com/integration/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_NONE"
+                    }
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 6,
+        "xPos": 6,
+        "yPos": 14
+      },
+      {
+        "height": 4,
+        "widget": {
+          "title": "Execution retries (per minute)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "apiSource": "DEFAULT_CLOUD",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_SUM"
+                    },
+                    "filter": "metric.type=\"integrations.googleapis.com/integration/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"is_retry\"=\"true\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_NONE"
+                    }
+                  }
+                }
+              }
+            ],
+            "thresholds": [
+              {
+                "label": "",
+                "targetAxis": "Y2",
+                "value": 0
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 7,
+        "xPos": 0,
+        "yPos": 18
+      },
+      {
+        "height": 4,
+        "widget": {
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "column": "integration",
+                "visible": true
+              },
+              {
+                "column": "value",
+                "visible": true
+              }
+            ],
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "86400s",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "86400s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"integration\""
+                      ],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"integrations.googleapis.com/integration/execution_count\" resource.type=\"integrations.googleapis.com/IntegrationVersion\" metric.label.\"is_retry\"=\"true\"",
+                    "pickTimeSeriesFilter": {
+                      "direction": "TOP",
+                      "numTimeSeries": 5,
+                      "rankingMethod": "METHOD_MEAN"
+                    },
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_NONE",
+                      "perSeriesAligner": "ALIGN_NONE"
+                    }
+                  }
+                }
+              }
+            ],
+            "metricVisualization": "BAR"
+          },
+          "title": "Integrations with high execution retries"
+        },
+        "width": 5,
+        "xPos": 7,
+        "yPos": 18
+      },
+      {
+        "height": 4,
+        "widget": {
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "title": "Successful integration executions"
+        },
+        "width": 12,
+        "xPos": 0,
+        "yPos": 2
+      },
+      {
+        "height": 8,
+        "widget": {
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "title": "Unsuccessful integration executions"
+        },
+        "width": 12,
+        "xPos": 0,
+        "yPos": 6
+      },
+      {
+        "height": 4,
+        "widget": {
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "title": "Integration executions grouped by different categories"
+        },
+        "width": 12,
+        "xPos": 0,
+        "yPos": 14
+      },
+      {
+        "height": 4,
+        "widget": {
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "title": "Integration retries"
+        },
+        "width": 12,
+        "xPos": 0,
+        "yPos": 18
       }
     ]
   }

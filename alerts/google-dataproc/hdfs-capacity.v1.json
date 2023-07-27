@@ -1,0 +1,30 @@
+{
+  "displayName": "Dataproc Cluster - HDFS capacity",
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Dataproc Cluster - HDFS capacity",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "300s",
+        "filter": "resource.type = \"cloud_dataproc_cluster\" AND metric.type = \"dataproc.googleapis.com/cluster/hdfs/storage_capacity\"",
+        "thresholdValue": 100,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
