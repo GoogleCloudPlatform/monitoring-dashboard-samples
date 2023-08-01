@@ -1,0 +1,29 @@
+{
+  "displayName": "sample policy to detect forwarder mean buffer used is more than 1% over a 1 hour window for input type pcap and buffer type memory",
+  "conditions": [
+    {
+      "displayName": "forwarder mean buffer used is more than 1% over 1 hour window",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "3600s",
+            "crossSeriesReducer": "REDUCE_MEAN",
+            "groupByFields": [
+              "resource.label.project_id"
+            ],
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"chronicle.googleapis.com/Collector\" AND metric.type = \"chronicle.googleapis.com/forwarder/buffer_used\" AND (metric.labels.input_type = \"pcap\" AND metric.labels.buffer_type = \"memory\")",
+        "thresholdValue": 0.01,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "combiner": "OR",
+  "enabled": true
+}
