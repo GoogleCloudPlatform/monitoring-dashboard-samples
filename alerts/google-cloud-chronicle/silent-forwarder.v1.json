@@ -1,0 +1,27 @@
+{
+  "displayName": "sample policy to detect a single silent Chronicle forwarder using collector_id filter",
+  "conditions": [
+    {
+      "displayName": "chronicle forwarder silent for 1 hour",
+      "conditionAbsent": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "3600s",
+            "crossSeriesReducer": "REDUCE_MEAN",
+            "groupByFields": [
+              "resource.label.project_id"
+            ],
+            "perSeriesAligner": "ALIGN_DELTA"
+          }
+        ],
+        "duration": "3600s",
+        "filter": "resource.type = \"chronicle.googleapis.com/Collector\" AND resource.labels.collector_id = \"10479925-878c-11e7-9421-10604b7cb5c1\" AND metric.type = \"chronicle.googleapis.com/ingestion/log/record_count\"",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "combiner": "OR",
+  "enabled": true
+}
