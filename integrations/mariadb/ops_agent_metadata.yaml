@@ -1,19 +1,19 @@
 platforms:
 - type: GCE
   launch_stage: GA
-  install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/mysql
+  install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/mariadb
   agent_requirement:
     logs_minimum_supported_version:
       major: 2
-      minor: 5
+      minor: 36
       patch: 0
     metrics_minimum_supported_version:
       major: 2
-      minor: 32
+      minor: 36
       patch: 0
   detections:
   - characteristic_log:
-      log_name_regex: mysql
+      log_name_regex: mariadb
   - characteristic_metric:
       metric_type: workload.googleapis.com/mysql.threads
   default_logs:
@@ -39,6 +39,9 @@ platforms:
       description: ''
   - name: mysql_general
     fields:
+    - name: severity
+      type: string
+      description: ''
     - name: jsonPayload.message
       type: string
       description: Log of the database action
@@ -48,26 +51,26 @@ platforms:
     - name: jsonPayload.tid
       type: number
       description: Thread ID where the log originated
+  - name: mysql_slow
+    fields:
     - name: severity
       type: string
       description: ''
-  - name: mysql_slow
-    fields:
     - name: jsonPayload.message
       type: string
       description: Full text of the query
     - name: jsonPayload.user
       type: string
-      description: User that executed the query
+      description: Authenticated user that executed the query
     - name: jsonPayload.database
       type: string
       description: Database where the query was executed
     - name: jsonPayload.host
       type: string
-      description: Host of the database instance
+      description: Host name the client connected from
     - name: jsonPayload.ipAddress
       type: string
-      description: Address of the database instance
+      description: IP address the client connected from
     - name: jsonPayload.tid
       type: number
       description: Thread ID where the query was logged
@@ -77,77 +80,53 @@ platforms:
     - name: jsonPayload.lockTime
       type: number
       description: The time to acquire locks in seconds
+    - name: jsonPayload.queryCacheHit
+      type: boolean
+      description: The statement was served from the query cache
     - name: jsonPayload.rowsSent
       type: number
       description: The number of rows sent to the client
     - name: jsonPayload.rowsExamined
       type: number
       description: The number of rows examined by the server layer
-    - name: jsonPayload.errorNumber
-      type: number
-      description: The statement error number, or 0 if no error occurred
-    - name: jsonPayload.killed
-      type: number
-      description: If the statement was terminated, the error number indicating why,
-        or 0 if the statement terminated normally
-    - name: jsonPayload.bytesReceived
-      type: number
-      description: The number of bytes received from all clients
+    - name: jsonPayload.rowsAffected
+      type: integer
+      description: The number of rows affected by the statement
     - name: jsonPayload.bytesSent
       type: number
       description: The number of bytes sent to all clients
-    - name: jsonPayload.readFirst
-      type: number
-      description: The number of times the first entry in an index was read
-    - name: jsonPayload.readLast
-      type: number
-      description: The number of requests to read the last key in an index
-    - name: jsonPayload.readKey
-      type: number
-      description: The number of requests to read a row based on a key
-    - name: jsonPayload.readNext
-      type: number
-      description: The number of requests to read the next row in key order
-    - name: jsonPayload.readPrev
-      type: number
-      description: The number of requests to read the previous row in key order
-    - name: jsonPayload.readRnd
-      type: number
-      description: The number of requests to read a row based on a fixed position
-    - name: jsonPayload.readRndNext
-      type: number
-      description: The number of requests to read the next row in the data file
+    - name: jsonPayload.storedRoutine
+      type: string
+      description: The name of the stored routine currently being executed
     - name: jsonPayload.sortMergePasses
       type: number
       description: The number of merge passes that the sort algorithm has had to do
-    - name: jsonPayload.sortRangeCount
+    - name: jsonPayload.createdTmpTables
       type: number
-      description: The number of sorts that were done using ranges
-    - name: jsonPayload.sortRows
-      type: number
-      description: The number of sorted rows
-    - name: jsonPayload.sortScanCount
-      type: number
-      description: The number of sorts that were done by scanning the table
+      description: The number of internal temporary tables created by the server
     - name: jsonPayload.createdTmpDiskTables
       type: number
       description: The number of internal on-disk temporary tables created by the
         server
-    - name: jsonPayload.createdTmpTables
+    - name: jsonPayload.createdTmpTableSizes
       type: number
-      description: The number of internal temporary tables created by the server
-    - name: jsonPayload.startTime
-      type: string
-      description: The statement execution start time
-    - name: jsonPayload.endTime
-      type: string
-      description: The statement execution end time
-    - name: severity
-      type: string
-      description: ''
-    - name: jsonPayload.level
-      type: string
-      description: Log entry level
+      description: The number of bytes used by internal temporary tables created by
+        the server
+    - name: jsonPayload.fullScan
+      type: boolean
+      description: The statement used a full table scan
+    - name: jsonPayload.fullJoin
+      type: boolean
+      description: The statement didn't use an index to join tables
+    - name: jsonPayload.filesort
+      type: boolean
+      description: The statement used filesort
+    - name: jsonPayload.filesortOnDisk
+      type: boolean
+      description: The statement used filesort that needed temporary tables on disk
+    - name: jsonPayload.priorityQueue
+      type: boolean
+      description: The statement used a priority queue filesort
   default_metrics:
   - name: workload.googleapis.com/mysql.buffer_pool_data_pages
     value_type: INT64
