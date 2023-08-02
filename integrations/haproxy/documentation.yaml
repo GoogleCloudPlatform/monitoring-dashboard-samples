@@ -12,9 +12,11 @@ multiple_dashboards: false
 dashboard_display_name: {{app_name_short}} Prometheus Overview
 additional_prereq_info: |
   {{app_name_short}} exposes Prometheus-format metrics only when it is 
-  [built with the service enabled](https://github.com/haproxy/haproxy/blob/master/addons/promex/README) and an appropriate `frontend` is included in the configuration.
+  [built with the service enabled](https://github.com/haproxy/haproxy/blob/master/addons/promex/README){:class="external"} and an appropriate `frontend` is included in the configuration.
+
   Most of the official docker images for versions greater than or equal to 2.4 are built with this service enabled.
-  The following example was built referencing [HAProxy Enterprise documentation](https://www.haproxy.com/documentation/hapee/latest/observability/metrics/prometheus/).
+
+  The following example was built referencing [HAProxy Enterprise documentation](https://www.haproxy.com/documentation/hapee/latest/observability/metrics/prometheus/){:class="external"}.
   It works with the community edition and can be modified to suit specific needs:
   <pre>
   apiVersion: v1
@@ -60,6 +62,7 @@ additional_prereq_info: |
             items:
             - key: haproxy.cfg
               path: haproxy.cfg
+
   </pre>
   To verify that {{exporter_name}} is emitting metrics on the expected endpoints, do the following:
   1. Set up port forwarding by using the following command:
@@ -87,6 +90,7 @@ podmonitoring_config: |
         app.kubernetes.io/name: haproxy
 additional_podmonitoring_info: |
   Ensure that the values of the `port` and `matchLabels` fields match those of the {{app_name_short}} pods you want to monitor.
+  
   {{app_name_short}} exposes metrics from targets defined in the `bind` configuration option. This option requires a user to define the IP address and port to be listened on for scraping metrics.
 sample_promql_query: up{job="haproxy", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
 alerts_config: |
