@@ -7,7 +7,7 @@ exporter_name: the MySQL exporter
 exporter_pkg_name: mysqld_exporter
 exporter_repo_url: https://github.com/prometheus/mysqld_exporter
 dashboard_available: true
-minimum_exporter_version: v0.15.0
+minimum_exporter_version: v0.14.0
 multiple_dashboards: false
 dashboard_display_name: {{app_name_short}} Prometheus Overview
 config_mods: |
@@ -47,6 +47,23 @@ config_mods: |
     +       - mountPath: /home/my.cnf
     +         subPath: my.cnf
     +         name: mysql-exporter-config
+          - name: mysql
+            env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: password
+            - name: MYSQL_USER
+              value: sbtest
+            - name: MYSQL_PASSWORD
+              value: password
+            - name: MYSQL_DATABASE
+              value: sbtest
+            ports:
+            - containerPort: 3306
+    +     volumes:
+    +     - name: mysql-exporter-config
+    +       items:
+    +       - key: my.cnf
+    +         path: my.cnf
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
   kind: PodMonitoring
