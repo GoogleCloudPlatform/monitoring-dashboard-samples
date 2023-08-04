@@ -3,20 +3,22 @@ app_name_short: Airflow
 app_name: Apache {{app_name_short}}
 app_site_name: Airflow
 app_site_url: https://airflow.apache.org/
-exporter_name: the Airflow exporter
-exporter_pkg_name: airflow
+exporter_name: StatsD
+exporter_pkg_name: statsd
 exporter_repo_url: https://airflow.apache.org/docs/apache-airflow/stable/logging-monitoring/metrics.html
 additional_prereq_info: |
-  {{exporter_name}} exposes Prometheus-format metrics automatically; you do not have to
-  install it separately. To verify that {{exporter_name}} is emitting metrics on the expected
-  endpoints, set up port-forwarding with the following command:
+  The official {{app_name_short}} [Helm chart](https://airflow.apache.org/docs/helm-chart/){:class=external}
+  includes a {{exporter_name}} deployment that exposes Prometheus-format metrics automatically.
 
+  To verify that {{exporter_name}} is emitting metrics on the expected endpoints, do the following:
+
+  0. Set up port forwarding by using the following command:
   <pre class="devsite-click-to-copy">
-  kubectl -n {{namespace_name}} port-forward deploy/airflow-statsd 9102
+  kubectl -n {{namespace_name}} port-forward deploy/<var>AIRFLOW_RELEASE_NAME</var>-statsd 9102
   </pre>
 
-  Access the endpoint `localhost:9102/metrics` by using the browser or curl in another terminal session
-  to verify that the metrics are being exposed by the exporter for scraping.
+  0. Access the endpoint `localhost:9102/metrics` by using the browser
+  or the `curl` utility in another terminal session.
 dashboard_available: true
 multiple_dashboards: false
 dashboard_display_name: {{app_name_short}} Prometheus Overview
@@ -40,9 +42,9 @@ podmonitoring_config: |
         component: statsd
         release: airflow
 additional_podmonitoring_info: |
-  Ensure that the values of the `port` and `matchLabels` fields match those of the {{app_name_short}} pods you want to monitor.
-  The labels and values shown here are set by default when Airflow is deployed with
-  [Helm](https://airflow.apache.org/docs/helm-chart/){:class=external}.
+  Ensure that the values of the `port` and `matchLabels` fields match those of the {{exporter_name}} pods you want to monitor.
+  The labels and values shown here are set by default when {{app_name_short}} is
+  deployed with [Helm](https://airflow.apache.org/docs/helm-chart/){:class=external}.
 sample_promql_query: up{job="airflow", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
 alerts_config: |
   apiVersion: monitoring.googleapis.com/v1
