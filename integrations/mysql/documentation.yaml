@@ -20,7 +20,7 @@ config_mods: |
   +     [client]
   +     user=root
   +     password=password
-  -------
+  ---
   apiVersion: apps/v1
   kind: StatefulSet
   metadata:
@@ -48,6 +48,7 @@ config_mods: |
   +         subPath: my.cnf
   +         name: mysql-exporter-config
         - name: mysql
+          image: mysql:5.7
           env:
           - name: MYSQL_ROOT_PASSWORD
             value: password
@@ -61,9 +62,11 @@ config_mods: |
           - containerPort: 3306
   +     volumes:
   +     - name: mysql-exporter-config
-  +       items:
-  +       - key: my.cnf
-  +         path: my.cnf
+  +       configMap:
+  +         name: mysql-exporter-config
+  +         items:
+  +         - key: my.cnf
+  +           path: my.cnf
 podmonitoring_config: |
   apiVersion: monitoring.googleapis.com/v1
   kind: PodMonitoring
