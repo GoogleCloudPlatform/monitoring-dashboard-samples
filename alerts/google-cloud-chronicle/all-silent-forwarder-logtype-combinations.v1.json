@@ -1,0 +1,28 @@
+{
+  "displayName": "sample policy to detect all silent Chronicle forwarder and logtype combinations",
+  "conditions": [
+    {
+      "displayName": "chronicle forwarder and logtypes silent for 1 hour",
+      "conditionAbsent": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "3600s",
+            "crossSeriesReducer": "REDUCE_MEAN",
+            "groupByFields": [
+              "resource.label.collector_id",
+              "resource.label.log_type"
+            ],
+            "perSeriesAligner": "ALIGN_DELTA"
+          }
+        ],
+        "duration": "3600s",
+        "filter": "resource.type = \"chronicle.googleapis.com/Collector\" AND metric.type = \"chronicle.googleapis.com/ingestion/log/record_count\"",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "combiner": "OR",
+  "enabled": true
+}
