@@ -1,0 +1,424 @@
+{
+    "category": "CUSTOM",
+    "dashboardFilters": [
+      {
+        "filterType": "RESOURCE_LABEL",
+        "labelKey": "cluster",
+        "templateVariable": "Cluster"
+      },
+      {
+        "filterType": "RESOURCE_LABEL",
+        "labelKey": "location",
+        "templateVariable": "Location"
+      },
+      {
+        "filterType": "RESOURCE_LABEL",
+        "labelKey": "namespace",
+        "templateVariable": "Namespace"
+      }
+    ],
+    "displayName": "ScyllaDB Prometheus Overview",
+    "labels": {},
+    "mosaicLayout": {
+      "columns": 12,
+      "tiles": [
+        {
+          "height": 4,
+          "widget": {
+            "timeSeriesTable": {
+              "dataSets": [
+                {
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "scylla_node_operation_mode{${Cluster},${Location},${Namespace}}"
+                  }
+                }
+              ],
+              "metricVisualization": "NUMBER"
+            },
+            "title": "Node status"
+          },
+          "width": 12,
+          "xPos": 0,
+          "yPos": 0
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Cache Bytes Used",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "scylla_cache_bytes_used{${Cluster},${Location},${Namespace}}",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 12,
+          "xPos": 0,
+          "yPos": 7
+        },
+        {
+          "height": 1,
+          "widget": {
+            "collapsibleGroup": {
+              "collapsed": false
+            },
+            "title": "Resource Utilization"
+          },
+          "width": 12,
+          "xPos": 0,
+          "yPos": 4
+        },
+        {
+          "height": 1,
+          "widget": {
+            "collapsibleGroup": {
+              "collapsed": true
+            },
+            "title": "Read Performance"
+          },
+          "width": 12,
+          "xPos": 0,
+          "yPos": 5
+        },
+        {
+          "height": 1,
+          "widget": {
+            "collapsibleGroup": {
+              "collapsed": true
+            },
+            "title": "Write Performance"
+          },
+          "width": 12,
+          "xPos": 0,
+          "yPos": 6
+        },
+        {
+          "height": 1,
+          "widget": {
+            "collapsibleGroup": {
+              "collapsed": true
+            },
+            "title": "Cache"
+          },
+          "width": 12,
+          "xPos": 0,
+          "yPos": 7
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Requests Served",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "scylla_transport_requests_served{${Cluster},${Location},${Namespace}}",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 8
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "CPU Utilization",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "scylla_reactor_utilization{${Cluster},${Location},${Namespace}}",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 12,
+          "xPos": 0,
+          "yPos": 4
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Read Requests",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "scylla_storage_proxy_coordinator_reads_local_node{${Cluster},${Location},${Namespace}}",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 5
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Read Latency",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "scylla_storage_proxy_coordinator_read_latency_sum{${Cluster},${Location},${Namespace}}",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 5
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Write Requests",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "scylla_storage_proxy_coordinator_total_write_attempts_local_node{${Cluster},${Location},${Namespace}}",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 6
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Write Latency",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "scylla_storage_proxy_coordinator_write_latency_sum{${Cluster},${Location},${Namespace}}",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 6
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Cache Partition Hits",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "scylla_cache_partition_hits{${Cluster},${Location},${Namespace}}",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 0,
+          "yPos": 11
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Cache Partition Misses",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "scylla_cache_partition_misses{${Cluster},${Location},${Namespace}}",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 11
+        },
+        {
+          "height": 4,
+          "widget": {
+            "title": "Active Compactions",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "scylla_compaction_manager_compactions{${Cluster},${Location},${Namespace}}",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": [],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "width": 6,
+          "xPos": 6,
+          "yPos": 8
+        }
+      ]
+    }
+  }
