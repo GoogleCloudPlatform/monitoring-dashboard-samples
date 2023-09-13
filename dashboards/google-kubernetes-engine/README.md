@@ -46,3 +46,12 @@
 |:---------------------|
 |Filename: [gke-nodes-pods-cluster-view.json](gke-nodes-pods-cluster-view.json)|
 |This dashboard has 10 charts using the related [Kubernetes metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes) to show how pods and containers are distributed within nodes and within namespaces. Container start, restart and autoscaler events are also plotted over time.|
+
+&nbsp;
+
+|GKE Optimization Signals|
+|:---------------------|
+|Filename: [gke-opt-golden-signals.json](gke-opt-golden-signals.json)|
+|This dashboard has 10 charts using the related [Kubernetes metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes) and summarize GKE cost optimization signals based on the [State of Kubernetes Cost Optimization](https://cloud.google.com/blog/products/containers-kubernetes/new-report-state-of-kubernetes-cost-optimization) report includes demand scaling, spot instance usage, cluster bin packing and workload rightsizing.|
+
+
