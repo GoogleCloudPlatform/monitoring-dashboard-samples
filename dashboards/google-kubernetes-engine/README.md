@@ -51,7 +51,7 @@
 
 |GKE Optimization Signals|
 |:---------------------|
-|Filename: [gke-opt-golden-signals.json](gke-opt-golden-signals.json)|
+|Filename: [gke-optimization-signals.json](gke-optimization-signals.json)|
 |This dashboard has 10 charts using the related [Kubernetes metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes) and summarize GKE cost optimization signals based on the [State of Kubernetes Cost Optimization](https://cloud.google.com/blog/products/containers-kubernetes/new-report-state-of-kubernetes-cost-optimization) report includes demand scaling, spot instance usage, cluster bin packing and workload rightsizing.|
 
 
