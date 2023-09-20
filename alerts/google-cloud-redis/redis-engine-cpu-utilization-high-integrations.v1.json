@@ -1,0 +1,36 @@
+{
+  "displayName": "Cloud Redis - Redis Engine CPU utilization",
+  "documentation": {
+    "content": "This alert fires if the  Redis Engine CPU Utilization goes above the set threshold. The utilization is measured on a scale of 0 to 1. ",
+    "mimeType": "text/markdown"
+  },
+  "conditions": [
+    {
+      "displayName": "Cloud Memorystore Redis Instance - Redis Engine CPU utilization",
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "crossSeriesReducer": "REDUCE_SUM",
+            "groupByFields": [
+              "resource.label.node_id"
+            ],
+            "perSeriesAligner": "ALIGN_RATE"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "filter": "resource.type = \"redis_instance\" AND metric.type = \"redis.googleapis.com/stats/cpu_utilization_main_thread\"",
+        "thresholdValue": 0.9,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
