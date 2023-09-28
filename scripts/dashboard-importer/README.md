@@ -18,7 +18,7 @@ To run the dashboard importer, you must have git, Node.js, and gcloud installed.
 ## Set Up
 Clone the `monitoring-dashboard-samples` repo and CD into the `scripts/dashboard-importer` directory
 ```
-git clone https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples.git && cd scripts/dashboard-importer
+git clone https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples.git && cd monitoring-dashboard-samples/scripts/dashboard-importer
 ```
 
 ## Quick Start
