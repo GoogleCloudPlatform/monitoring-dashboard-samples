@@ -30,7 +30,7 @@ create_dashboard_with_gcloud() {
   # successful creation of a dashboard follows format of "Created [DASHBOARD_ID]."
   if [[ $CREATE_LOG =~ ^Created.* ]]; then
     echo
-    echo "$BASE_NAME successfully created: https://console.cloud.google.com/monitoring/dashboards/builder/$DASHBOARD_ID?project=$PROJECT"
+    echo -e "\033[32m✓ $BASE_NAME successfully uploaded: \033[0m\n\033[34mhttps://console.cloud.google.com/monitoring/dashboards/builder/$DASHBOARD_ID?project=$PROJECT\033[0m"
     if [ ! -z "$2" ]; then
       echo "$BASE_NAME, https://console.cloud.google.com/monitoring/dashboards/builder/$DASHBOARD_ID?project=$PROJECT" >> $UPLOAD_LOG
     fi
@@ -44,7 +44,7 @@ create_dashboard_with_gcloud() {
 main() {
   # Arguments
   JSON_PATH=$1 # Path to directory containing JSON files or a JSON file
-  PROJECT=$2 # optional supplied GCP project to upload to
+  PROJECT=$2 # Supplied GCP project to upload to
 
   TIME_STAMP=`date +%H:%M:%S`
 
@@ -55,11 +55,16 @@ main() {
 
   if [[ -d $JSON_PATH ]]; then
     # argument is a directory
+    if [[ ${JSON_PATH: -1} != "/" ]];
+    then
+      JSON_PATH="$JSON_PATH/"
+    fi
+
     FILE_COUNT=$(find $1 -type f -name "*.json" | grep -v report.json | wc -l)
 
     echo "Uploading $FILE_COUNT dashboard(s) from a directory with the following args:"
-    echo "Directory: $JSON_PATH"
-    echo "Project: $PROJECT";
+    echo -e "Directory: \033[34m$JSON_PATH\033[0m"
+    echo -e "Project: \033[34m$PROJECT\033[0m"
 
     echo # move to a new line
     echo "The following are your dashboards:"
@@ -87,7 +92,7 @@ main() {
         fi
       done
       echo
-      echo "Upload log created in $UPLOAD_LOG"
+      echo -e "Upload log created in \033[34m$UPLOAD_LOG\033[0m"
     fi
   elif [[ -f $JSON_PATH ]]; then
     # path provided is a single file
@@ -100,6 +105,21 @@ main() {
   fi
 }
 
-# $1 JSON_FILEPATH
-# $2 PROJECT (Optional)
-main $1 $2
+JSON_PATH=$1 # Path to directory containing JSON files or a JSON file
+PROJECT=$2 # Supplied GCP project to upload to
+
+if [ "$JSON_PATH" = "" ]
+then
+  echo "Error: No JSON_PATH included"
+  echo "Syntax: ./upload.sh <JSON_PATH> <PROJECT>"
+  exit
+fi
+
+if [ "$PROJECT" = "" ]
+then
+  echo "Error: No PROJECT included"
+  echo "Syntax: ./upload.sh <JSON_PATH> <PROJECT>"
+  exit
+fi
+
+main $JSON_PATH $PROJECT

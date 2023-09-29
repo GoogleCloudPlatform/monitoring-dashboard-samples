@@ -70,7 +70,8 @@ function handleDashboardsCommand(jsonFilePath) {
             fs.mkdirSync(outputPath, { recursive: true });
         }
         if (fs.lstatSync(jsonFilePath).isDirectory()) {
-            const results = yield convertAllDashboardsInDirectory(jsonFilePath, report);
+            const formattedFilePath = jsonFilePath.slice(-1) === '/' ? jsonFilePath : `${jsonFilePath}/`;
+            const results = yield convertAllDashboardsInDirectory(formattedFilePath, report);
             report.results = [...results];
         }
         else if (jsonFilePath.endsWith('.json')) {

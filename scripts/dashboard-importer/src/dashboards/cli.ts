@@ -43,7 +43,8 @@ export default async function handleDashboardsCommand(jsonFilePath: string) {
   }
 
   if (fs.lstatSync(jsonFilePath).isDirectory()) {
-    const results = await convertAllDashboardsInDirectory(jsonFilePath, report);
+    const formattedFilePath = jsonFilePath.slice(-1) === '/' ? jsonFilePath : `${jsonFilePath}/`;
+    const results = await convertAllDashboardsInDirectory(formattedFilePath, report);
     report.results = [...results];
   } else if (jsonFilePath.endsWith('.json')) {
     const fileName = jsonFilePath.replace(/^.*[\\\/]/, '');
