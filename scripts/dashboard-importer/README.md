@@ -31,8 +31,8 @@ upload them to your Google Cloud project, run the following:
 ```
 
 #### Arguments:
-  - FILE_OR_DIRECTORY: Path to a file or directory that contains Grafana dashboards in JSON format. These files must use the extension `.json`.
-  - PROJECT_ID: The destination Google Cloud project for the converted dashboards
+  - `FILE_OR_DIRECTORY`: Path to a file or directory that contains Grafana dashboards in JSON format. These files must use the extension `.json`.
+  - `PROJECT_ID` (Optional): The destination Google Cloud project for the converted dashboards. Omitting the `PROJECT_ID` will only run the conversion step and skip the upload.
 
 #### Example:
   To convert a single file `./foo/test.json` and upload to project `test-project`, you run:
@@ -45,32 +45,20 @@ upload them to your Google Cloud project, run the following:
   ./import.sh ./foo/ test-project
   ```
 
-#### Behavior and Output:
-The importer will convert the JSON files in the given path and upload them to
-the specified project using gcloud.
+  To convert all the JSONs in the `./foo` directory without uploading, you run:
+  ```
+  ./import.sh ./foo/
+  ```
 
-The importer will also generate some files. To view your converted JSON files, look under the `reports/<date>/<time>/` directory of the importer's directory.
+#### Behavior and Output:
+The importer will convert the JSON files in the given path. It will also upload
+them to the specified project using gcloud if a project id is provided.
+
+The importer will also generate some files. To view your converted JSON files, look under `reports/<date>/<time>/` of the importer's directory.
 
 The `reports/<date>/<time>/` directory will also contain:
 -  `report.txt` - Details conversion details, warnings and errors
--  `upload_<time>.txt` - Contains the urls of the uploaded dashboards.
-
-## Other Use Cases
-If you want to inspect or modify converted JSON files before uploading them,
-you can perform the conversion and upload steps separately.
-
-### Conversion Only
-You can manually run the conversion with the following command:
-```
-dist/convert.js dashboards <FILE_OR_DIRECTORY>
-```
-#### Arguments:
-  - FILE_OR_DIRECTORY: Path to a file or directory that contains Grafana dashboards in JSON format. These files must use the extension `.json`.
-
-#### Behavior and Output
-This command converts the specified JSON files and writes the converted files
-to the `reports/<date>/<time>/` directory of the importer's directory. The directory also includes a `report.json` file. `report.json` logs details of the invocation
-along with warnings or errors from the conversion.
+-  `upload_<time>.txt` (If upload is run) - Contains the urls of the uploaded dashboards.
 
 ### Upload Only
 To manually upload the converted dashboards, use the following command:
@@ -78,8 +66,8 @@ To manually upload the converted dashboards, use the following command:
 ./upload.sh <FILE_OR_DIRECTORY> <PROJECT_ID>
 ```
 #### Arguments:
-  - FILE_OR_DIRECTORY: Path to a file or directory that contains dashboards in Cloud Monitoring JSON format.
-  - PROJECT_ID (optional): The destination Google Cloud project for the converted dashboards. Defaults to the project set in your active gcloud config.
+  - `FILE_OR_DIRECTORY`: Path to a file or directory that contains dashboards in Cloud Monitoring JSON format.
+  - `PROJECT_ID`: The destination Google Cloud project for the converted dashboards.
 
 #### Behavior and Output
 When uploading directories, the command prompts you to confirm the project and files before it uploads.
@@ -103,7 +91,7 @@ You need to run `gcloud auth login`. See the [docs](https://cloud.google.com/sdk
 
 ### Can't find output files
 
-Converted JSON files are written to the `reports/<date>/<time>/` directory
+Converted JSON files are written to `reports/<date>/<time>/`
 of the importer's directory.
 
 In `reports/<date>/<time>/`, you will also find:
