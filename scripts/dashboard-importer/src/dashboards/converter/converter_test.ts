@@ -34,7 +34,7 @@ import {GrafanaDashboard} from '../../common/types/grafana_types';
 import {Dashboard} from '../../common/types/cloud_ops_types';
 
 function convertDashboard(dashboard: GrafanaDashboard): Dashboard {
-  const converter = new GrafanaDashboardConverter(dashboard);
+  const converter = new GrafanaDashboardConverter(dashboard, 'test-file');
   converter.convert();
   const converted = converter.converted;
   if (converted === null) {
@@ -45,7 +45,7 @@ function convertDashboard(dashboard: GrafanaDashboard): Dashboard {
 
 // Tests fundamental dashboard conversion behavior
 function testDashboardConversion() {
-  const converter = new GrafanaDashboardConverter(TEST_GENERIC_DASHBOARD);
+  const converter = new GrafanaDashboardConverter(TEST_GENERIC_DASHBOARD, 'test-file');
   converter.convert();
   const convertedDashboard = converter.converted;
   const tiles = convertedDashboard?.mosaicLayout?.tiles || [];

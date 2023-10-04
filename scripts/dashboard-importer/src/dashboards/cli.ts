@@ -101,6 +101,7 @@ async function convertSingleDashboard(
   try {
     const converter: GrafanaDashboardConverter = new GrafanaDashboardConverter(
       dashboard,
+      fileName,
     );
     converter.convert();
     converted = converter.converted;

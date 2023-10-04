@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import {MAX_TILE_COUNT} from "../dashboards/converter/layout/constants";
+
 // Conversion Report for Converting One or More Dashboards
 export interface DashboardsConversionReport {
   id: string; // ID of the conversion job
@@ -71,4 +73,30 @@ export function generateEmptyReport(
     outputPath,
     date: dateString,
   };
+}
+
+// Condenses a list of warnings into a summarized format
+export function generateWarningSummary(warnings: string[], numPanels: number): string {
+  let hasCollapsibleGroupWarning = false;
+  let hasMaxTileWarning = false;
+  // Warnings array is an array of text, priority tuples
+  const warningsArr: Array<[text: string, priority: number]> = warnings.reduce(
+    (acc, curr) => {
+      if (curr.includes('Collapsible groups currently are not yet fully supported.')) {
+        if (!hasCollapsibleGroupWarning) {
+          acc.push(['• This dashboard contains collapsible groups that were not imported because the importer doesn\'t support their conversion. Tiles in collapsible groups will be unnested.\n\n', 0]);
+          hasCollapsibleGroupWarning = true;
+        }
+      } else if (curr.includes('skipped as the maximum number of tiles')) {
+        if (!hasMaxTileWarning) {
+          acc.push([`• Cloud Monitoring only supports up to 40 tiles, ${numPanels - MAX_TILE_COUNT} tiles have been skipped\n`, 1]);
+          hasMaxTileWarning = true;
+        }
+      } else {
+        acc.push([`• ${curr}\n\n`, Infinity])
+      }
+      return acc;
+    }, <Array<[string, number]>>[]);
+  warningsArr.sort((a, b) => a[1] - b[1]);
+  return warningsArr.map(warning => warning[0]).join('\n');
 }

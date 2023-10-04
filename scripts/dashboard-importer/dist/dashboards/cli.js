@@ -117,7 +117,7 @@ function convertSingleDashboard(filePath, fileName, report) {
         };
         let converted = null;
         try {
-            const converter = new converter_1.default(dashboard);
+            const converter = new converter_1.default(dashboard, fileName);
             converter.convert();
             converted = converter.converted;
             const fileNameLabel = getSystemFileNameLabel(fileName);
