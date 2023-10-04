@@ -24,4 +24,4 @@ export const DEFAULT_COLS = 24;
 export const MIN_HEIGHT = 2;
 
 // Maximum number of tiles for cloud ops
-export const MAX_TILE_COUNT = 40;
+export const MAX_TILE_COUNT = 39;

@@ -21,9 +21,12 @@ const constants_1 = require("./layout/constants");
 const widget_1 = require("./widgets/widget");
 const logger_1 = require("../../common/logger");
 const layout_utils_1 = require("./layout/layout_utils");
+const text_1 = require("./widgets/text");
+const report_1 = require("../../common/report");
 class GrafanaDashboardConverter {
-    constructor(dashboard) {
+    constructor(dashboard, fileName) {
         this.converted = null;
+        this.fileName = fileName;
         this.grid = new Set();
         this.title = dashboard.title || dashboard.description || '';
         this.gnetId = typeof dashboard.gnetId === 'number' ? dashboard.gnetId :
@@ -34,6 +37,7 @@ class GrafanaDashboardConverter {
         this.templating = dashboard.templating;
         this.templateVariables = this.getResult((0, templating_1.getTemplateVariableMap)(this.templating), new Map());
         this.yOffSet = 0;
+        this.dashboardHeight = 0;
         this.panels = dashboard.panels || [];
         // Rows are a Grafana schema for panel layout used from version 12 - 14
         if (dashboard.rows) {
@@ -49,6 +53,7 @@ class GrafanaDashboardConverter {
         for (const panel of this.panels) {
             this.convertPanel(panel);
         }
+        this.addTroubleshootingTile();
         this.converted = {
             displayName: this.title,
             dashboardFilters: dashboardFilters,
@@ -115,6 +120,7 @@ class GrafanaDashboardConverter {
             this.errors.push(`Panel '${panel.title}' encountered an unexpected error and was unable to be converted to a widget`);
             return {};
         }
+        this.dashboardHeight = Math.max(this.dashboardHeight, yPos + this.yOffSet + height);
         return {
             widget,
             xPos,
@@ -122,6 +128,21 @@ class GrafanaDashboardConverter {
             height,
             width,
         };
+    }
+    addTroubleshootingTile() {
+        const warningSummary = `##### Generated Warnings\n\n${(0, report_1.generateWarningSummary)(this.warnings, this.panels.length)}`;
+        const troubleshootingDocsText = 'For conversion issues such as no data in charts or missing tiles, please see our [troubleshooting docs](https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples/blob/master/scripts/dashboard-importer/README.md#conversion-issues)';
+        const date = new Date();
+        const dateTimeText = `Converted from ${this.fileName} on ${(0, report_1.getDateString)(date)} at ${(0, report_1.createReportId)(date)}`;
+        const text = [dateTimeText, troubleshootingDocsText, warningSummary].join('\n\n');
+        const height = 4 + Math.floor(warningSummary.split("\n").length / 3);
+        this.tiles.push({
+            widget: (0, text_1.createTextWidget)('Conversion info', text),
+            xPos: 0,
+            yPos: this.dashboardHeight,
+            height,
+            width: 24,
+        });
     }
     /**
      * Utility Function that pushes warnings and errors from a result obj
