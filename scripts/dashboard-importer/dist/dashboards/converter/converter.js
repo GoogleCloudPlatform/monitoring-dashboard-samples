@@ -61,7 +61,7 @@ class GrafanaDashboardConverter {
                 columns: constants_1.DEFAULT_COLS,
                 tiles: this.tiles,
             },
-            labels: Object.assign({ 'goog-imported-via-script': '', 'cloud-ops-grafana-importer': '', 'goog-imported-grafana-dashboard': '', [`goog-imported-grafana-revision-${this.version}`]: '' }, (this.gnetId && { [`goog-imported-grafana-id-${this.gnetId}`]: '' })),
+            labels: Object.assign({ 'goog-imported-via-script': '', 'cloud-monitoring-dashboard-importer': '', 'goog-imported-grafana-dashboard': '', 'goog-imported-grafana-revision': `${this.version}` }, (this.gnetId && { 'goog-imported-grafana-id': `${this.gnetId}` })),
         };
     }
     // converts panels to tiles by looping through panels and subpanels

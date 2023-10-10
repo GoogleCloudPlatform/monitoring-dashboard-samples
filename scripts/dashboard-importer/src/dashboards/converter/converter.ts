@@ -112,10 +112,10 @@ export default class GrafanaDashboardConverter {
       },
       labels: {
         'goog-imported-via-script': '',
-        'cloud-ops-grafana-importer': '',
+        'cloud-monitoring-dashboard-importer': '',
         'goog-imported-grafana-dashboard': '',
-        [`goog-imported-grafana-revision-${this.version}`]: '',
-        ...(this.gnetId && {[`goog-imported-grafana-id-${this.gnetId}`]: ''}),
+        'goog-imported-grafana-revision': `${this.version}`,
+        ...(this.gnetId && {'goog-imported-grafana-id': `${this.gnetId}`}),
       },
     };
   }
