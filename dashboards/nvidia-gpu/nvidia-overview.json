@@ -427,7 +427,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n    {\n\n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | filter (metric.memory_state == 'used')\n    | group_by []\n    | add [Memory: 'Used']\n\n    ;\n\n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_used'\n    | group_by []\n    | add [Memory: 'Used']\n\n    }\n    | outer_join 0\n    | add\n;\n\n    {\n\n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | group_by []\n    | add [Memory: 'Total']\n\n    ;\n\n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_total'\n    | group_by []\n    | add [Memory: 'Total']\n\n    }\n    | outer_join 0\n    | add\n} | union"
+                  "timeSeriesQueryLanguage": "{\n    {\n\n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | filter (metric.memory_state == 'used')\n    | group_by []\n    | add [Memory: 'Used']\n\n    ;\n\n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_used'\n    | group_by []\n    | add [Memory: 'Used']\n\n    }\n    | outer_join 0, 0\n    | add\n;\n\n    {\n\n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | group_by []\n    | add [Memory: 'Total']\n\n    ;\n\n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_total'\n    | group_by []\n    | add [Memory: 'Total']\n\n    }\n    | outer_join 0, 0\n    | add\n} | union"
                 }
               }
             ],
@@ -512,7 +512,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n    {\n        \n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | filter metric.memory_state == 'used'\n    | group_by [metric.model]\n    | value [val: val()]\n\n    ;\n\n\n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_used'\n    | group_by [metric.model]\n    | value [val: val()]\n\n    } | union\n\n;\n    {\n        \n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_used'\n    | group_by [metric.model]\n    | value [val: val()]\n\n    ;\n\n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_total'\n    | group_by [metric.model]\n    | value [val: val()]\n\n    } | union\n} \n| ratio | mul(100) |cast_units(\"%\")"
+                  "timeSeriesQueryLanguage": "{\n    {\n        \n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | filter metric.memory_state == 'used'\n    | group_by [metric.model]\n    | value [val: val()]\n\n    ;\n\n\n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_used'\n    | group_by [metric.model]\n    | value [val: val()]\n\n    } | union\n\n;\n    {\n        \n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | group_by [metric.model]\n    | value [val: val()]\n\n    ;\n\n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_total'\n    | group_by [metric.model]\n    | value [val: val()]\n\n    } | union\n} \n| ratio | mul(100) |cast_units(\"%\")"
                 }
               }
             ],

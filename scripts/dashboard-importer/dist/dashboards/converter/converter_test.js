@@ -27,7 +27,7 @@ const test_legacy_row_dashboard_1 = require("./testing/test_legacy_row_dashboard
 const test_overlap_dashboard_1 = require("./testing/test_overlap_dashboard");
 const overlap_test_utils_1 = require("./testing/overlap_test_utils");
 function convertDashboard(dashboard) {
-    const converter = new converter_1.default(dashboard);
+    const converter = new converter_1.default(dashboard, 'test-file');
     converter.convert();
     const converted = converter.converted;
     if (converted === null) {
@@ -38,7 +38,7 @@ function convertDashboard(dashboard) {
 // Tests fundamental dashboard conversion behavior
 function testDashboardConversion() {
     var _a, _b, _c;
-    const converter = new converter_1.default(test_dashboard_1.TEST_GENERIC_DASHBOARD);
+    const converter = new converter_1.default(test_dashboard_1.TEST_GENERIC_DASHBOARD, 'test-file');
     converter.convert();
     const convertedDashboard = converter.converted;
     const tiles = ((_a = convertedDashboard === null || convertedDashboard === void 0 ? void 0 : convertedDashboard.mosaicLayout) === null || _a === void 0 ? void 0 : _a.tiles) || [];

@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateEmptyReport = exports.padZeros = exports.createReportId = exports.getDateString = void 0;
+exports.generateWarningSummary = exports.generateEmptyReport = exports.padZeros = exports.createReportId = exports.getDateString = void 0;
+const constants_1 = require("../dashboards/converter/layout/constants");
 // Function that generates a date string for report directories
 function getDateString(date) {
     const year = date.getFullYear();
@@ -54,4 +55,31 @@ function generateEmptyReport(jsonFilePath) {
     };
 }
 exports.generateEmptyReport = generateEmptyReport;
+// Condenses a list of warnings into a summarized format
+function generateWarningSummary(warnings, numPanels) {
+    let hasCollapsibleGroupWarning = false;
+    let hasMaxTileWarning = false;
+    // Warnings array is an array of text, priority tuples
+    const warningsArr = warnings.reduce((acc, curr) => {
+        if (curr.includes('Collapsible groups currently are not yet fully supported.')) {
+            if (!hasCollapsibleGroupWarning) {
+                acc.push(['• This dashboard contains collapsible groups that were not imported because the importer doesn\'t support their conversion. Tiles in collapsible groups will be unnested.\n\n', 0]);
+                hasCollapsibleGroupWarning = true;
+            }
+        }
+        else if (curr.includes('skipped as the maximum number of tiles')) {
+            if (!hasMaxTileWarning) {
+                acc.push([`• Cloud Monitoring only supports up to 40 tiles, ${numPanels - constants_1.MAX_TILE_COUNT} tiles have been skipped\n`, 1]);
+                hasMaxTileWarning = true;
+            }
+        }
+        else {
+            acc.push([`• ${curr}\n\n`, Infinity]);
+        }
+        return acc;
+    }, []);
+    warningsArr.sort((a, b) => a[1] - b[1]);
+    return warningsArr.map(warning => warning[0]).join('\n');
+}
+exports.generateWarningSummary = generateWarningSummary;
 //# sourceMappingURL=report.js.map

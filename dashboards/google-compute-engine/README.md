@@ -18,3 +18,10 @@
 |:-------------------------|
 |Filename: [vm-lifecycle-dashboard.json](vm-lifecycle-dashboard.json)|
 |This dashboard enables you to visualize [system events and admin activities](https://cloud.google.com/logging/docs/audit#types) to monitor VM lifecycle events (including shutdowns, reboots, and host errors). For more information on how to use this dashboard see [Monitor VM Lifecycle Events](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-reboots#monitor-events).|
+
+&nbsp;
+
+|GCE Reservations Monitoring|
+|:-------------------------|
+|Filename: [reservations-monitoring.json](reservations-monitoring.json)|
+|This dashboard enables you to visualize and monitor [local and shared reservation usage](https://cloud.google.com/compute/docs/instances/reservations-monitor) at the owner project level.|
