@@ -1,0 +1,45 @@
+{
+  "displayName": "High Latency (GKE Workload: ${WORKLOAD_NAME})",
+  "documentation": {
+    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${WORKLOAD_NAME}/observability?project=${PROJECT_ID}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [MQL documentation](https://cloud.google.com/monitoring/mql/alerts)",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {
+    "workload_name": "${WORKLOAD_NAME}",
+    "workload_type": "${WORKLOAD_TYPE}",
+    "project_id": "${PROJECT_ID}",
+    "location": "${CLUSTER_LOCATION}",
+    "cluster": "${CLUSTER_NAME}",
+    "namespace": "${NAMESPACE}"
+  },
+  "conditions": [
+    {
+      "displayName": "High latency for an operation",
+      "conditionThreshold": {
+        "filter": "resource.type = \"k8s_container\" AND resource.labels.project_id = \"${PROJECT_ID}\" AND resource.labels.location = \"${CLUSTER_LOCATION}\" AND resource.labels.namespace_name = \"${NAMESPACE}\" AND resource.labels.cluster_name = \"${CLUSTER_NAME}\" AND metric.type = \"istio.io/service/server/response_latencies\" AND metadata.system_labels.top_level_controller_name = \"${WORKLOAD_NAME}\" AND metadata.system_labels.top_level_controller_type = \"${TOP_LEVEL_CONTROLLER_TYPE}\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "crossSeriesReducer": "REDUCE_MEAN",
+            "groupByFields": [
+              "metric.label.request_operation"
+            ],
+            "perSeriesAligner": "ALIGN_PERCENTILE_95"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        },
+        "thresholdValue": 10000
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
