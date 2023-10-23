@@ -210,7 +210,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container::kubernetes.io/container/memory/request_bytes;\n fetch k8s_node::kubernetes.io/node/memory/allocatable_bytes\n} \n| ${project_id}\n| ${location}\n| ${cluster_name}\n| join\n| group_by [project_id, location, cluster_name], sum(val(0)) / sum(val(1))",
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container::kubernetes.io/container/cpu/request_cores;\n fetch k8s_node::kubernetes.io/node/cpu/allocatable_cores\n} \n| ${project_id}\n| ${location}\n| ${cluster_name}\n| join\n| group_by [project_id, location, cluster_name], sum(val(0)) / sum(val(1))",
                   "unitOverride": ""
                 }
               }
