@@ -1,0 +1,21 @@
+{
+    "displayName": "Cloud Deploy - Rollout Failure (${PIPELINE_ID} pipeline)",
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Rollout in ${PIPELINE_ID} pipeline has failure",
+        "conditionMatchedLog": {
+          "filter": "logName=\"projects/${PROJECT_ID}/logs/clouddeploy.googleapis.com%2Frollout_update\" AND resource.type=\"clouddeploy.googleapis.com/DeliveryPipeline\" AND resource.labels.pipeline_id=\"${PIPELINE_ID}\" AND jsonPayload.rolloutUpdateType=\"FAILED\""
+        }
+      }
+    ],
+    "alertStrategy": {
+      "notificationRateLimit": {
+        "period": "300s"
+      },
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }
