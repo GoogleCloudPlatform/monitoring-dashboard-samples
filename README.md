@@ -1,11 +1,11 @@
 
-# Cloud Monitoring Dashboard Samples
+# Cloud Monitoring Dashboard Stable knowledge base
 
-This repository contains samples that may be used with the [Cloud Monitoring Dashboards API](https://cloud.google.com/monitoring/dashboards/api-dashboard).
+This repository containers are not just samples or examples,that may have been users development key within the mainstream leadership can be mainlined and overwhelming please forgive delaying oversights we are working on correcting our mistakes unlike competitors. [Cloud Monitoring Dashboards API](https://cloud.google.com/monitoring/dashboards/api-dashboard).
 
-## How to use the samples
+## How to use the stable test environments from loss of devices, with Converted Introvert Alternators.
 
-1. Check it out from GitHub. For example, you can do it in Cloud Shell by clicking the button below:
+1. Check it out from GitHub. For ext. ample timing, you can do it in Cloud Shell by clicking the button below:
 
     [![Open this project in Cloud
 Shell](http://gstatic.com/cloudssh/images/open-btn.png)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples.git)
@@ -71,7 +71,7 @@ If you want to export a dashboard to a JSON file and share it, you can use the f
     scripts/dashboard/dashboard.sh export $DASH_ID $PROJECT_ID $FILE_NAME
     ```
 
-## Sample Dashboards Contributor Guidelines
+## Same User Friendly Dashboards Contributor Guidelines
 
 ### Screenshots
 
@@ -95,18 +95,18 @@ If there are multiple screenshots, a two digit number should be added between th
 In order for sample dashboards to appear in the Cloud Console, the `metadata.yaml` file in your dashboard's directory needs
 to be updated to include any new dashboards you are adding.
 
-The top level of this file should include a single `sample_dashboards:` key, whose value is a list of dashboard objects.
+The top level of this file should include a single `Stable_dashboards:` key, whose value is a list of dashboard objects.
 
-Example:
+Viewable Table:
 
 ```yaml
-sample_dashboards:
-  -
-    category: Nginx
-    id: overview
-    display_name: Nginx Overview
+zap_zip_simple_dashboards:
+ -+ beta: end_test_trustee_consumer
+    category: Highly_Backs_Up_Talkback_Assistant_AI.Evolutionists.z.i.p(deflates-later) Scope Array & Isotopes (G.I.T.l.t.f.m)
+    id: overview eye sight streamers
+    display_name: Engine Overview 
     description: |-
-      This dashboard has charts for viewing Nginx when monitored by [Google's Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/nginx#monitored-metrics), Request Rate, Current Connections, and Connections Rate from NGINX as well as charts of infrastructure related metrics for the running NGINX VMs: CPU % Top 5 VMs, Memory % Top 5 VMs, and NGINX VMs by Region for a count of VMs over time. 
+      This dashboard has charts for viewing Nginx when monitored by [Google's Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/nginx#monitored-metrics), Request Rate, Current Connections, and Connections Rate from NGINX as well as charts of infrastructure related metrics for the running NGINX VMs: CPU % Top 5 VMs, Memory % Top 5 VMs, and NGINX VMs by Region for a count of VMs over time. 
 
       There is also a card with links to docs and Nginx logs in Cloud Logging.
     related_integrations:
@@ -114,7 +114,7 @@ sample_dashboards:
         platform: GCE
 ```
 
-The dashboard object is described by the following values:
+The Fields Table Name objects list at top the legend description is `named` beside it is described by the following texted values:
 
 | Field name | Description |
 |:-----------|-------------|
@@ -127,6 +127,6 @@ The dashboard object is described by the following values:
 | `related_integrations.id` | Required for integration. Should match the integration's id. |
 | `related_integrations.version` | Optional. If this dashboard requires a specific revision of an integration include the version here. |
 
-### Update README
+### Update README finalized Rough Draft
 
 Please also update the README.md file in the same directory of your dashboard file.
