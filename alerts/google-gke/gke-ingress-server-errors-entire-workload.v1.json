@@ -1,0 +1,33 @@
+{
+  "displayName": "Server Error (5xx) is high. (GKE Workload: ${WORKLOAD_NAME})",
+  "documentation": {
+    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${WORKLOAD_NAME}/observability?project=${PROJECT_ID}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [MQL documentation](https://cloud.google.com/monitoring/mql/alerts)",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {
+    "workload_name": "${WORKLOAD_NAME}",
+    "workload_type": "${WORKLOAD_TYPE}",
+    "project_id": "${PROJECT_ID}",
+    "location": "${CLUSTER_LOCATION}",
+    "cluster": "${CLUSTER_NAME}",
+    "namespace": "${NAMESPACE}"
+  },
+  "conditions": [
+    {
+      "displayName": "Server Error (5xx) is high for a URL path",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        },
+        "query": "fetch https_lb_rule\n| metric 'loadbalancing.googleapis.com/https/request_count'\n| filter\n    resource.project_id == '${PROJECT_ID}' &&\n    resource.backend_name =~ '${NETWORK_ENDPOINT_GROUPS_REGEX}' &&\n    resource.backend_type == 'NETWORK_ENDPOINT_GROUP'\n|\n{\n    filter metric.response_code_class == 500\n    | align rate(5m)\n    | every 1m\n    | group_by [resource.matched_url_path_rule], [value_request_count_aggregate: aggregate(value.request_count)]\n    ;\n    align rate(5m)\n    | every 1m\n    | group_by [resource.matched_url_path_rule], [value_request_count_aggregate: aggregate(value.request_count)]\n}\n| join\n| div\n| scale('%')\n| condition val() > 5'%'"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
