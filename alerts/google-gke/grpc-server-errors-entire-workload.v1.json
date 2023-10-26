@@ -1,5 +1,5 @@
 {
-  "displayName": "High Latency (GKE Workload: ${WORKLOAD_NAME})",
+  "displayName": "Server Error is high. (GKE Workload: ${WORKLOAD_NAME})",
   "documentation": {
     "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${WORKLOAD_NAME}/observability?project=${PROJECT_ID}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [MQL documentation](https://cloud.google.com/monitoring/mql/alerts)",
     "mimeType": "text/markdown"
@@ -14,25 +14,13 @@
   },
   "conditions": [
     {
-      "displayName": "High p95 latency for a method",
-      "conditionThreshold": {
-        "filter": "resource.type = \"prometheus_target\" AND (resource.labels.project_id = \"${PROJECT_ID}\" AND resource.labels.location = \"${CLUSTER_LOCATION}\" AND resource.labels.cluster = \"${CLUSTER_NAME}\" AND resource.labels.namespace = \"${NAMESPACE}\") AND metric.type = \"prometheus.googleapis.com/http_request_duration_seconds/histogram\" AND metric.pod = monitoring.regex.full_match(\"${WORKLOAD_NAME}-[a-f0-9]{7,10}-[a-z0-9]{5}\")",
-        "aggregations": [
-          {
-            "alignmentPeriod": "300s",
-            "crossSeriesReducer": "REDUCE_PERCENTILE_95",
-            "groupByFields": [
-              "metric.label.method"
-            ],
-            "perSeriesAligner": "ALIGN_DELTA"
-          }
-        ],
-        "comparison": "COMPARISON_GT",
+      "displayName": "Server Error is high for a method",
+      "conditionMonitoringQueryLanguage": {
         "duration": "0s",
         "trigger": {
           "count": 1
         },
-        "thresholdValue": 10000
+        "query": "fetch prometheus_target\n| metric 'prometheus.googleapis.com/grpc_server_handled_total/counter'\n| filter\n    resource.project_id == '${PROJECT_ID}' &&\n    resource.cluster == '${CLUSTER_NAME}' &&\n    resource.location == '${CLUSTER_LOCATION}' &&\n    resource.namespace == '${NAMESPACE}' &&\n    metric.pod =~ '${WORKLOAD_NAME}-[a-f0-9]{7,10}-[a-z0-9]{5}'\n|\n{\n    filter metric.grpc_code =~ '(Internal|Unknown|Unavailable|Unimplemented)'\n    | align rate(5m)\n    | every 1m\n    | group_by [metric.grpc_method], [value_grpc_server_handled_total_aggregate: aggregate(value.grpc_server_handled_total)]\n    ;\n    align rate(5m)\n    | every 1m\n    | group_by [metric.grpc_method], [value_grpc_server_handled_total_aggregate: aggregate(value.grpc_server_handled_total)]\n}\n| join\n| div\n| cast_units('1')\n| scale('%')\n| condition val() > 5'%'"
       }
     }
   ],
