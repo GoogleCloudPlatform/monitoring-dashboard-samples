@@ -14,13 +14,13 @@
   },
   "conditions": [
     {
-      "displayName": "Server Error (5xx) is high for a URL path",
+      "displayName": "Server Error (5xx) is high for a method",
       "conditionMonitoringQueryLanguage": {
         "duration": "0s",
         "trigger": {
           "count": 1
         },
-        "query": "fetch https_lb_rule\n| metric 'loadbalancing.googleapis.com/https/request_count'\n| filter\n    resource.project_id == '${PROJECT_ID}' &&\n    resource.backend_name =~ '${NETWORK_ENDPOINT_GROUPS_REGEX}' &&\n    resource.backend_type == 'NETWORK_ENDPOINT_GROUP'\n|\n{\n    filter metric.response_code_class == 500\n    | align rate(5m)\n    | every 1m\n    | group_by [resource.matched_url_path_rule], [value_request_count_aggregate: aggregate(value.request_count)]\n    ;\n    align rate(5m)\n    | every 1m\n    | group_by [resource.matched_url_path_rule], [value_request_count_aggregate: aggregate(value.request_count)]\n}\n| join\n| div\n| scale('%')\n| condition val() > 5'%'"
+        "query": "fetch prometheus_target\n| metric 'prometheus.googleapis.com/http_requests_total/counter'\n| filter\n    resource.project_id == '${PROJECT_ID}' &&\n    resource.cluster == '${CLUSTER_NAME}' &&\n    resource.location == '${CLUSTER_LOCATION}' &&\n    resource.namespace == '${NAMESPACE}' &&\n    metric.pod =~ '${WORKLOAD_NAME}-[a-f0-9]{7,10}-[a-z0-9]{5}'\n|\n{\n    filter metric.code =~ '5[0-9][0-9]'\n    | align rate(5m)\n    | every 1m\n    | group_by [metric.code, metric.method], [value_http_requests_total_aggregate: aggregate(value.http_requests_total)]\n    ;\n    align rate(5m)\n    | every 1m\n    | group_by [metric.code, metric.method], [value_http_requests_total_aggregate: aggregate(value.http_requests_total)]\n}\n| join\n| div\n| cast_units('1')\n| scale('%')\n| condition val() > 5'%'"
       }
     }
   ],
