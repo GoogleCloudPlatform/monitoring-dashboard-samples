@@ -1,0 +1,45 @@
+{
+  "displayName": "High Latency (GKE Workload: ${WORKLOAD_NAME})",
+  "documentation": {
+    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${WORKLOAD_NAME}/observability?project=${PROJECT_ID}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [MQL documentation](https://cloud.google.com/monitoring/mql/alerts)",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {
+    "workload_name": "${WORKLOAD_NAME}",
+    "workload_type": "${WORKLOAD_TYPE}",
+    "project_id": "${PROJECT_ID}",
+    "location": "${CLUSTER_LOCATION}",
+    "cluster": "${CLUSTER_NAME}",
+    "namespace": "${NAMESPACE}"
+  },
+  "conditions": [
+    {
+      "displayName": "High p95 latency for a URL path",
+      "conditionThreshold": {
+        "filter": "resource.type = \"https_lb_rule\" AND (resource.labels.backend_name = monitoring.regex.full_match(\"k8s1-fe6e51a5-default-hello-world-1-60000-38a13631\") AND resource.labels.backend_type = \"NETWORK_ENDPOINT_GROUP\" AND resource.labels.project_id = \"cco-test-lab\") AND metric.type = \"loadbalancing.googleapis.com/https/total_latencies\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+            "groupByFields": [
+              "resource.label.matched_url_path_rule"
+            ],
+            "perSeriesAligner": "ALIGN_DELTA"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        },
+        "thresholdValue": 10000
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
