@@ -386,7 +386,7 @@
                   "plotType": "LINE",
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
-                    "timeSeriesQueryLanguage": "def top_5_cpu_filtered_by_metric filter_metric =\n  fetch gce_instance\n  | { t_cpu: metric 'agent.googleapis.com/instance/cpu/utilization'; \n  t_filter_metric: metric $filter_metric }\n  | join\n  | value t_cpu.value.utilization\n  | group_by [resource.project_id, resource.zone, metric.instance_name], 1m,\n      [value_utilization_mean: mean(t_cpu.value.utilization)]\n  | top 5\n  | every 1m;\n\n  @top_5_cpu_filtered_by_metric 'workload.googleapis.com/sap/hanamonitoring/system/connection/total'"
+                    "timeSeriesQueryLanguage": "def top_5_cpu_filtered_by_metric filter_metric =\n  fetch gce_instance\n  | { t_cpu:\n           metric 'compute.googleapis.com/instance/cpu/utilization'\n |  t_filter_metric: metric $filter_metric }\n  | join\n  | value t_cpu.value.utilization\n  | group_by [resource.project_id, resource.zone, metric.instance_name], 1m,\n      [value_utilization_mean: mean(t_cpu.value.utilization)]\n  | top 5\n  | every 1m;\n\n  @top_5_cpu_filtered_by_metric 'workload.googleapis.com/sap/hanamonitoring/system/connection/total'"
                   }
                 }
               ],
