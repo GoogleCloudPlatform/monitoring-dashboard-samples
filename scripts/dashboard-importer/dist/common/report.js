@@ -63,18 +63,18 @@ function generateWarningSummary(warnings, numPanels) {
     const warningsArr = warnings.reduce((acc, curr) => {
         if (curr.includes('Collapsible groups currently are not yet fully supported.')) {
             if (!hasCollapsibleGroupWarning) {
-                acc.push(['• This dashboard contains collapsible groups that were not imported because the importer doesn\'t support their conversion. Tiles in collapsible groups will be unnested.\n\n', 0]);
+                acc.push(['- This dashboard contains collapsible groups that were not imported because the importer doesn\'t support their conversion. Tiles in collapsible groups will be unnested.', 0]);
                 hasCollapsibleGroupWarning = true;
             }
         }
         else if (curr.includes('skipped as the maximum number of tiles')) {
             if (!hasMaxTileWarning) {
-                acc.push([`• Cloud Monitoring only supports up to 40 tiles, ${numPanels - constants_1.MAX_TILE_COUNT} tiles have been skipped\n`, 1]);
+                acc.push([`- Cloud Monitoring only supports up to 40 tiles, ${numPanels - constants_1.MAX_TILE_COUNT} tiles have been skipped`, 1]);
                 hasMaxTileWarning = true;
             }
         }
         else {
-            acc.push([`• ${curr}\n\n`, Infinity]);
+            acc.push([`- ${curr}`, Infinity]);
         }
         return acc;
     }, []);

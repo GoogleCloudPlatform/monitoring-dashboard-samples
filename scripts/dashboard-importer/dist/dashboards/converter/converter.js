@@ -135,7 +135,7 @@ class GrafanaDashboardConverter {
         const date = new Date();
         const dateTimeText = `Converted from ${this.fileName} on ${(0, report_1.getDateString)(date)} at ${(0, report_1.createReportId)(date)}`;
         const text = [dateTimeText, troubleshootingDocsText, warningSummary].join('\n\n');
-        const height = 4 + Math.floor(warningSummary.split("\n").length / 3);
+        const height = 4 + Math.floor(warningSummary.split("\n").length) / 2;
         this.tiles.push({
             widget: (0, text_1.createTextWidget)('Conversion info', text),
             xPos: 0,
