@@ -197,12 +197,25 @@
           "scorecard": {
             "gaugeView": {
               "lowerBound": 0,
-              "upperBound": 1
+              "upperBound": 100
             },
-            "thresholds": [],
+            "thresholds": [
+              {
+                "color": "YELLOW",
+                "direction": "BELOW",
+                "label": "",
+                "value": 90
+              },
+              {
+                "color": "RED",
+                "direction": "BELOW",
+                "label": "",
+                "value": 75
+              }
+            ],
             "timeSeriesQuery": {
               "outputFullDuration": true,
-              "prometheusQuery": "rate(mysql_global_status_table_open_cache_hits{${Cluster},${Location},${Namespace}}[5m]) /\n(rate(mysql_global_status_table_open_cache_hits{${Cluster},${Location},${Namespace}}[5m]) + rate(mysql_global_status_table_open_cache_misses{${Cluster},${Location},${Namespace}}[5m]))",
+              "prometheusQuery": "(rate(mysql_global_status_table_open_cache_hits{${Cluster},${Location},${Namespace}}[5m]) /\n(rate(mysql_global_status_table_open_cache_hits{${Cluster},${Location},${Namespace}}[5m]) + rate(mysql_global_status_table_open_cache_misses{${Cluster},${Location},${Namespace}}[5m]))) * 100",
               "unitOverride": ""
             }
           },
