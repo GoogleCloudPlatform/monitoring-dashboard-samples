@@ -1,5 +1,4 @@
 {
-  "category": "CUSTOM",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -20,59 +19,61 @@
   "displayName": "NGINX Ingress Prometheus Overview",
   "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 2,
+        "height": 8,
         "widget": {
           "scorecard": {
             "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "round(sum(irate(nginx_ingress_controller_requests{${Cluster},${Location},${Namespace}}[2m])), 0.001)"
+              "prometheusQuery": "round(sum(irate(nginx_ingress_controller_requests{${Cluster},${Location},${Namespace}}[2m])), 0.001)",
+              "unitOverride": ""
             }
           },
           "title": "Controller Request Volume"
         },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 0
+        "width": 16
       },
       {
-        "height": 2,
+        "height": 8,
         "widget": {
           "scorecard": {
             "sparkChartView": {
               "sparkChartType": "SPARK_LINE"
             },
+            "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(avg_over_time(nginx_ingress_controller_nginx_process_connections{${Cluster},${Location},${Namespace}}[2m]))\n"
+              "prometheusQuery": "sum(avg_over_time(nginx_ingress_controller_nginx_process_connections{${Cluster},${Location},${Namespace}}[2m]))\n",
+              "unitOverride": ""
             }
           },
           "title": "Controller Connections"
         },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 0
+        "width": 16,
+        "xPos": 16
       },
       {
-        "height": 2,
+        "height": 8,
         "widget": {
           "scorecard": {
             "sparkChartView": {
               "sparkChartType": "SPARK_LINE"
             },
+            "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(nginx_ingress_controller_success{${Cluster},${Location},${Namespace}})"
+              "prometheusQuery": "sum(nginx_ingress_controller_success{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
             }
           },
           "title": "Config Reloads"
         },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 0
+        "width": 16,
+        "xPos": 32
       },
       {
-        "height": 3,
+        "height": 12,
         "widget": {
           "title": "Ingress Request Volume",
           "xyChart": {
@@ -81,25 +82,30 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "round(sum(irate(nginx_ingress_controller_requests{ingress=~\".*\",${Cluster},${Location},${Namespace}}[2m])) by (ingress), 0.001)"
+                  "prometheusQuery": "round(sum(irate(nginx_ingress_controller_requests{ingress=~\".*\",${Cluster},${Location},${Namespace}}[2m])) by (ingress), 0.001)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 5
+        "width": 24,
+        "yPos": 32
       },
       {
-        "height": 3,
+        "height": 12,
         "widget": {
           "title": "Ingress Request Rate",
           "xyChart": {
@@ -108,25 +114,30 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(nginx_ingress_controller_requests{${Cluster},${Location},${Namespace}}[2m])"
+                  "prometheusQuery": "rate(nginx_ingress_controller_requests{${Cluster},${Location},${Namespace}}[2m])",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 2
+        "width": 24,
+        "yPos": 20
       },
       {
-        "height": 3,
+        "height": 12,
         "widget": {
           "title": "Network I/O Pressure",
           "xyChart": {
@@ -135,25 +146,31 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(irate (nginx_ingress_controller_request_size_sum{${Cluster},${Location},${Namespace}}[2m]))"
+                  "prometheusQuery": "(irate (nginx_ingress_controller_request_size_sum{${Cluster},${Location},${Namespace}}[2m]))",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 5
+        "width": 24,
+        "xPos": 24,
+        "yPos": 8
       },
       {
-        "height": 3,
+        "height": 12,
         "widget": {
           "title": "Memory Usage",
           "xyChart": {
@@ -162,25 +179,31 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "nginx_ingress_controller_nginx_process_resident_memory_bytes{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "nginx_ingress_controller_nginx_process_resident_memory_bytes{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 8
+        "width": 24,
+        "xPos": 24,
+        "yPos": 32
       },
       {
-        "height": 3,
+        "height": 12,
         "widget": {
           "title": "CPU Usage",
           "xyChart": {
@@ -189,21 +212,58 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate (nginx_ingress_controller_nginx_process_cpu_seconds_total{${Cluster},${Location},${Namespace}}[2m])"
+                  "prometheusQuery": "rate (nginx_ingress_controller_nginx_process_cpu_seconds_total{${Cluster},${Location},${Namespace}}[2m])",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         },
-        "width": 6,
-        "xPos": 6,
+        "width": 24,
+        "xPos": 24,
+        "yPos": 20
+      },
+      {
+        "height": 12,
+        "widget": {
+          "title": "Upstream Latency Seconds",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "nginx_ingress_controller_ingress_upstream_latency_seconds_sum",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 24,
         "yPos": 8
       }
     ]
