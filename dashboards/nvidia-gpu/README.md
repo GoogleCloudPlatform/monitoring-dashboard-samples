@@ -16,3 +16,8 @@
 |:------------------|
 |Filename: [nvidia-dcgm.json](nvidia-dcgm.json)|
 |Displays Advanced GPU metrics from NVIDIA Datacenter GPU Manager (DCGM).  This requires a specific setup (e.g. installing DCGM, installing the Ops Agent, and configuring it to receive DCGM metrics).|
+
+|NVIDIA GPU Monitoring Advanced DCGM Metrics (GKE Only)|
+|:------------------|
+|Filename: [nvidia-dcgm-prometheus.json](nvidia-dcgm-prometheus.json)|
+|Displays Advanced GPU metrics from NVIDIA Datacenter GPU Manager (DCGM).  This requires a specific setup (e.g. installing DCGM and DCGM exporter).|
