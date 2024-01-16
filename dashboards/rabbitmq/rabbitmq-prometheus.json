@@ -1,4 +1,5 @@
 {
+  "displayName": "RabbitMQ Prometheus Overview",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -16,14 +17,14 @@
       "templateVariable": "Namespace"
     }
   ],
-  "displayName": "RabbitMQ Prometheus Overview - KPI Updates",
-  "labels": {},
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
       {
+        "width": 12,
         "height": 8,
         "widget": {
+          "title": "Ready Messages",
           "scorecard": {
             "blankView": {},
             "thresholds": [],
@@ -31,14 +32,15 @@
               "prometheusQuery": "sum(rabbitmq_queue_messages_ready{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
-          },
-          "title": "Ready Messages"
-        },
-        "width": 12
+          }
+        }
       },
       {
+        "xPos": 12,
+        "width": 12,
         "height": 8,
         "widget": {
+          "title": "Incoming Messages",
           "scorecard": {
             "sparkChartView": {
               "sparkChartType": "SPARK_LINE"
@@ -48,15 +50,15 @@
               "prometheusQuery": "sum(rate(rabbitmq_channel_messages_published_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
-          },
-          "title": "Incoming Messages"
-        },
-        "width": 12,
-        "xPos": 12
+          }
+        }
       },
       {
+        "xPos": 24,
+        "width": 8,
         "height": 8,
         "widget": {
+          "title": "Publishers",
           "scorecard": {
             "blankView": {},
             "thresholds": [],
@@ -64,15 +66,15 @@
               "prometheusQuery": "sum(rabbitmq_channels{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) - sum(rabbitmq_channel_consumers * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
-          },
-          "title": "Publishers"
-        },
-        "width": 8,
-        "xPos": 24
+          }
+        }
       },
       {
+        "xPos": 32,
+        "width": 8,
         "height": 8,
         "widget": {
+          "title": "Connections",
           "scorecard": {
             "blankView": {},
             "thresholds": [],
@@ -80,15 +82,15 @@
               "prometheusQuery": "sum(rabbitmq_connections{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
-          },
-          "title": "Connections"
-        },
-        "width": 8,
-        "xPos": 32
+          }
+        }
       },
       {
+        "xPos": 40,
+        "width": 8,
         "height": 8,
         "widget": {
+          "title": "Queues",
           "scorecard": {
             "blankView": {},
             "thresholds": [],
@@ -96,15 +98,15 @@
               "prometheusQuery": "sum(rabbitmq_queues{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
-          },
-          "title": "Queues"
-        },
-        "width": 8,
-        "xPos": 40
+          }
+        }
       },
       {
+        "yPos": 8,
+        "width": 12,
         "height": 8,
         "widget": {
+          "title": "Unacknowledged Messages",
           "scorecard": {
             "blankView": {},
             "thresholds": [],
@@ -112,15 +114,16 @@
               "prometheusQuery": "sum(rabbitmq_queue_messages_unacked{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
-          },
-          "title": "Unacknowledged Messages"
-        },
-        "width": 12,
-        "yPos": 8
+          }
+        }
       },
       {
+        "xPos": 12,
+        "yPos": 8,
+        "width": 12,
         "height": 8,
         "widget": {
+          "title": "Outgoing Messages",
           "scorecard": {
             "sparkChartView": {
               "sparkChartType": "SPARK_LINE"
@@ -130,16 +133,16 @@
               "prometheusQuery": "sum(rate(rabbitmq_channel_messages_redelivered_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) +\nsum(rate(rabbitmq_channel_messages_delivered_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) +\nsum(rate(rabbitmq_channel_messages_delivered_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) +\nsum(rate(rabbitmq_channel_get_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) +\nsum(rate(rabbitmq_channel_get_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
-          },
-          "title": "Outgoing Messages"
-        },
-        "width": 12,
-        "xPos": 12,
-        "yPos": 8
+          }
+        }
       },
       {
+        "xPos": 24,
+        "yPos": 8,
+        "width": 8,
         "height": 8,
         "widget": {
+          "title": "Consumers",
           "scorecard": {
             "blankView": {},
             "thresholds": [],
@@ -147,16 +150,16 @@
               "prometheusQuery": "sum(rabbitmq_channel_consumers{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
-          },
-          "title": "Consumers"
-        },
-        "width": 8,
-        "xPos": 24,
-        "yPos": 8
+          }
+        }
       },
       {
+        "xPos": 32,
+        "yPos": 8,
+        "width": 8,
         "height": 8,
         "widget": {
+          "title": "Channels",
           "scorecard": {
             "blankView": {},
             "thresholds": [],
@@ -164,16 +167,16 @@
               "prometheusQuery": "sum(rabbitmq_channels{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
-          },
-          "title": "Channels"
-        },
-        "width": 8,
-        "xPos": 32,
-        "yPos": 8
+          }
+        }
       },
       {
+        "xPos": 40,
+        "yPos": 8,
+        "width": 8,
         "height": 8,
         "widget": {
+          "title": "Nodes",
           "scorecard": {
             "blankView": {},
             "thresholds": [],
@@ -181,16 +184,15 @@
               "prometheusQuery": "sum(rabbitmq_build_info{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
-          },
-          "title": "Nodes"
-        },
-        "width": 8,
-        "xPos": 40,
-        "yPos": 8
+          }
+        }
       },
       {
+        "yPos": 16,
+        "width": 48,
         "height": 10,
         "widget": {
+          "title": "Info",
           "timeSeriesTable": {
             "dataSets": [
               {
@@ -200,13 +202,12 @@
               }
             ],
             "metricVisualization": "NUMBER"
-          },
-          "title": "Info"
-        },
-        "width": 48,
-        "yPos": 16
+          }
+        }
       },
       {
+        "yPos": 30,
+        "width": 24,
         "height": 11,
         "widget": {
           "title": "Memory Available Before Publishers Blocked",
@@ -234,11 +235,11 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "yPos": 30
+        }
       },
       {
+        "yPos": 41,
+        "width": 24,
         "height": 11,
         "widget": {
           "title": "Disk Space Available Before Publishers Blocked",
@@ -266,11 +267,11 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "yPos": 41
+        }
       },
       {
+        "yPos": 52,
+        "width": 24,
         "height": 10,
         "widget": {
           "title": "TCP Sockets Available",
@@ -298,11 +299,11 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "yPos": 52
+        }
       },
       {
+        "yPos": 82,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Messages Ready to be Delivered to Consumers",
@@ -330,11 +331,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "yPos": 82
+        }
       },
       {
+        "xPos": 24,
+        "yPos": 82,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Messages Pending Consumer Acknowledgement",
@@ -362,12 +364,11 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "xPos": 24,
-        "yPos": 82
+        }
       },
       {
+        "yPos": 90,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Messages Unconfirmed to Publishers",
@@ -395,11 +396,11 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "yPos": 90
+        }
       },
       {
+        "yPos": 66,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Messages Routed to Queues",
@@ -427,11 +428,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "yPos": 66
+        }
       },
       {
+        "xPos": 24,
+        "yPos": 90,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Messages Confirmed to Publishers",
@@ -459,12 +461,11 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "xPos": 24,
-        "yPos": 90
+        }
       },
       {
+        "yPos": 74,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Unroutable Messages Dropped",
@@ -492,11 +493,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "yPos": 74
+        }
       },
       {
+        "xPos": 24,
+        "yPos": 114,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Unroutable Messages Returned to Publishers",
@@ -524,12 +526,11 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "xPos": 24,
-        "yPos": 114
+        }
       },
       {
+        "yPos": 114,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Polling Operations That Yield No Result",
@@ -557,11 +558,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "yPos": 114
+        }
       },
       {
+        "xPos": 24,
+        "yPos": 74,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Messages Redelivered",
@@ -589,12 +591,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "xPos": 24,
-        "yPos": 74
+        }
       },
       {
+        "xPos": 24,
+        "yPos": 98,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Messages Delivered With Manual Ack",
@@ -622,12 +624,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "xPos": 24,
-        "yPos": 98
+        }
       },
       {
+        "xPos": 24,
+        "yPos": 106,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Polling Operations With Manual Ack",
@@ -655,12 +657,11 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "xPos": 24,
-        "yPos": 106
+        }
       },
       {
+        "yPos": 98,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Messages Delivered Auto Ack",
@@ -688,11 +689,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "yPos": 98
+        }
       },
       {
+        "xPos": 24,
+        "yPos": 66,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Messages Acknowledged",
@@ -720,12 +722,11 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "xPos": 24,
-        "yPos": 66
+        }
       },
       {
+        "yPos": 106,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Polling Operations With Auto Ack",
@@ -753,11 +754,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "yPos": 106
+        }
       },
       {
+        "xPos": 24,
+        "yPos": 30,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Total Queues",
@@ -785,12 +787,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "xPos": 24,
-        "yPos": 30
+        }
       },
       {
+        "xPos": 24,
+        "yPos": 38,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Queues Created",
@@ -800,6 +802,9 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
@@ -815,12 +820,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "xPos": 24,
-        "yPos": 38
+        }
       },
       {
+        "xPos": 24,
+        "yPos": 46,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Queues Declared",
@@ -830,6 +835,9 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
@@ -845,12 +853,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "xPos": 24,
-        "yPos": 46
+        }
       },
       {
+        "xPos": 24,
+        "yPos": 54,
+        "width": 24,
         "height": 8,
         "widget": {
           "title": "Queues Deleted",
@@ -860,6 +868,9 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
@@ -875,35 +886,36 @@
               "scale": "LINEAR"
             }
           }
-        },
+        }
+      },
+      {
+        "yPos": 26,
         "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Nodes",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
         "xPos": 24,
-        "yPos": 54
-      },
-      {
-        "height": 4,
-        "widget": {
-          "text": {
-            "content": "",
-            "format": "MARKDOWN",
-            "style": {
-              "backgroundColor": "#FFFFFF",
-              "fontSize": "FS_LARGE",
-              "horizontalAlignment": "H_LEFT",
-              "padding": "P_EXTRA_SMALL",
-              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
-              "textColor": "#212121",
-              "verticalAlignment": "V_TOP"
-            }
-          },
-          "title": "Nodes"
-        },
+        "yPos": 26,
         "width": 24,
-        "yPos": 26
-      },
-      {
         "height": 4,
         "widget": {
+          "title": "Queues",
           "text": {
             "content": "",
             "format": "MARKDOWN",
@@ -916,34 +928,31 @@
               "textColor": "#212121",
               "verticalAlignment": "V_TOP"
             }
-          },
-          "title": "Queues"
-        },
-        "width": 24,
-        "xPos": 24,
-        "yPos": 26
+          }
+        }
       },
       {
-        "height": 4,
-        "widget": {
-          "text": {
-            "content": "",
-            "format": "MARKDOWN",
-            "style": {
-              "backgroundColor": "#FFFFFF",
-              "fontSize": "FS_LARGE",
-              "horizontalAlignment": "H_LEFT",
-              "padding": "P_EXTRA_SMALL",
-              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
-              "textColor": "#212121",
-              "verticalAlignment": "V_TOP"
-            }
-          },
-          "title": "Messages"
-        },
+        "yPos": 62,
         "width": 48,
-        "yPos": 62
+        "height": 4,
+        "widget": {
+          "title": "Messages",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }
