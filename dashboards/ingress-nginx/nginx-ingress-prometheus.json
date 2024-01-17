@@ -1,4 +1,5 @@
 {
+  "displayName": "NGINX Ingress Prometheus Overview",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -16,14 +17,14 @@
       "templateVariable": "Namespace"
     }
   ],
-  "displayName": "NGINX Ingress Prometheus Overview",
-  "labels": {},
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
       {
+        "width": 16,
         "height": 8,
         "widget": {
+          "title": "Controller Request Volume",
           "scorecard": {
             "blankView": {},
             "thresholds": [],
@@ -31,14 +32,15 @@
               "prometheusQuery": "round(sum(irate(nginx_ingress_controller_requests{${Cluster},${Location},${Namespace}}[2m])), 0.001)",
               "unitOverride": ""
             }
-          },
-          "title": "Controller Request Volume"
-        },
-        "width": 16
+          }
+        }
       },
       {
+        "xPos": 16,
+        "width": 16,
         "height": 8,
         "widget": {
+          "title": "Controller Connections",
           "scorecard": {
             "sparkChartView": {
               "sparkChartType": "SPARK_LINE"
@@ -48,15 +50,15 @@
               "prometheusQuery": "sum(avg_over_time(nginx_ingress_controller_nginx_process_connections{${Cluster},${Location},${Namespace}}[2m]))\n",
               "unitOverride": ""
             }
-          },
-          "title": "Controller Connections"
-        },
-        "width": 16,
-        "xPos": 16
+          }
+        }
       },
       {
+        "xPos": 32,
+        "width": 16,
         "height": 8,
         "widget": {
+          "title": "Config Reloads",
           "scorecard": {
             "sparkChartView": {
               "sparkChartType": "SPARK_LINE"
@@ -66,14 +68,13 @@
               "prometheusQuery": "sum(nginx_ingress_controller_success{${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
-          },
-          "title": "Config Reloads"
-        },
-        "width": 16,
-        "xPos": 32
+          }
+        }
       },
       {
-        "height": 12,
+        "yPos": 36,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Ingress Request Volume",
           "xyChart": {
@@ -100,12 +101,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "yPos": 32
+        }
       },
       {
-        "height": 12,
+        "yPos": 28,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Ingress Request Rate",
           "xyChart": {
@@ -132,12 +133,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "yPos": 20
+        }
       },
       {
-        "height": 12,
+        "yPos": 44,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Network I/O Pressure",
           "xyChart": {
@@ -164,13 +165,13 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "xPos": 24,
-        "yPos": 8
+        }
       },
       {
-        "height": 12,
+        "xPos": 24,
+        "yPos": 36,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Memory Usage",
           "xyChart": {
@@ -197,13 +198,13 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "xPos": 24,
-        "yPos": 32
+        }
       },
       {
-        "height": 12,
+        "xPos": 24,
+        "yPos": 20,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "CPU Usage",
           "xyChart": {
@@ -230,13 +231,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 24,
-        "xPos": 24,
-        "yPos": 20
+        }
       },
       {
-        "height": 12,
+        "yPos": 20,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Upstream Latency Seconds",
           "xyChart": {
@@ -262,10 +262,171 @@
               "scale": "LINEAR"
             }
           }
-        },
+        }
+      },
+      {
+        "yPos": 8,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Active Connections",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "nginx_ingress_controller_nginx_process_connections{state=\"active\"}",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 40,
+        "yPos": 8,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Waiting Connections",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "nginx_ingress_controller_nginx_process_connections{state=\"waiting\"}",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 8,
+        "yPos": 8,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Accepted Connections",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "nginx_ingress_controller_nginx_process_connections_total{state=\"accepted\"}",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 16,
+        "yPos": 8,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Dropped Connections",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "sum(nginx_ingress_controller_nginx_process_connections_total{state=\"accepted\"}) - sum(nginx_ingress_controller_nginx_process_connections_total{state=\"handled\"})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 8,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Writing Connections",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "nginx_ingress_controller_nginx_process_connections{state=\"writing\"}",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 32,
+        "yPos": 8,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Reading Connections",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "nginx_ingress_controller_nginx_process_connections{state=\"reading\"}",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
         "width": 24,
-        "yPos": 8
+        "height": 4,
+        "widget": {
+          "title": "Requests",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 16,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Resource Utilization",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }
