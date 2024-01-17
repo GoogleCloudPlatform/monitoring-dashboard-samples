@@ -13,4 +13,4 @@
 |Nginx Prometheus|
 |:------------------|
 |Filename: [nginx-prometheus.json](nginx-prometheus.json)|
-|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/nginxinc/nginx-prometheus-exporter). This dashboard has charts displaying: `HTTP Requests`, `Active Connections`, `Connections Waiting`, `Accepted Connections`, `Reading Connections`, and `Connections Writing`|
+|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/nginxinc/nginx-prometheus-exporter). This dashboard has charts displaying: `HTTP Requests`, `Active Connections`, `Connections Waiting`, `Accepted Connections`, `Reading Connections`, `Connections Writing`, and `Dropped Connections`|
