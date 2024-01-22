@@ -1,5 +1,5 @@
 {
-  "category": "CUSTOM",
+  "displayName": "Zookeeper Prometheus Overview",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -17,226 +17,243 @@
       "templateVariable": "Namespace"
     }
   ],
-  "displayName": "Zookeeper Prometheus Overview",
-  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 2,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Average Uptime (Days)",
           "scorecard": {
             "gaugeView": {
+              "lowerBound": 0,
               "upperBound": 1000
             },
             "thresholds": [
               {
                 "color": "RED",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 730
-              },
-              {
-                "color": "RED",
-                "direction": "BELOW",
-                "value": 0
               },
               {
                 "color": "YELLOW",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 365
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(uptime{${Cluster},${Location},${Namespace}}) / count(uptime{${Cluster},${Location},${Namespace}}) / 86400 / 1000"
+              "prometheusQuery": "sum(uptime{${Cluster},${Location},${Namespace}}) / count(uptime{${Cluster},${Location},${Namespace}}) / 86400 / 1000",
+              "unitOverride": ""
             }
-          },
-          "title": "Average Uptime (days)"
-        },
-        "width": 2,
-        "xPos": 0,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 2,
+        "xPos": 16,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "ZNodes",
           "scorecard": {
             "gaugeView": {
+              "lowerBound": 0,
               "upperBound": 1000
             },
             "thresholds": [
               {
                 "color": "RED",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 750
               },
               {
                 "color": "RED",
                 "direction": "BELOW",
+                "label": "",
                 "value": 1
               },
               {
                 "color": "YELLOW",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 500
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(znode_count{${Cluster},${Location},${Namespace}})"
+              "prometheusQuery": "sum(znode_count{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
             }
-          },
-          "title": "ZNodes"
-        },
-        "width": 2,
-        "xPos": 0,
-        "yPos": 2
+          }
+        }
       },
       {
-        "height": 2,
+        "yPos": 20,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "scorecard": {
-            "gaugeView": {
-              "upperBound": 65
+          "title": "Connections",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
             },
-            "thresholds": [
+            "dataSets": [
               {
-                "color": "RED",
-                "direction": "ABOVE",
-                "value": 50
-              },
-              {
-                "color": "YELLOW",
-                "direction": "ABOVE",
-                "value": 40
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum(num_alive_connections{${Cluster},${Location},${Namespace}})",
+                  "unitOverride": ""
+                }
               }
             ],
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum(num_alive_connections{${Cluster},${Location},${Namespace}})"
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
             }
-          },
-          "title": "Connections"
-        },
-        "width": 2,
-        "xPos": 2,
-        "yPos": 2
+          }
+        }
       },
       {
-        "height": 2,
+        "xPos": 8,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "ZNodes Total Memory (GB)",
           "scorecard": {
             "gaugeView": {
+              "lowerBound": 0,
               "upperBound": 1
             },
             "thresholds": [
               {
                 "color": "RED",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 0.65
               },
               {
                 "color": "YELLOW",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 0.5
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(approximate_data_size{${Cluster},${Location},${Namespace}} / 1024)"
+              "prometheusQuery": "sum(approximate_data_size{${Cluster},${Location},${Namespace}} / 1024)",
+              "unitOverride": ""
             }
-          },
-          "title": "ZNodes Total Memory (GB)"
-        },
-        "width": 2,
-        "xPos": 2,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 2,
+        "xPos": 8,
+        "yPos": 8,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Watch Count",
           "scorecard": {
             "gaugeView": {
+              "lowerBound": 0,
               "upperBound": 20000
             },
             "thresholds": [
               {
                 "color": "RED",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 9000
               },
               {
                 "color": "YELLOW",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 5000
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(watch_count{${Cluster},${Location},${Namespace}})"
+              "prometheusQuery": "sum(watch_count{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
             }
-          },
-          "title": "Watch Count"
-        },
-        "width": 2,
-        "xPos": 0,
-        "yPos": 4
+          }
+        }
       },
       {
-        "height": 2,
+        "xPos": 16,
+        "yPos": 8,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Leader Elections Counter",
           "scorecard": {
             "gaugeView": {
+              "lowerBound": 0,
               "upperBound": 1
             },
             "thresholds": [
               {
                 "color": "RED",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 0.65
               },
               {
                 "color": "YELLOW",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 0.5
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(increase(election_time_count{${Cluster},${Location},${Namespace}}[5m]))"
+              "prometheusQuery": "sum(increase(election_time_count{${Cluster},${Location},${Namespace}}[5m]))",
+              "unitOverride": ""
             }
-          },
-          "title": "Leader Elections Counter"
-        },
-        "width": 2,
-        "xPos": 2,
-        "yPos": 4
+          }
+        }
       },
       {
-        "height": 2,
+        "yPos": 8,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Open File Descriptors",
           "scorecard": {
             "gaugeView": {
+              "lowerBound": 0,
               "upperBound": 1000
             },
             "thresholds": [
               {
                 "color": "RED",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 600
               },
               {
                 "color": "YELLOW",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 300
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(open_file_descriptor_count{${Cluster},${Location},${Namespace}})"
+              "prometheusQuery": "sum(open_file_descriptor_count{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
             }
-          },
-          "title": "Open File Descriptors"
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 6
+          }
+        }
       },
       {
-        "height": 4,
+        "yPos": 44,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Fsync Time (ms)",
           "xyChart": {
@@ -245,31 +262,36 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(fsynctime_sum{${Cluster},${Location},${Namespace}}[1m])"
+                  "prometheusQuery": "rate(fsynctime_sum{${Cluster},${Location},${Namespace}}[1m])",
+                  "unitOverride": ""
                 }
               }
             ],
             "thresholds": [
               {
+                "label": "",
                 "targetAxis": "Y1",
                 "value": 100
               }
             ],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 0
+        }
       },
       {
-        "height": 4,
+        "yPos": 36,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Snapshot Time (ms)",
           "xyChart": {
@@ -278,31 +300,36 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(snapshottime_sum{${Cluster},${Location},${Namespace}}[5m])"
+                  "prometheusQuery": "rate(snapshottime_sum{${Cluster},${Location},${Namespace}}[5m])",
+                  "unitOverride": ""
                 }
               }
             ],
             "thresholds": [
               {
+                "label": "",
                 "targetAxis": "Y1",
                 "value": 100
               }
             ],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 4
+        }
       },
       {
-        "height": 4,
+        "yPos": 28,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Average Latency (ms)",
           "xyChart": {
@@ -311,62 +338,238 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "avg_latency{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "avg_latency{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
             "thresholds": [
               {
+                "label": "",
                 "targetAxis": "Y1",
                 "value": 100
               }
             ],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 0
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 20,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "JVM Memory",
+          "title": "JVM Memory Utilization",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "jvm_memory_bytes_used{${Cluster},${Location},${Namespace}} / jvm_memory_bytes_max{area=\"heap\",${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "jvm_memory_bytes_used{${Cluster},${Location},${Namespace}} / jvm_memory_bytes_max{area=\"heap\",${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
             "thresholds": [
               {
+                "label": "",
                 "targetAxis": "Y1",
                 "value": 0.8
               }
             ],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 4
+        }
+      },
+      {
+        "xPos": 24,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "JVM Threads State",
+          "pieChart": {
+            "chartType": "DONUT",
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "jvm_threads_state",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "sliceAggregatedThreshold": 0
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Zookeeper",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 16,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "JVM",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 28,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "JVM Threads Deadlocked",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "jvm_threads_deadlocked",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [
+              {
+                "label": "",
+                "targetAxis": "Y1",
+                "value": 1
+              }
+            ],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 44,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "JVM Memory Pool Allocated Bytes",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "jvm_memory_pool_allocated_bytes_total",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 36,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "JVM Garbage Collection Seconds",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "jvm_gc_collection_seconds_sum",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }
