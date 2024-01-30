@@ -49,7 +49,7 @@
           }
         }
       },
-            {
+      {
         "yPos": 4,
         "width": 24,
         "height": 12,
@@ -68,7 +68,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "prometheusQuery": "sum by (destination_workload, namespace, cluster)(rate(istio_requests_total{reporter=\"destination\", ${cluster}, ${location}, ${namespace}, ${destination_workload}}[${__interval}]))\nor\nsum by (destination_workload, namespace, cluster)(rate(workload:istio_requests_total{reporter=\"destination\", ${cluster}, ${location}, ${namespace}, ${destination_workload}}[${__interval}]))",
-                  "unitOverride": ""
+                  "unitOverride": "1/s"
                 }
               }
             ],
@@ -101,7 +101,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "prometheusQuery": "sum by (response_code)(rate(istio_requests_total{reporter=\"destination\", ${cluster}, ${location}, ${namespace}, ${destination_workload}}[${__interval}]))",
-                  "unitOverride": ""
+                  "unitOverride": "1/s"
                 }
               }
             ],
@@ -133,7 +133,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "prometheusQuery": "histogram_quantile(\n    0.50,\n    sum by (le, destination_workload, namespace, cluster)(\n        rate(istio_request_duration_milliseconds_bucket{reporter=\"destination\", ${cluster}, ${location}, ${namespace}, ${destination_workload}}[${__interval}])))",
-                  "unitOverride": ""
+                  "unitOverride": "ms"
                 }
               }
             ],
@@ -166,7 +166,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "prometheusQuery": "histogram_quantile(\n    0.95,\n    sum by (le, destination_workload, namespace, cluster)(\n        rate(istio_request_duration_milliseconds_bucket{reporter=\"destination\", ${cluster}, ${location}, ${namespace}, ${destination_workload}}[${__interval}])))",
-                  "unitOverride": ""
+                  "unitOverride": "ms"
                 }
               }
             ],
