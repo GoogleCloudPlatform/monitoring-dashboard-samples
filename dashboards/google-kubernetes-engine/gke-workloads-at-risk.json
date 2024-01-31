@@ -79,7 +79,14 @@
         "widget": {
           "title": "Memory not set",
           "scorecard": {
-            "thresholds": [],
+            "thresholds": [
+              {
+                "color": "RED",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 0
+              }
+            ],
             "timeSeriesQuery": {
               "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/request_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| filter\n    resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name, resource.namespace_name, metadata.system_labels.top_level_controller_name, metadata.system_labels.top_level_controller_type, resource.container_name],.mean\n| { best_effort_workloads:\n      filter value_request_bytes_mean == 0\n      | row_count\n  ; all_workloads:\n      ident \n\n      | row_count }\n| ratio\n| scale '%'",
               "unitOverride": ""
@@ -95,7 +102,14 @@
         "widget": {
           "title": "CPU not set",
           "scorecard": {
-            "thresholds": [],
+            "thresholds": [
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 0
+              }
+            ],
             "timeSeriesQuery": {
               "timeSeriesQueryLanguage": "fetch k8s_container::kubernetes.io/container/cpu/request_cores\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| every 5m\n| group_by  \n    [resource.project_id, resource.location, resource.cluster_name, resource.namespace_name, metadata.system_labels.top_level_controller_name, metadata.system_labels.top_level_controller_type, resource.container_name],.mean\n| { best_effort_workloads:\n      filter value_request_cores_mean == 0\n      | row_count;\n      all_workloads:\n      ident\n      | row_count }\n| ratio\n| scale '%'\n",
               "unitOverride": ""
