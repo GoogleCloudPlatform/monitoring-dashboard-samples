@@ -603,6 +603,34 @@ export const TEST_GENERIC_DASHBOARD: GrafanaDashboard = {
         sort: 0,
         type: 'query',
       },
+      {
+        current: {
+          isNone: true,
+          selected: false,
+          text: ['all'],
+          value: ['$__all'],
+        },
+        datasource: {
+          type: 'prometheus',
+          uid: 'P1809F7CD0C75ACF3',
+        },
+        definition: 'label_values(kubernetes_io_hostname)',
+        hide: 0,
+        includeAll: false,
+        label: 'testNodeLabel',
+        multi: false,
+        name: 'testNodeTv',
+        options: [],
+        query: {
+          query: 'label_values(kubernetes_io_hostname)',
+          refId: 'StandardVariableQuery',
+        },
+        refresh: 1,
+        regex: '',
+        skipUrlSync: false,
+        sort: 0,
+        type: 'query',
+      }
     ],
   },
   time: {
