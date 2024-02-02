@@ -79,10 +79,14 @@ export function getDashboardFilterFromLabelKey(
     return warning(labelKeyResult.warnings);
   }
 
+  const stringValue = typeof templateVariable.current?.value === 'string' ?
+      templateVariable.current?.value :
+      '';
+
   const dashboardFilter: DashboardFilter = {
     labelKey,
     templateVariable: templateVariable.name,
-    stringValue: templateVariable.current?.value || '',
+    stringValue,
     filterType: RESOURCE_LABELS.includes(labelKey)
       ? 'RESOURCE_LABEL'
       : 'METRIC_LABEL',

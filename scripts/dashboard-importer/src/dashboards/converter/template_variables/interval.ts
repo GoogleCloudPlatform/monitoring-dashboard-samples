@@ -26,9 +26,11 @@ function getIntervalMapping(tv: TemplateVariable): Result<[string, string]> {
 
   const name = tv.name;
   const options = tv.options || [];
+  const tvCurrentValue =
+    typeof tv.current?.value === "string" ? tv.current?.value : '';
   const selectedValue =
     options.filter((option) => option.selected)[0]?.value ||
-    tv.current?.value ||
+    tvCurrentValue ||
     options[0]?.value;
   if (selectedValue === undefined) {
     return warning([`No suitable mapping found for template variable ${name}`]);

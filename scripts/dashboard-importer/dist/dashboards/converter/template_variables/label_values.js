@@ -62,7 +62,7 @@ exports.getLabelKey = getLabelKey;
  * figuring out if it's a resource or metric label
  */
 function getDashboardFilterFromLabelKey(queryString, templateVariable) {
-    var _a;
+    var _a, _b;
     const labelKeyResult = getLabelKey(queryString);
     let labelKey = labelKeyResult.result;
     if (labelKey === 'kubernetes_io_hostname') {
@@ -71,10 +71,13 @@ function getDashboardFilterFromLabelKey(queryString, templateVariable) {
     if (labelKey === null) {
         return (0, result_1.warning)(labelKeyResult.warnings);
     }
+    const stringValue = typeof ((_a = templateVariable.current) === null || _a === void 0 ? void 0 : _a.value) === 'string' ?
+        (_b = templateVariable.current) === null || _b === void 0 ? void 0 : _b.value :
+        '';
     const dashboardFilter = {
         labelKey,
         templateVariable: templateVariable.name,
-        stringValue: ((_a = templateVariable.current) === null || _a === void 0 ? void 0 : _a.value) || '',
+        stringValue,
         filterType: constants_1.RESOURCE_LABELS.includes(labelKey)
             ? 'RESOURCE_LABEL'
             : 'METRIC_LABEL',
