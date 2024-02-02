@@ -53,6 +53,12 @@ function testDashboardConversion() {
             stringValue: '',
             templateVariable: 'testTv',
         },
+        {
+            filterType: 'METRIC_LABEL',
+            labelKey: 'node',
+            stringValue: '',
+            templateVariable: 'testNodeTv',
+        }
     ]);
     // Validate Tiles
     (0, assert_1.default)((0, overlap_test_utils_1.hasNoOverlap)(tiles));

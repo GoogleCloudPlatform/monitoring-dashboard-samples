@@ -62,6 +62,12 @@ function testDashboardConversion() {
       stringValue: '',
       templateVariable: 'testTv',
     },
+    {
+      filterType: 'METRIC_LABEL',
+      labelKey: 'node',
+      stringValue: '',
+      templateVariable: 'testNodeTv',
+    }
   ]);
 
   // Validate Tiles

@@ -113,6 +113,12 @@ export interface TemplateVariableTextValue {
   value?: string;
 }
 
+// Typing for a Grafana's Template Variable text labels to values mapping
+export interface TemplateVariableTextArrayValue {
+  text?: string[];
+  value?: string[];
+}
+
 // Typing for Grafana's Template Variable Dropdown Option
 export interface TemplateVariableOption extends TemplateVariableTextValue {
   selected: boolean;
@@ -121,7 +127,7 @@ export interface TemplateVariableOption extends TemplateVariableTextValue {
 // Typing for Grafana's Individual Template Variable
 export interface TemplateVariable {
   allFormat: string;
-  current: TemplateVariableTextValue;
+  current: TemplateVariableTextValue | TemplateVariableTextArrayValue;
   datasource: string;
   includeAll: boolean;
   name: string;
