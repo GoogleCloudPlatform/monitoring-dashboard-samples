@@ -76,6 +76,11 @@ After the upload is complete, the command prints out the URLs of the uploaded da
 In the directory with the file(s) to be uploaded, it also creates `upload_<time>.txt` file that records the names and URLs of the uploaded files
 
 ## Troubleshooting
+We occasionally publish small updates and bug fixes to the tool. Before
+attempting further troubleshooting, first try fixing the issue by using
+`git pull` to pull down the latest version of the repository and then importing
+again.
+
 Common troubleshooting cases for the Cloud Monitoring Dashboard Importer
 
 ### gcloud Related Issues
