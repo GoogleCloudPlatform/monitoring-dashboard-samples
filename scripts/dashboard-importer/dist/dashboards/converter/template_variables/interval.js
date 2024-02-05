@@ -17,7 +17,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const result_1 = require("../../../common/result");
 function getIntervalMapping(tv) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     if (tv.type !== 'interval') {
         return (0, result_1.warning)([
             `getIntervalMapping received type ${tv.type} instead of interval`,
@@ -25,9 +25,10 @@ function getIntervalMapping(tv) {
     }
     const name = tv.name;
     const options = tv.options || [];
-    const selectedValue = ((_a = options.filter((option) => option.selected)[0]) === null || _a === void 0 ? void 0 : _a.value) ||
-        ((_b = tv.current) === null || _b === void 0 ? void 0 : _b.value) ||
-        ((_c = options[0]) === null || _c === void 0 ? void 0 : _c.value);
+    const tvCurrentValue = typeof ((_a = tv.current) === null || _a === void 0 ? void 0 : _a.value) === 'string' ? (_b = tv.current) === null || _b === void 0 ? void 0 : _b.value : '';
+    const selectedValue = ((_c = options.filter((option) => option.selected)[0]) === null || _c === void 0 ? void 0 : _c.value) ||
+        tvCurrentValue ||
+        ((_d = options[0]) === null || _d === void 0 ? void 0 : _d.value);
     if (selectedValue === undefined) {
         return (0, result_1.warning)([`No suitable mapping found for template variable ${name}`]);
     }
