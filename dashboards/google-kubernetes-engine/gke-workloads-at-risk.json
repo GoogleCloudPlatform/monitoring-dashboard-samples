@@ -1,5 +1,6 @@
 {
   "category": "CUSTOM",
+  "displayName": "GKE Workloads at Risk",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -18,103 +19,111 @@
       "labelKey": "cluster_name",
       "stringValue": "",
       "templateVariable": "cluster_name"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace_name",
+      "stringValue": "",
+      "templateVariable": "namespace_name"
     }
   ],
-  "displayName": "GKE Workloads at Risk",
-  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 2,
+        "xPos": 32,
+        "yPos": 0,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Workloads analyzed",
           "scorecard": {
             "blankView": {},
             "thresholds": [],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/core_usage_time'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| align rate(5m)\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name, resource.namespace_name, metadata.system_labels.top_level_controller_name, metadata.system_labels.top_level_controller_type, resource.container_name],.max\n| filter value_core_usage_time_max > 0\n| row_count\n",
+              "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/core_usage_time'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n    | ${namespace_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| align rate(5m)\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name, resource.namespace_name, metadata.system_labels.top_level_controller_name, metadata.system_labels.top_level_controller_type, resource.container_name],.max\n| filter value_core_usage_time_max > 0\n| row_count\n",
               "unitOverride": ""
             }
-          },
-          "title": "Workloads analyzed"
-        },
-        "width": 2,
+          }
+        }
+      },
+      {
+        "xPos": 0,
+        "yPos": 8,
+        "width": 48,
+        "height": 24,
+        "widget": {
+          "title": "Best Effort - Memory/CPU not set",
+          "collapsibleGroup": {
+            "collapsed": false
+          }
+        }
+      },
+      {
+        "xPos": 0,
+        "yPos": 32,
+        "width": 48,
+        "height": 24,
+        "widget": {
+          "title": "Burstable - Memory/CPU running above request",
+          "collapsibleGroup": {
+            "collapsed": false
+          }
+        }
+      },
+      {
+        "xPos": 0,
+        "yPos": 0,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Memory not set",
+          "scorecard": {
+            "thresholds": [
+              {
+                "color": "RED",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 0
+              }
+            ],
+            "timeSeriesQuery": {
+              "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/request_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| filter\n    resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name, resource.namespace_name, metadata.system_labels.top_level_controller_name, metadata.system_labels.top_level_controller_type, resource.container_name],.mean\n| { best_effort_workloads:\n      filter value_request_bytes_mean == 0\n      | row_count\n  ; all_workloads:\n      ident \n\n      | row_count }\n| ratio\n| scale '%'",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
         "xPos": 8,
-        "yPos": 0
-      },
-      {
-        "height": 6,
+        "yPos": 0,
+        "width": 8,
+        "height": 8,
         "widget": {
-          "collapsibleGroup": {
-            "collapsed": false
-          },
-          "title": "Best Effort - Memory/CPU not set"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 2
-      },
-      {
-        "height": 6,
-        "widget": {
-          "collapsibleGroup": {
-            "collapsed": false
-          },
-          "title": "Burstable - Memory/CPU running above request"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 8
-      },
-      {
-        "height": 2,
-        "widget": {
+          "title": "CPU not set",
           "scorecard": {
             "thresholds": [
               {
-                "color": "RED",
+                "color": "YELLOW",
                 "direction": "ABOVE",
                 "label": "",
                 "value": 0
               }
             ],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/request_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| filter\n    resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name, resource.namespace_name, metadata.system_labels.top_level_controller_name, metadata.system_labels.top_level_controller_type, resource.container_name],.mean\n| { best_effort_workloads:\n      filter value_request_bytes_mean == 0\n      | row_count\n  ; all_workloads:\n      ident \n\n      | row_count }\n| ratio\n| scale '%'",
+              "timeSeriesQueryLanguage": "fetch k8s_container::kubernetes.io/container/cpu/request_cores\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| every 5m\n| group_by  \n    [resource.project_id, resource.location, resource.cluster_name, resource.namespace_name, metadata.system_labels.top_level_controller_name, metadata.system_labels.top_level_controller_type, resource.container_name],.mean\n| { best_effort_workloads:\n      filter value_request_cores_mean == 0\n      | row_count;\n      all_workloads:\n      ident\n      | row_count }\n| ratio\n| scale '%'\n",
               "unitOverride": ""
             }
-          },
-          "title": "Memory not set"
-        },
-        "width": 2,
+          }
+        }
+      },
+      {
         "xPos": 0,
-        "yPos": 0
-      },
-      {
-        "height": 2,
+        "yPos": 8,
+        "width": 48,
+        "height": 8,
         "widget": {
-          "scorecard": {
-            "thresholds": [
-              {
-                "color": "RED",
-                "direction": "ABOVE",
-                "label": "",
-                "value": 0
-              }
-            ],
-            "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "fetch k8s_container::kubernetes.io/container/cpu/request_cores\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| every 5m\n| group_by  \n    [resource.project_id, resource.location, resource.cluster_name, resource.namespace_name, metadata.system_labels.top_level_controller_name, metadata.system_labels.top_level_controller_type, resource.container_name],.mean\n| { best_effort_workloads:\n      filter value_request_cores_mean == 0\n      | row_count;\n      all_workloads:\n      ident\n      | row_count }\n| ratio\n| scale '%'\n",
-              "unitOverride": ""
-            }
-          },
-          "title": "CPU not set"
-        },
-        "width": 2,
-        "xPos": 2,
-        "yPos": 0
-      },
-      {
-        "height": 2,
-        "widget": {
+          "title": "Best Effort workloads at risk",
           "text": {
             "content": "Not setting CPU or memory requests constitutes a reliability risk. When memory is unset, the kubelet can stop your pods anytime and mark them as failed. When CPU is unset, your Pods' CPU can be throttled to 0, causing your workloads to become unresponsive. [Set appropriate resource requests and limits](https://cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke#set_appropriate_resource_requests_and_limits)",
             "format": "MARKDOWN",
@@ -123,19 +132,20 @@
               "fontSize": "FONT_SIZE_UNSPECIFIED",
               "horizontalAlignment": "H_LEFT",
               "padding": "PADDING_SIZE_UNSPECIFIED",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
               "textColor": "",
               "verticalAlignment": "V_TOP"
             }
-          },
-          "title": "Best Effort workloads at risk"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 2
+          }
+        }
       },
       {
-        "height": 2,
+        "xPos": 40,
+        "yPos": 0,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Dashboard Legend",
           "text": {
             "content": "**Red** - Reliability risk.  \n**Yellow** - Performance risk.",
             "format": "MARKDOWN",
@@ -144,19 +154,20 @@
               "fontSize": "FONT_SIZE_UNSPECIFIED",
               "horizontalAlignment": "H_LEFT",
               "padding": "PADDING_SIZE_UNSPECIFIED",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
               "textColor": "",
               "verticalAlignment": "V_TOP"
             }
-          },
-          "title": "Dashboard Legend"
-        },
-        "width": 2,
-        "xPos": 10,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 2,
+        "xPos": 0,
+        "yPos": 32,
+        "width": 48,
+        "height": 8,
         "widget": {
+          "title": "Burstable workloads at risk",
           "text": {
             "content": "Pods using more memory than requested constitute a reliability risk. Like Best Effort pods above, they can be stopped by the kubelet anytime. When workloads consume more CPU than requested, they can be throttled, slowing down the workload.\n [Set appropriate resource requests and limits](https://cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke#set_appropriate_resource_requests_and_limits)",
             "format": "MARKDOWN",
@@ -165,19 +176,20 @@
               "fontSize": "FONT_SIZE_UNSPECIFIED",
               "horizontalAlignment": "H_LEFT",
               "padding": "PADDING_SIZE_UNSPECIFIED",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
               "textColor": "",
               "verticalAlignment": "V_TOP"
             }
-          },
-          "title": "Burstable workloads at risk"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 8
+          }
+        }
       },
       {
-        "height": 2,
+        "xPos": 24,
+        "yPos": 0,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "CPU under-provisioned",
           "scorecard": {
             "thresholds": [
               {
@@ -188,19 +200,19 @@
               }
             ],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "fetch k8s_container::kubernetes.io/container/cpu/request_utilization\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name, resource.namespace_name, metadata.system_labels.top_level_controller_name, metadata.system_labels.top_level_controller_type, resource.container_name], .max\n| { filter value_request_utilization_max >= 1\n| row_count\n  ; ident | row_count}\n| ratio\n| scale '%'",
+              "timeSeriesQueryLanguage": "fetch k8s_container::kubernetes.io/container/cpu/request_utilization\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name, resource.namespace_name, metadata.system_labels.top_level_controller_name, metadata.system_labels.top_level_controller_type, resource.container_name], .max\n| { filter value_request_utilization_max >= 1\n| row_count\n  ; ident | row_count}\n| ratio\n| scale '%'",
               "unitOverride": ""
             }
-          },
-          "title": "CPU under-provisioned"
-        },
-        "width": 2,
-        "xPos": 6,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 2,
+        "xPos": 16,
+        "yPos": 0,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Memory under-provisioned",
           "scorecard": {
             "thresholds": [
               {
@@ -211,117 +223,19 @@
               }
             ],
             "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "fetch k8s_container::kubernetes.io/container/memory/request_utilization\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| filter (resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system|gke-managed-filestorecsi|gke-mcs' && metric.memory_type == 'non-evictable')\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name, resource.namespace_name, metadata.system_labels.top_level_controller_name, metadata.system_labels.top_level_controller_type, resource.container_name],.max\n| { filter value_request_utilization_max >= 1\n| row_count\n  ; ident | row_count}\n| ratio\n| scale '%'",
+              "timeSeriesQueryLanguage": "fetch k8s_container::kubernetes.io/container/memory/request_utilization\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| filter (resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp)-system|gke-managed-filestorecsi|gke-mcs' && metric.memory_type == 'non-evictable')\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name, resource.namespace_name, metadata.system_labels.top_level_controller_name, metadata.system_labels.top_level_controller_type, resource.container_name],.max\n| { filter value_request_utilization_max >= 1\n| row_count\n  ; ident | row_count}\n| ratio\n| scale '%'",
               "unitOverride": ""
             }
-          },
-          "title": "Memory under-provisioned"
-        },
-        "width": 2,
-        "xPos": 4,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 4,
-        "widget": {
-          "timeSeriesTable": {
-            "columnSettings": [
-              {
-                "column": "resource.project_id",
-                "visible": true
-              },
-              {
-                "column": "resource.location",
-                "visible": true
-              },
-              {
-                "column": "resource.cluster_name",
-                "visible": true
-              },
-              {
-                "column": "resource.namespace_name",
-                "visible": true
-              },
-              {
-                "column": "metadata.system.top_level_controller_name",
-                "visible": true
-              },
-              {
-                "column": "metadata.system.top_level_controller_type",
-                "visible": true
-              },
-              {
-                "column": "value",
-                "visible": true
-              }
-            ],
-            "dataSets": [
-              {
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| filter (resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs')\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| {\n  metric 'kubernetes.io/container/memory/used_bytes'\n  | filter metric.memory_type == 'non-evictable'\n  | every 5m\n  | group_by\n      [resource.project_id, resource.location, resource.cluster_name,\n       resource.namespace_name,\n       metadata.system.top_level_controller_name:\n         metadata.system_labels.top_level_controller_name,\n       metadata.system.top_level_controller_type:\n         metadata.system_labels.top_level_controller_type],[value_used_bytes_mean_aggregate: aggregate(value.used_bytes)];\n  metric 'kubernetes.io/container/memory/request_bytes'\n  | every 5m\n  | group_by\n      [resource.project_id, resource.location, resource.cluster_name,\n       resource.namespace_name,\n       metadata.system.top_level_controller_name:\n         metadata.system_labels.top_level_controller_name,\n       metadata.system.top_level_controller_type:\n         metadata.system_labels.top_level_controller_type],\n      [value_request_bytes_mean_mean: mean(value.request_bytes)]\n  | filter value_request_bytes_mean_mean == 0\n} \n| join\n| value [t_0.value_used_bytes_mean_aggregate]"
-                }
-              }
-            ],
-            "metricVisualization": "BAR"
-          },
-          "title": "Workloads without memory requested - MiB used"
-        },
-        "width": 6,
         "xPos": 0,
-        "yPos": 4
-      },
-      {
-        "height": 4,
+        "yPos": 16,
+        "width": 24,
+        "height": 16,
         "widget": {
-          "timeSeriesTable": {
-            "columnSettings": [
-              {
-                "column": "resource.project_id",
-                "visible": true
-              },
-              {
-                "column": "resource.location",
-                "visible": true
-              },
-              {
-                "column": "resource.cluster_name",
-                "visible": true
-              },
-              {
-                "column": "resource.namespace_name",
-                "visible": true
-              },
-              {
-                "column": "metadata.system.top_level_controller_name",
-                "visible": true
-              },
-              {
-                "column": "metadata.system.top_level_controller_type",
-                "visible": true
-              },
-              {
-                "column": "value",
-                "visible": true
-              }
-            ],
-            "dataSets": [
-              {
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| filter\n    resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| { \n  metric 'kubernetes.io/container/cpu/request_cores'\n    | every 5m\n    | group_by\n        [resource.project_id, resource.location, resource.cluster_name,\n         resource.namespace_name,\n         metadata.system.top_level_controller_name:\n           metadata.system_labels.top_level_controller_name,\n         metadata.system.top_level_controller_type:\n           metadata.system_labels.top_level_controller_type],\n        [value_request_bytes_mean_mean: mean(value.request_cores)]\n    | filter value_request_bytes_mean_mean == 0 ;\n    metric 'kubernetes.io/container/cpu/core_usage_time'\n| align rate(5m)\n| every 5m\n    | group_by\n        [resource.project_id, resource.location, resource.cluster_name,\n         resource.namespace_name,\n         metadata.system.top_level_controller_name:\n           metadata.system_labels.top_level_controller_name,\n         metadata.system.top_level_controller_type:\n           metadata.system_labels.top_level_controller_type], [value_core_usage_time_aggregate: aggregate(value.core_usage_time)]}\n| join\n| value [mul(t_1.value_core_usage_time_aggregate,1000)]\n\n"
-                }
-              }
-            ],
-            "metricVisualization": "BAR"
-          },
-          "title": "Workloads without CPU requested - mCPU used"
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 4
-      },
-      {
-        "height": 4,
-        "widget": {
+          "title": "Workloads without memory requested - MiB used",
           "timeSeriesTable": {
             "columnSettings": [
               {
@@ -352,21 +266,21 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_utilization'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name,\n     metadata.system.top_level_controller_name:\n       metadata.system_labels.top_level_controller_name],\n    [value_request_utilization_mean:\n       mean(value.request_utilization)]\n| filter value_request_utilization_mean >= 1\n| scale '%'"
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| filter (resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs')\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| {\n  metric 'kubernetes.io/container/memory/used_bytes'\n  | filter metric.memory_type == 'non-evictable'\n  | every 5m\n  | group_by\n      [resource.project_id, resource.location, resource.cluster_name,\n       resource.namespace_name,\n       metadata.system.top_level_controller_name:\n         metadata.system_labels.top_level_controller_name,\n       metadata.system.top_level_controller_type:\n         metadata.system_labels.top_level_controller_type],[value_used_bytes_mean_aggregate: aggregate(value.used_bytes)];\n  metric 'kubernetes.io/container/memory/request_bytes'\n  | every 5m\n  | group_by\n      [resource.project_id, resource.location, resource.cluster_name,\n       resource.namespace_name,\n       metadata.system.top_level_controller_name:\n         metadata.system_labels.top_level_controller_name,\n       metadata.system.top_level_controller_type:\n         metadata.system_labels.top_level_controller_type],\n      [value_request_bytes_mean_mean: mean(value.request_bytes)]\n  | filter value_request_bytes_mean_mean == 0\n} \n| join\n| value [t_0.value_used_bytes_mean_aggregate]"
                 }
               }
             ],
             "metricVisualization": "BAR"
-          },
-          "title": " Workloads using more CPU than requested - CPU utilization"
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 10
+          }
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 16,
+        "width": 24,
+        "height": 16,
         "widget": {
+          "title": "Workloads without CPU requested - mCPU used",
           "timeSeriesTable": {
             "columnSettings": [
               {
@@ -390,7 +304,48 @@
                 "visible": true
               },
               {
-                "column": "metadata.system.top_level_controller_type",
+                "column": "value",
+                "visible": true
+              }
+            ],
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| filter\n    resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| { \n  metric 'kubernetes.io/container/cpu/request_cores'\n    | every 5m\n    | group_by\n        [resource.project_id, resource.location, resource.cluster_name,\n         resource.namespace_name,\n         metadata.system.top_level_controller_name:\n           metadata.system_labels.top_level_controller_name,\n         metadata.system.top_level_controller_type:\n           metadata.system_labels.top_level_controller_type],\n        [value_request_bytes_mean_mean: mean(value.request_cores)]\n    | filter value_request_bytes_mean_mean == 0 ;\n    metric 'kubernetes.io/container/cpu/core_usage_time'\n| align rate(5m)\n| every 5m\n    | group_by\n        [resource.project_id, resource.location, resource.cluster_name,\n         resource.namespace_name,\n         metadata.system.top_level_controller_name:\n           metadata.system_labels.top_level_controller_name,\n         metadata.system.top_level_controller_type:\n           metadata.system_labels.top_level_controller_type], [value_core_usage_time_aggregate: aggregate(value.core_usage_time)]}\n| join\n| value [mul(t_1.value_core_usage_time_aggregate,1000)]\n\n"
+                }
+              }
+            ],
+            "metricVisualization": "BAR"
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 40,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": " Workloads using more CPU than requested - CPU utilization",
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "column": "resource.project_id",
+                "visible": true
+              },
+              {
+                "column": "resource.location",
+                "visible": true
+              },
+              {
+                "column": "resource.cluster_name",
+                "visible": true
+              },
+              {
+                "column": "resource.namespace_name",
+                "visible": true
+              },
+              {
+                "column": "metadata.system.top_level_controller_name",
                 "visible": true
               },
               {
@@ -401,138 +356,162 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/request_utilization'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n| filter\n    (resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n     && metric.memory_type == 'non-evictable')\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name, metadata.system_labels.top_level_controller_name,\n     metadata.system_labels.top_level_controller_type],\n    [value_request_utilization_mean: mean(value.request_utilization)]\n| filter val() >= 1\n| scale '%'"
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_utilization'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n    | ${namespace_name}\n| filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name,\n     metadata.system.top_level_controller_name:\n       metadata.system_labels.top_level_controller_name],\n    [value_request_utilization_mean:\n       mean(value.request_utilization)]\n| filter value_request_utilization_mean >= 1\n| scale '%'"
                 }
               }
             ],
             "metricVisualization": "BAR"
-          },
-          "title": "Workloads using more memory than requested - memory utilization"
-        },
-        "width": 6,
+          }
+        }
+      },
+      {
         "xPos": 0,
-        "yPos": 10
+        "yPos": 40,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Workloads using more memory than requested - memory utilization",
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "column": "resource.project_id",
+                "visible": true
+              },
+              {
+                "column": "resource.location",
+                "visible": true
+              },
+              {
+                "column": "resource.cluster_name",
+                "visible": true
+              },
+              {
+                "column": "resource.namespace_name",
+                "visible": true
+              },
+              {
+                "column": "metadata.system.top_level_controller_name",
+                "visible": true
+              },
+              {
+                "column": "metadata.system.top_level_controller_type",
+                "visible": true
+              },
+              {
+                "column": "value",
+                "visible": true
+              }
+            ],
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/request_utilization'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n    | ${namespace_name}\n| filter\n    (resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n     && metric.memory_type == 'non-evictable')\n| every 5m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.namespace_name, metadata.system_labels.top_level_controller_name,\n     metadata.system_labels.top_level_controller_type],\n    [value_request_utilization_mean: mean(value.request_utilization)]\n| filter val() >= 1\n| scale '%'"
+                }
+              }
+            ],
+            "metricVisualization": "BAR"
+          }
+        }
       },
       {
-        "height": 6,
+        "xPos": 0,
+        "yPos": 56,
+        "width": 48,
+        "height": 20,
         "widget": {
+          "title": "Workload right-sizing recommendations (for deployments only)",
           "collapsibleGroup": {
             "collapsed": false
-          },
-          "title": "Workload right-sizing recommendations (for deployments only)"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 14
+          }
+        }
       },
       {
-        "height": 4,
+        "xPos": 0,
+        "yPos": 60,
+        "width": 24,
+        "height": 16,
         "widget": {
+          "title": "Memory request MiB recommended per replica",
           "timeSeriesTable": {
             "columnSettings": [
               {
-                "column": "resource.project_id",
-                "visible": true
-              },
-              {
-                "column": "resource.location",
-                "visible": true
-              },
-              {
-                "column": "resource.cluster_name",
-                "visible": true
-              },
-              {
-                "column": "resource.namespace_name",
-                "visible": true
-              },
-              {
-                "column": "resource.controller_name",
-                "visible": true
-              },
-              {
-                "column": "resource.controller_kind",
-                "visible": true
-              },
-              {
-                "column": "metric.container_name",
-                "visible": true
-              },
-              {
                 "column": "value",
-                "visible": true
+                "visible": false
               }
             ],
             "dataSets": [
               {
+                "minAlignmentPeriod": "60s",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_scale\n| metric\n    'kubernetes.io/autoscaler/container/memory/per_replica_recommended_request_bytes'\n    | filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n| group_by 14d,\n    [value_per_replica_recommended_request_bytes_mean:\n       max(value.per_replica_recommended_request_bytes)]\n\n\n"
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MAX",
+                      "groupByFields": [
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"location\"",
+                        "resource.label.\"cluster_name\"",
+                        "metric.label.\"container_name\"",
+                        "resource.label.\"namespace_name\"",
+                        "resource.label.\"controller_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MAX"
+                    },
+                    "filter": "metric.type=\"kubernetes.io/autoscaler/container/memory/per_replica_recommended_request_bytes\" resource.type=\"k8s_scale\" resource.label.\"namespace_name\"!=monitoring.regex.full_match(\"gmp-system\") ${project_id} ${location} ${cluster_name} ${namespace_name}"
+                  }
                 }
               }
             ],
             "metricVisualization": "NUMBER"
-          },
-          "title": "Memory request MiB recommended per replica"
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 16
+          }
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 60,
+        "width": 24,
+        "height": 16,
         "widget": {
+          "title": "CPU request mCore recommended per replica",
           "timeSeriesTable": {
-            "columnSettings": [
-              {
-                "column": "resource.project_id",
-                "visible": true
-              },
-              {
-                "column": "resource.location",
-                "visible": true
-              },
-              {
-                "column": "resource.cluster_name",
-                "visible": true
-              },
-              {
-                "column": "resource.namespace_name",
-                "visible": true
-              },
-              {
-                "column": "resource.controller_name",
-                "visible": true
-              },
-              {
-                "column": "resource.controller_kind",
-                "visible": true
-              },
-              {
-                "column": "metric.container_name",
-                "visible": true
-              },
-              {
-                "column": "value",
-                "visible": true
-              }
-            ],
             "dataSets": [
               {
+                "minAlignmentPeriod": "1209600s",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_scale\n| metric\n    'kubernetes.io/autoscaler/container/cpu/per_replica_recommended_request_cores'\n    | filter resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n    | ${project_id}\n    | ${location}\n    | ${cluster_name}\n| group_by 14d,\n    [value_per_replica_recommended_request_cores_mean:\n       max(value.per_replica_recommended_request_cores)]\n| mul 1000\n"
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "1209600s",
+                      "crossSeriesReducer": "REDUCE_MAX",
+                      "groupByFields": [
+                        "resource.label.\"project_id\"",
+                        "metric.label.\"container_name\"",
+                        "resource.label.\"location\"",
+                        "resource.label.\"cluster_name\"",
+                        "resource.label.\"namespace_name\"",
+                        "resource.label.\"controller_kind\"",
+                        "resource.label.\"controller_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MAX"
+                    },
+                    "filter": "metric.type=\"kubernetes.io/autoscaler/container/cpu/per_replica_recommended_request_cores\" resource.type=\"k8s_scale\" resource.label.\"namespace_name\"!=\"gmp-system\" ${namespace_name} ${project_id} ${location} ${cluster_name}",
+                    "pickTimeSeriesFilter": {
+                      "direction": "TOP",
+                      "numTimeSeries": 30,
+                      "rankingMethod": "METHOD_MEAN"
+                    }
+                  }
                 }
               }
             ],
             "metricVisualization": "NUMBER"
-          },
-          "title": "CPU request mCore recommended per replica"
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 16
+          }
+        }
       },
       {
-        "height": 2,
+        "xPos": 0,
+        "yPos": 56,
+        "width": 48,
+        "height": 4,
         "widget": {
           "text": {
             "content": "Refer to the following recommended resource requests for CPU and memory requirements that ensuring efficient resource allocation based on VPA recommendations. They are calculated as 14 day peak recommendations.\n**Want to see workload recommendations at scale?**\n[Right-size your GKE workloads](https://cloud.google.com/blog/products/containers-kubernetes/optimize-gke-workloads-at-scale)",
@@ -542,15 +521,15 @@
               "fontSize": "FONT_SIZE_UNSPECIFIED",
               "horizontalAlignment": "H_LEFT",
               "padding": "PADDING_SIZE_UNSPECIFIED",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
               "textColor": "",
               "verticalAlignment": "V_TOP"
             }
           }
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 14
+        }
       }
-    ]
-  }
+    ],
+    "legacyRows": 76
+  },
+  "labels": {}
 }
