@@ -12,4 +12,4 @@
 |Solr Prometheus Overview|
 |:------------------|
 |Filename: [solr-prometheus-overview.json](solr-prometheus-overview.json)|
-|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/prometheus/jmx_exporter), including `Documents`, `Index Size`, `Cache Hit Ratio`, `Cache Size`, `Queries`, `Query Errors`, `Average Query Time`, `Updates`, `Update Errors`, and `Average Update Time`.|
+|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/prometheus/jmx_exporter), including `Documents`, `Index Size`, `Cache Hit Ratio`, `Cache Size`, `Queries`, `Query Errors`, `Average Query Time`, `Total Query Time`, `Query Timeouts`, `Query Server Errors`, `Updates`, `Update Errors`, `Average Update Time`, `Total Update Time`, `Update Timeouts`, and `Update Server Errors`.|
