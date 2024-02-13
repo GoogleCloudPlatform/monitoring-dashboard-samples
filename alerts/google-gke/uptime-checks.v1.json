@@ -1,0 +1,30 @@
+{
+  "displayName": "${CLUSTER_NAME}/${WORKLOAD_NAME} GKE Load Balancer Check uptime failure"
+  "documentation": {},
+  "userLabels": {},
+  "conditions": [
+    {
+      "conditionThreshold": {
+        "aggregations": [
+          {
+            "alignmentPeriod": "1200s",
+            "perSeriesAligner": "ALIGN_NEXT_OLDER",
+            "crossSeriesReducer": "REDUCE_COUNT_FALSE",
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "${UPTIME_DURATION}",
+        "filter": "metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" AND metric.label.check_id=\"${UPTIME_CHECK_ID}\" AND resource.type=\"k8s_service\"",
+        "thresholdValue": 1,
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+}
