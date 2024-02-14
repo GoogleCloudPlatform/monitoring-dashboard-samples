@@ -13,4 +13,4 @@
 |Apache Prometheus Overview|
 |:------------------|
 |Filename: [apache-prometheus-overview.json](apache-prometheus-overview.json)|
-|This dashboard is based on Prometheus metrics exposed by an [exporter](https://github.com/Lusitaniae/apache_exporter). It has charts displaying `Request Rate`, `Traffic Rate`, `Connections`, `Scoreboard`, `Workers`, `Processes`, `CPU Load`, and `Load` from Apache.|
+|This dashboard is based on Prometheus metrics exposed by an [exporter](https://github.com/Lusitaniae/apache_exporter). It has charts displaying `Apache Version`, `Server Status`, `Uptime (seconds)`, `Scoreboard`, `Connections`, `Processes`, `Workers`, `CPU Load`, `Load`, `Sent Request Rate (kb)`, and `Traffic Rate (ms)` from Apache.|
