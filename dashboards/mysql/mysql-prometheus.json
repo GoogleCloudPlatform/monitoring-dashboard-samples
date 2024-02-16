@@ -1,5 +1,5 @@
 {
-  "category": "CUSTOM",
+  "displayName": "MySQL Prometheus Overview",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -17,37 +17,30 @@
       "templateVariable": "Namespace"
     }
   ],
-  "displayName": "MySQL Prometheus Overview",
-  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 3,
+        "xPos": 8,
+        "width": 10,
+        "height": 8,
         "widget": {
+          "title": "Uptime (minutes)",
           "scorecard": {
-            "gaugeView": {
-              "upperBound": 1440
-            },
-            "thresholds": [
-              {
-                "color": "YELLOW",
-                "direction": "BELOW",
-                "value": 30
-              }
-            ],
+            "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(mysql_global_status_uptime{${Cluster},${Location},${Namespace}} / 60)"
+              "prometheusQuery": "sum(mysql_global_status_uptime{${Cluster},${Location},${Namespace}} / 60)",
+              "unitOverride": ""
             }
-          },
-          "title": "Global Status Uptime (minutes)"
-        },
-        "width": 5,
-        "xPos": 0,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 12,
+        "width": 24,
+        "height": 10,
         "widget": {
           "title": "MySQL Up",
           "xyChart": {
@@ -56,101 +49,109 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mysql_up{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "mysql_up{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 7,
-        "xPos": 5,
-        "yPos": 0
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 22,
+        "width": 24,
+        "height": 10,
         "widget": {
-          "title": "Global Status Connection Error Rate (5m)",
+          "title": "Connection Errors",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(mysql_global_status_connection_errors_total{${Cluster},${Location},${Namespace}}[5m])"
+                  "prometheusQuery": "rate(mysql_global_status_connection_errors_total{${Cluster},${Location},${Namespace}}[5m])",
+                  "unitOverride": ""
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 7,
-        "xPos": 5,
-        "yPos": 3
+        }
       },
       {
-        "height": 3,
+        "xPos": 18,
+        "width": 10,
+        "height": 8,
         "widget": {
+          "title": "Available Connections",
           "scorecard": {
             "gaugeView": {
-              "upperBound": 100
+              "lowerBound": 0,
+              "upperBound": 151
             },
             "thresholds": [
               {
-                "color": "RED",
-                "direction": "ABOVE",
-                "value": 85
-              },
-              {
                 "color": "YELLOW",
-                "direction": "ABOVE",
+                "direction": "BELOW",
+                "label": "",
                 "value": 50
               },
               {
-                "color": "YELLOW",
+                "color": "RED",
                 "direction": "BELOW",
-                "value": 0
+                "label": "",
+                "value": 10
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "100 * sum(mysql_global_status_threads_connected{${Cluster},${Location},${Namespace}}) / sum(mysql_global_variables_max_connections{${Cluster},${Location},${Namespace}})\n"
+              "prometheusQuery": "sum(mysql_global_variables_max_connections{${Cluster},${Location},${Namespace}}) - sum(mysql_global_status_threads_connected{${Cluster},${Location},${Namespace}})\n",
+              "unitOverride": ""
             }
-          },
-          "title": "Available Connections"
-        },
-        "width": 5,
-        "xPos": 0,
-        "yPos": 3
+          }
+        }
       },
       {
-        "height": 3,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Open Files Available",
           "scorecard": {
             "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(mysql_global_variables_open_files_limit{${Cluster},${Location},${Namespace}}) - sum(mysql_global_variables_innodb_open_files{${Cluster},${Location},${Namespace}})\n"
+              "prometheusQuery": "sum(mysql_global_variables_open_files_limit{${Cluster},${Location},${Namespace}}) - sum(mysql_global_variables_innodb_open_files{${Cluster},${Location},${Namespace}})\n",
+              "unitOverride": ""
             }
-          },
-          "title": "Open Files Available"
-        },
-        "width": 5,
-        "xPos": 0,
-        "yPos": 6
+          }
+        }
       },
       {
-        "height": 3,
+        "yPos": 41,
+        "width": 24,
+        "height": 9,
         "widget": {
           "title": "Slow Queries",
           "xyChart": {
@@ -159,185 +160,305 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(mysql_global_status_slow_queries{${Cluster},${Location},${Namespace}}[5m])"
+                  "prometheusQuery": "rate(mysql_global_status_slow_queries{${Cluster},${Location},${Namespace}}[5m])",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 7,
-        "xPos": 5,
-        "yPos": 6
+        }
       },
       {
-        "height": 3,
+        "xPos": 28,
+        "width": 10,
+        "height": 8,
         "widget": {
-          "title": "Cache Hit Rate",
+          "title": "Cache Hit Rate %",
+          "scorecard": {
+            "gaugeView": {
+              "lowerBound": 0,
+              "upperBound": 100
+            },
+            "thresholds": [
+              {
+                "color": "YELLOW",
+                "direction": "BELOW",
+                "label": "",
+                "value": 90
+              },
+              {
+                "color": "RED",
+                "direction": "BELOW",
+                "label": "",
+                "value": 75
+              }
+            ],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "(rate(mysql_global_status_table_open_cache_hits{${Cluster},${Location},${Namespace}}[5m]) /\n(rate(mysql_global_status_table_open_cache_hits{${Cluster},${Location},${Namespace}}[5m]) + rate(mysql_global_status_table_open_cache_misses{${Cluster},${Location},${Namespace}}[5m]))) * 100",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 38,
+        "width": 10,
+        "height": 8,
+        "widget": {
+          "title": "Buffer Pool Cache Hit Rate %",
+          "scorecard": {
+            "gaugeView": {
+              "lowerBound": 0,
+              "upperBound": 100
+            },
+            "thresholds": [
+              {
+                "color": "YELLOW",
+                "direction": "BELOW",
+                "label": "",
+                "value": 95
+              },
+              {
+                "color": "RED",
+                "direction": "BELOW",
+                "label": "",
+                "value": 75
+              }
+            ],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "((rate(mysql_global_status_innodb_buffer_pool_read_requests{${Cluster},${Location},${Namespace}}[5m]) -\nrate(mysql_global_status_innodb_buffer_pool_reads{${Cluster},${Location},${Namespace}}[5m])) / rate(mysql_global_status_innodb_buffer_pool_read_requests{${Cluster},${Location},${Namespace}}[5m])) * 100",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "yPos": 32,
+        "width": 24,
+        "height": 9,
+        "widget": {
+          "title": "Questions",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(mysql_global_status_table_open_cache_hits{${Cluster},${Location},${Namespace}}[5m]) /\n(rate(mysql_global_status_table_open_cache_hits{${Cluster},${Location},${Namespace}}[5m]) + rate(mysql_global_status_table_open_cache_misses{${Cluster},${Location},${Namespace}}[5m]))"
+                  "prometheusQuery": "rate(mysql_global_status_questions{${Cluster},${Location},${Namespace}}[5m])",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 9
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 32,
+        "width": 24,
+        "height": 9,
         "widget": {
-          "title": "Buffer Pool Cache Hit Rate",
+          "title": "InnoDB Buffer Pool Read Requests vs Reads From Disk",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(rate(mysql_global_status_innodb_buffer_pool_read_requests{${Cluster},${Location},${Namespace}}[5m]) -\nrate(mysql_global_status_innodb_buffer_pool_reads{${Cluster},${Location},${Namespace}}[5m])) / rate(mysql_global_status_innodb_buffer_pool_read_requests{${Cluster},${Location},${Namespace}}[5m])"
+                  "prometheusQuery": "rate(mysql_global_status_innodb_buffer_pool_reads{${Cluster},${Location},${Namespace}}[5m])",
+                  "unitOverride": ""
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(mysql_global_status_innodb_buffer_pool_read_requests[5m])",
+                  "unitOverride": ""
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 9
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 41,
+        "width": 24,
+        "height": 9,
         "widget": {
-          "title": "Full Join",
+          "title": "Fsync Operations",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(mysql_global_status_select_full_join{${Cluster},${Location},${Namespace}}[5m])"
+                  "prometheusQuery": "rate(mysql_global_status_innodb_data_fsyncs{${Cluster},${Location},${Namespace}}[5m])",
+                  "unitOverride": ""
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 3,
-        "xPos": 0,
-        "yPos": 12
+        }
       },
       {
-        "height": 3,
+        "yPos": 12,
+        "width": 24,
+        "height": 10,
         "widget": {
-          "title": "Full Range Join",
+          "title": "Insert | Update | Delete Statements",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(mysql_global_status_select_full_range_join{${Cluster},${Location},${Namespace}}[5m])"
+                  "prometheusQuery": "rate(mysql_global_status_commands_total{command=~\"insert|update|delete\",${Cluster},${Location},${Namespace}}[5m])",
+                  "unitOverride": ""
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 3,
-        "xPos": 3,
-        "yPos": 12
+        }
       },
       {
-        "height": 3,
+        "yPos": 22,
+        "width": 24,
+        "height": 10,
         "widget": {
-          "title": "Range Check",
+          "title": "Select Statements",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(mysql_global_status_select_range_check{${Cluster},${Location},${Namespace}}[5m])"
+                  "prometheusQuery": "rate(mysql_global_status_commands_total{command=~\"select\",${Cluster},${Location},${Namespace}}[5m])",
+                  "unitOverride": ""
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 3,
-        "xPos": 6,
-        "yPos": 12
+        }
       },
       {
-        "height": 3,
+        "yPos": 8,
+        "width": 24,
+        "height": 4,
         "widget": {
-          "title": "Scan",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "rate(mysql_global_status_select_scan{${Cluster},${Location},${Namespace}}[5m])"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
+          "title": "Queries / Questions",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
             }
           }
-        },
-        "width": 3,
-        "xPos": 9,
-        "yPos": 12
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 8,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Performance",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }
