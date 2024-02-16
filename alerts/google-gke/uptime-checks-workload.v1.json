@@ -8,6 +8,7 @@
   },
   "conditions": [
     {
+      "displayName": "Failure of ${UPTIME_CHECK_NAME}"
       "conditionThreshold": {
         "aggregations": [
           {
@@ -21,7 +22,7 @@
         ],
         "comparison": "COMPARISON_GT",
         "duration": "${UPTIME_DURATION}",
-        "filter": "metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" AND metric.label.check_id=\"${UPTIME_CHECK_ID}\" AND resource.type=\"k8s_service\"",
+        "filter": "metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" AND metric.label.check_id=\"${UPTIME_CHECK_ID}\" AND resource.type=\"${UPTIME_RESOURCE_TYPE}\"",
         "thresholdValue": 1,
         "trigger": {
           "count": 1
@@ -34,4 +35,5 @@
   },
   "combiner": "OR",
   "enabled": true,
+  "notificationChannels": []
 }
