@@ -13,4 +13,4 @@
 |PostgreSQL Prometheus|
 |:------------------|
 |Filename: [postgresql-prometheus.json](postgresql-prometheus.json)|
-|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/prometheus-community/postgres_exporter). This dashboard has charts displaying: `Backend Utilization %`, `Temporary Bytes to Disk`, `Rows Fetched/Returned`, `Buffers`, `Rows Inserted/Updated/Deleted`, `Checkpoints Requests/Scheduled`, and `Blocks Hit/Read`|
+|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/prometheus-community/postgres_exporter). This dashboard has charts displaying: `Active Connections`, `Deadlocks`, `Conflicts`, `Connections`, `Max Active Transaction Duration (seconds)`, `Backend Utilization %`, `Temporary Bytes to Disk`, `Rows Fetched/Returned`, `Rows Inserted/Updated/Deleted`, `Blocks Hit/Read`, `Block Read/Write Time`, `Buffers`, `Checkpoints Requests/Scheduled`, `Replication Lag (seconds)`, `Max Replication Slots` and `Max Logical Replication Workers`. |
