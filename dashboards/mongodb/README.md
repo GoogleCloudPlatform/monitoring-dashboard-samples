@@ -12,4 +12,4 @@
 |MongoDB Prometheus|
 |:------------------|
 |Filename: [mongodb-prometheus.json](mongodb-prometheus.json)|
-|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/percona/mongodb_exporter). This dashboard has charts displaying: `Connections Available`, `Disk Read/Write IO`, `Memory`, `Opcounters`, and `Ops Latencies`|
+|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/percona/mongodb_exporter). This dashboard has charts displaying: `Active Connections`, `Available Connections`, `Memory Utilization %`, `Page Faults`, `Asserts`, `Memory (kb)`, `Disk Read/Write IO`, `Disk Queue Time (microseconds)`, `Collection Ops`, `Collection Ops Latencies (microseconds)`, `Collection Size (bytes)`, `Document Ops`, `Operations Queued due to Lock`, `Operation Scan and Order`, and `Oplog Size`. |
