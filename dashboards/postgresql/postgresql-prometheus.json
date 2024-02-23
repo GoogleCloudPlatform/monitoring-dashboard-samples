@@ -1,4 +1,5 @@
 {
+  "displayName": "PostgreSQL Prometheus Overview",
   "category": "CUSTOM",
   "dashboardFilters": [
     {
@@ -17,13 +18,193 @@
       "templateVariable": "Namespace"
     }
   ],
-  "displayName": "PostgreSQL Prometheus Overview",
-  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
+        "width": 16,
+        "height": 8,
+        "widget": {
+          "title": "Active Connections",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "sum(pg_stat_activity_count{state=\"active\",${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 16,
+        "width": 16,
+        "height": 8,
+        "widget": {
+          "title": "Deadlocks",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "sum(pg_stat_database_deadlocks{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 32,
+        "width": 16,
+        "height": 8,
+        "widget": {
+          "title": "Conflicts",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "sum(pg_stat_database_conflicts{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Connections",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "pg_stat_activity_count{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 8,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Max Active Transaction Duration (seconds)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "pg_stat_activity_max_tx_duration{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 20,
+        "width": 48,
         "height": 4,
+        "widget": {
+          "title": "Database",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Backend Utilization %",
+          "scorecard": {
+            "gaugeView": {
+              "lowerBound": 0,
+              "upperBound": 1
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(pg_stat_database_numbackends{${Cluster},${Location},${Namespace}}) / sum(pg_settings_max_connections{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 24,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Temporary Bytes to Disk",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "pg_stat_database_temp_bytes{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 36,
+        "width": 24,
+        "height": 12,
         "widget": {
           "title": "Rows Fetched/Returned",
           "xyChart": {
@@ -61,46 +242,13 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 3
+        }
       },
       {
-        "height": 3,
-        "widget": {
-          "title": "Temporary Bytes to Disk",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "pg_stat_database_temp_bytes{${Cluster},${Location},${Namespace}}",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 0
-      },
-      {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 36,
+        "width": 24,
+        "height": 12,
         "widget": {
           "title": "Rows Inserted/Updated/Deleted",
           "xyChart": {
@@ -149,132 +297,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 7
+        }
       },
       {
-        "height": 4,
-        "widget": {
-          "title": "Checkpoints Requests/Scheduled",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "pg_stat_bgwriter_checkpoints_req{${Cluster},${Location},${Namespace}}",
-                  "unitOverride": ""
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "pg_stat_bgwriter_checkpoints_timed{${Cluster},${Location},${Namespace}}",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 7
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Buffers ",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "pg_stat_bgwriter_buffers_checkpoint{${Cluster},${Location},${Namespace}}",
-                  "unitOverride": ""
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "pg_stat_bgwriter_buffers_clean{${Cluster},${Location},${Namespace}}",
-                  "unitOverride": ""
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "pg_stat_bgwriter_buffers_backend{${Cluster},${Location},${Namespace}}",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 3
-      },
-      {
-        "height": 3,
-        "widget": {
-          "scorecard": {
-            "gaugeView": {
-              "lowerBound": 0,
-              "upperBound": 1
-            },
-            "thresholds": [],
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum(pg_stat_database_numbackends{${Cluster},${Location},${Namespace}}) / sum(pg_settings_max_connections{${Cluster},${Location},${Namespace}})",
-              "unitOverride": ""
-            }
-          },
-          "title": "Backend Utilization %"
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 0
-      },
-      {
-        "height": 4,
+        "yPos": 48,
+        "width": 24,
+        "height": 12,
         "widget": {
           "title": "Blocks Hit/Read",
           "xyChart": {
@@ -312,11 +340,332 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 11
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 48,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Block Read/Write Time",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "pg_stat_database_blk_read_time{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              },
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "pg_stat_database_blk_write_time{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 60,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Deadlocks",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "pg_stat_database_deadlocks{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 60,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Conflicts",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "pg_stat_database_conflicts{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 72,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Background Writer",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 76,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Buffers",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "pg_stat_bgwriter_buffers_checkpoint_total{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "pg_stat_bgwriter_buffers_clean_total{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "pg_stat_bgwriter_buffers_backend_total{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 76,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Checkpoints Requested/Scheduled",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "pg_stat_bgwriter_checkpoints_req_total{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "pg_stat_bgwriter_checkpoints_timed_total{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 88,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Replication",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 92,
+        "width": 16,
+        "height": 12,
+        "widget": {
+          "title": "Replication Lag (seconds)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "pg_replication_lag_seconds{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 16,
+        "yPos": 92,
+        "width": 16,
+        "height": 12,
+        "widget": {
+          "title": "Max Replication Slots",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "pg_settings_max_replication_slots{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 32,
+        "yPos": 92,
+        "width": 16,
+        "height": 12,
+        "widget": {
+          "title": "Max Logical Replication Workers",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "pg_settings_max_logical_replication_workers{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }
