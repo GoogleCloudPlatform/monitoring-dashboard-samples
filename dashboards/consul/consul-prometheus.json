@@ -1,5 +1,5 @@
 {
-  "category": "CUSTOM",
+  "displayName": "Consul Prometheus Overview",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -17,13 +17,13 @@
       "templateVariable": "Namespace"
     }
   ],
-  "displayName": "Consul Prometheus Overview",
-  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 3,
+        "yPos": 16,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "KV Store Apply Time ",
           "xyChart": {
@@ -35,22 +35,25 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "consul_kvs_apply{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "rate(consul_kvs_apply_sum{${Cluster},${Location},${Namespace}}[1m])",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 6
+          },
+          "computedId": "d92ac376-226a-433a-86d7-5d5f004c4223"
+        }
       },
       {
-        "height": 3,
+        "yPos": 40,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Raft Commit Time",
           "xyChart": {
@@ -62,73 +65,60 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "consul_raft_commitTime{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "rate(consul_raft_commitTime_sum{${Cluster},${Location},${Namespace}}[1m])",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 6
-      },
-      {
-        "height": 6,
-        "widget": {
-          "collapsibleGroup": {
-            "collapsed": false
           },
-          "title": "Transaction Timing"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 3
+          "computedId": "d76006b2-37d2-4786-9be5-2125d3bfc78d"
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 52,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "collapsibleGroup": {
-            "collapsed": false
-          },
-          "title": "Leadership"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 15
-      },
-      {
-        "height": 3,
-        "widget": {
-          "title": "Leaders Elected",
+          "title": "Leadership Changes",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "consul_raft_state_leader{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "rate(consul_raft_state_leader{${Cluster},${Location},${Namespace}}[1m])",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 15
+          },
+          "computedId": "858bb839-dc78-4b8b-8de1-35cd5344f222"
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 44,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Elections",
           "xyChart": {
@@ -137,25 +127,30 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "consul_raft_state_candidate{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "consul_raft_state_candidate{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 15
+          },
+          "computedId": "29957853-f863-425f-b8a7-9b48bd9fe2d4"
+        }
       },
       {
-        "height": 3,
+        "width": 12,
+        "height": 12,
         "widget": {
           "title": "Autopilot Health",
           "xyChart": {
@@ -164,25 +159,31 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "consul_autopilot_healthy{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "consul_autopilot_healthy{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
-          }
-        },
-        "width": 3,
-        "xPos": 0,
-        "yPos": 0
+          },
+          "computedId": "60fcefd8-2398-4c5b-bc4c-9f4ec27610b5"
+        }
       },
       {
-        "height": 3,
+        "xPos": 12,
+        "width": 20,
+        "height": 12,
         "widget": {
           "title": "System Memory Utilized in Bytes",
           "xyChart": {
@@ -191,64 +192,71 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "consul_runtime_sys_bytes{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "consul_runtime_sys_bytes{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
-          }
-        },
-        "width": 5,
-        "xPos": 3,
-        "yPos": 0
+          },
+          "computedId": "048b1ca1-1bb7-45ac-9a5c-ee4a789a1ee5"
+        }
       },
       {
-        "height": 3,
+        "xPos": 32,
+        "width": 16,
+        "height": 12,
         "widget": {
-          "title": "GC Pause (nanoseconds)",
+          "title": "GC Pause Time",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(consul_runtime_total_gc_pause_ns{${Cluster},${Location},${Namespace}}[5m])"
+                  "prometheusQuery": "rate(consul_runtime_total_gc_pause_ns{${Cluster},${Location},${Namespace}}[5m]) / (1000000000)",
+                  "unitOverride": ""
                 }
+              }
+            ],
+            "thresholds": [
+              {
+                "label": "",
+                "targetAxis": "Y1",
+                "value": 2
               }
             ],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
-          }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 0
-      },
-      {
-        "height": 6,
-        "widget": {
-          "collapsibleGroup": {
-            "collapsed": false
           },
-          "title": "Network activity"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 9
+          "computedId": "9c8ea2db-1070-408a-b3f0-0cb20c61fab9"
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 16,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Client RPC Request Rate",
           "xyChart": {
@@ -257,52 +265,66 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(consul_client_rpc{${Cluster},${Location},${Namespace}}[1m])"
+                  "prometheusQuery": "rate(consul_client_rpc{${Cluster},${Location},${Namespace}}[1m])",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 9
+          },
+          "computedId": "6f2136bc-8cf1-4fb0-9ad7-c5b7fbc73341"
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 24,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Rate Limited RPC Request Rate",
+          "title": "Rate Limit Exceeded RPC Requests",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(consul_client_rpc_exceeded{${Cluster},${Location},${Namespace}}[1m])"
+                  "prometheusQuery": "rate(consul_client_rpc_exceeded{${Cluster},${Location},${Namespace}}[1m])",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 9
+          },
+          "computedId": "fbc0ce8b-d050-4953-a24c-05f175249f75"
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 32,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Failed RPC Request Rate",
           "xyChart": {
@@ -311,50 +333,196 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(consul_client_rpc_failed{${Cluster},${Location},${Namespace}}[1m])"
+                  "prometheusQuery": "rate(consul_client_rpc_failed{${Cluster},${Location},${Namespace}}[1m])",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
-          }
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 12
+          },
+          "computedId": "7d5a5635-f28e-481d-8f53-83494341fa99"
+        }
       },
       {
-        "height": 3,
+        "yPos": 32,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Raft Apply Rate",
+          "title": "Transaction Count Rate",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(consul_raft_apply{${Cluster},${Location},${Namespace}}[5m])"
+                  "prometheusQuery": "rate(consul_raft_apply{${Cluster},${Location},${Namespace}}[5m])",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
-          }
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 3
+          },
+          "computedId": "aa667fc3-02e1-4c45-9e63-a9e76710396d"
+        }
+      },
+      {
+        "yPos": 12,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Transaction Timing",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          },
+          "computedId": "86c7579d-b9a9-4ae9-8eb6-9b805ab96312"
+        }
+      },
+      {
+        "yPos": 24,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Transaction Timing Rate",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(consul_txn_apply_sum{${Cluster},${Location},${Namespace}}[1m])",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          },
+          "computedId": "d4721a31-00a1-42c8-a978-13f77e36d97b"
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 12,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Network Activity",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          },
+          "computedId": "fdfcf71e-1314-4325-8d14-ed8b3c1ad0b3"
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 40,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Leadership Health",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          },
+          "computedId": "9ce1abc6-4a57-49f6-a07e-cfe63f0e195d"
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 60,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Time To Contact Followers",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(consul_raft_leader_lastContact{${Cluster},${Location},${Namespace}}[1m])",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          },
+          "computedId": "9b318080-7af7-40c1-a3d3-6eeb953f42d4"
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }
