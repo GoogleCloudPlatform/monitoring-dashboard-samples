@@ -7,4 +7,4 @@
 |Consul Prometheus|
 |:------------------|
 |Filename: [consul-prometheus.json](consul-prometheus.json)|
-|This dashboard has charts displaying: `Autopilot Health`, `System Memory Utilized in Bytes`, `GC Pause Time`, `KV Store Apply Time`, `Raft Commit Time`, `Transaction Timing Rate`, `Client RPC Request Rate`, `Rate Limit Exceeded RPC Requests`, `Failed RPC Request Rate`, `Elections`, `Leaders Elected`, and `Time To Contact Followers` |
+|This dashboard has charts displaying: `Autopilot Health`, `System Memory Utilized in Bytes`, `GC Pause Time`, `KV Store Apply Time`, `Raft Commit Time`, `Raft Transaction Rate`, `Transaction Timing Rate`, `Transaction Apply Time`, `Client RPC Request Rate`, `Rate Limit Exceeded RPC Requests`, `Failed RPC Request Rate`, `Elections`, `Leaders Elected`, and `Time To Contact Followers` |
