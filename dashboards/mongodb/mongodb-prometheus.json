@@ -1,5 +1,6 @@
 {
   "category": "CUSTOM",
+  "displayName": "MongoDB Prometheus Overview",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -17,148 +18,264 @@
       "templateVariable": "Namespace"
     }
   ],
-  "displayName": "MongoDB Prometheus Overview",
-  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Active Connections",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "sum(mongodb_ss_connections{conn_type=\"active\",${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 12,
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Available Connections",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "sum(mongodb_ss_connections{conn_type=\"available\",${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Memory Utilization %",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "(1 - sum(mongodb_sys_memory_MemFree_kb{${Cluster},${Location},${Namespace}}) / sum(mongodb_sys_memory_MemTotal_kb{${Cluster},${Location},${Namespace}})) * 100",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 36,
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Page Faults",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "sum(mongodb_ss_extra_info_page_faults{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "width": 48,
         "height": 4,
         "widget": {
-          "title": "Opcounters",
+          "title": "Server",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 12,
+        "width": 16,
+        "height": 16,
+        "widget": {
+          "title": "Available Connections",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_ss_opcounters{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "mongodb_ss_connections{conn_type=\"available\",${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 7
+        }
       },
       {
-        "height": 4,
+        "xPos": 16,
+        "yPos": 12,
+        "width": 16,
+        "height": 16,
         "widget": {
-          "title": "Ops Latencies",
+          "title": "Page Faults",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_ss_opLatencies_latency{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "mongodb_ss_extra_info_page_faults{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 7
+        }
       },
       {
-        "height": 4,
+        "xPos": 32,
+        "yPos": 12,
+        "width": 16,
+        "height": 16,
         "widget": {
-          "title": "Connections Available",
+          "title": "Asserts",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_ss_connections{conn_type=\"available\",${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "mongodb_ss_asserts{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 0
+        }
       },
       {
+        "yPos": 28,
+        "width": 48,
         "height": 4,
         "widget": {
-          "title": "Operations Queued due to Lock",
+          "title": "System",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 32,
+        "width": 16,
+        "height": 16,
+        "widget": {
+          "title": "Memory (kb)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_ss_globalLock_currentQueue{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "mongodb_sys_memory_MemFree_kb{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 11
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Scan and Order",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
+              },
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_ss_metrics_operation_scanAndOrder{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "mongodb_sys_memory_MemTotal_kb{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 11
+        }
       },
       {
-        "height": 4,
+        "xPos": 16,
+        "yPos": 32,
+        "width": 16,
+        "height": 16,
         "widget": {
           "title": "Disk Read/Write IO",
           "xyChart": {
@@ -167,64 +284,319 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_sys_disks_sda_write_time_ms{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "mongodb_sys_disks_sda_write_time_ms{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               },
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_sys_disks_sda_read_time_ms{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "mongodb_sys_disks_sda_read_time_ms{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 0
+        }
       },
       {
-        "height": 3,
+        "xPos": 32,
+        "yPos": 32,
+        "width": 16,
+        "height": 16,
         "widget": {
-          "title": "Memory",
+          "title": "Disk Queue Time (milliseconds)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_sys_memory_MemFree_kb{${Cluster},${Location},${Namespace}}"
-                }
-              },
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "mongodb_sys_memory_MemTotal_kb{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "mongodb_sys_disks_sda_io_queued_ms{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 4
+        }
+      },
+      {
+        "yPos": 48,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Operations",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 52,
+        "width": 16,
+        "height": 16,
+        "widget": {
+          "title": "Collection Ops",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "mongodb_ss_opLatencies_ops{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 16,
+        "yPos": 52,
+        "width": 16,
+        "height": 16,
+        "widget": {
+          "title": "Collection Ops Latencies (microseconds)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "mongodb_ss_opLatencies_ops{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 32,
+        "yPos": 52,
+        "width": 16,
+        "height": 16,
+        "widget": {
+          "title": "Collection Size (bytes)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "mongodb_dbstats_dataSize{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 68,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Document Ops",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "mongodb_ss_opcounters{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 68,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Operations Queued due to Lock",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "mongodb_ss_globalLock_currentQueue{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 84,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Operation Scan and Order",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "mongodb_ss_metrics_operation_scanAndOrder{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 84,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Oplog Size",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "mongodb_oplog_stats_size{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }
