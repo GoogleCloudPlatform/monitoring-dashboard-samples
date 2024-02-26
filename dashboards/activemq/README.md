@@ -13,4 +13,4 @@
 |ActiveMQ Prometheus Overview|
 |:------------------|
 |Filename: [activemq-prometheus-overview.json](activemq-prometheus-overview.json)|
-|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/prometheus/jmx_exporter). This dashboard has charts displaying: `Memory Usage`, `Store Usage`, `Temp Usage`, `Connections`, `Producers`, `Messages Waiting`, `Messages Enqueued`, `Messages Dequeued`,`Total Messages`,`Consumers`, `Average Wait Time`. |
+|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/prometheus/jmx_exporter). This dashboard has charts displaying: `Connections`, `Memory Usage`, `Store Usage`, `Temp Usage`, `Total Connections`, `Total Consumers`, `Total Producers`, `Total Messages`, `Total Messages Enqueued`, `Total Messages Dequeued`, `Topic Message Size`, `Topic Producers`, `Topic Consumers`, `Topic Dispatch Count`, `Topic Average Blocked Time`, `Topics Expired`, `Topic Queue Size`, `Topic Enqueues`, and `Topic Dequeues`. |
