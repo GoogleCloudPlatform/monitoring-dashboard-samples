@@ -1,5 +1,5 @@
 {
-  "category": "CUSTOM",
+  "displayName": "Jenkins Prometheus Overview",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -17,40 +17,45 @@
       "templateVariable": "Namespace"
     }
   ],
-  "displayName": "Jenkins Prometheus Overview",
-  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 3,
+        "yPos": 20,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Job Build Speed",
+          "title": "Time Spent Building",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "jenkins_job_building_duration{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "jenkins_job_building_duration{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 4
+        }
       },
       {
-        "height": 4,
+        "xPos": 8,
+        "width": 8,
+        "height": 8,
         "widget": {
           "title": "JVM Memory Free %",
           "xyChart": {
@@ -59,109 +64,94 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(vm_memory_total_max{job=\"jenkins-metrics\",${Cluster},${Location},${Namespace}} - vm_memory_total_used{job=\"jenkins-metrics\",${Cluster},${Location},${Namespace}}) / vm_memory_total_max{job=\"jenkins-metrics\",${Cluster},${Location},${Namespace}} * 100.0"
+                  "prometheusQuery": "(vm_memory_total_max{job=\"jenkins-metrics\",${Cluster},${Location},${Namespace}} - vm_memory_total_used{job=\"jenkins-metrics\",${Cluster},${Location},${Namespace}}) / vm_memory_total_max{job=\"jenkins-metrics\",${Cluster},${Location},${Namespace}} * 100.0",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 0
+        }
       },
       {
-        "height": 2,
+        "xPos": 40,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Executor Free",
           "scorecard": {
             "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(jenkins_executor_free_value{${Cluster},${Location},${Namespace}})"
+              "prometheusQuery": "sum(jenkins_executor_free_value{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
             }
-          },
-          "title": "Executor Free"
-        },
-        "width": 3,
-        "xPos": 3,
-        "yPos": 2
+          }
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 20,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Queue Size",
+          "title": "Size",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "jenkins_queue_size_value{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "jenkins_queue_size_value{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 4
+        }
       },
       {
-        "height": 3,
+        "xPos": 32,
+        "width": 8,
+        "height": 8,
         "widget": {
-          "title": "Job Queued Rate",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "rate(jenkins_job_queuing_duration_count{${Cluster},${Location},${Namespace}}[1m])"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 7
-      },
-      {
-        "height": 2,
-        "widget": {
+          "title": "Executor In Use",
           "scorecard": {
             "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(jenkins_executor_in_use_value{${Cluster},${Location},${Namespace}})"
+              "prometheusQuery": "sum(jenkins_executor_in_use_value{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
             }
-          },
-          "title": "Executor In Use"
-        },
-        "width": 3,
-        "xPos": 3,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 2,
+        "width": 8,
+        "height": 8,
         "widget": {
           "title": "Health Check",
           "xyChart": {
@@ -170,108 +160,329 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "jenkins_health_check_score"
+                  "prometheusQuery": "jenkins_health_check_score{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 3,
-        "xPos": 0,
-        "yPos": 0
+        }
       },
       {
+        "xPos": 16,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Plugins Failed",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(jenkins_plugins_failed{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Nodes Offline",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(jenkins_node_offline_value{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "yPos": 28,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Time Spent In Buildable State",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "jenkins_job_buildable_duration{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "width": 24,
         "height": 4,
         "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum(jenkins_plugins_failed{${Cluster},${Location},${Namespace}})"
+          "title": "Jobs",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#C8E6C9",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
             }
-          },
-          "title": "Plugins Failed"
-        },
-        "width": 2,
-        "xPos": 6,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 2,
+        "xPos": 24,
+        "yPos": 16,
+        "width": 24,
+        "height": 4,
         "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum(jenkins_node_offline_value{${Cluster},${Location},${Namespace}})"
+          "title": "Build Queue",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#C6DAFC",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
             }
-          },
-          "title": "Nodes Offline"
-        },
-        "width": 3,
-        "xPos": 0,
-        "yPos": 2
+          }
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 28,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Job Queue Duration",
+          "title": "Buildable",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "jenkins_job_queuing_duration{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "jenkins_queue_buildable_value{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 10
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 36,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Resource Usage",
+          "title": "Pending",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "vm_cpu_load{job=\"jenkins-metrics\",${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "jenkins_queue_pending_value{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 7
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 44,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Blocked",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "jenkins_queue_blocked_value{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 36,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Time Spent In Waiting State",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "jenkins_job_waiting_duration{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 44,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Time Spent In Blocked State",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "jenkins_job_blocked_duration{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "width": 48,
+        "height": 8,
+        "widget": {
+          "title": "CPU Load",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "vm_cpu_load{job=\"jenkins-metrics\",${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }
