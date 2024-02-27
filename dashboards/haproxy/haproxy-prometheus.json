@@ -38,7 +38,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "haproxy_frontend_http_responses_total{${Cluster},${Location},${Namespace}}",
+                  "prometheusQuery": "rate(haproxy_frontend_http_responses_total{${Cluster},${Location},${Namespace}}[1m])",
                   "unitOverride": ""
                 }
               }
@@ -71,7 +71,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "haproxy_backend_http_responses_total{${Cluster},${Location},${Namespace}}",
+                  "prometheusQuery": "rate(haproxy_backend_http_responses_total{${Cluster},${Location},${Namespace}}[1m])",
                   "unitOverride": ""
                 }
               }
@@ -103,7 +103,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "haproxy_frontend_bytes_in_total{${Cluster},${Location},${Namespace}}",
+                  "prometheusQuery": "rate(haproxy_frontend_bytes_in_total{${Cluster},${Location},${Namespace}}[1m])",
                   "unitOverride": ""
                 }
               }
@@ -135,7 +135,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "haproxy_frontend_bytes_out_total{${Cluster},${Location},${Namespace}}",
+                  "prometheusQuery": "rate(haproxy_frontend_bytes_out_total{${Cluster},${Location},${Namespace}}[1m])",
                   "unitOverride": ""
                 }
               }
@@ -168,7 +168,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "haproxy_backend_bytes_in_total{${Cluster},${Location},${Namespace}}",
+                  "prometheusQuery": "rate(haproxy_backend_bytes_in_total{${Cluster},${Location},${Namespace}}[1m])",
                   "unitOverride": ""
                 }
               }
@@ -201,7 +201,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "haproxy_backend_bytes_out_total{${Cluster},${Location},${Namespace}}",
+                  "prometheusQuery": "rate(haproxy_backend_bytes_out_total{${Cluster},${Location},${Namespace}}[1m])",
                   "unitOverride": ""
                 }
               }
@@ -233,7 +233,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "haproxy_frontend_connections_total{${Cluster},${Location},${Namespace}}",
+                  "prometheusQuery": "rate(haproxy_frontend_connections_total{${Cluster},${Location},${Namespace}}[1m])",
                   "unitOverride": ""
                 }
               }
@@ -593,7 +593,7 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": true,
-              "prometheusQuery": "(sum(haproxy_frontend_http_responses_total{${Cluster},${Location},${Namespace},code=\"2xx\"}) / sum(haproxy_frontend_http_responses_total{${Cluster},${Location},${Namespace}})) * 100",
+              "prometheusQuery": "(sum(rate(haproxy_frontend_http_responses_total{${Cluster},${Location},${Namespace}[1m]),code=\"2xx\"}) / sum(rate(haproxy_frontend_http_responses_total{${Cluster},${Location},${Namespace}}[1m]))) * 100",
               "unitOverride": ""
             }
           }
@@ -627,7 +627,7 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": true,
-              "prometheusQuery": "sum(haproxy_backend_response_time_average_seconds)",
+              "prometheusQuery": "avg(haproxy_backend_response_time_average_seconds)",
               "unitOverride": ""
             }
           }
@@ -644,7 +644,7 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": true,
-              "prometheusQuery": "(sum(haproxy_backend_http_responses_total{${Cluster},${Location},${Namespace},code=\"2xx\"}) / sum(haproxy_backend_http_responses_total{${Cluster},${Location},${Namespace}})) * 100",
+              "prometheusQuery": "(sum(rate(haproxy_backend_http_responses_total{${Cluster},${Location},${Namespace},code=\"2xx\"}[1m])) / sum(rate(haproxy_backend_http_responses_total{${Cluster},${Location},${Namespace}}[1m]))) * 100",
               "unitOverride": ""
             }
           }
@@ -661,7 +661,7 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": true,
-              "prometheusQuery": "(sum(haproxy_frontend_http_responses_total{${Cluster},${Location},${Namespace},code=\"5xx\"}) / sum(haproxy_frontend_http_responses_total{${Cluster},${Location},${Namespace}})) * 100",
+              "prometheusQuery": "(sum(rate(haproxy_frontend_http_responses_total{${Cluster},${Location},${Namespace},code=\"5xx\"}[1m])) / sum(rate(haproxy_frontend_http_responses_total{${Cluster},${Location},${Namespace}}[1m]))) * 100",
               "unitOverride": ""
             }
           }
