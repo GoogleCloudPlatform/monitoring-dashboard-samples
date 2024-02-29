@@ -13,4 +13,4 @@
 |Varnish Prometheus Overview|
 |:------------------|
 |Filename: [varnish-prometheus-overview.json](varnish-prometheus-overview.json)|
-|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/jonnenauha/prometheus_varnish_exporter), including `Backend Connections`, `Session Connections`, `Requests`, `Request Errors`, `Threads`, `Cache Hits / Misses`, `Expired Objects`, and `Object Structs Created`.|
+|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/jonnenauha/prometheus_varnish_exporter), including `Service Status`, `Uptime`, `Backend Up`, `Happy Backend Health Probes`, `Backend Connections`, `Reused and Recycled Backend Connections`, `Session Connections`, `Dropped Session Connections`, `Backend Requests`, `Session Requests`, `Session Request Errors`, `Active Threads`, `Threads Created`, `Object Structs Created`, `Expired Objects`, `Cache Hits`, and `Cache Misses`.|
