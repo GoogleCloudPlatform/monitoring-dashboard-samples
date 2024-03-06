@@ -28,4 +28,4 @@
 |Redis Prometheus|
 |:-----------------------|
 |Filename: [redis-prometheus.json](redis-prometheus.json)|
-|This dashboard is based on prometheus metrics coming from an [exporter](https://github.com/oliver006/redis_exporter). This dashboard has charts highlighting `Commands Per Second`, `Connections`, `Memory Used`, `Keys`, and `Network I/O`|
+|This dashboard is based on prometheus metrics coming from an [exporter](https://github.com/oliver006/redis_exporter). This dashboard has charts highlighting `Commands Per Second`, `Connections`, `Memory Used`, `Keys`, `Network I/O`, `Latency Percentiles (Milliseconds)`, `Hit Percentage`, `Blocked Clients`, `Slowlog Length`, `Evictions`, `Client Recent Max Input Buffer`, and `Fragmentation Ratio`|
