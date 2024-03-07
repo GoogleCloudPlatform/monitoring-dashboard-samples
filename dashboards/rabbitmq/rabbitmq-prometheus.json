@@ -1,5 +1,5 @@
 {
-  "category": "CUSTOM",
+  "displayName": "RabbitMQ Prometheus Overview",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -17,199 +17,214 @@
       "templateVariable": "Namespace"
     }
   ],
-  "displayName": "RabbitMQ Prometheus Overview",
-  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum(rabbitmq_queue_messages_ready{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})"
-            }
-          },
-          "title": "Ready Messages"
-        },
-        "width": 3,
-        "xPos": 0,
-        "yPos": 0
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "sparkChartView": {
-              "sparkChartType": "SPARK_LINE"
-            },
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum(rate(rabbitmq_channel_messages_published_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})"
-            }
-          },
-          "title": "Incoming Messages / second"
-        },
-        "width": 3,
-        "xPos": 3,
-        "yPos": 0
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum(rabbitmq_channels{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) - sum(rabbitmq_channel_consumers * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})"
-            }
-          },
-          "title": "Publishers"
-        },
-        "width": 2,
-        "xPos": 6,
-        "yPos": 0
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum(rabbitmq_connections{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})"
-            }
-          },
-          "title": "Connections"
-        },
-        "width": 2,
-        "xPos": 8,
-        "yPos": 0
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum(rabbitmq_queues{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})"
-            }
-          },
-          "title": "Queues"
-        },
-        "width": 2,
-        "xPos": 10,
-        "yPos": 0
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum(rabbitmq_queue_messages_unacked{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})"
-            }
-          },
-          "title": "Unacknowledged Messages"
-        },
-        "width": 3,
-        "xPos": 0,
-        "yPos": 2
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "sparkChartView": {
-              "sparkChartType": "SPARK_LINE"
-            },
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum(rate(rabbitmq_channel_messages_redelivered_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) +\nsum(rate(rabbitmq_channel_messages_delivered_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) +\nsum(rate(rabbitmq_channel_messages_delivered_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) +\nsum(rate(rabbitmq_channel_get_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) +\nsum(rate(rabbitmq_channel_get_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})"
-            }
-          },
-          "title": "Outgoing Messages / second"
-        },
-        "width": 3,
-        "xPos": 3,
-        "yPos": 2
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum(rabbitmq_channel_consumers{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})"
-            }
-          },
-          "title": "Consumers"
-        },
-        "width": 2,
-        "xPos": 6,
-        "yPos": 2
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum(rabbitmq_channels{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})"
-            }
-          },
-          "title": "Channels"
-        },
-        "width": 2,
-        "xPos": 8,
-        "yPos": 2
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum(rabbitmq_build_info{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})"
-            }
-          },
-          "title": "Nodes"
-        },
-        "width": 2,
-        "xPos": 10,
-        "yPos": 2
-      },
-      {
-        "height": 6,
-        "widget": {
-          "collapsibleGroup": {
-            "collapsed": false
-          },
-          "title": "Nodes"
-        },
         "width": 12,
-        "xPos": 0,
-        "yPos": 4
+        "height": 8,
+        "widget": {
+          "title": "Ready Messages",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(rabbitmq_queue_messages_ready{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
       },
       {
-        "height": 3,
+        "xPos": 12,
+        "width": 12,
+        "height": 8,
         "widget": {
+          "title": "Incoming Messages",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(rate(rabbitmq_channel_messages_published_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Publishers",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(rabbitmq_channels{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) - sum(rabbitmq_channel_consumers * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 32,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Connections",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(rabbitmq_connections{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 40,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Queues",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(rabbitmq_queues{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Unacknowledged Messages",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(rabbitmq_queue_messages_unacked{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 12,
+        "yPos": 8,
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Outgoing Messages",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(rate(rabbitmq_channel_messages_redelivered_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) +\nsum(rate(rabbitmq_channel_messages_delivered_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) +\nsum(rate(rabbitmq_channel_messages_delivered_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) +\nsum(rate(rabbitmq_channel_get_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) +\nsum(rate(rabbitmq_channel_get_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 8,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Consumers",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(rabbitmq_channel_consumers{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 32,
+        "yPos": 8,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Channels",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(rabbitmq_channels{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 40,
+        "yPos": 8,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Nodes",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(rabbitmq_build_info{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "width": 48,
+        "height": 10,
+        "widget": {
+          "title": "Info",
           "timeSeriesTable": {
             "dataSets": [
               {
-                "tableDisplayOptions": {},
                 "timeSeriesQuery": {
                   "prometheusQuery": "rabbitmq_build_info{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
             "metricVisualization": "NUMBER"
-          },
-          "title": "Info"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 4
+          }
+        }
       },
       {
-        "height": 3,
+        "yPos": 30,
+        "width": 24,
+        "height": 11,
         "widget": {
           "title": "Memory Available Before Publishers Blocked",
           "xyChart": {
@@ -218,25 +233,30 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(rabbitmq_resident_memory_limit_bytes{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) -\n(rabbitmq_process_resident_memory_bytes * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})"
+                  "prometheusQuery": "(rabbitmq_resident_memory_limit_bytes{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) -\n(rabbitmq_process_resident_memory_bytes * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 7
+        }
       },
       {
-        "height": 3,
+        "yPos": 41,
+        "width": 24,
+        "height": 11,
         "widget": {
           "title": "Disk Space Available Before Publishers Blocked",
           "xyChart": {
@@ -245,25 +265,30 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rabbitmq_disk_space_available_bytes{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "rabbitmq_disk_space_available_bytes{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 7
+        }
       },
       {
-        "height": 3,
+        "yPos": 52,
+        "width": 24,
+        "height": 10,
         "widget": {
           "title": "TCP Sockets Available",
           "xyChart": {
@@ -272,37 +297,30 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(rabbitmq_process_max_tcp_sockets{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) -\n(rabbitmq_process_open_tcp_sockets * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})"
+                  "prometheusQuery": "(rabbitmq_process_max_tcp_sockets{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) -\n(rabbitmq_process_open_tcp_sockets * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 7
+        }
       },
       {
-        "height": 3,
-        "widget": {
-          "collapsibleGroup": {
-            "collapsed": true
-          },
-          "title": "Queued Messages"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 10
-      },
-      {
-        "height": 3,
+        "yPos": 82,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Messages Ready to be Delivered to Consumers",
           "xyChart": {
@@ -311,25 +329,31 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rabbitmq_queue_messages_ready{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rabbitmq_queue_messages_ready{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 10
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 82,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Messages Pending Consumer Acknowledgement",
           "xyChart": {
@@ -338,439 +362,421 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rabbitmq_queue_messages_unacked{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rabbitmq_queue_messages_unacked{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 10
+        }
       },
       {
-        "height": 9,
+        "yPos": 90,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "collapsibleGroup": {
-            "collapsed": true
-          },
-          "title": "Incoming Messages"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 13
-      },
-      {
-        "height": 3,
-        "widget": {
-          "title": "Messages Published / second",
+          "title": "Messages Unconfirmed to Publishers",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_published_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_unconfirmed{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 13
+        }
       },
       {
-        "height": 3,
+        "yPos": 66,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Messages Unconfirmed to Publishers / second",
+          "title": "Messages Routed to Queues",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_unconfirmed{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_queue_messages_published_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 16
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 90,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Messages Routed to Queues / second",
+          "title": "Messages Confirmed to Publishers",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_queue_messages_published_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_confirmed_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 16
+        }
       },
       {
-        "height": 3,
+        "yPos": 74,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Messages Confirmed to Publishers / second",
+          "title": "Unroutable Messages Dropped",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_confirmed_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_unroutable_dropped_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 13
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 114,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Unroutable Messages Dropped / second",
+          "title": "Unroutable Messages Returned to Publishers",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_unroutable_dropped_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_unroutable_returned_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 19
+        }
       },
       {
-        "height": 3,
+        "yPos": 114,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Unroutable Messages Returned to Publishers / second",
+          "title": "Polling Operations That Yield No Result",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_unroutable_returned_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_get_empty_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 19
+        }
       },
       {
-        "height": 16,
+        "xPos": 24,
+        "yPos": 74,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "collapsibleGroup": {
-            "collapsed": true
-          },
-          "title": "Outgoing Messages"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 22
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Polling Operations That Yield No Result / second",
+          "title": "Messages Redelivered",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_get_empty_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_redelivered_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 30
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 98,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Messages Redelivered / second",
+          "title": "Messages Delivered With Manual Ack",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_redelivered_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_delivered_ack_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 22
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 106,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Messages Delivered / second",
+          "title": "Polling Operations With Manual Ack",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(\n  (rate(rabbitmq_channel_messages_delivered_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) +\n  (rate(rabbitmq_channel_messages_delivered_ack_total[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}})\n) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_get_ack_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 22
+        }
       },
       {
-        "height": 4,
+        "yPos": 98,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Messages Delivered With Manual Ack / second",
+          "title": "Messages Delivered Auto Ack",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_delivered_ack_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_delivered_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 34
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 66,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Polling Operations With Manual Ack / second",
+          "title": "Messages Acknowledged",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_get_ack_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_acked_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 34
+        }
       },
       {
-        "height": 4,
+        "yPos": 106,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Messages Delivered Auto Ack / second",
+          "title": "Polling Operations With Auto Ack",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_delivered_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_channel_get_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 26
+        }
       },
       {
-        "height": 4,
-        "widget": {
-          "title": "Messages Acknowledged / second",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_messages_acked_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 26
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Polling Operations With Auto Ack / second",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_channel_get_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 30
-      },
-      {
-        "height": 6,
-        "widget": {
-          "collapsibleGroup": {
-            "collapsed": true
-          },
-          "title": "Queues"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 38
-      },
-      {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 30,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Total Queues",
           "xyChart": {
@@ -779,104 +785,190 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rabbitmq_queues{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "rabbitmq_queues{${Cluster},${Location},${Namespace}} * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 38
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 38,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Queues Created / second",
+          "title": "Queues Created",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_queues_created_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_queues_created_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 41
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 46,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Queues Declared / second",
+          "title": "Queues Declared",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_queues_declared_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_queues_declared_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 38
+        }
       },
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 54,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Queues Deleted / second",
+          "title": "Queues Deleted",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(rabbitmq_queues_deleted_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)"
+                  "prometheusQuery": "sum(rate(rabbitmq_queues_deleted_total{${Cluster},${Location},${Namespace}}[60s]) * on(instance) group_left(rabbitmq_cluster, rabbitmq_node) rabbitmq_identity_info{${Cluster},${Location},${Namespace}}) by(rabbitmq_node)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 41
+        }
+      },
+      {
+        "yPos": 26,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Nodes",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 26,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Queues",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 62,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Messages",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }

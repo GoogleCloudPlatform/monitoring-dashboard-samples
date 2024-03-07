@@ -13,4 +13,4 @@
 |Hadoop Prometheus Overview|
 |:------------------|
 |Filename: [hadoop-prometheus-overview.json](hadoop-prometheus-overview.json)|
-|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/prometheus/jmx_exporter), including `Data Nodes`, `Volume Failures`, `Capacity Used`, `Capacity Limit`, `Block Count`, `Corrupt Blocks`, `Missing Blocks`, `File Count`, and `File Load`.|
+|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/prometheus/jmx_exporter), including `Open Connections`, `Active Clients`, `Active Sources`, `Active Sinks`, `Block Pool Utilization %`, `Threads`, `Active Data Nodes`, `Dead Data Nodes`, `Stale Data Nodes`, `Capacity Used`, `Capacity Limit`, `File Count`, `File Load`, `Heap Memory (mb)`, `Nonheap Memory (mb)`, `Block Count`, `Block Capacity`, `Missing Blocks`, `Corrupt Blocks`, `Under-replicated Blocks`, `Excess Blocks`, `Volume Failures`, `Dropped Connections`, `Error Logs`, and `Fatal Logs`.|
