@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "Jenkins Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -17,13 +35,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "jenkins_job_building_duration"
+                  "prometheusQuery": "jenkins_job_building_duration{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
               "scale": "LINEAR"
             }
           }
@@ -45,13 +62,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(vm_memory_total_max{job=\"jenkins-metrics\"} - vm_memory_total_used{job=\"jenkins-metrics\"}) / vm_memory_total_max{job=\"jenkins-metrics\"} * 100.0"
+                  "prometheusQuery": "(vm_memory_total_max{job=\"jenkins-metrics\",${Cluster},${Location},${Namespace}} - vm_memory_total_used{job=\"jenkins-metrics\",${Cluster},${Location},${Namespace}}) / vm_memory_total_max{job=\"jenkins-metrics\",${Cluster},${Location},${Namespace}} * 100.0"
                 }
               }
             ],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
               "scale": "LINEAR"
             }
           }
@@ -66,7 +82,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "jenkins_executor_free_value"
+              "prometheusQuery": "sum(jenkins_executor_free_value{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Executor Free"
@@ -88,13 +104,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "jenkins_queue_size_value"
+                  "prometheusQuery": "jenkins_queue_size_value{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
               "scale": "LINEAR"
             }
           }
@@ -116,13 +131,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(jenkins_job_queuing_duration_count[1m])"
+                  "prometheusQuery": "rate(jenkins_job_queuing_duration_count{${Cluster},${Location},${Namespace}}[1m])"
                 }
               }
             ],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
               "scale": "LINEAR"
             }
           }
@@ -137,7 +151,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "jenkins_executor_in_use_value"
+              "prometheusQuery": "sum(jenkins_executor_in_use_value{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Executor In Use"
@@ -149,20 +163,26 @@
       {
         "height": 2,
         "widget": {
-          "scorecard": {
-            "thresholds": [
+          "title": "Health Check",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
               {
-                "color": "RED",
-                "direction": "BELOW",
-                "label": "",
-                "value": 1
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "jenkins_health_check_score"
+                }
               }
             ],
-            "timeSeriesQuery": {
-              "prometheusQuery": "jenkins_health_check_score"
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
             }
-          },
-          "title": "Health Check"
+          }
         },
         "width": 3,
         "xPos": 0,
@@ -174,7 +194,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "jenkins_plugins_failed"
+              "prometheusQuery": "sum(jenkins_plugins_failed{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Plugins Failed"
@@ -189,7 +209,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "jenkins_node_offline_value"
+              "prometheusQuery": "sum(jenkins_node_offline_value{${Cluster},${Location},${Namespace}})"
             }
           },
           "title": "Nodes Offline"
@@ -211,13 +231,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "jenkins_job_queuing_duration"
+                  "prometheusQuery": "jenkins_job_queuing_duration{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
               "scale": "LINEAR"
             }
           }
@@ -239,13 +258,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "vm_cpu_load{job=\"jenkins-metrics\"}"
+                  "prometheusQuery": "vm_cpu_load{job=\"jenkins-metrics\",${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
               "scale": "LINEAR"
             }
           }

@@ -1,0 +1,25 @@
+{
+  "displayName": "High Memory Request Utilization (GKE Workload: ${WORKLOAD_NAME})",
+  "documentation": {
+    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${WORKLOAD_NAME}/observability?project=${PROJECT_ID}).\n- The likelihood of Out-Of-Memory (OOM) failures and container restarts increase when the memory usage of the workload nears the total requested memory of its containers. [View Documentation](https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits)\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [MQL documentation](https://cloud.google.com/monitoring/mql/alerts)",
+    "mimeType": "text/markdown"
+  },
+  "conditions": [
+    {
+      "displayName": "Memory Request Utilization is high for: ${WORKLOAD_NAME}",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        },
+        "query": "\nfetch k8s_container\n|\n{\n    metric 'kubernetes.io/container/memory/used_bytes'\n    | filter\n        resource.project_id == '${PROJECT_ID}'\n        &&\n        (metadata.system_labels.top_level_controller_name == '${WORKLOAD_NAME}'\n        && metadata.system_labels.top_level_controller_type == 'Deployment')\n        &&\n        (resource.cluster_name == '${CLUSTER_NAME}'\n        && resource.location == '${CLUSTER_LOCATION}'\n        && resource.namespace_name == '${NAMESPACE}')\n    | group_by 5m, [value_used_bytes_mean: mean(value.used_bytes)]\n    | every 1m\n    | group_by [],\n        [value_used_bytes_mean_aggregate: aggregate(value_used_bytes_mean)]\n    ;\n    metric 'kubernetes.io/container/memory/request_bytes'\n    | filter\n        resource.project_id == '${PROJECT_ID}'\n        &&\n        (metadata.system_labels.top_level_controller_name == '${WORKLOAD_NAME}'\n        && metadata.system_labels.top_level_controller_type == 'Deployment')\n        &&\n        (resource.cluster_name == '${CLUSTER_NAME}'\n        && resource.location == '${CLUSTER_LOCATION}'\n        && resource.namespace_name == '${NAMESPACE}')\n    | group_by 5m, [value_request_bytes_mean: mean(value.request_bytes)]\n    | every 1m\n    | group_by [],\n        [value_request_bytes_mean_aggregate: aggregate(value_request_bytes_mean)]\n}\n| join\n| div\n| map add[p: 'Memory Request Utilization']\n| scale('%')\n| condition val() > 90'%'"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}

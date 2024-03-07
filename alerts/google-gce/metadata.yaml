@@ -1,13 +1,57 @@
 alert_policy_templates:
 -
   id: cpu-utilization-too-high
-  description: "Monitor CPU utilization across all GCE VMs in scope and will notify you if the CPU utilization rises above 80% for 5 minutes or more."
+  description: "Monitors CPU utilization across all GCE VMs in the current project and will notify you if the CPU utilization on any VM instance rises above 80% for 5 minutes or more."
   version: 1
+  related_integrations:
+    - id: gce
+      platform: GCP
+-
+  id: cpu-utilization-too-high-within-vm
+  description: "Monitors CPU utilization in the specified GCE VM and will notify you if the CPU utilization rises above 80% for 5 minutes or more."
+  version: 1
+  related_integrations:
+    - id: gce
+      platform: GCP
 -
   id: disk-utilization-too-high
-  description: "Monitor disk utilization across all GCE VMs in scope and will notify you if the disk utilization rises above 95% for 5 minutes or more."
+  description: "Monitors disk utilization across all GCE VMs in the current project and will notify you if the disk utilization on any VM instance rises above 95% for 5 minutes or more. This requires the Ops Agent to be installed on VMs to collect the disk utilization metric."
   version: 1
+  related_integrations:
+    - id: gce
+      platform: GCP
+-
+  id: disk-utilization-too-high-within-vm
+  description: "Monitors disk utilization in the specified GCE VM and will notify you if the disk utilization rises above 95% for 5 minutes or more. This requires the Ops Agent to be installed on the VM to collect the disk utilization metric."
+  version: 1
+  related_integrations:
+    - id: gce
+      platform: GCP
 -
   id: memory-utilization-too-high
-  description: "Monitor memory utilization across all GCE VMs in scope and will notify you if the memory utilization rises above 100% for 5 minutes or more."
+  description: "Monitors memory utilization across all GCE VMs in the current project and will notify you if the memory utilization on any VM instance rises above 90% for 5 minutes or more. This requires the Ops Agent to be installed on VMs to collect the memory utilization metric."
   version: 1
+  related_integrations:
+    - id: gce
+      platform: GCP
+-
+  id: memory-utilization-too-high-within-vm
+  description: "Monitors memory utilization in the specified GCE VM and will notify you if the memory utilization rises above 90% for 5 minutes or more. This requires the Ops Agent to be installed on the VM to collect the memory utilization metric."
+  version: 1
+  related_integrations:
+    - id: gce
+      platform: GCP
+-
+  id: host-error-log-detected
+  description: "Monitors host errors via system event logs across all GCE VMs in the current project and will notify you if a host error occurs on any VM instance, limited to notifying once per hour."
+  version: 1
+  related_integrations:
+    - id: gce
+      platform: GCP
+-
+  id: host-error-log-detected-within-vm
+  description: "Monitors host errors via system event logs in the specified GCE VM and will notify you if a host error occurs, limited to notifying once per hour."
+  version: 1
+  related_integrations:
+    - id: gce
+      platform: GCP

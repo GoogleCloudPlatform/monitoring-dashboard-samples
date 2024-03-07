@@ -1,0 +1,268 @@
+{
+  "displayName": "Anthos Cluster Control Plane Uptime",
+  "gridLayout": {
+    "columns": "2",
+    "widgets": [
+      {
+        "title": "API Server Uptime",
+        "xyChart": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"kubernetes.io/anthos/container/uptime\" resource.type=\"k8s_container\" resource.label.\"container_name\"=monitoring.regex.full_match(\"kube-apiserver\")",
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_MEAN",
+                    "crossSeriesReducer": "REDUCE_MEAN",
+                    "groupByFields": [
+                      "resource.label.\"project_id\"",
+                      "resource.label.\"location\"",
+                      "resource.label.\"cluster_name\"",
+                      "resource.label.\"namespace_name\"",
+                      "resource.label.\"pod_name\"",
+                      "resource.label.\"container_name\""
+                    ]
+                  },
+                  "secondaryAggregation": {
+                    "alignmentPeriod": "60s"
+                  }
+                }
+              },
+              "plotType": "LINE",
+              "minAlignmentPeriod": "60s",
+              "targetAxis": "Y1"
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          },
+          "chartOptions": {
+            "mode": "COLOR"
+          }
+        }
+      },
+      {
+        "title": "Scheduler Uptime",
+        "xyChart": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"kubernetes.io/anthos/container/uptime\" resource.type=\"k8s_container\" resource.label.\"container_name\"=monitoring.regex.full_match(\"kube-scheduler\")",
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_MEAN",
+                    "crossSeriesReducer": "REDUCE_MEAN",
+                    "groupByFields": [
+                      "resource.label.\"project_id\"",
+                      "resource.label.\"location\"",
+                      "resource.label.\"cluster_name\"",
+                      "resource.label.\"namespace_name\"",
+                      "resource.label.\"pod_name\"",
+                      "resource.label.\"container_name\""
+                    ]
+                  },
+                  "secondaryAggregation": {
+                    "alignmentPeriod": "60s"
+                  }
+                }
+              },
+              "plotType": "LINE",
+              "minAlignmentPeriod": "60s",
+              "targetAxis": "Y1"
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          },
+          "chartOptions": {
+            "mode": "COLOR"
+          }
+        }
+      },
+      {
+        "title": "Controller Manager Uptime",
+        "xyChart": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"kubernetes.io/anthos/container/uptime\" resource.type=\"k8s_container\" resource.label.\"container_name\"=monitoring.regex.full_match(\"kube-controller-manager\")",
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_MEAN",
+                    "crossSeriesReducer": "REDUCE_MEAN",
+                    "groupByFields": [
+                      "resource.label.\"project_id\"",
+                      "resource.label.\"location\"",
+                      "resource.label.\"cluster_name\"",
+                      "resource.label.\"namespace_name\"",
+                      "resource.label.\"pod_name\"",
+                      "resource.label.\"container_name\""
+                    ]
+                  },
+                  "secondaryAggregation": {
+                    "alignmentPeriod": "60s"
+                  }
+                }
+              },
+              "plotType": "LINE",
+              "minAlignmentPeriod": "60s",
+              "targetAxis": "Y1"
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          },
+          "chartOptions": {
+            "mode": "COLOR"
+          }
+        }
+      },
+      {
+        "title": "ETCD Uptime",
+        "xyChart": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"kubernetes.io/anthos/container/uptime\" resource.type=\"k8s_container\" resource.label.\"container_name\"=monitoring.regex.full_match(\".*etcd.*\")",
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_MEAN",
+                    "crossSeriesReducer": "REDUCE_MEAN",
+                    "groupByFields": [
+                      "resource.label.\"project_id\"",
+                      "resource.label.\"location\"",
+                      "resource.label.\"cluster_name\"",
+                      "resource.label.\"namespace_name\"",
+                      "resource.label.\"pod_name\"",
+                      "resource.label.\"container_name\""
+                    ]
+                  },
+                  "secondaryAggregation": {
+                    "alignmentPeriod": "60s"
+                  }
+                }
+              },
+              "plotType": "LINE",
+              "minAlignmentPeriod": "60s",
+              "targetAxis": "Y1"
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          },
+          "chartOptions": {
+            "mode": "COLOR"
+          }
+        }
+      },
+      {
+        "title": "API Server Webhook Latency [MEDIAN]",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesQueryLanguage": "{ fetch k8s_container\n| metric\n    'kubernetes.io/anthos/apiserver_admission_webhook_admission_duration_seconds'\n| add [cluster: resource.cluster_name, namespace: resource.namespace_name]\n| align delta(1m)\n| every 1m\n| group_by\n    [resource.project_id, resource.location, cluster, namespace],\n    [value_percentile50:\n       percentile(value.apiserver_admission_webhook_admission_duration_seconds,\n         50)]\n; fetch prometheus_target\n| metric\n    'kubernetes.io/anthos/apiserver_admission_webhook_admission_duration_seconds/histogram'\n| add [cluster: resource.cluster, namespace: resource.namespace]\n| align delta(1m)\n| every 1m\n| group_by\n    [resource.project_id, resource.location, cluster, namespace],\n    [value_percentile50:\n       percentile(value.histogram,\n         50)] }\n| union",
+                "unitOverride": ""
+              }
+            }
+          ],
+          "thresholds": [],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "API Server Request Latency [MEDIAN]",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesQueryLanguage": "{ fetch k8s_container\n| metric\n    'kubernetes.io/anthos/apiserver_request_duration_seconds'\n| add [cluster: resource.cluster_name, namespace: resource.namespace_name]\n| align delta(1m)\n| every 1m\n| group_by\n    [resource.project_id, resource.location, cluster, namespace],\n    [value_percentile50:\n       percentile(value.apiserver_request_duration_seconds,\n         50)]\n; fetch prometheus_target\n| metric\n    'kubernetes.io/anthos/apiserver_request_duration_seconds/histogram'\n| add [cluster: resource.cluster, namespace: resource.namespace]\n| align delta(1m)\n| every 1m\n| group_by\n    [resource.project_id, resource.location, cluster, namespace],\n    [value_percentile50:\n       percentile(value.histogram,\n         50)] }\n| union",
+                "unitOverride": ""
+              }
+            }
+          ],
+          "thresholds": [],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "API Server Webhook Latency [95th Percentile]",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesQueryLanguage": "{ fetch k8s_container\n| metric\n    'kubernetes.io/anthos/apiserver_admission_webhook_admission_duration_seconds'\n| add [cluster: resource.cluster_name, namespace: resource.namespace_name]\n| align delta(1m)\n| every 1m\n| group_by\n    [resource.project_id, resource.location, cluster, namespace],\n    [value_percentile95:\n       percentile(value.apiserver_admission_webhook_admission_duration_seconds,\n         95)]\n; fetch prometheus_target\n| metric\n    'kubernetes.io/anthos/apiserver_admission_webhook_admission_duration_seconds/histogram'\n| add [cluster: resource.cluster, namespace: resource.namespace]\n| align delta(1m)\n| every 1m\n| group_by\n    [resource.project_id, resource.location, cluster, namespace],\n    [value_percentile95:\n       percentile(value.histogram,\n         95)] }\n| union",
+                "unitOverride": ""
+              }
+            }
+          ],
+          "thresholds": [],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "API Server Request Latency [95th Percentile]",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesQueryLanguage": "{ fetch k8s_container\n| metric\n    'kubernetes.io/anthos/apiserver_request_duration_seconds'\n| add [cluster: resource.cluster_name, namespace: resource.namespace_name]\n| align delta(1m)\n| every 1m\n| group_by\n    [resource.project_id, resource.location, cluster, namespace],\n    [value_percentile95:\n       percentile(value.apiserver_request_duration_seconds,\n         95)]\n; fetch prometheus_target\n| metric\n    'kubernetes.io/anthos/apiserver_request_duration_seconds/histogram'\n| add [cluster: resource.cluster, namespace: resource.namespace]\n| align delta(1m)\n| every 1m\n| group_by\n    [resource.project_id, resource.location, cluster, namespace],\n    [value_percentile95:\n       percentile(value.histogram,\n         95)] }\n| union",
+                "unitOverride": ""
+              }
+            }
+          ],
+          "thresholds": [],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "",
+            "scale": "LINEAR"
+          }
+        }
+      }
+    ]
+  }
+}

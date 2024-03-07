@@ -1,0 +1,147 @@
+exporter_type: sidecar
+app_name_short: Varnish
+app_name: {{app_name_short}}
+app_site_name: {{app_name}}
+app_site_url: https://varnish-cache.org/
+exporter_name: the {{app_name_short}} exporter
+exporter_pkg_name: prometheus_varnish_exporter
+exporter_repo_url: https://github.com/jonnenauha/prometheus_varnish_exporter
+dashboard_available: true
+minimum_exporter_version: "1.6.1"
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+config_mods: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: varnish
+  spec:
+    selector:
+      matchLabels:
+  +     app.kubernetes.io/name: varnish
+    template:
+      metadata:
+        name: varnish
+        labels:
+  +       app.kubernetes.io/name: varnish
+      spec:
+        containers:
+        - name: varnish
+          image: varnish:7.2.0
+  +       volumeMounts:
+  +         - name: shared-data
+  +           mountPath: /var/lib/varnish
+  +       env:
+  +       - name: VARNISH_HTTP_PORT
+  +         value: "8080"
+  +     - name: exporter
+  +       image: <custom-docker-image>
+  +       volumeMounts:
+  +         - name: shared-data
+  +           mountPath: /var/lib/varnish
+  +           readOnly: true
+  +       ports:
+  +       - containerPort: 9131
+  +         name: prometheus
+  +     volumes:
+  +       - name: shared-data
+  +         emptyDir: {}
+  +     shareProcessNamespace: true
+additional_prereq_info: |
+  The {{ app_name_short }} exporter scrapes the output of the `varnishstat` command.
+  It requires [process namespace sharing](https://kubernetes.io/docs/tasks/configure-pod-container/share-process-namespace/){:class="external"}
+  and access to the {{app_name_short}} container's `/var/lib/varnish` directory.
+
+  The {{ app_name_short }} exporter is not published as a container image;
+  you must build your own. The following example demonstrates how to
+  build an exporter container image that contains the exporter and the
+  `varnishstat` command.
+
+  <pre class="devsite-click-to-copy">
+  FROM debian:stable-slim as stage
+  WORKDIR /exporter
+  ADD https://github.com/jonnenauha/prometheus_varnish_exporter/releases/download/1.6.1/prometheus_varnish_exporter-1.6.1.linux-amd64.tar.gz /exporter/exporter.tar.gz
+  RUN tar -xvf exporter.tar.gz
+  RUN chmod +x /exporter/prometheus_varnish_exporter-1.6.1.linux-amd64/prometheus_varnish_exporter
+
+  FROM varnish:7.2.0
+  COPY --from=stage /exporter/prometheus_varnish_exporter-1.6.1.linux-amd64/prometheus_varnish_exporter /prometheus_varnish_exporter
+  ENTRYPOINT [ "/prometheus_varnish_exporter" ]
+  </pre>
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: varnish
+    labels:
+      app.kubernetes.io/name: varnish
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: prometheus
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: varnish
+sample_promql_query: up{job="varnish", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: varnish-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: varnish-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: varnish
+      interval: 30s
+      rules:
+      - alert: VarnishBackendConnectionFailure
+        annotations:
+          description: |-
+            Varnish backend connection failure
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Varnish backend connection failure (instance {{ $labels.instance }})
+        expr: varnish_backend_fail > 0
+        for: 5m
+        labels:
+          severity: critical
+      - alert: VarnishHighCacheEvictions
+        annotations:
+          description: |-
+            Varnish high cache evictions
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Varnish high cache evictions (instance {{ $labels.instance }})
+        expr: rate(varnish_main_n_obj_purged[5m]) >= 10
+        for: 5m
+        labels:
+          severity: warning
+      - alert: VarnishHighServerLimit
+        annotations:
+          description: |-
+            Varnish high server limit
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Varnish high server limit (instance {{ $labels.instance }})
+        expr: varnish_main_threads_failed > 0
+        for: 5m
+        labels:
+          severity: critical
+      - alert: VarnishSessionsDropped
+        annotations:
+          description: |-
+            Varnish sessions dropped
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Varnish sessions dropped (instance {{ $labels.instance }})
+        expr: varnish_main_sessions{type="dropped"} > 0
+        for: 5m
+        labels:
+          severity: critical
+additional_alert_info: You can adjust the alert thresholds to suit your application.

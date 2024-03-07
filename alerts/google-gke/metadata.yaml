@@ -3,23 +3,112 @@ alert_policy_templates:
   id: cpu-limit-utilization-all-containers
   description: "Monitors CPU limit utilization across all containers in the current project and alerts if a container's CPU limit utilization is above 90% on average for 5 minutes."
   version: 1
+  related_integrations:
+    - id: gke
+      platform: GCP
 -
   id: cpu-limit-utilization-containers-within-cluster
   description: "Monitors CPU limit utilization across all containers within a cluster and alerts if a container's CPU limit utilization is above 90% on average for 5 minutes."
   version: 1
 -
+  id: failedscheduling-log-event-within-cluster
+  description: "Monitors log events with cluster and alerts if there is an event with reason 'FailedScheduling'."
+  version: 1
+-
   id: memory-limit-utilization-all-containers
   description: "Monitors memory limit utilization across all containers in the current project and alerts if a container's memory limit utilization is above 90% on average for 1 minute."
   version: 1
+  related_integrations:
+    - id: gke
+      platform: GCP
 -
   id: memory-limit-utilization-containers-within-cluster
   description: "Monitors memory limit utilization across all containers within a cluster and alerts if a container's memory limit utilization is above 90% on average for 1 minute."
   version: 1
 -
   id: restarts-all-containers
-  description: "Monitors all containers in the current project clusters and alerts if a container restarts. (Restart count for the container is more than 0 within 1 minute window)"
+  description: "Monitors all containers in the current project clusters and alerts if a container restarts more than once. (Restart count for the container is more than 1 within 5 minute window)"
   version: 1
+  related_integrations:
+    - id: gke
+      platform: GCP
 -
   id: restarts-containers-within-cluster
-  description: "Monitors containers within a cluster and alerts if a container restarts. (Restart count for the container is more than 0 within 1 minute window)"
+  description: "Monitors containers within a cluster and alerts if a container restarts more than once. (Restart count for the container is more than 1 within 5 minute window)"
+  version: 1
+-
+  id: cpu-request-utilization-entire-workload
+  description: "Alerts if the workload's CPU request utilization exceeds 90% for 5 minutes."
+  version: 1
+-
+  id: cpu-limit-utilization-entire-workload
+  description: "Alerts if the workload's CPU limit utilization exceeds 90% for 5 minutes."
+  version: 1
+-
+  id: memory-request-utilization-entire-workload
+  description: "Alerts if the workload's Memory request utilization exceeds 90% for 5 minutes."
+  version: 1
+-
+  id: memory-limit-utilization-entire-workload
+  description: "Alerts if the workload's Memory limit utilization exceeds 90% for 5 minutes."
+  version: 1
+-
+  id: istio-server-errors-entire-workload
+  description: "Alerts if the per-operation 5xx error rate exceeds 5% for 5 minutes."
+  version: 1
+-
+  id: istio-latency-entire-workload
+  description: "Alerts if the per-operation p95 latency exceeds 10 seconds for 5 minutes."
+  version: 1
+-
+  id: istio-gmp-server-errors-entire-workload
+  description: "Alerts if the 5xx error rate exceeds 5% for 5 minutes."
+  version: 1
+-
+  id: istio-gmp-latency-entire-workload
+  description: "Alerts if the p95 latency exceeds 10 seconds for 5 minutes."
+  version: 1
+-
+  id: gke-ingress-server-errors-entire-workload
+  description: "Alerts if the 5xx error rate for a URL path exceeds 5% for 5 minutes."
+  version: 1
+-
+  id: gke-ingress-latency-entire-workload
+  description: "Alerts if the p95 latency for a URL path exceeds 10 seconds for 5 minutes."
+  version: 1
+-
+  id: nginx-ingress-server-errors-entire-workload
+  description: "Alerts if the 5xx error rate for a method in a path exceeds 5% for 5 minutes."
+  version: 1
+-
+  id: nginx-ingress-latency-entire-workload
+  description: "Alerts if the p95 latency for a method in a path exceeds 10 seconds for 5 minutes."
+  version: 1
+-
+  id: http-gmp-server-errors-entire-workload
+  description: "Alerts if the 5xx error rate for a method exceeds 5% for 5 minutes."
+  version: 1
+-
+  id: http-gmp-latency-entire-workload
+  description: "Alerts if the p95 latency for a method exceeds 10 seconds for 5 minutes."
+  version: 1
+-
+  id: grpc-server-errors-entire-workload
+  description: "Alerts if the server error rate for a method exceeds 5% for 5 minutes."
+  version: 1
+-
+  id: grpc-latency-entire-workload
+  description: "Alerts if the p95 latency for a method exceeds 10 seconds for 5 minutes."
+  version: 1
+-
+  id: utilization-container-cpu-within-workload
+  description: "Alerts if a container's CPU limit utilization is above 90% on average for 5 minutes."
+  version: 1
+-
+  id: utilization-container-memory-within-workload
+  description: "Alerts if a container's memory limit utilization is above 90% on average for 1 minute."
+  version: 1
+-
+  id: restarts-containers-within-workload
+  description: "Alerts if a container restarts within a 5 minute window"
   version: 1

@@ -1,11 +1,29 @@
 {
   "category": "CUSTOM",
   "displayName": "Tomcat Prometheus Overview",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 4,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Traffic (bytes)",
           "xyChart": {
@@ -14,33 +32,41 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "tomcat_bytesreceived_total"
+                  "prometheusQuery": "tomcat_bytesreceived_total{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               },
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "tomcat_bytessent_total"
+                  "prometheusQuery": "tomcat_bytessent_total{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 0
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Errors",
           "xyChart": {
@@ -49,26 +75,30 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "tomcat_errorcount_total"
+                  "prometheusQuery": "tomcat_errorcount_total{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 0
+        }
       },
       {
-        "height": 4,
+        "yPos": 32,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Session Processing Time",
           "xyChart": {
@@ -77,26 +107,31 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "tomcat_session_processingtime_total"
+                  "prometheusQuery": "tomcat_session_processingtime_total{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 8
+        }
       },
       {
-        "height": 4,
+        "xPos": 16,
+        "yPos": 16,
+        "width": 16,
+        "height": 16,
         "widget": {
           "title": "Active Sessions",
           "xyChart": {
@@ -105,26 +140,31 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "tomcat_session_sessioncounter_total"
+                  "prometheusQuery": "tomcat_session_sessioncounter_total{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 4
+        }
       },
       {
-        "height": 4,
+        "xPos": 32,
+        "yPos": 16,
+        "width": 16,
+        "height": 16,
         "widget": {
           "title": "Threads",
           "xyChart": {
@@ -133,26 +173,30 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "tomcat_threadpool_currentthreadcount"
+                  "prometheusQuery": "tomcat_threadpool_currentthreadcount{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 4
+        }
       },
       {
-        "height": 4,
+        "yPos": 16,
+        "width": 16,
+        "height": 16,
         "widget": {
           "title": "Requests",
           "xyChart": {
@@ -161,26 +205,31 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "tomcat_requestcount_total"
+                  "prometheusQuery": "tomcat_requestcount_total{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 4
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 32,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Processing Time",
           "xyChart": {
@@ -189,24 +238,27 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "tomcat_processingtime_total"
+                  "prometheusQuery": "tomcat_processingtime_total{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 8
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }

@@ -1,6 +1,24 @@
 {
   "category": "CUSTOM",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "displayName": "Argo Workflows Prometheus Overview",
+  "labels": {},
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -10,7 +28,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "argo_workflows_count{status=\"Pending\"}"
+              "prometheusQuery": "argo_workflows_count{status=\"Pending\",${Cluster},${Location},${Namespace}}"
             }
           },
           "title": "Pending"
@@ -25,7 +43,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "argo_workflows_count{status=\"Running\"}"
+              "prometheusQuery": "argo_workflows_count{status=\"Running\",${Cluster},${Location},${Namespace}}"
             }
           },
           "title": "Running"
@@ -40,7 +58,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "argo_workflows_count{status=\"Error\"}"
+              "prometheusQuery": "argo_workflows_count{status=\"Error\",${Cluster},${Location},${Namespace}}"
             }
           },
           "title": "Errors"
@@ -55,7 +73,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "argo_workflows_count{status=\"Failed\"}"
+              "prometheusQuery": "argo_workflows_count{status=\"Failed\",${Cluster},${Location},${Namespace}}"
             }
           },
           "title": "Failed"
@@ -70,7 +88,7 @@
           "scorecard": {
             "blankView": {},
             "timeSeriesQuery": {
-              "prometheusQuery": "argo_workflows_count{status=\"Succeeded\"}"
+              "prometheusQuery": "argo_workflows_count{status=\"Succeeded\",${Cluster},${Location},${Namespace}}"
             }
           },
           "title": "Succeeded"
@@ -92,13 +110,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "argo_workflows_operation_duration_seconds_sum"
+                  "prometheusQuery": "argo_workflows_operation_duration_seconds_sum{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
               "scale": "LINEAR"
             }
           }
@@ -120,13 +137,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "delta(argo_workflows_queue_adds_count[2m])"
+                  "prometheusQuery": "delta(argo_workflows_queue_adds_count{${Cluster},${Location},${Namespace}}[2m])"
                 }
               }
             ],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
               "scale": "LINEAR"
             }
           }
@@ -148,13 +164,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "argo_workflows_queue_depth_count"
+                  "prometheusQuery": "argo_workflows_queue_depth_count{${Cluster},${Location},${Namespace}}"
                 }
               }
             ],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
               "scale": "LINEAR"
             }
           }
@@ -176,13 +191,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(argo_workflows_queue_latency_sum[1m])"
+                  "prometheusQuery": "rate(argo_workflows_queue_latency_sum{${Cluster},${Location},${Namespace}}[1m])"
                 }
               }
             ],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
               "scale": "LINEAR"
             }
           }

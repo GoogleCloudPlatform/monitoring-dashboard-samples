@@ -1,0 +1,21 @@
+{
+    "displayName": "Cloud Deploy - Rollout Canary Advance Required (${PIPELINE_ID} pipeline)",
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Rollout canary advance required in ${PIPELINE_ID} pipeline",
+        "conditionMatchedLog": {
+          "filter": "logName=\"projects/${PROJECT_ID}/logs/clouddeploy.googleapis.com%2Frollout_update\" AND resource.type=\"clouddeploy.googleapis.com/DeliveryPipeline\" AND resource.labels.pipeline_id=\"${PIPELINE_ID}\" AND resource.labels.location=\"${REGION}\" AND jsonPayload.rolloutUpdateType=\"ADVANCE_REQUIRED\""
+        }
+      }
+    ],
+    "alertStrategy": {
+      "notificationRateLimit": {
+        "period": "300s"
+      },
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true,
+    "notificationChannels": []
+  }

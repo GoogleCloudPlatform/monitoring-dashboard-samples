@@ -1,0 +1,30 @@
+{
+  "displayName": "Quota adjuster errors and failures",
+  "documentation": {
+    "content": "Log-based alerting detected that quota adjuster attempted to change the service ${log.extracted_label.service_name} quota ${log.extracted_label.limit_name} in location ${log.extracted_label.location}. The change has failed.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Log match condition",
+      "conditionMatchedLog": {
+        "filter": "log_id(\"cloudaudit.googleapis.com/system_event\")\nprotoPayload.methodName=\"google.cloud.quotaadjuster.v1main.QuotaAdjusterService.AutoAdjustQuota\"\nlabels.event_state=\"FAILED\"",
+        "labelExtractors": {
+          "limit_name":"EXTRACT(labels.limit)",
+          "location":"EXTRACT(labels.location)",
+          "service_name":"EXTRACT(labels.service)"
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "notificationRateLimit": {
+      "period": "3600s"
+    },
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}

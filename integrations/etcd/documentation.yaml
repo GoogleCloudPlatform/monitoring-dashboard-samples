@@ -1,0 +1,83 @@
+exporter_type: included
+app_name_short: etcd
+app_name: {{app_name_short}}
+app_site_name: {{app_name_short}}
+app_site_url: https://etcd.io/
+exporter_name: the {{app_name_short}} exporter
+exporter_pkg_name: etcd
+exporter_repo_url: https://etcd.io/docs/v3.1/op-guide/monitoring/
+additional_prereq_info: |
+  {{app_site_name}} exposes Prometheus-format metrics automatically; you do not
+  have to install it separately. To verify that {{exporter_name}} is emitting
+  metrics on the expected endpoints, do the following:
+
+  1. Set up port forwarding by using the following command:
+
+  <pre class="devsite-click-to-copy">
+  kubectl -n {{namespace_name}} port-forward {{pod_name}} 2379
+  </pre>
+
+  2. Access the endpoint `localhost:2379/metrics` by using the browser
+  or the `curl` utility in another terminal session.
+dashboard_available: true
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: etcd
+    labels:
+      app.kubernetes.io/name: etcd
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: 2379
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: etcd
+additional_podmonitoring_info: |
+  Ensure that the values of the `port` and `matchLabels` fields match those of the {{app_name_short}} pods you want to monitor.
+  Deploying {{app_name_short}} using this [helm chart](https://artifacthub.io/packages/helm/bitnami/etcd){:class="external"}
+  will contain the label `app.kubernetes.io/name: etcd` and `client` port.
+sample_promql_query: up{job="etcd", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: etcd-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: etcd-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: etcd
+      interval: 30s
+      rules:
+      - alert: EtcdLongFsyncDuration
+        annotations:
+          description: |-
+            Etcd long fsync duration
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Etcd long fsync duration (instance {{ $labels.instance }})
+        expr: histogram_quantile(0.9, rate(etcd_disk_wal_fsync_duration_seconds_bucket[10m])) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+      - alert: EtcdRapidLeaderChanges
+        annotations:
+          description: |-
+            Etcd rapid leader changes
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: Etcd rapid leader changes (instance {{ $labels.instance }})
+        expr: etcd_server_leader_changes_seen_total >= 0.05
+        for: 5m
+        labels:
+          severity: critical
+additional_alert_info: You can adjust the alert thresholds to suit your application.

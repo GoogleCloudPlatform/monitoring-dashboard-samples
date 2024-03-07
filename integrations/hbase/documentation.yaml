@@ -1,0 +1,136 @@
+exporter_type: sidecar
+app_name_short: HBase
+app_name: Apache {{app_name_short}}
+app_site_name: {{app_name}}
+app_site_url: https://hbase.apache.org/
+exporter_name: the JMX exporter
+exporter_pkg_name: jmx-exporter
+exporter_repo_url: https://github.com/bitnami/containers/tree/main/bitnami/jmx-exporter
+dashboard_available: true
+minimum_exporter_version: "0.17.0"
+multiple_dashboards: true
+config_mods: |
+  + apiVersion: v1
+  + kind: ConfigMap
+  + metadata:
+  +   name: hbase-exporter
+  + data:
+  +   config.yaml: |
+  +     hostPort: localhost:9900
+  +     rules:
+  +     - pattern: "Hadoop<service=HBase, name=RegionServer, sub=TableLatencies><>Namespace_(\\w+)_table_(\\w+)_metric_(\\w+)"
+  +       name: "hbase_$3"
+  +       labels:
+  +         namespace: "$1"
+  +         table: "$2"
+  +     - pattern: "Hadoop<service=HBase, name=RegionServer, sub=Regions><>Namespace_(\\w+)_table_(\\w+)_region(\\W+)_metric_(\\w+)"
+  +       name: "hbase_$4"
+  +       labels:
+  +         namespace: "$1"
+  +         table: "$2"
+  +         region: "$3"
+  +     - pattern: "Hadoop<service=HBase, name=(\\w+), sub=(\\w+)><>(\\w+)"
+  +       name: "hbase_$1_$2_$3"
+  +     - pattern: "Hadoop<service=HBase, name=(\\w+)><>(\\w+)"
+  +       name: "hbase_$1_$2"
+  +     - pattern: "org.apache.ZooKeeperService<name0=StandaloneServer_port(\\d+)><>(\\w+)"
+  +       type: GAUGE
+  +       name: "zookeeper_$2"
+  +     - pattern: "org.apache.ZooKeeperService<name0=StandaloneServer_port(\\d+), name1=InMemoryDataTree><>(\\w+)"
+  +       type: GAUGE
+  +       name: "zookeeper_$2"
+  ---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: hbase
+  spec:
+    selector:
+      matchLabels:
+  +     app.kubernetes.io/name: hbase
+    template:
+      metadata:
+        labels:
+  +       app.kubernetes.io/name: hbase
+      spec:
+        containers:
+        - name: hbase
+  +       image: dajobe/hbase:latest
+          ports:
+  +       - containerPort: 9900
+  +         name: jmx
+          env:
+  +       - name: HBASE_MASTER_OPTS
+  +         value: -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.rmi.port=9900 -Dcom.sun.management.jmxremote.port=9900
+  +     - name: jmx-exporter
+  +       image: bitnami/jmx-exporter:0.17.0
+  +       command:
+  +         - java
+  +         - -jar
+  +         - jmx_prometheus_httpserver.jar
+  +       args:
+  +         - "9000"
+  +         - config.yaml
+  +       ports:
+  +       - containerPort: 9000
+  +         name: prometheus
+  +       volumeMounts:
+  +       - mountPath: /opt/bitnami/jmx-exporter/config.yaml
+  +         subPath: config.yaml
+  +         name: hbase-exporter
+  +     volumes:
+  +     - name: hbase-exporter
+  +       configMap:
+  +         name: hbase-exporter
+  +         defaultMode: 0644
+  +         items:
+  +         - key: config.yaml
+  +           path: config.yaml
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: hbase
+    labels:
+      app.kubernetes.io/name: hbase
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: prometheus
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: hbase
+additional_install_info: |
+  HBase supports JMX, however, it must be enabled. The best way to enable JMX is
+  to pass `jmxremote` options to the startup script, usually by
+  setting the environment variable `HBASE_MASTER_OPTS` or `HBASE_REGIONSERVER_OPTS`.
+sample_promql_query: up{job="hbase", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+alerts_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: Rules
+  metadata:
+    name: hbase-rules
+    labels:
+      app.kubernetes.io/component: rules
+      app.kubernetes.io/name: hbase-rules
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    groups:
+    - name: hbase
+      interval: 30s
+      rules:
+      - alert: HBaseAuthenticationErrors
+        annotations:
+          description: |-
+            HBase authentication errors
+              VALUE = {{ $value }}
+              LABELS: {{ $labels }}
+          summary: HBase authentication errors (instance {{ $labels.instance }})
+        expr: rate(hbase_RegionServer_IPC_authenticationFailures[5m]) > 5
+        for: 5m
+        labels:
+          severity: warning
+additional_alert_info: You can adjust the alert thresholds to suit your application.

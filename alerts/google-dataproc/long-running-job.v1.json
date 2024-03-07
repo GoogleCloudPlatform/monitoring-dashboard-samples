@@ -1,0 +1,22 @@
+{
+  "displayName": "Dataproc Long Running Job - Job in RUNNING state",
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Dataproc Long Running Job - Job in RUNNING state",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "3600s",
+        "query": "fetch cloud_dataproc_job\n| metric 'dataproc.googleapis.com/job/state'\n| filter metric.state == 'RUNNING'\n| group_by [resource.job_id, metric.state], 1m\n| condition val() == true()",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}

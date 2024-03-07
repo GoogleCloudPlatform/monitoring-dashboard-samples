@@ -1,0 +1,24 @@
+{
+  "displayName": "High CPU Request Utilization (GKE Workload: ${WORKLOAD_NAME})",
+  "documentation": {
+    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${WORKLOAD_NAME}/observability?project=${PROJECT_ID}).\n- Workloads with high CPU request utilization likely have containers that are CPU throttled. To avoid application slowdown and unresponsiveness, you can either keep CPU usage below the CPU request limit or increase the limit [View Documentation](https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits)\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [MQL documentation](https://cloud.google.com/monitoring/mql/alerts)",
+    "mimeType": "text/markdown"
+  },
+  "conditions": [
+    {
+      "displayName": "CPU Request Utilization is high for: ${WORKLOAD_NAME}",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        },
+        "query": "fetch k8s_container\n| \n{\n    metric 'kubernetes.io/container/cpu/core_usage_time'\n    | filter\n        resource.project_id == '${PROJECT_ID}'\n        &&\n        (metadata.system_labels.top_level_controller_name == '${WORKLOAD_NAME}'\n        && metadata.system_labels.top_level_controller_type == '${TOP_LEVEL_CONTROLLER_TYPE}')\n        &&\n        (resource.cluster_name == '${CLUSTER_NAME}'\n        && resource.location == '${CLUSTER_LOCATION}'\n        && resource.namespace_name == '${NAMESPACE}')\n    | align rate(5m)\n    | every 1m\n    | group_by [],\n        [value_core_usage_time_aggregate: aggregate(value.core_usage_time)]\n;\n    metric 'kubernetes.io/container/cpu/request_cores'\n    | filter\n        resource.project_id == '${PROJECT_ID}'\n        &&\n        (metadata.system_labels.top_level_controller_name == '${WORKLOAD_NAME}'\n        && metadata.system_labels.top_level_controller_type == '${TOP_LEVEL_CONTROLLER_TYPE}')\n        &&\n        (resource.cluster_name == '${CLUSTER_NAME}'\n        && resource.location == '${CLUSTER_LOCATION}'\n        && resource.namespace_name == '${NAMESPACE}')\n    | group_by 5m, [value_request_cores_mean: mean(value.request_cores)]\n    | every 1m\n    | group_by [],\n        [value_request_cores_mean_aggregate: aggregate(value_request_cores_mean)]\n}\n| join\n| div\n| map add[p: 'CPU Request Utilization']\n| scale('%')\n| condition val() > 90'%'"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
