@@ -1,5 +1,5 @@
 {
-  "displayName": "Argo Workflows Prometheus Overview - KPI/LAYOUT UPDATE",
+  "displayName": "Argo Workflows Prometheus Overview",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -30,7 +30,7 @@
             "blankView": {},
             "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "argo_workflows_count{status=\"Pending\",${Cluster},${Location},${Namespace}}",
+              "prometheusQuery": "sum(argo_workflows_count{status=\"Pending\",${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
           }
@@ -45,7 +45,7 @@
             "blankView": {},
             "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "argo_workflows_count{status=\"Running\",${Cluster},${Location},${Namespace}}",
+              "prometheusQuery": "sum(argo_workflows_count{status=\"Running\",${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
           }
@@ -61,7 +61,7 @@
             "blankView": {},
             "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "argo_workflows_count{status=\"Error\",${Cluster},${Location},${Namespace}}",
+              "prometheusQuery": "sum(argo_workflows_count{status=\"Error\",${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
           }
@@ -77,7 +77,7 @@
             "blankView": {},
             "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "argo_workflows_count{status=\"Failed\",${Cluster},${Location},${Namespace}}",
+              "prometheusQuery": "sum(argo_workflows_count{status=\"Failed\",${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
           }
@@ -93,7 +93,7 @@
             "blankView": {},
             "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "argo_workflows_count{status=\"Succeeded\",${Cluster},${Location},${Namespace}}",
+              "prometheusQuery": "sum(argo_workflows_count{status=\"Succeeded\",${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
           }
@@ -117,7 +117,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "argo_workflows_operation_duration_seconds_bucket{${Cluster},${Location},${Namespace}}",
+                  "prometheusQuery": "histogram_quantile(0.50,rate(argo_workflows_operation_duration_seconds_bucket{${Cluster},${Location},${Namespace}}[${__interval}]))",
                   "unitOverride": ""
                 }
               }
@@ -214,7 +214,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(argo_workflows_queue_latency_bucket{${Cluster},${Location},${Namespace}}[1m])",
+                  "prometheusQuery": "histogram_quantile(0.50, sum by (queue_name, le)(rate(argo_workflows_queue_latency_bucket{${Cluster},${Location},${Namespace}}[${__interval}])))",
                   "unitOverride": ""
                 }
               }
