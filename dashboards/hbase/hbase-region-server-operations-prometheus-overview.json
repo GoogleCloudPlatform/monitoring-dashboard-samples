@@ -1,7 +1,23 @@
 {
   "category": "CUSTOM",
   "displayName": "Hbase Region Server Operations Prometheus Overview",
-  "dashboardFilters": [],
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
@@ -21,7 +37,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(hbase_RegionServer_Server_slowGetCount[5m])",
+                  "prometheusQuery": "rate(hbase_RegionServer_Server_slowGetCount{${Cluster},${Location},${Namespace}}[5m])",
                   "unitOverride": ""
                 }
               }
@@ -54,7 +70,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_RegionServer_Server_Get_99th_percentile",
+                  "prometheusQuery": "hbase_RegionServer_Server_Get_99th_percentile{${Cluster},${Location},${Namespace}}",
                   "unitOverride": ""
                 }
               }
@@ -87,7 +103,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(hbase_RegionServer_Server_slowAppendCount[5m])",
+                  "prometheusQuery": "rate(hbase_RegionServer_Server_slowAppendCount{${Cluster},${Location},${Namespace}}[5m])",
                   "unitOverride": ""
                 }
               }
@@ -120,7 +136,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_RegionServer_Server_Append_99th_percentile",
+                  "prometheusQuery": "hbase_RegionServer_Server_Append_99th_percentile{${Cluster},${Location},${Namespace}}",
                   "unitOverride": ""
                 }
               }
@@ -153,7 +169,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(hbase_RegionServer_Server_slowDeleteCount[5m])",
+                  "prometheusQuery": "rate(hbase_RegionServer_Server_slowDeleteCount{${Cluster},${Location},${Namespace}}[5m])",
                   "unitOverride": ""
                 }
               }
@@ -186,7 +202,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_RegionServer_Server_Delete_99th_percentile",
+                  "prometheusQuery": "hbase_RegionServer_Server_Delete_99th_percentile{${Cluster},${Location},${Namespace}}",
                   "unitOverride": ""
                 }
               }
@@ -219,7 +235,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(hbase_RegionServer_Server_slowPutCount[5m])",
+                  "prometheusQuery": "rate(hbase_RegionServer_Server_slowPutCount{${Cluster},${Location},${Namespace}}[5m])",
                   "unitOverride": ""
                 }
               }
@@ -252,7 +268,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_RegionServer_Server_Put_99th_percentile",
+                  "prometheusQuery": "hbase_RegionServer_Server_Put_99th_percentile{${Cluster},${Location},${Namespace}}",
                   "unitOverride": ""
                 }
               }
@@ -285,7 +301,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(hbase_RegionServer_Server_slowIncrementCount[5m])",
+                  "prometheusQuery": "rate(hbase_RegionServer_Server_slowIncrementCount{${Cluster},${Location},${Namespace}}[5m])",
                   "unitOverride": ""
                 }
               }
@@ -315,7 +331,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_RegionServer_Server_Increment_99th_percentile",
+                  "prometheusQuery": "hbase_RegionServer_Server_Increment_99th_percentile{${Cluster},${Location},${Namespace}}",
                   "unitOverride": ""
                 }
               }
@@ -345,7 +361,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_RegionServer_Server_Replay_99th_percentile",
+                  "prometheusQuery": "hbase_RegionServer_Server_Replay_99th_percentile{${Cluster},${Location},${Namespace}}",
                   "unitOverride": ""
                 }
               }
@@ -499,7 +515,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(hbase_RegionServer_Server_Get_num_ops[5m])",
+                  "prometheusQuery": "rate(hbase_RegionServer_Server_Get_num_ops{${Cluster},${Location},${Namespace}}[5m])",
                   "unitOverride": ""
                 }
               }
@@ -528,7 +544,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_RegionServer_Server_Get_mean",
+                  "prometheusQuery": "hbase_RegionServer_Server_Get_mean{${Cluster},${Location},${Namespace}}",
                   "unitOverride": ""
                 }
               }
@@ -557,7 +573,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(hbase_RegionServer_Server_Append_num_ops[5m])",
+                  "prometheusQuery": "rate(hbase_RegionServer_Server_Append_num_ops{${Cluster},${Location},${Namespace}}[5m])",
                   "unitOverride": ""
                 }
               }
@@ -586,7 +602,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_RegionServer_Server_Append_mean",
+                  "prometheusQuery": "hbase_RegionServer_Server_Append_mean{${Cluster},${Location},${Namespace}}",
                   "unitOverride": ""
                 }
               }
@@ -615,7 +631,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(hbase_RegionServer_Server_Delete_num_ops[5m])",
+                  "prometheusQuery": "rate(hbase_RegionServer_Server_Delete_num_ops{${Cluster},${Location},${Namespace}}[5m])",
                   "unitOverride": ""
                 }
               }
@@ -647,7 +663,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_RegionServer_Server_Delete_99th_percentile",
+                  "prometheusQuery": "hbase_RegionServer_Server_Delete_99th_percentile{${Cluster},${Location},${Namespace}}",
                   "unitOverride": ""
                 }
               }
@@ -676,7 +692,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(hbase_RegionServer_Server_Put_num_ops[5m])",
+                  "prometheusQuery": "rate(hbase_RegionServer_Server_Put_num_ops{${Cluster},${Location},${Namespace}}[5m])",
                   "unitOverride": ""
                 }
               }
@@ -705,7 +721,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_RegionServer_Server_Put_mean",
+                  "prometheusQuery": "hbase_RegionServer_Server_Put_mean{${Cluster},${Location},${Namespace}}",
                   "unitOverride": ""
                 }
               }
@@ -734,7 +750,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(hbase_RegionServer_Server_Increment_num_ops[5m])",
+                  "prometheusQuery": "rate(hbase_RegionServer_Server_Increment_num_ops{${Cluster},${Location},${Namespace}}[5m])",
                   "unitOverride": ""
                 }
               }
@@ -763,7 +779,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_RegionServer_Server_Increment_mean",
+                  "prometheusQuery": "hbase_RegionServer_Server_Increment_mean{${Cluster},${Location},${Namespace}}",
                   "unitOverride": ""
                 }
               }
@@ -792,7 +808,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "hbase_RegionServer_Server_Replay_mean",
+                  "prometheusQuery": "hbase_RegionServer_Server_Replay_mean{${Cluster},${Location},${Namespace}}",
                   "unitOverride": ""
                 }
               }
@@ -821,7 +837,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(hbase_RegionServer_Server_Replay_num_ops[5m])",
+                  "prometheusQuery": "rate(hbase_RegionServer_Server_Replay_num_ops{${Cluster},${Location},${Namespace}}[5m])",
                   "unitOverride": ""
                 }
               }
