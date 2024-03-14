@@ -103,7 +103,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_scale::kubernetes.io/autoscaler/container/cpu/per_replica_recommended_request_cores\n| filter namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name} \n| group_by [cluster_name], .aggregate;\n fetch k8s_container::kubernetes.io/container/cpu/request_cores\n | filter (metadata.system_labels.top_level_controller_type == 'Deployment') && namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs' \n| ${project_id}\n| ${location}\n| ${cluster_name}\n | group_by [cluster_name], .aggregate\n}\n| ratio\n",
+                  "timeSeriesQueryLanguage": "{ fetch k8s_scale::kubernetes.io/autoscaler/container/cpu/per_replica_recommended_request_cores\n| filter namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name} \n| group_by [cluster_name], .aggregate;\n fetch k8s_container::kubernetes.io/container/cpu/request_cores\n | filter (metadata.system_labels.top_level_controller_type == 'Deployment') && namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs' \n| ${project_id}\n| ${location}\n| ${cluster_name}\n | group_by [cluster_name], .aggregate\n}\n| ratio\n| scale '%'",
                   "unitOverride": ""
                 }
               }
@@ -132,7 +132,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch\n    k8s_scale ::\n    kubernetes.io/autoscaler/container/memory/per_replica_recommended_request_bytes\n  | filter\n      namespace_name\n      !~\n      '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n  | group_by [cluster_name], .aggregate\n; fetch k8s_container::kubernetes.io/container/memory/request_bytes\n  | filter (metadata.system_labels.top_level_controller_type == 'Deployment') && \n      namespace_name\n      !~\n      '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n  | group_by [cluster_name], .aggregate\n  }\n| ratio",
+                  "timeSeriesQueryLanguage": "{ fetch\n    k8s_scale ::\n    kubernetes.io/autoscaler/container/memory/per_replica_recommended_request_bytes\n  | filter\n      namespace_name\n      !~\n      '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n  | group_by [cluster_name], .aggregate\n; fetch k8s_container::kubernetes.io/container/memory/request_bytes\n  | filter (metadata.system_labels.top_level_controller_type == 'Deployment') && \n      namespace_name\n      !~\n      '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n  | group_by [cluster_name], .aggregate\n  }\n| ratio\n| scale '%'",
                   "unitOverride": ""
                 }
               }
@@ -179,7 +179,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container::kubernetes.io/container/memory/request_bytes\n| filter\n    resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n    | group_by []\n;\n fetch k8s_node::kubernetes.io/node/memory/allocatable_bytes\n| ${project_id}\n| ${location}\n| ${cluster_name}\n | group_by []\n} \n| join\n| value val(0) / val(1)",
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container::kubernetes.io/container/memory/request_bytes\n| filter\n    resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n    | group_by []\n;\n fetch k8s_node::kubernetes.io/node/memory/allocatable_bytes\n| ${project_id}\n| ${location}\n| ${cluster_name}\n | group_by []\n} \n| join\n| value val(0) / val(1)\n| scale '%'",
                   "unitOverride": ""
                 }
               }
@@ -209,7 +209,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container::kubernetes.io/container/cpu/request_cores\n| filter\n    resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n    | group_by [], .aggregate()\n    ;\n fetch k8s_node::kubernetes.io/node/cpu/allocatable_cores\n| ${project_id}\n| ${location}\n| ${cluster_name}\n | group_by [], .aggregate()\n} \n| join\n| value val(0) / val(1)",
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container::kubernetes.io/container/cpu/request_cores\n| filter\n    resource.namespace_name !~ '(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n    | group_by [], .aggregate()\n    ;\n fetch k8s_node::kubernetes.io/node/cpu/allocatable_cores\n| ${project_id}\n| ${location}\n| ${cluster_name}\n | group_by [], .aggregate()\n} \n| join\n| value val(0) / val(1)\n| scale '%'",
                   "unitOverride": ""
                 }
               }
@@ -252,23 +252,11 @@
             },
             "dataSets": [
               {
-                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"project_id\"",
-                        "resource.label.\"location\"",
-                        "resource.label.\"cluster_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"kubernetes.io/node/cpu/allocatable_utilization\" resource.type=\"k8s_node\""
-                  }
+                  "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'kubernetes.io/node/cpu/allocatable_utilization'\n| group_by 1m,\n    [value_allocatable_utilization_mean: mean(value.allocatable_utilization)]\n| every 1m\n| group_by [resource.project_id, resource.location, resource.cluster_name],\n    [value_allocatable_utilization_mean_aggregate:\n       aggregate(value_allocatable_utilization_mean)]\n| scale '%'",
+                  "unitOverride": ""
                 }
               }
             ],
