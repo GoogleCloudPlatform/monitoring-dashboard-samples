@@ -47,7 +47,7 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": true,
-              "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'kubernetes.io/node/cpu/allocatable_utilization'\n| group_by 1m,\n    [value_allocatable_utilization_mean: mean(value.allocatable_utilization)]\n| every 1m\n| group_by [resource.project_id, resource.location, resource.cluster_name],\n    [value_allocatable_utilization_mean_aggregate:\n       aggregate(value_allocatable_utilization_mean)]\n| value\n    [value_allocatable_utilization_mean_aggregate_scale:\n       scale(value_allocatable_utilization_mean_aggregate, '%')]",
+              "timeSeriesQueryLanguage": "fetch k8s_node\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| metric 'kubernetes.io/node/cpu/allocatable_utilization'\n| group_by 1m,\n    [value_allocatable_utilization_mean: mean(value.allocatable_utilization)]\n| every 1m\n| group_by [resource.project_id, resource.location, resource.cluster_name],\n    [value_allocatable_utilization_mean_aggregate:\n       aggregate(value_allocatable_utilization_mean)]\n| value\n    [value_allocatable_utilization_mean_aggregate_scale:\n       scale(value_allocatable_utilization_mean_aggregate, '%')]",
               "unitOverride": ""
             }
           }
@@ -255,7 +255,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'kubernetes.io/node/cpu/allocatable_utilization'\n| group_by 1m,\n    [value_allocatable_utilization_mean: mean(value.allocatable_utilization)]\n| every 1m\n| group_by [resource.project_id, resource.location, resource.cluster_name],\n    [value_allocatable_utilization_mean_aggregate:\n       aggregate(value_allocatable_utilization_mean)]\n| scale '%'",
+                  "timeSeriesQueryLanguage": "fetch k8s_node\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| metric 'kubernetes.io/node/cpu/allocatable_utilization'\n| group_by 1m,\n    [value_allocatable_utilization_mean: mean(value.allocatable_utilization)]\n| every 1m\n| group_by [resource.project_id, resource.location, resource.cluster_name],\n    [value_allocatable_utilization_mean_aggregate:\n       aggregate(value_allocatable_utilization_mean)]\n| value\n    [value_allocatable_utilization_mean_aggregate_scale:\n       scale(value_allocatable_utilization_mean_aggregate, '%')]",
                   "unitOverride": ""
                 }
               }
@@ -295,7 +295,7 @@
                         ],
                         "perSeriesAligner": "ALIGN_RATE"
                       },
-                      "filter": "metric.type=\"kubernetes.io/node/cpu/core_usage_time\" resource.type=\"k8s_node\""
+                      "filter": "metric.type=\"kubernetes.io/node/cpu/core_usage_time\" resource.type=\"k8s_node\" ${project_id} ${cluster_name} ${location}"
                     },
                     "numerator": {
                       "aggregation": {
