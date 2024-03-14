@@ -1,5 +1,5 @@
 {
-  "category": "CUSTOM",
+  "displayName": "Argo Workflows Prometheus Overview",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -17,115 +17,125 @@
       "templateVariable": "Namespace"
     }
   ],
-  "displayName": "Argo Workflows Prometheus Overview",
-  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "argo_workflows_count{status=\"Pending\",${Cluster},${Location},${Namespace}}"
-            }
-          },
-          "title": "Pending"
-        },
-        "width": 3,
-        "xPos": 3,
-        "yPos": 0
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "argo_workflows_count{status=\"Running\",${Cluster},${Location},${Namespace}}"
-            }
-          },
-          "title": "Running"
-        },
-        "width": 3,
-        "xPos": 0,
-        "yPos": 0
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "argo_workflows_count{status=\"Error\",${Cluster},${Location},${Namespace}}"
-            }
-          },
-          "title": "Errors"
-        },
-        "width": 2,
-        "xPos": 10,
-        "yPos": 0
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "argo_workflows_count{status=\"Failed\",${Cluster},${Location},${Namespace}}"
-            }
-          },
-          "title": "Failed"
-        },
-        "width": 2,
         "xPos": 8,
-        "yPos": 0
-      },
-      {
-        "height": 2,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Pending",
           "scorecard": {
             "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "argo_workflows_count{status=\"Succeeded\",${Cluster},${Location},${Namespace}}"
+              "prometheusQuery": "sum(argo_workflows_count{status=\"Pending\",${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
             }
-          },
-          "title": "Succeeded"
-        },
-        "width": 2,
-        "xPos": 6,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 4,
+        "width": 8,
+        "height": 8,
         "widget": {
-          "title": "Operation Duration (seconds)",
+          "title": "Running",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(argo_workflows_count{status=\"Running\",${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 40,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Errors",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(argo_workflows_count{status=\"Error\",${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 32,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Failed",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(argo_workflows_count{status=\"Failed\",${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 16,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Succeeded",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(argo_workflows_count{status=\"Succeeded\",${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "width": 24,
+        "height": 10,
+        "widget": {
+          "title": "Median Operation Duration Seconds",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "argo_workflows_operation_duration_seconds_sum{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "histogram_quantile(0.50,rate(argo_workflows_operation_duration_seconds_bucket{${Cluster},${Location},${Namespace}}[${__interval}]))",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 2
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 34,
+        "width": 24,
+        "height": 12,
         "widget": {
           "title": "Queue Adds",
           "xyChart": {
@@ -134,25 +144,30 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "delta(argo_workflows_queue_adds_count{${Cluster},${Location},${Namespace}}[2m])"
+                  "prometheusQuery": "delta(argo_workflows_queue_adds_count{${Cluster},${Location},${Namespace}}[2m])",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 6
+        }
       },
       {
-        "height": 4,
+        "yPos": 34,
+        "width": 24,
+        "height": 12,
         "widget": {
           "title": "Queue Depth",
           "xyChart": {
@@ -161,50 +176,129 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "argo_workflows_queue_depth_count{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "argo_workflows_queue_depth_count{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 6
+        }
       },
       {
-        "height": 4,
+        "yPos": 22,
+        "width": 48,
+        "height": 12,
         "widget": {
-          "title": "Queue Latency",
+          "title": "Median Queue Latency",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(argo_workflows_queue_latency_sum{${Cluster},${Location},${Namespace}}[1m])"
+                  "prometheusQuery": "histogram_quantile(0.50, sum by (queue_name, le)(rate(argo_workflows_queue_latency_bucket{${Cluster},${Location},${Namespace}}[${__interval}])))",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 6
+        }
+      },
+      {
+        "xPos": 24,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Pods Not Running",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "argo_workflows_workflow_condition{status=\"False\",type=\"PodRunning\",${Cluster},${Location},${Namespace}}",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 8,
+        "width": 24,
+        "height": 10,
+        "widget": {
+          "title": "Kubernetes Requests Rates",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(argo_workflows_k8s_request_total{${Cluster},${Location},${Namespace}}[1m])",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 18,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Queue",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#E7EFFE",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }
