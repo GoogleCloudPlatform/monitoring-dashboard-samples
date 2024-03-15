@@ -1,5 +1,5 @@
 {
-  "category": "CUSTOM",
+  "displayName": "Elasticsearch Prometheus Overview",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -17,185 +17,216 @@
       "templateVariable": "Namespace"
     }
   ],
-  "displayName": "Elasticsearch Prometheus Overview",
-  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 3,
+        "xPos": 24,
+        "yPos": 21,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "timeSeriesTable": {
+          "title": "Cluster Status",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
             "dataSets": [
               {
-                "tableDisplayOptions": {},
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "elasticsearch_cluster_health_status{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "elasticsearch_cluster_health_status{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
-            "metricVisualization": "NUMBER"
-          },
-          "title": "Cluster Health"
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 2
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
       },
       {
-        "height": 2,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Tripped Breakers",
           "scorecard": {
             "gaugeView": {
+              "lowerBound": 0,
               "upperBound": 100
             },
             "thresholds": [
               {
                 "color": "RED",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 50
               },
               {
                 "color": "YELLOW",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 30
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "count(elasticsearch_breakers_tripped{${Cluster},${Location},${Namespace}})"
+              "prometheusQuery": "count(elasticsearch_breakers_tripped{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
             }
-          },
-          "title": "Tripped Breakers"
-        },
-        "width": 2,
-        "xPos": 0,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "gaugeView": {
-              "upperBound": 100
-            },
-            "thresholds": [
-              {
-                "color": "RED",
-                "direction": "ABOVE",
-                "value": 80
-              },
-              {
-                "color": "YELLOW",
-                "direction": "ABOVE",
-                "value": 50
-              }
-            ],
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum (elasticsearch_process_cpu_percent{${Cluster},${Location},${Namespace}} ) / count (elasticsearch_process_cpu_percent{${Cluster},${Location},${Namespace}} )"
-            }
-          },
-          "title": "CPU Avg Usage %"
-        },
-        "width": 2,
-        "xPos": 2,
-        "yPos": 0
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "gaugeView": {
-              "upperBound": 100
-            },
-            "thresholds": [
-              {
-                "color": "RED",
-                "direction": "ABOVE",
-                "value": 80
-              },
-              {
-                "color": "YELLOW",
-                "direction": "ABOVE",
-                "value": 50
-              }
-            ],
-            "timeSeriesQuery": {
-              "prometheusQuery": "avg(elasticsearch_jvm_memory_used_bytes{${Cluster},${Location},${Namespace}} / elasticsearch_jvm_memory_max_bytes{${Cluster},${Location},${Namespace}} * 100)"
-            }
-          },
-          "title": "JVM Memory Avg Usage %"
-        },
-        "width": 2,
-        "xPos": 4,
-        "yPos": 0
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum(elasticsearch_cluster_health_number_of_nodes{${Cluster},${Location},${Namespace}})"
-            }
-          },
-          "title": "ES Nodes"
-        },
-        "width": 2,
-        "xPos": 6,
-        "yPos": 0
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "sum(elasticsearch_cluster_health_number_of_data_nodes{${Cluster},${Location},${Namespace}})"
-            }
-          },
-          "title": "ES Data Nodes"
-        },
-        "width": 2,
         "xPos": 8,
-        "yPos": 0
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "CPU Avg Usage %",
+          "scorecard": {
+            "gaugeView": {
+              "lowerBound": 0,
+              "upperBound": 100
+            },
+            "thresholds": [
+              {
+                "color": "RED",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 80
+              },
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 50
+              }
+            ],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum (elasticsearch_process_cpu_percent{${Cluster},${Location},${Namespace}} ) / count (elasticsearch_process_cpu_percent{${Cluster},${Location},${Namespace}} )",
+              "unitOverride": ""
+            }
+          }
+        }
       },
       {
-        "height": 2,
+        "xPos": 16,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "JVM Memory Avg Usage %",
+          "scorecard": {
+            "gaugeView": {
+              "lowerBound": 0,
+              "upperBound": 100
+            },
+            "thresholds": [
+              {
+                "color": "RED",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 80
+              },
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 50
+              }
+            ],
+            "timeSeriesQuery": {
+              "prometheusQuery": "avg(elasticsearch_jvm_memory_used_bytes{${Cluster},${Location},${Namespace}} / elasticsearch_jvm_memory_max_bytes{${Cluster},${Location},${Namespace}} * 100)",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Nodes",
           "scorecard": {
             "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(elasticsearch_cluster_health_number_of_pending_tasks{${Cluster},${Location},${Namespace}})"
+              "prometheusQuery": "sum(elasticsearch_cluster_health_number_of_nodes{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
             }
-          },
-          "title": "Pending Tasks"
-        },
-        "width": 2,
-        "xPos": 10,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 3,
+        "xPos": 32,
+        "width": 8,
+        "height": 8,
         "widget": {
-          "timeSeriesTable": {
+          "title": "Data Nodes",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(elasticsearch_cluster_health_number_of_data_nodes{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 40,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Pending Tasks",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(elasticsearch_cluster_health_number_of_pending_tasks{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "yPos": 21,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Open File Descriptors",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
             "dataSets": [
               {
-                "tableDisplayOptions": {},
+                "plotType": "LINE",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "elasticsearch_process_open_files_count{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "elasticsearch_process_open_files_count{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
-            "metricVisualization": "NUMBER"
-          },
-          "title": "Open file descriptors"
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 2
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
       },
       {
-        "height": 4,
+        "yPos": 29,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "OS Load Average over 15min",
           "xyChart": {
@@ -204,25 +235,30 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "elasticsearch_os_load15{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "elasticsearch_os_load15{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 5
+        }
       },
       {
-        "height": 4,
+        "yPos": 37,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "CPU Usage % ",
           "xyChart": {
@@ -231,59 +267,73 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "elasticsearch_process_cpu_percent{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "elasticsearch_process_cpu_percent{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 5
+        }
       },
       {
-        "height": 4,
+        "yPos": 53,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "JVM Memory Pool Peak Used Bytes",
+          "title": "JVM Memory Pool Peak Used Bytes VS Max",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "elasticsearch_jvm_memory_pool_peak_used_bytes{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "elasticsearch_jvm_memory_pool_peak_used_bytes{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               },
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "elasticsearch_jvm_memory_max_bytes{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "elasticsearch_jvm_memory_max_bytes{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 5
+        }
       },
       {
-        "height": 4,
+        "yPos": 45,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Disk Usage %",
           "xyChart": {
@@ -292,25 +342,30 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "100 * (1-(elasticsearch_filesystem_data_available_bytes{${Cluster},${Location},${Namespace}}/elasticsearch_filesystem_data_size_bytes{${Cluster},${Location},${Namespace}}))"
+                  "prometheusQuery": "100 * (1-(elasticsearch_filesystem_data_available_bytes{${Cluster},${Location},${Namespace}}/elasticsearch_filesystem_data_size_bytes{${Cluster},${Location},${Namespace}}))",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 9
+        }
       },
       {
-        "height": 4,
+        "yPos": 8,
+        "width": 48,
+        "height": 9,
         "widget": {
           "title": "Network Usage",
           "xyChart": {
@@ -319,57 +374,354 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "irate(elasticsearch_transport_rx_size_bytes_total{${Cluster},${Location},${Namespace}}[5m])"
+                  "prometheusQuery": "irate(elasticsearch_transport_rx_size_bytes_total{${Cluster},${Location},${Namespace}}[5m])",
+                  "unitOverride": ""
                 }
               },
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "irate(elasticsearch_transport_tx_size_bytes_total{${Cluster},${Location},${Namespace}}[5m])"
+                  "prometheusQuery": "irate(elasticsearch_transport_tx_size_bytes_total{${Cluster},${Location},${Namespace}}[5m])",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 9
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 53,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Thread Pool Operations Rejected",
+          "title": "Unassigned Shards",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "irate(elasticsearch_thread_pool_rejected_count{${Cluster},${Location},${Namespace}}[5m])"
+                  "prometheusQuery": "elasticsearch_cluster_health_delayed_unassigned_shards{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 9
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 29,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Active Primary Shards",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "elasticsearch_cluster_health_active_primary_shards{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 17,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Node Performance",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 17,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Cluster Health",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 37,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Relocating Shards",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "elasticsearch_cluster_health_relocating_shards{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 45,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Initializing Shards",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "elasticsearch_cluster_health_initializing_shards{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 61,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Index",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 65,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Documents",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "elasticsearch_indices_docs{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 73,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Search Queries",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "elasticsearch_indices_search_query_total{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 81,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Query Cache Evictions",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "elasticsearch_indices_query_cache_evictions{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 89,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Query Cache Hit Ratio",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "elasticsearch_indices_query_cache_count{${Cluster},${Location},${Namespace}} / (elasticsearch_indices_query_cache_count{${Cluster},${Location},${Namespace}} + elasticsearch_indices_query_miss_count{${Cluster},${Location},${Namespace}})",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }
