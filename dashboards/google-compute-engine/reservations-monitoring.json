@@ -1,12 +1,21 @@
 {
   "displayName": "GCE Reservations Monitoring",
+  "dashboardFilters": [
+    {
+      "filterType": "SYSTEM_METADATA_LABEL",
+      "labelKey": "name",
+      "stringValue": "",
+      "templateVariable": ""
+    }
+  ],
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
       {
+        "width": 24,
         "height": 16,
         "widget": {
-          "title": "Reservations Monitoring",
+          "title": "Used and Reserved Resources",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -15,59 +24,338 @@
               {
                 "breakdowns": [],
                 "dimensions": [],
+                "legendTemplate": "${metric.labels.reserved_resource_type} reserved by  ${metadata.system_labels\\.name}",
                 "measures": [],
                 "minAlignmentPeriod": "300s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "300s",
-                      "crossSeriesReducer": "REDUCE_SUM",
+                      "crossSeriesReducer": "REDUCE_MEAN",
                       "groupByFields": [
-                        "metadata.system_labels.\"name\""
+                        "metadata.system_labels.\"name\"",
+                        "metric.label.\"reserved_resource_type\""
                       ],
-                      "perSeriesAligner": "ALIGN_SUM"
+                      "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"compute.googleapis.com/reservation/used\" resource.type=\"compute.googleapis.com/Reservation\""
+                    "filter": "metric.type=\"compute.googleapis.com/reservation/reserved\" resource.type=\"compute.googleapis.com/Reservation\""
                   }
                 }
               },
               {
                 "breakdowns": [],
                 "dimensions": [],
+                "legendTemplate": "${metric.labels.reserved_resource_type} used by  ${metadata.system_labels\\.name}",
                 "measures": [],
                 "minAlignmentPeriod": "300s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "300s",
-                      "crossSeriesReducer": "REDUCE_SUM",
+                      "crossSeriesReducer": "REDUCE_MEAN",
                       "groupByFields": [
-                        "metadata.system_labels.\"name\""
+                        "metadata.system_labels.\"name\"",
+                        "metric.label.\"reserved_resource_type\""
                       ],
-                      "perSeriesAligner": "ALIGN_SUM"
+                      "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"compute.googleapis.com/reservation/reserved\" resource.type=\"compute.googleapis.com/Reservation\""
+                    "filter": "metric.type=\"compute.googleapis.com/reservation/used\" resource.type=\"compute.googleapis.com/Reservation\""
                   }
                 }
               }
             ],
             "thresholds": [],
+            "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "Cores",
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
+        }
+      },
+      {
+        "xPos": 24,
         "width": 24,
-        "xPos": 1,
-        "yPos": 0
+        "height": 16,
+        "widget": {
+          "title": "Reservation Utilization",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "% of ${metric.labels.reserved_resource_type} used in ${metadata.system_labels\\.name}",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilterRatio": {
+                    "denominator": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_MEAN",
+                        "groupByFields": [
+                          "metadata.system_labels.\"name\"",
+                          "metric.label.\"reserved_resource_type\""
+                        ],
+                        "perSeriesAligner": "ALIGN_MEAN"
+                      },
+                      "filter": "metric.type=\"compute.googleapis.com/reservation/reserved\" resource.type=\"compute.googleapis.com/Reservation\""
+                    },
+                    "numerator": {
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "crossSeriesReducer": "REDUCE_MEAN",
+                        "groupByFields": [
+                          "metadata.system_labels.\"name\"",
+                          "metric.label.\"reserved_resource_type\""
+                        ],
+                        "perSeriesAligner": "ALIGN_MEAN"
+                      },
+                      "filter": "metric.type=\"compute.googleapis.com/reservation/used\" resource.type=\"compute.googleapis.com/Reservation\""
+                    }
+                  }
+                }
+              }
+            ],
+            "thresholds": [
+              {
+                "label": "",
+                "targetAxis": "Y1",
+                "value": 1
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "width": 24,
+        "height": 7,
+        "widget": {
+          "title": "Instance Properties",
+          "text": {
+            "content": "For an Instance to consume a Reservation [multiple properties need to match](https://cloud.google.com/compute/docs/instances/reservations-overview#requirements). The only properties available in metrics are `machine_type` and `min_cpu_platform.` Keep this in mind when analyzing the following chart.",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 23,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Reservations by Instance Properties",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "reserved ${metric.labels.reserved_resource_type} of ${metadata.system_labels\\.machine_type}, ${metadata.system_labels\\.min_cpu_platform}",
+                "measures": [],
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "300s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [
+                        "metadata.system_labels.\"machine_type\"",
+                        "metadata.system_labels.\"min_cpu_platform\"",
+                        "metric.label.\"reserved_resource_type\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"compute.googleapis.com/reservation/reserved\" resource.type=\"compute.googleapis.com/Reservation\""
+                  }
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "used ${metric.labels.reserved_resource_type} of ${metadata.system_labels\\.machine_type}, ${metadata.system_labels\\.min_cpu_platform}",
+                "measures": [],
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "300s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metadata.system_labels.\"machine_type\"",
+                        "metadata.system_labels.\"min_cpu_platform\"",
+                        "metric.label.\"reserved_resource_type\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"compute.googleapis.com/reservation/used\" resource.type=\"compute.googleapis.com/Reservation\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "width": 48,
+        "height": 16,
+        "widget": {
+          "title": "Individual Reservations",
+          "collapsibleGroup": {
+            "collapsed": false
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "width": 48,
+        "height": 23,
+        "widget": {
+          "title": "Reservations By Settings",
+          "collapsibleGroup": {
+            "collapsed": false
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 23,
+        "width": 23,
+        "height": 16,
+        "widget": {
+          "title": "Reservations by Access Settings",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "reserved ${metric.labels.reserved_resource_type} from share type: ${metadata.system_labels\\.share_type}, specific reservation required: ${metadata.system_labels\\.specific_allocation_required}",
+                "measures": [],
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "300s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [
+                        "metric.label.\"reserved_resource_type\"",
+                        "metadata.system_labels.\"specific_allocation_required\"",
+                        "metadata.system_labels.\"share_type\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"compute.googleapis.com/reservation/reserved\" resource.type=\"compute.googleapis.com/Reservation\""
+                  }
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "used ${metric.labels.reserved_resource_type} from share type: ${metadata.system_labels\\.share_type}, specific reservation required: ${metadata.system_labels\\.specific_allocation_required}",
+                "measures": [],
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "300s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"reserved_resource_type\"",
+                        "metadata.system_labels.\"specific_allocation_required\"",
+                        "metadata.system_labels.\"share_type\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"compute.googleapis.com/reservation/used\" resource.type=\"compute.googleapis.com/Reservation\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 16,
+        "width": 24,
+        "height": 7,
+        "widget": {
+          "title": "Access Settings",
+          "text": {
+            "content": "- When _Specific Reservation Requried_ is `true` the reservation's consumption type is _specific_. When `false` the consumption type is _automatic_.\n- _Share type_: Specifies if and how other projects can use the reservation.\n\nMore details can be found in [How Reservations Work](https://cloud.google.com/compute/docs/instances/reservations-overview#how-reservations-work).",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 39,
+        "width": 48,
+        "height": 16,
+        "widget": {
+          "title": "Reservation Audit Logs",
+          "logsPanel": {
+            "filter": "protoPayload.@type=\"type.googleapis.com/google.cloud.audit.AuditLog\" \nprotoPayload.serviceName=\"compute.googleapis.com\"\nresource.labels.method =~ \"compute.reservations\"",
+            "resourceNames": []
+          }
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }
