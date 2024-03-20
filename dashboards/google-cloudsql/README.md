@@ -17,4 +17,4 @@
 |Cloud SQL - Transactions|
 |:------------------|
 |Filename: [cloudsql-transactions.json](cloudsql-transactions.json)|
-|This dashboard has charts displaying information regarding transactions and queries from mysql, mssql, and postgresql in Cloud SQL as well as charts relating to network activity. |
+|This dashboard has charts displaying information regarding transactions and queries from MySQL, PostgreSQL, and SQL Server in Cloud SQL as well as charts relating to network activity. |

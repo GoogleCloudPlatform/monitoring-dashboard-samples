@@ -2,7 +2,7 @@
 
 ## Spiking Evictions
 
-If `cloudsql.googleapis.com/database/postgresql/vacuum/oldest_transaction_age` is higher than `10` it indicates that postgres is having issues keeping up with the amount of queries. 
+If `cloudsql.googleapis.com/database/postgresql/vacuum/oldest_transaction_age` is higher than `10` it indicates that PostgreSQL is having issues keeping up with the number of queries.
 
 ## Replication in Error State
 
@@ -14,7 +14,7 @@ If any instance in `cloudsql.googleapis.com/database/instance_state` has a state
 
 ### Creating Notification Channels and User Labels
 
-Whether these alert policies are being used as standalones or base templates for a deployment strategy like terraform, one thing that should be utilized is notification channels and user labels.
+Whether these alert policies are being used as standalones or base templates for a deployment strategy like Terraform, one thing that should be utilized is notification channels and user labels.
 
 ### User Labels
 

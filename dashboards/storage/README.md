@@ -22,14 +22,14 @@
 
 &nbsp;
 
-|Cloud SQL(MySQL) Monitoring|
+|Cloud SQL (MySQL) Monitoring|
 |:--------------------------|
 |Filename: [cloudsql-mysql-monitoring.json](cloudsql-mysql-monitoring.json)|
 |This dashboard has 6 charts for the [Cloud SQL(MySQL) metrics](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-cloudsql), including `Database queries`, `Connections`, `Network bytes received/sent`, and the `InnoDB page` metrics.
 
 &nbsp;
 
-|Cloud SQL(PostgreSQL) Monitoring|
+|Cloud SQL (PostgreSQL) Monitoring|
 |:-------------------------------|
 |Filename: [cloudsql-postgre-monitoring.json](cloudsql-postgre-monitoring.json)
 |This dashboard has 3 charts for the [Cloud SQL(PostgreSQL) metrics](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-cloudsql), including `Number of transactions`, `Connections`, and `Lag bytes`.
@@ -64,7 +64,7 @@
 
 &nbsp;
 
-|Redis Stats monitoring|
+|Redis Stats Monitoring|
 |:---------------------|
 |Filename: [redis-stats-monitoring.json](redis-stats-monitoring.json)|
 |This dashboard has 14 charts for the stats of [Memorystore for Redis](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-redis), including `Hits`, `Misses`, `Cache Hit Ratio`, `Evicted Keys`, `Expired Keys`, `Memory Usage Ratio`, and others.
