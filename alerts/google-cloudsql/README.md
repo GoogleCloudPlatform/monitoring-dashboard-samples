@@ -1,4 +1,4 @@
-# Alerts for CloudSQL in the Ops Agent
+# Alerts for Cloud SQL in the Ops Agent
 
 ## Spiking Evictions
 

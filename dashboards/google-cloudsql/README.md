@@ -1,20 +1,20 @@
-### Dashboards for CloudSQL
+### Dashboards for Cloud SQL
 
 #### Notes
 
 - These dashboards are based on first party Google Cloud monitoring solutions.
 
-|CloudSQL - General|
+|Cloud SQL - General|
 |:------------------|
 |Filename: [cloudsql-general.json](cloudsql-general.json)|
-|This dashboard has charts displaying logs from CloudSQL as well as charts of instance states and network throughput. |
+|This dashboard has charts displaying logs from Cloud SQL as well as charts of instance states and network throughput. |
 
-|CloudSQL - Replication|
+|Cloud SQL - Replication|
 |:------------------|
 |Filename: [cloudsql-replication.json](cloudsql-replication.json)|
-|This dashboard has charts displaying information about replication states and replication performance from CloudSQL. |
+|This dashboard has charts displaying information about replication states and replication performance from Cloud SQL. |
 
-|CloudSQL - Transactions|
+|Cloud SQL - Transactions|
 |:------------------|
 |Filename: [cloudsql-transactions.json](cloudsql-transactions.json)|
-|This dashboard has charts displaying information regarding transactions and queries from mysql, mssql, and postgresql in CloudSQL as well as charts relating to network activity. |
+|This dashboard has charts displaying information regarding transactions and queries from mysql, mssql, and postgresql in Cloud SQL as well as charts relating to network activity. |
