@@ -7,4 +7,4 @@
 |Apache Airflow Scheduler|
 |:------------------|
 |Filename: [apache-airflow-prometheus.json](apache-airflow-prometheus.json)|
-|This dashboard has charts displaying `Tasks: Running, Starving, Executable`, `Heartbeat`, `Orphaned Tasks Cleared`, `Orphaned Tasks Adopted` and `Critical Section Duration` |
+|This dashboard has charts displaying `Tasks: Running, Starving, Executable`, `Heartbeat`, `Orphaned Tasks Cleared`, `Orphaned Tasks Adopted`, `Executor Slots Open`, `Executor Queued Tasks`, `Executor Running Tasks`, and `Critical Section Duration` |
