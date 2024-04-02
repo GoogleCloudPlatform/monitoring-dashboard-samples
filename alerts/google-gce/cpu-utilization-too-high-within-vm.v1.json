@@ -1,0 +1,34 @@
+{
+  "displayName": "VM Instance - High CPU Utilization (${INSTANCE_NAME})",
+  "documentation": {
+    "content": "This alert fires when the CPU utilization on the VM instance (${INSTANCE_NAME}) rises above 80% for 5 minutes or more.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - High CPU utilization (${INSTANCE_NAME})",
+      "conditionThreshold": {
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"compute.googleapis.com/instance/cpu/utilization\" AND metric.labels.instance_name = \"${INSTANCE_NAME}\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "crossSeriesReducer": "REDUCE_NONE",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        },
+        "thresholdValue": 0.8
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}

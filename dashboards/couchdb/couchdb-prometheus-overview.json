@@ -1,5 +1,5 @@
 {
-  "category": "CUSTOM",
+  "displayName": "CouchDB Prometheus Overview",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -17,211 +17,68 @@
       "templateVariable": "Namespace"
     }
   ],
-  "displayName": "CouchDB Prometheus Overview",
-  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 4,
+        "width": 16,
+        "height": 8,
         "widget": {
-          "title": "Requests by Method",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
+          "title": "Service Status",
+          "scorecard": {
+            "thresholds": [
               {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "rate(couchdb_httpd_request_methods{${Cluster},${Location},${Namespace}}[5m])"
-                }
+                "color": "RED",
+                "direction": "BELOW",
+                "label": "",
+                "value": 1
               }
             ],
+            "timeSeriesQuery": {
+              "prometheusQuery": "couchdb_httpd_up{${Cluster},${Location},${Namespace}}",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 16,
+        "width": 16,
+        "height": 8,
+        "widget": {
+          "title": "Authentication Cache Hits",
+          "scorecard": {
+            "blankView": {},
             "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "couchdb_httpd_auth_cache_hits{${Cluster},${Location},${Namespace}}",
+              "unitOverride": ""
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 0
+        }
       },
       {
-        "height": 4,
+        "xPos": 32,
+        "width": 16,
+        "height": 8,
         "widget": {
-          "title": "Average Request Time",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "avg(couchdb_httpd_request_time{${Cluster},${Location},${Namespace}})"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 4
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Views",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "couchdb_httpd_view_reads{${Cluster},${Location},${Namespace}}"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 8
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Responses by Status Code",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "rate(couchdb_httpd_status_codes{${Cluster},${Location},${Namespace}}[5m])"
-                }
-              }
-            ],
+          "title": "Authentication Cache Misses",
+          "scorecard": {
+            "blankView": {},
             "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "couchdb_httpd_auth_cache_misses{${Cluster},${Location},${Namespace}}",
+              "unitOverride": ""
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 0
+        }
       },
       {
-        "height": 4,
-        "widget": {
-          "title": "Bulk Requests",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "couchdb_httpd_bulk_requests{${Cluster},${Location},${Namespace}}"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 4
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Database Operations",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "couchdb_httpd_database_reads{${Cluster},${Location},${Namespace}}"
-                }
-              },
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "couchdb_httpd_database_writes{${Cluster},${Location},${Namespace}}"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 8
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Open File Descriptors",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "couchdb_httpd_open_os_files{${Cluster},${Location},${Namespace}}"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 12
-      },
-      {
-        "height": 4,
+        "yPos": 8,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Open Databases",
           "xyChart": {
@@ -230,23 +87,308 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "couchdb_httpd_open_databases{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "couchdb_httpd_open_databases{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 12
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 8,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Open File Descriptors",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "couchdb_httpd_open_os_files{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Performance",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 28,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Responses by Status Code",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(couchdb_httpd_status_codes{${Cluster},${Location},${Namespace}}[5m])",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 28,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Average Request Time",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "avg(couchdb_httpd_request_time{${Cluster},${Location},${Namespace}})",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 44,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Throughput",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Requests by Method",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(couchdb_httpd_request_methods{${Cluster},${Location},${Namespace}}[5m])",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 48,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Database Operations",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "couchdb_httpd_database_reads{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "couchdb_httpd_database_writes{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 64,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Bulk Requests",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "couchdb_httpd_bulk_requests{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 64,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Views",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "couchdb_httpd_view_reads{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }

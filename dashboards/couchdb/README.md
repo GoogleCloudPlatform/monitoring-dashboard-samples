@@ -14,4 +14,4 @@
 |CouchDB Prometheus Overview|
 |:------------------|
 |Filename: [couchdb-prometheus-overview.json](couchdb-prometheus-overview.json)|
-|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/gesellix/couchdb-prometheus-exporter), including `Requests by Method`, `Responses by Status Code`, `Average Request Time`, `Bulk Requests`, `Views`, `Database Operations`, `Open Files Descriptors`, and `Open Databases`. |
+|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/gesellix/couchdb-prometheus-exporter), including `Service Status`, `Authentication Cache Hits`, `Authentication Cache Misses`, `Open Databases`, `Open Files Descriptors`, `Responses by Status Code`, `Average Request Time`, `Requests by Method`, `Database Operations`, `Bulk Requests`, and `Views`. |

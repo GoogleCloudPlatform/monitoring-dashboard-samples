@@ -35,7 +35,8 @@ then
   echo "Conversion complete. Proceeding to upload..."
 
   # Extract output directory from console output
-  DIRECTORY=$(grep -Po '(reports.*/)' <<< "$CONVERSION_OUTPUT" | sed -n '2p')
+  DIRECTORY="${CONVERSION_OUTPUT##*./upload.sh }"
+  DIRECTORY="${DIRECTORY% <PROJECT_ID>*}"
   echo
   echo -e "Now running: \033[34m./upload.sh $DIRECTORY $PROJECT\033[0m\n"
 
