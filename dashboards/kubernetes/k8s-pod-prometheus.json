@@ -1,77 +1,89 @@
 {
-  "category": "CUSTOM",
   "displayName": "Kubernetes Pod Prometheus Overview",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "Cluster"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "Location"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "templateVariable": "Namespace"
+    }
+  ],
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 2,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Scheduled Pods",
           "scorecard": {
             "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(kube_pod_status_scheduled{condition=\"true\"})"
+              "prometheusQuery": "sum(kube_pod_status_scheduled{condition=\"true\",${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
             }
-          },
-          "title": "Scheduled Pods"
-        },
-        "width": 2,
-        "xPos": 0,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 2,
+        "xPos": 16,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Pending Pods",
           "scorecard": {
             "blankView": {},
             "thresholds": [
               {
                 "color": "RED",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 50
               },
               {
                 "color": "YELLOW",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 10
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(kube_pod_status_phase{phase=\"Pending\"})"
+              "prometheusQuery": "sum(kube_pod_status_phase{phase=\"Pending\",${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
             }
-          },
-          "title": "Pending Pods"
-        },
-        "width": 2,
-        "xPos": 4,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 2,
+        "xPos": 40,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Failed Pods",
           "scorecard": {
-            "sparkChartView": {
-              "sparkChartType": "SPARK_LINE"
-            },
-            "thresholds": [
-              {
-                "color": "YELLOW",
-                "direction": "ABOVE",
-                "value": 0
-              }
-            ],
+            "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(kube_pod_status_phase{phase=\"Failed\"})"
+              "prometheusQuery": "sum(kube_pod_status_phase{phase=\"Failed\",${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
             }
-          },
-          "title": "Failed Pods"
-        },
-        "width": 2,
-        "xPos": 10,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 4,
+        "yPos": 32,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Pod CPU Usage",
           "xyChart": {
@@ -80,25 +92,30 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(container_cpu_usage_seconds_total{container!~\"POD|\"}[1m])) by (pod)\n"
+                  "prometheusQuery": "sum(rate(container_cpu_usage_seconds_total{container!~\"POD|\",${Cluster},${Location},${Namespace}}[1m])) by (pod)\n",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "y1Axis",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 8
+        }
       },
       {
-        "height": 4,
+        "yPos": 48,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Pod Memory Usage",
           "xyChart": {
@@ -107,25 +124,31 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(container_memory_usage_bytes{container!~\"POD|\"}) by (pod)\n"
+                  "prometheusQuery": "sum(container_memory_usage_bytes{container!~\"POD|\",${Cluster},${Location},${Namespace}}) by (pod)\n",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "y1Axis",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 8
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 48,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Pod Network Receive Bytes",
           "xyChart": {
@@ -134,25 +157,31 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(container_network_receive_bytes_total{pod!~\"\"}[1m])) by (pod)\n"
+                  "prometheusQuery": "sum(rate(container_network_receive_bytes_total{pod!~\"\",${Cluster},${Location},${Namespace}}[1m])) by (pod)\n",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "y1Axis",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 12
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 32,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Pod Network Transmit Bytes",
           "xyChart": {
@@ -161,242 +190,251 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(container_network_transmit_bytes_total{pod!~\"\"}[1m])) by (pod)\n"
+                  "prometheusQuery": "sum(rate(container_network_transmit_bytes_total{pod!~\"\",${Cluster},${Location},${Namespace}}[1m])) by (pod)\n",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "y1Axis",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 12
+        }
       },
       {
-        "height": 2,
+        "xPos": 8,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Running Pods",
           "scorecard": {
             "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(kube_pod_status_phase{phase=\"Running\"})"
+              "prometheusQuery": "sum(kube_pod_status_phase{phase=\"Running\",${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
             }
-          },
-          "title": "Running Pods"
-        },
-        "width": 2,
-        "xPos": 2,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 2,
+        "xPos": 24,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Evicted Pods",
           "scorecard": {
             "blankView": {},
             "thresholds": [
               {
                 "color": "RED",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 50
               },
               {
                 "color": "YELLOW",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 10
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(kube_pod_status_reason{phase=\"Evicted\"})"
+              "prometheusQuery": "sum(kube_pod_status_reason{reason=\"Evicted\",${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
             }
-          },
-          "title": "Evicted Pods"
-        },
-        "width": 2,
-        "xPos": 6,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 2,
+        "xPos": 32,
+        "width": 8,
+        "height": 8,
         "widget": {
+          "title": "Shutdown Pods",
           "scorecard": {
             "blankView": {},
             "thresholds": [
               {
                 "color": "RED",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 50
               },
               {
                 "color": "YELLOW",
                 "direction": "ABOVE",
+                "label": "",
                 "value": 10
               }
             ],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(kube_pod_status_reason{phase=\"Shutdown\"})"
+              "prometheusQuery": "sum(kube_pod_status_reason{reason=\"Shutdown\",${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
             }
-          },
-          "title": "Shutdown Pods"
-        },
-        "width": 2,
-        "xPos": 8,
-        "yPos": 0
+          }
+        }
       },
       {
-        "height": 2,
+        "yPos": 12,
+        "width": 16,
+        "height": 16,
         "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "count(kube_statefulset_created)"
-            }
-          },
-          "title": "Statefulsets"
-        },
-        "width": 2,
-        "xPos": 8,
-        "yPos": 2
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "count(kube_deployment_status_condition{status=\"true\", condition=\"Available\"})"
-            }
-          },
-          "title": "Deployments"
-        },
-        "width": 2,
-        "xPos": 4,
-        "yPos": 2
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "count(kube_daemonset_created)"
-            }
-          },
-          "title": "Daemonsets"
-        },
-        "width": 2,
-        "xPos": 6,
-        "yPos": 2
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "count(kube_job_created)"
-            }
-          },
-          "title": "Jobs"
-        },
-        "width": 2,
-        "xPos": 10,
-        "yPos": 2
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "count(kube_namespace_created)"
-            }
-          },
-          "title": "Namespaces"
-        },
-        "width": 2,
-        "xPos": 0,
-        "yPos": 2
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "prometheusQuery": "count(kube_replicaset_created)"
-            }
-          },
-          "title": "Replicasets"
-        },
-        "width": 2,
-        "xPos": 2,
-        "yPos": 2
-      },
-      {
-        "height": 4,
-        "widget": {
-          "timeSeriesTable": {
+          "title": "Scheduled Pods Per Cluster",
+          "pieChart": {
+            "chartType": "PIE",
             "dataSets": [
               {
-                "tableDisplayOptions": {},
+                "dimensions": [],
+                "measures": [],
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (cluster) (kube_pod_status_scheduled)"
+                  "prometheusQuery": "sum by (cluster) (kube_pod_status_scheduled{${Cluster},${Location},${Namespace}})",
+                  "unitOverride": ""
                 }
               }
             ],
-            "metricVisualization": "NUMBER"
-          },
-          "title": "Scheduled Pods Per Cluster"
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 4
+            "sliceAggregatedThreshold": 0
+          }
+        }
       },
       {
-        "height": 4,
+        "xPos": 32,
+        "yPos": 12,
+        "width": 16,
+        "height": 16,
         "widget": {
-          "timeSeriesTable": {
+          "title": "Failed Pods Per Cluster",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
             "dataSets": [
               {
-                "tableDisplayOptions": {},
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (cluster) (kube_pod_status_phase{phase=\"Failed\"})"
+                  "prometheusQuery": "sum by (cluster) (kube_pod_status_phase{phase=\"Failed\",${Cluster},${Location},${Namespace}})",
+                  "unitOverride": ""
                 }
               }
             ],
-            "metricVisualization": "NUMBER"
-          },
-          "title": "Failed Pods Per Cluster"
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 4
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
       },
       {
-        "height": 4,
+        "xPos": 16,
+        "yPos": 12,
+        "width": 16,
+        "height": 16,
         "widget": {
-          "timeSeriesTable": {
+          "title": "Pods Per Namespace",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
             "dataSets": [
               {
-                "tableDisplayOptions": {},
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "STACKED_AREA",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (exported_namespace) (kube_pod_status_scheduled{condition=\"true\"})"
+                  "prometheusQuery": "sum by (namespace) (kube_pod_status_scheduled{condition=\"true\",${Cluster},${Location},${Namespace}})",
+                  "unitOverride": ""
                 }
               }
             ],
-            "metricVisualization": "NUMBER"
-          },
-          "title": "Pods Per Namespace"
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 4
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 28,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Network",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#E1BEE7",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 28,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Resource Usage",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#C8E6C9",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Overview",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#C6DAFC",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }
