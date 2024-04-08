@@ -1,0 +1,29 @@
+{
+  "displayName": "Pacemaker: Resource failed to start",
+  "documentation": {
+    "content": "## Pacemaker resource ${metric.label.resource} is in status `Stopped` on ${metric.label.node}\n\nThe resource agent ${metric.label.resource} in Pacemaker HA cluster for SAP system ${metric.label.sid} has been in status `Stopped` for over 3 minutes and has failed to restart. Manual intervention is required to retry start attempts.\n\n### Resolution\n\n1. Access the Pacemaker cluster on ${metric.label.node}\n\n1. Follow the [**Troubleshooting high-availability configurations for SAP**](https://cloud.google.com/solutions/sap/docs/troubleshooting/troubleshooting-sap-ha#resource_agent_is_stopped) troubleshooting guide",
+    "mimeType": "text/markdown",
+    "subject": "Pacemaker: ${metric.label.resource} is in status `Stopped` on ${metric.label.node}"
+
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Pacemaker resource is stopped",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "0s",
+        "query": "fetch gce_instance\n| metric 'workload.googleapis.com/sap/cluster/failcounts'\n# Uncomment and modify the following line to filter by SID\n#| filter (metric.sid =~ 'SID')\n| group_by [metric.node, metric.resource, metric.sid], [min(val())]\n| window 3m\n| condition gt(val(), 999999)",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "1800s"
+  },
+  "combiner": "OR",
+  "enabled": false,
+  "notificationChannels": [],
+  "severity": "ERROR"
+}

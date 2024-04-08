@@ -1,0 +1,28 @@
+{
+  "displayName": "Pacemaker: Location constraint detected",
+  "documentation": {
+    "content": "## Pacemaker: Location constraint detected\n\nA location constraint has been detected on the Pacemaker cluster for SAP system with SID `${metric.label.sid}`. Location constraints might prevent correct failover of cluster resources in the event of failure. This type of constraint is typically created when a resource is manually moved between nodes in the cluster.\n\n### Resolution\n\n1. Access the Pacemaker cluster on ${metadata.system_labels.name} \n\n1. Follow the [**Troubleshooting high-availability configurations for SAP**](https://cloud.google.com/solutions/sap/docs/troubleshooting/troubleshooting-sap-ha#unintentional_node_affinity_that_favors_a_particular_node) troubleshooting guide",
+    "mimeType": "text/markdown",
+    "subject": "Pacemaker location constraint detected on ${metadata.system_labels.name} ${metric.label.sid}"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Pacemaker: Location constraint detected",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "0s",
+        "query": "fetch gce_instance\n| metric 'workload.googleapis.com/sap/pacemaker'\n# Uncomment and modify the following line to filter by SID\n#| filter (metric.sid =~ 'SID')\n| filter (metric.location_preference_set == 'true')\n| group_by [metadata.system.name,metric.location_preference_set, metric.sid]\n| top 1\n| window 1m\n| condition gt(val(), 0)",
+        "trigger": {
+          "count": 1
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "1800s"
+  },
+  "combiner": "OR",
+  "enabled": false,
+  "notificationChannels": [],
+  "severity": "WARNING"
+}
