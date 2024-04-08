@@ -29,7 +29,7 @@
 |Logging Usage - GCE|
 |:-----------------------|
 |Filename: [gce-usage.json](gce-usage.json)|
-|This dashboard is fairly simple in that it primarily looks at the `Log Bytes Sent` and `Log Entries` metrics but also adds in some additional visualizations of `Entries By Severity`.|
+|This dashboard is fairly simple in that it primarily looks at the `Log Bytes Sent` and `Log Entries` metrics but also adds in some additional visualizations of `Entries by Severity`.|
 
 
 &nbsp;
@@ -37,7 +37,7 @@
 |Logging Usage - Cloud SQL|
 |:-----------------------|
 |Filename: [cloudsql-usage.json](cloudsql-usage.json)|
-|This dashboard primarily looks at the `Log Bytes Sent` and `Log Entries` metrics but also adds in some additional visualizations of `Entries By Severity` for monitored resources of `cloudsql_database` and `cloudsql_instance_database`.|
+|This dashboard primarily looks at the `Log Bytes Sent` and `Log Entries` metrics but also adds in some additional visualizations of `Entries by Severity` for monitored resources of `cloudsql_database` and `cloudsql_instance_database`.|
 
 &nbsp;
 
