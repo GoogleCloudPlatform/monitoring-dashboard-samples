@@ -12,4 +12,4 @@
 |Memcached Prometheus Overview|
 |:------------------|
 |Filename: [memcached-prometheus.json](memcached-prometheus.json)|
-|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/prometheus/memcached_exporter). This dashboard has charts displaying: `Hits`, `Misses`, `Connections`, `Commands`, `Evicts/Reclaims`, `Read/Written Bytes`, `Memory Bytes Used to Store Items`, and `Items in Cache`|
+|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/prometheus/memcached_exporter). This dashboard has charts displaying: `Up/Down`, `Hits`, `Misses`, `Connections`, `Commands`, `Evicts/Reclaims`, `Read/Written Bytes`, `Memory Bytes Used to Store Items`, and `Items in Cache`|

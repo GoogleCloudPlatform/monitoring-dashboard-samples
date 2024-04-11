@@ -1,5 +1,5 @@
 {
-  "category": "CUSTOM",
+  "displayName": "Memcached Prometheus Overview",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -17,13 +17,13 @@
       "templateVariable": "Namespace"
     }
   ],
-  "displayName": "Memcached Prometheus Overview",
-  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 4,
+        "yPos": 22,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Misses",
           "xyChart": {
@@ -32,25 +32,30 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(memcached_commands_total{status=\"miss\",${Cluster},${Location},${Namespace}}[1m])"
+                  "prometheusQuery": "rate(memcached_commands_total{status=\"miss\",${Cluster},${Location},${Namespace}}[1m])",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 0
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "width": 24,
+        "height": 10,
         "widget": {
           "title": "Connections",
           "xyChart": {
@@ -59,25 +64,30 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "memcached_current_connections{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "memcached_current_connections{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 0
+        }
       },
       {
-        "height": 4,
+        "yPos": 30,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Commands",
           "xyChart": {
@@ -86,25 +96,31 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(rate(memcached_commands_total{${Cluster},${Location},${Namespace}}[1m])) by (command)"
+                  "prometheusQuery": "sum(rate(memcached_commands_total{${Cluster},${Location},${Namespace}}[1m])) by (command)",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 4
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 34,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Evicts / Reclaims",
           "xyChart": {
@@ -113,32 +129,42 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "memcached_items_evicted_total{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "memcached_items_evicted_total{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               },
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "memcached_items_reclaimed_total{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "memcached_items_reclaimed_total{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 4
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 14,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Read / Written Bytes",
           "xyChart": {
@@ -147,32 +173,42 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(irate(memcached_read_bytes_total{${Cluster},${Location},${Namespace}}[5m]))"
+                  "prometheusQuery": "irate(memcached_read_bytes_total{${Cluster},${Location},${Namespace}}[5m])",
+                  "unitOverride": ""
                 }
               },
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "irate(memcached_written_bytes_total{${Cluster},${Location},${Namespace}}[10m])"
+                  "prometheusQuery": "irate(memcached_written_bytes_total{${Cluster},${Location},${Namespace}}[10m])",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 8
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 22,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Total Memory Usage",
           "xyChart": {
@@ -181,25 +217,31 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "memcached_current_bytes{${Cluster},${Location},${Namespace}} / memcached_limit_bytes{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "memcached_current_bytes{${Cluster},${Location},${Namespace}} / memcached_limit_bytes{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 8
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 42,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Items in Cache",
           "xyChart": {
@@ -208,27 +250,128 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "memcached_current_items{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "memcached_current_items{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 8
+        }
       },
       {
-        "height": 4,
+        "yPos": 14,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Hits",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(memcached_commands_total{status=\"hit\",${Cluster},${Location},${Namespace}}[1m])",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 10,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Commands",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#F4B400",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#FFFFFF",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 10,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Resource Usage",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#4CAF50",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#FFFFFF",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 30,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Items",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#4285F4",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#FFFFFF",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "width": 8,
+        "height": 10,
+        "widget": {
+          "title": "Up/Down",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -238,20 +381,54 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(memcached_commands_total{status=\"hit\",${Cluster},${Location},${Namespace}}[1m])"
+                  "prometheusQuery": "memcached_up{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 0
+        }
+      },
+      {
+        "xPos": 8,
+        "width": 8,
+        "height": 10,
+        "widget": {
+          "title": "Evictions",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "memcached_items_evicted_total{${Cluster},${Location},${Namespace}}",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 16,
+        "width": 8,
+        "height": 10,
+        "widget": {
+          "title": "Reclaims",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "memcached_items_reclaimed_total{${Cluster},${Location},${Namespace}}",
+              "unitOverride": ""
+            }
+          }
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }
