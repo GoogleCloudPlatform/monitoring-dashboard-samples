@@ -1,0 +1,32 @@
+{
+  "displayName": "Server Error (5xx) is high. (GKE Workload: ${WORKLOAD_NAME})",
+  "documentation": {
+    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${WORKLOAD_NAME}/observability?project=${PROJECT_ID}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold or duration. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth)",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {
+    "workload_name": "${WORKLOAD_NAME}",
+    "workload_type": "${WORKLOAD_TYPE}",
+    "project_id": "${PROJECT_ID}",
+    "location": "${CLUSTER_LOCATION}",
+    "cluster": "${CLUSTER_NAME}",
+    "namespace": "${NAMESPACE}"
+  },
+  "conditions": [
+    {
+      "displayName": "Server Error (5xx) is high",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "60s",
+        "query": "sum by (http_method, http_route, http_status_code)(\n  rate(http_server_duration_milliseconds_count{project_id=\"${PROJECT_ID}\", location=\"${CLUSTER_LOCATION}\", cluster=\"${CLUSTER_NAME}\", namespace=\"${NAMESPACE}\", job=\"${JOB}\", http_status_code=~\"5..\"}[5m]))\n/\non(http_method, http_route) group_left\nsum by (http_method, http_route)(\n  rate(http_server_duration_milliseconds_count{project_id=\"${PROJECT_ID}\", location=\"${CLUSTER_LOCATION}\", cluster=\"${CLUSTER_NAME}\", namespace=\"${NAMESPACE}\", job=\"${JOB}\"}[5m]))\n> .05"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
+}
