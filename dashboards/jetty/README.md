@@ -13,4 +13,4 @@
 |Jetty Prometheus Overview|
 |:------------------|
 |Filename: [jetty-prometheus-overview.json](jetty-prometheus-overview.json)|
-|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/prometheus/jmx_exporter), including `Sessions`, `Session Time`, `Select Calls`, `Max Session Time`, `Threads`, and `Thread Queue`.|
+|This dashboard is based on prometheus metrics exposed by an [exporter](https://github.com/prometheus/jmx_exporter), including `Sessions`, `Session Time`, `Select Calls`, `Max Session Time`, `Idle Threads`, `Busy Threads`, `Utilized Threads`, `Threads`, and `Thread Queue`.|
