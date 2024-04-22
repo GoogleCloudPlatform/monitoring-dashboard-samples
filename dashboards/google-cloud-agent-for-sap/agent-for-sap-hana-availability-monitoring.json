@@ -135,7 +135,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/sap/hana/ha/replication'\n| group_by [metadata.system_labels.name, metric.sid]\n| map add[status:\n        if(val() == 15, 'is Primary',\n            if(val() == 12, 'is Secondary',\n                if(val() == 10, 'has replication disabled','in status ERROR')))]",
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/sap/hana/ha/replication'\n| group_by [metadata.system_labels.name, metric.sid], min(val())\n| map add[status:\n        if(val() == 15, 'is Primary',\n            if(val() == 12, 'is Secondary',\n                if(val() == 10, 'has replication disabled','in status ERROR')))]",
                   "unitOverride": ""
                 }
               }
