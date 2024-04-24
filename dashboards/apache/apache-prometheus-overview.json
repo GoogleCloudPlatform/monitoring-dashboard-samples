@@ -1,5 +1,4 @@
 {
-  "category": "CUSTOM",
   "displayName": "Apache Prometheus Overview",
   "dashboardFilters": [
     {
@@ -22,63 +21,69 @@
     "columns": 48,
     "tiles": [
       {
-        "width": 16,
-        "height": 8,
+        "width": 8,
+        "height": 14,
         "widget": {
-          "title": "Apache Version",
+          "title": "Total Connections",
           "scorecard": {
             "blankView": {},
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": true,
-              "prometheusQuery": "apache_version{${Cluster},${Location},${Namespace}}",
+              "prometheusQuery": "sum(apache_connections{state=\"total\",${Cluster},${Location},${Namespace}})",
               "unitOverride": ""
             }
           }
         }
       },
       {
-        "xPos": 16,
-        "width": 16,
-        "height": 8,
+        "xPos": 8,
+        "width": 8,
+        "height": 14,
         "widget": {
-          "title": "Server Status",
+          "title": "Servers Up",
           "scorecard": {
-            "thresholds": [
-              {
-                "color": "RED",
-                "direction": "BELOW",
-                "label": "",
-                "value": 1
-              }
-            ],
+            "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": true,
-              "prometheusQuery": "apache_up{${Cluster},${Location},${Namespace}}",
+              "prometheusQuery": "count(apache_up{${Cluster},${Location},${Namespace}} == 1)",
               "unitOverride": ""
             }
           }
         }
       },
       {
-        "xPos": 32,
-        "width": 16,
-        "height": 8,
+        "xPos": 24,
+        "width": 24,
+        "height": 14,
         "widget": {
           "title": "Uptime (seconds)",
-          "scorecard": {
-            "blankView": {},
-            "thresholds": [],
-            "timeSeriesQuery": {
-              "outputFullDuration": true,
-              "prometheusQuery": "apache_uptime_seconds_total{${Cluster},${Location},${Namespace}}",
-              "unitOverride": ""
-            }
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "column": "value",
+                "visible": true
+              },
+              {
+                "column": "pod",
+                "visible": true
+              }
+            ],
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "apache_uptime_seconds_total{${Cluster},${Location},${Namespace}}"
+                }
+              }
+            ],
+            "metricVisualization": "BAR"
           }
         }
       },
       {
-        "yPos": 8,
+        "yPos": 14,
         "width": 48,
         "height": 4,
         "widget": {
@@ -99,7 +104,7 @@
         }
       },
       {
-        "yPos": 12,
+        "yPos": 18,
         "width": 16,
         "height": 16,
         "widget": {
@@ -132,7 +137,7 @@
       },
       {
         "xPos": 16,
-        "yPos": 12,
+        "yPos": 18,
         "width": 16,
         "height": 16,
         "widget": {
@@ -165,7 +170,7 @@
       },
       {
         "xPos": 32,
-        "yPos": 12,
+        "yPos": 18,
         "width": 16,
         "height": 16,
         "widget": {
@@ -197,7 +202,7 @@
         }
       },
       {
-        "yPos": 28,
+        "yPos": 34,
         "width": 48,
         "height": 4,
         "widget": {
@@ -218,7 +223,7 @@
         }
       },
       {
-        "yPos": 32,
+        "yPos": 38,
         "width": 16,
         "height": 16,
         "widget": {
@@ -251,7 +256,7 @@
       },
       {
         "xPos": 16,
-        "yPos": 32,
+        "yPos": 38,
         "width": 16,
         "height": 16,
         "widget": {
@@ -284,7 +289,7 @@
       },
       {
         "xPos": 32,
-        "yPos": 32,
+        "yPos": 38,
         "width": 16,
         "height": 16,
         "widget": {
@@ -316,7 +321,7 @@
         }
       },
       {
-        "yPos": 48,
+        "yPos": 54,
         "width": 48,
         "height": 4,
         "widget": {
@@ -337,7 +342,7 @@
         }
       },
       {
-        "yPos": 52,
+        "yPos": 58,
         "width": 24,
         "height": 16,
         "widget": {
@@ -370,7 +375,7 @@
       },
       {
         "xPos": 24,
-        "yPos": 52,
+        "yPos": 58,
         "width": 24,
         "height": 16,
         "widget": {
@@ -397,6 +402,23 @@
             "yAxis": {
               "label": "",
               "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 16,
+        "width": 8,
+        "height": 14,
+        "widget": {
+          "title": "Servers Down",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "(count(apache_up{${Cluster},${Location},${Namespace}} != 1) or (count(apache_up{${Cluster},${Location},${Namespace}}) - count(apache_up{${Cluster},${Location},${Namespace}})))",
+              "unitOverride": ""
             }
           }
         }
