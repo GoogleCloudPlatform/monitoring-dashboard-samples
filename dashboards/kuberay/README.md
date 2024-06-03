@@ -1,4 +1,4 @@
-### Dashboards for Zookeeper
+### Dashboards for Kuberay
 
 |Kuberay Overview|
 |:------------------|
