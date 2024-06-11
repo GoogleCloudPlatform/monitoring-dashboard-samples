@@ -1,14 +1,159 @@
 {
   "displayName": "NVIDIA GPU Monitoring Advanced DCGM Metrics (GKE Only)",
-  "dashboardFilters": [],
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "stringValue": "",
+      "templateVariable": ""
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "stringValue": "",
+      "templateVariable": ""
+    },
+    {
+      "filterType": "METRIC_LABEL",
+      "labelKey": "Hostname",
+      "stringValue": "",
+      "templateVariable": ""
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "namespace",
+      "stringValue": "",
+      "templateVariable": ""
+    },
+    {
+      "filterType": "METRIC_LABEL",
+      "labelKey": "pod",
+      "stringValue": "",
+      "templateVariable": ""
+    },
+    {
+      "filterType": "METRIC_LABEL",
+      "labelKey": "modelName",
+      "stringValue": "",
+      "templateVariable": ""
+    },
+    {
+      "filterType": "METRIC_LABEL",
+      "labelKey": "gpu",
+      "stringValue": "",
+      "templateVariable": ""
+    }
+  ],
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
       {
-        "width": 24,
-        "height": 14,
+        "xPos": 12,
+        "width": 12,
+        "height": 5,
         "widget": {
-          "title": "GKE - Built-In - Accelerator Duty Cycle",
+          "title": "Avg. SM Utilization (H100 Only)",
+          "scorecard": {
+            "dimensions": [],
+            "gaugeView": {
+              "lowerBound": 0,
+              "upperBound": 100
+            },
+            "measures": [],
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "avg(avg_over_time(DCGM_FI_PROF_SM_ACTIVE[${__interval}])) * 100",
+              "unitOverride": "%"
+            }
+          }
+        }
+      },
+      {
+        "width": 12,
+        "height": 5,
+        "widget": {
+          "title": "Avg. GPU Utilization",
+          "scorecard": {
+            "dimensions": [],
+            "gaugeView": {
+              "lowerBound": 0,
+              "upperBound": 100
+            },
+            "measures": [],
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "avg(avg_over_time(DCGM_FI_DEV_GPU_UTIL[${__interval}]))",
+              "unitOverride": "%"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "width": 12,
+        "height": 5,
+        "widget": {
+          "title": "Avg. Tensor Utilization (H100 Only)",
+          "scorecard": {
+            "dimensions": [],
+            "gaugeView": {
+              "lowerBound": 0,
+              "upperBound": 100
+            },
+            "measures": [],
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "avg(avg_over_time(DCGM_FI_PROF_PIPE_TENSOR_ACTIVE[${__interval}])) * 100",
+              "unitOverride": "%"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 36,
+        "width": 12,
+        "height": 5,
+        "widget": {
+          "title": "Avg. GPU Temperature (°C)",
+          "scorecard": {
+            "dimensions": [],
+            "gaugeView": {
+              "lowerBound": 0,
+              "upperBound": 100
+            },
+            "measures": [],
+            "thresholds": [
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 83
+              },
+              {
+                "color": "RED",
+                "direction": "ABOVE",
+                "label": "",
+                "value": 87
+              }
+            ],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "avg (avg_over_time(DCGM_FI_DEV_GPU_TEMP[${__interval}]))",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 41,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Tensor Utilization % (avg. by Model)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -21,7 +166,50 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(kubernetes_io:container_accelerator_duty_cycle{monitored_resource=\"k8s_container\"}[${__interval}])",
+                  "prometheusQuery": "avg by (cluster, location, modelName) (avg_over_time(DCGM_FI_PROF_PIPE_TENSOR_ACTIVE[${__interval}]) * 100)",
+                  "unitOverride": "%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 29,
+        "width": 48,
+        "height": 48,
+        "widget": {
+          "title": "Advanced Utilization Metrics (H100 Only)",
+          "collapsibleGroup": {
+            "collapsed": true
+          }
+        }
+      },
+      {
+        "yPos": 65,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "FP16 Utilization % (avg. by Model)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "avg by (cluster, location, modelName) (avg_over_time(DCGM_FI_PROF_PIPE_FP16_ACTIVE[${__interval}]) * 100)",
                   "unitOverride": "%"
                 }
               }
@@ -37,10 +225,11 @@
       },
       {
         "xPos": 24,
+        "yPos": 53,
         "width": 24,
-        "height": 14,
+        "height": 12,
         "widget": {
-          "title": "GKE - Bulit-In - Accelerator Memory Used",
+          "title": "FP32 Utilization % (avg. by Model)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -53,7 +242,103 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(kubernetes_io:container_accelerator_memory_used{monitored_resource=\"k8s_container\"}[${__interval}])",
+                  "prometheusQuery": "avg by (cluster, location, modelName) (avg_over_time(DCGM_FI_PROF_PIPE_FP32_ACTIVE[${__interval}]) * 100)",
+                  "unitOverride": "%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 53,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "FP64 Utilization % (avg. by Model)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "avg by (cluster, location, modelName) (avg_over_time(DCGM_FI_PROF_PIPE_FP64_ACTIVE[${__interval}]) * 100)",
+                  "unitOverride": "%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 41,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "SM Utilization % (avg. by Model)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "avg by (cluster, location, modelName) (avg_over_time(DCGM_FI_PROF_SM_ACTIVE[${__interval}]) * 100)",
+                  "unitOverride": "%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 77,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "PCIe Bytes Transmitted per Second (by GPU)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (cluster, location, Hostname, modelName, gpu) (avg_over_time(DCGM_FI_PROF_PCIE_TX_BYTES[${__interval}]))",
                   "unitOverride": "By"
                 }
               }
@@ -68,11 +353,12 @@
         }
       },
       {
-        "yPos": 14,
+        "xPos": 24,
+        "yPos": 77,
         "width": 24,
-        "height": 14,
+        "height": 12,
         "widget": {
-          "title": "GKE - DCGM - GPU Utilization",
+          "title": "NvLink Bytes Transmitted per Second (by GPU)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -85,8 +371,40 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(DCGM_FI_DEV_GPU_UTIL[${__interval}])",
-                  "unitOverride": "%"
+                  "prometheusQuery": "sum by (cluster, location, Hostname, modelName, gpu) (avg_over_time(DCGM_FI_PROF_NVLINK_TX_BYTES[${__interval}]))",
+                  "unitOverride": "By"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 89,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "PCIe Bytes Received per Second (by GPU)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (cluster, location, Hostname, modelName, gpu) (avg_over_time(DCGM_FI_PROF_PCIE_RX_BYTES[${__interval}]))",
+                  "unitOverride": "By"
                 }
               }
             ],
@@ -101,11 +419,11 @@
       },
       {
         "xPos": 24,
-        "yPos": 14,
+        "yPos": 89,
         "width": 24,
-        "height": 14,
+        "height": 12,
         "widget": {
-          "title": "GKE - DCGM - GPU Memory Used",
+          "title": "NvLink Bytes Received per Second (by GPU)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -118,7 +436,243 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(DCGM_FI_DEV_FB_USED[${__interval}])",
+                  "prometheusQuery": "sum by (cluster, location, Hostname, modelName, gpu) (avg_over_time(DCGM_FI_PROF_NVLINK_RX_BYTES[${__interval}]))",
+                  "unitOverride": "By"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 77,
+        "width": 48,
+        "height": 24,
+        "widget": {
+          "title": "I/O Metrics (H100 Only)",
+          "collapsibleGroup": {
+            "collapsed": true
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 17,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "singleViewGroup": {}
+        }
+      },
+      {
+        "yPos": 17,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "singleViewGroup": {}
+        }
+      },
+      {
+        "yPos": 17,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "SM Clock Speed (avg. by Model)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "avg by (cluster, location, modelName) (DCGM_FI_DEV_SM_CLOCK) * 1000000",
+                  "unitOverride": "1/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 17,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Memory Clock Speed (avg. by Model)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "avg by (cluster, location, modelName) (DCGM_FI_DEV_MEM_CLOCK * 1000000)",
+                  "unitOverride": "1/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 5,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "singleViewGroup": {}
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 29,
+        "width": 23,
+        "height": 12,
+        "widget": {
+          "title": "Memory Bandwidth Utilization % (avg. by Model)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "avg by (cluster, location, modelName) (avg_over_time(DCGM_FI_PROF_DRAM_ACTIVE[${__interval}]) OR avg_over_time(DCGM_FI_DEV_MEM_COPY_UTIL[${__interval}])) * 100",
+                  "unitOverride": "%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 29,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Graphic Engine Active % (avg. by Model)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "avg by (cluster, location, modelName) (avg_over_time(DCGM_FI_PROF_GR_ENGINE_ACTIVE[${__interval}])) * 100",
+                  "unitOverride": "%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 5,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "singleViewGroup": {}
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 5,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Framebuffer Memory Utilization % (avg. by Model)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "avg by (cluster, location, modelName) (avg_over_time(DCGM_FI_DEV_FB_USED[${__interval}]) * 100 / avg_over_time(DCGM_FI_DEV_FB_TOTAL[${__interval}]))",
+                  "unitOverride": "%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 5,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Framebuffer Memory Usage (by GPU)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (cluster, location, Hostname, modelName, gpu) (avg_over_time(DCGM_FI_DEV_FB_USED[${__interval}]))",
                   "unitOverride": "MBy"
                 }
               }
@@ -126,18 +680,18 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
+              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "yPos": 29,
+        "yPos": 5,
         "width": 24,
-        "height": 14,
+        "height": 12,
         "widget": {
-          "title": "GKE - DCGM - SM Utilization",
+          "title": "GPU Utilization % (avg. by Model)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -150,40 +704,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(DCGM_FI_PROF_SM_ACTIVE[${__interval}])",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "Ratio",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "xPos": 24,
-        "yPos": 29,
-        "width": 24,
-        "height": 14,
-        "widget": {
-          "title": "GKE - DCGM - Memory Utilization",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(DCGM_FI_DEV_MEM_COPY_UTIL[${__interval}])",
+                  "prometheusQuery": "avg by (cluster, location, modelName) (avg_over_time(DCGM_FI_DEV_GPU_UTIL[${__interval}]))",
                   "unitOverride": "%"
                 }
               }
@@ -198,11 +719,11 @@
         }
       },
       {
-        "yPos": 45,
+        "yPos": 5,
         "width": 24,
-        "height": 14,
+        "height": 12,
         "widget": {
-          "title": "GKE - DCGM - SM Occupancy",
+          "title": "GPU Utilization % (avg. by Pod)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -215,15 +736,79 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(DCGM_FI_PROF_SM_OCCUPANCY[${__interval}])",
-                  "unitOverride": ""
+                  "prometheusQuery": "avg by (cluster, location, Hostname, namespace, pod) (avg_over_time(DCGM_FI_DEV_GPU_UTIL[${__interval}]))",
+                  "unitOverride": "%"
                 }
               }
             ],
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "Ratio",
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 5,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "GPU Utilization % (avg. by Cluster)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "avg by (cluster, location) (avg_over_time(DCGM_FI_DEV_GPU_UTIL[${__interval}]))",
+                  "unitOverride": "%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 5,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "GPU Utilization % (by GPU)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "avg by (cluster, location, Hostname, modelName, gpu) (avg_over_time(DCGM_FI_DEV_GPU_UTIL[${__interval}]))",
+                  "unitOverride": "%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -231,11 +816,11 @@
       },
       {
         "xPos": 24,
-        "yPos": 45,
+        "yPos": 17,
         "width": 24,
-        "height": 14,
+        "height": 12,
         "widget": {
-          "title": "GKE - DCGM - Tensor Engine Utilization",
+          "title": "GPU Temperature (avg. by Model)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -248,7 +833,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(DCGM_FI_PROF_PIPE_TENSOR_ACTIVE[${__interval}])",
+                  "prometheusQuery": "avg by (cluster, location, modelName) (avg_over_time(DCGM_FI_DEV_GPU_TEMP[${__interval}]))",
                   "unitOverride": ""
                 }
               }
@@ -256,39 +841,7 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "Ratio",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 61,
-        "width": 24,
-        "height": 14,
-        "widget": {
-          "title": "GKE - DCGM - PCIe Tx Bandwidth",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(DCGM_FI_PROF_PCIE_TX_BYTES[${__interval}])",
-                  "unitOverride": "By"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
+              "label": "°C",
               "scale": "LINEAR"
             }
           }
@@ -296,11 +849,11 @@
       },
       {
         "xPos": 24,
-        "yPos": 61,
+        "yPos": 17,
         "width": 24,
-        "height": 14,
+        "height": 12,
         "widget": {
-          "title": "GKE - DCGM - PCIe Rx Bandwidth",
+          "title": "Memory Temperature (avg. by Model)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -313,47 +866,15 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(DCGM_FI_PROF_PCIE_RX_BYTES[${__interval}])",
-                  "unitOverride": "By"
+                  "prometheusQuery": "avg by (cluster, location, modelName) (avg_over_time(DCGM_FI_DEV_MEMORY_TEMP[${__interval}]))",
+                  "unitOverride": ""
                 }
               }
             ],
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 77,
-        "width": 24,
-        "height": 14,
-        "widget": {
-          "title": "GKE - DCGM - NvLink Tx Bandwidth",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(DCGM_FI_PROF_NVLINK_TX_BYTES[${__interval}])",
-                  "unitOverride": "By"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
+              "label": "°C",
               "scale": "LINEAR"
             }
           }
@@ -361,11 +882,11 @@
       },
       {
         "xPos": 24,
-        "yPos": 77,
+        "yPos": 17,
         "width": 24,
-        "height": 14,
+        "height": 12,
         "widget": {
-          "title": "GKE - DCGM - NvLink Rx Bandwidth",
+          "title": "Total Power Usage (by Model)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -378,208 +899,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(DCGM_FI_PROF_NVLINK_RX_BYTES[${__interval}])",
-                  "unitOverride": "By"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "y1Axis",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 93,
-        "width": 24,
-        "height": 14,
-        "widget": {
-          "title": "GKE - DCGM - FP64 Engine Utilization",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(DCGM_FI_PROF_PIPE_FP64_ACTIVE[${__interval}])",
+                  "prometheusQuery": "sum by (cluster, location, modelName) (rate(DCGM_FI_DEV_TOTAL_ENERGY_CONSUMPTION[${__interval}])) / 1000",
                   "unitOverride": ""
                 }
               }
             ],
             "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "Ratio",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "xPos": 24,
-        "yPos": 93,
-        "width": 24,
-        "height": 14,
-        "widget": {
-          "title": "GKE - DCGM - FP32 Engine Utilization",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(DCGM_FI_PROF_PIPE_FP32_ACTIVE[${__interval}])",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "Ratio",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 109,
-        "width": 24,
-        "height": 14,
-        "widget": {
-          "title": "GKE - DCGM - FP16 Engine Utilization",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(DCGM_FI_PROF_PIPE_FP16_ACTIVE[${__interval}])",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "Ratio",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "xPos": 24,
-        "yPos": 109,
-        "width": 24,
-        "height": 14,
-        "widget": {
-          "title": "GKE - DCGM - Current temperature in Celsius",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(DCGM_FI_DEV_GPU_TEMP[${__interval}])",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "Celsius",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 125,
-        "width": 24,
-        "height": 14,
-        "widget": {
-          "title": "GKE - DCGM - Memory temperature in Celsius",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(DCGM_FI_DEV_MEMORY_TEMP[${__interval}])",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "Celsius",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "xPos": 24,
-        "yPos": 125,
-        "width": 24,
-        "height": 14,
-        "widget": {
-          "title": "GKE - DCGM - Power usage for the device in Watts",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(DCGM_FI_DEV_POWER_USAGE[${__interval}])",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
             "yAxis": {
               "label": "Watts",
               "scale": "LINEAR"
