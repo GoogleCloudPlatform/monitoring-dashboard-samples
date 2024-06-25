@@ -1,0 +1,184 @@
+{
+  "displayName": "SAP HANA Availability Monitoring",
+  "dashboardFilters": [
+    {
+      "filterType": "SYSTEM_METADATA_LABEL",
+      "labelKey": "name",
+      "stringValue": "",
+      "templateVariable": ""
+    },
+    {
+      "filterType": "METRIC_LABEL",
+      "labelKey": "sid",
+      "stringValue": "",
+      "templateVariable": ""
+    }
+  ],
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "HANA System Availability",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "${labels.metadata\\.system\\.name} ${labels.metric\\.sid}:${labels.metric\\.instance_nr} ${labels.status}",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/sap/hana/availability'\n| group_by [metadata.system_labels.name, metric.sid,metric.instance_nr], \n| map add[status:\n        if(val() == 1, 'All processes are active','One or more processes are not active')]",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 16,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "HANA High Availability Status",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "${labels.metadata\\.system\\.name} ${labels.metric\\.sid}:${labels.metric\\.instance_nr} ${labels.status}",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/sap/hana/ha/availability'\n| group_by[metadata.system_labels.name, metric.sid,metric.instance_nr]\n| every 1m\n| map add[status:\n        if(val() == 4, ' is primary, in sync',\n            if(val() == 3, ' is primary, not in sync',\n                if(val() == 2, ' is primary but has sync error',\n                    if(val() == 1, '  is secondary',' Unknown'))))]\n",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "HANA Service Availability",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "${labels.metadata\\.system\\.name} ${labels.metric\\.sid}:${labels.metric\\.instance_nr} ${labels.metric\\.service_name} ${labels.status}",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/sap/hana/service'\n| group_by [ metadata.system_labels.name, metric.sid,metric.instance_nr, metric.service_name]\n| map add[status:\n        if(val() == 1, 'Running','Not running')]",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "HANA Replication Status",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "${labels.metadata\\.system\\.name} ${labels.metric\\.sid}:${labels.metric\\.instance_nr} ${labels.status}",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/sap/hana/ha/replication'\n| group_by [metadata.system_labels.name, metric.sid], min(val())\n| map add[status:\n        if(val() == 15, 'is Primary',\n            if(val() == 12, 'is Secondary',\n                if(val() == 10, 'has replication disabled','in status ERROR')))]",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 32,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Pacemaker Resource Agent Status",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/sap/cluster/resources'\n| map add[status:\n        if(val() == 3, ' Running',\n            if(val() == 2, ' Starting',\n                if(val() == 1, ' Stopped',\n                    if(val() == 0, ' Failed',' Unknown'))))]",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LOG10"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "labels": {}
+}

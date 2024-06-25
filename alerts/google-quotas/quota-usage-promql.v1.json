@@ -1,0 +1,23 @@
+{
+  "displayName": "Quota usage - ${SERVICE_TITLE} - ${LIMIT_DISPLAY_NAME} - ${METRIC_NAME}",
+  "documentation": {
+    "content": "To resolve this issue, click [here](https://console.cloud.google.com/iam-admin/quotas?${URL_PARAMS}) to review quota usage and optionally request a quota increase.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Quota usage reached defined threshold",
+      "conditionPrometheusQueryLanguage": {
+        "query": "${QUERY}",
+        "duration": "60s",
+        "evaluationInterval": "60s"
+    }
+  }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}

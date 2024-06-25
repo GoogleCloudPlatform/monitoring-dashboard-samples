@@ -13,4 +13,4 @@
 |Zookeeper Prometheus|
 |:------------------|
 |Filename: [zookeeper-prometheus.json](zookeeper-prometheus.json)|
-|This dashboard is based on [built-in prometheus metrics](https://zookeeper.apache.org/doc/r3.6.3/zookeeperMonitor.html). This dashboard includes charts displaying: `Uptime`, `ZNodes Total Memory (GB)`, `ZNodes`, `Connections`, `Watch Count`, `Leader Elections Counter`, `Open File Descriptors`, `Fsync Time (ms)`, `Snapshot Time (ms)`, `Average Latency (ms)`, and `JVM Memory`|
+|This dashboard is based on [built-in prometheus metrics](https://zookeeper.apache.org/doc/r3.6.3/zookeeperMonitor.html). This dashboard includes charts displaying: `Average Uptime (Days)`, `ZNodes Total Memory (GB)`, `ZNodes`, `Connections`, `Watch Count`, `Leader Elections Counter`, `Open File Descriptors`, `Fsync Time (ms)`, `Snapshot Time (ms)`, `Average Latency (ms)`, `JVM Memory Utilization`, `JVM Threads Deadlocked`, `JVM Garbage Collection Seconds`, `JVM Memory Pool Allocated Bytes`, and `JVM Theads State` |

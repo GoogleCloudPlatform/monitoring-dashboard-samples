@@ -1,0 +1,844 @@
+{
+    "displayName": "Ray on GKE Overview",
+    "dashboardFilters": [
+      {
+        "filterType": "METRIC_LABEL",
+        "labelKey": "SessionName",
+        "stringValue": "",
+        "templateVariable": "SessionName"
+      },
+      {
+        "filterType": "RESOURCE_LABEL",
+        "labelKey": "instance",
+        "stringValue": "",
+        "templateVariable": "Instance"
+      },
+      {
+        "filterType": "RESOURCE_LABEL",
+        "labelKey": "cluster",
+        "stringValue": "",
+        "templateVariable": "Cluster"
+      },
+      {
+        "filterType": "RESOURCE_LABEL",
+        "labelKey": "namespace",
+        "stringValue": "",
+        "templateVariable": "Namespace"
+      },
+      {
+        "filterType": "RESOURCE_LABEL",
+        "labelKey": "location",
+        "stringValue": "",
+        "templateVariable": "Location"
+      }
+    ],
+    "mosaicLayout": {
+      "columns": 48,
+      "tiles": [
+        {
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Scheduler Task State",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "${labels.State}",
+                  "measures": [],
+                  "plotType": "STACKED_AREA",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(max_over_time(ray_tasks{IsRetry=\"0\",State=~\"FINISHED|FAILED\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}[${__interval}])) by (State) or clamp_min(sum(ray_tasks{IsRetry=\"0\",State!~\"FINISHED|FAILED\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) by (State), 0)",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "${labels.State} (retry)",
+                  "measures": [],
+                  "plotType": "STACKED_AREA",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(max_over_time(ray_tasks{IsRetry!=\"0\",State=~\"FINISHED|FAILED\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}[${__interval}])) by (State) or clamp_min(sum(ray_tasks{IsRetry!=\"0\",State!~\"FINISHED|FAILED\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) by (State), 0)",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "xPos": 24,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Active Tasks by Name",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "${labels.Name}",
+                  "measures": [],
+                  "plotType": "STACKED_AREA",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_tasks{IsRetry=\"0\",State!~\"FINISHED|FAILED\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) by (Name)",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "${labels.Name} (retry)",
+                  "measures": [],
+                  "plotType": "STACKED_AREA",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_tasks{IsRetry!=\"0\",State!~\"FINISHED|FAILED\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) by (Name)",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "yPos": 16,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Scheduler Actor State",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "${labels.State}",
+                  "measures": [],
+                  "plotType": "STACKED_AREA",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_actors{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) by (State)",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "xPos": 24,
+          "yPos": 16,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Active Actors by Name",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "${labels.Name}",
+                  "measures": [],
+                  "plotType": "STACKED_AREA",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_actors{State!=\"DEAD\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) by (Name)",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "yPos": 32,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Scheduler CPUs (logical slots)",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "CPU Usage: ${labels.instance}",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_resources{Name=\"CPU\",State=\"USED\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\", instance=~\"${Instance.value}\"}) by (instance)",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "MAX",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_resources{Name=\"CPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "MAX + PENDING",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "((sum(autoscaler_cluster_resources{resource=\"CPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)) + (sum(autoscaler_pending_resources{resource=\"CPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)) and (sum(autoscaler_cluster_resources{resource=\"CPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)) + (sum(autoscaler_pending_resources{resource=\"CPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)) > (sum(autoscaler_cluster_resources{resource=\"CPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)))",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "xPos": 24,
+          "yPos": 32,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Object Store Memory",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "${labels.Location}",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_object_store_memory{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) by (Location)",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "MAX",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_resources{Name=\"object_store_memory\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "yPos": 48,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Scheduler GPUs (logical slots)",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "GPU Usage: ${labels.instance}",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "ray_resources{Name=\"GPU\",State=\"USED\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",instance=~\"${Instance.value}\",SessionName=~\"${SessionName.value}\"}",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "MAX",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_resources{Name=\"GPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "MAX + PENDING",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "((sum(autoscaler_cluster_resources{resource=\"GPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)) + (sum(autoscaler_pending_resources{resource=\"GPU\",SessionName=~\"${SessionName.value}\"}) or vector(0)) and (sum(autoscaler_cluster_resources{resource=\"GPU\",SessionName=~\"${SessionName.value}\"}) or vector(0)) + (sum(autoscaler_pending_resources{resource=\"GPU\",SessionName=~\"${SessionName.value}\"}) or vector(0)) > (sum(autoscaler_cluster_resources{resource=\"GPU\",SessionName=~\"${SessionName.value}\"}) or vector(0)))",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "xPos": 24,
+          "yPos": 48,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Scheduler Placement Groups",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "${labels.State}",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_placement_groups{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) by (State)",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "yPos": 64,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Node CPU (hardware utilization)",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "CPU Usage: ${labels.instance}",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "ray_node_cpu_utilization{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"} * ray_node_cpu_count{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"} / 100",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "MAX",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_node_cpu_count{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "xPos": 24,
+          "yPos": 64,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Node GPU (hardware utilization)",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "GPU Usage: ${labels.instance}, gpu.${labels.GpuIndex}, ${labels.GpuDeviceName}",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "ray_node_gpus_utilization{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"} / 100",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "MAX",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_node_gpus_available{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "yPos": 80,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Node Disk",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "Disk Used: ${labels.instance}",
+                  "measures": [],
+                  "plotType": "STACKED_AREA",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "ray_node_disk_usage{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "MAX",
+                  "measures": [],
+                  "plotType": "STACKED_AREA",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_node_disk_free{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) + sum(ray_node_disk_usage{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "xPos": 24,
+          "yPos": 80,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Node Disk IO Speed",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "Write: ${labels.instance}",
+                  "measures": [],
+                  "plotType": "STACKED_AREA",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "ray_node_disk_io_write_speed{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "Read: ${labels.instance}",
+                  "measures": [],
+                  "plotType": "STACKED_AREA",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "ray_node_disk_io_read_speed{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "yPos": 96,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Node Memory (heap + object store)",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "Memory Used: ${labels.instance}",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "ray_node_mem_used{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "MAX",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_node_mem_total{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "xPos": 24,
+          "yPos": 96,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Node Out of Memory Failures by Name",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "OOM Killed: ${labels.Name}, ${labels.instance}",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "ray_memory_manager_worker_eviction_total{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "yPos": 112,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Node Memory by Component",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "${labels.Component}",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "(sum(ray_component_rss_mb{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"} * 1e6) by (Component)) - (sum(ray_component_mem_shared_bytes{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) by (Component))",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "shared_memory",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_node_mem_shared_bytes{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "MAX",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_node_mem_total{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "xPos": 24,
+          "yPos": 112,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Node CPU by Component",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "${labels.Component}",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_component_cpu_percentage{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) by (Component) / 100",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "MAX",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_node_cpu_count{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "yPos": 128,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Node GPU Memory (GRAM)",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "Used GRAM: ${labels.instance}, gpu.${labels.GpuIndex}, ${labels.GpuDeviceName}",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "ray_node_gram_used{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"} * 1024 * 1024",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "MAX",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "(sum(ray_node_gram_available{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) + sum(ray_node_gram_used{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})) * 1024 * 1024",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "xPos": 24,
+          "yPos": 128,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Node Network",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "Recv: ${labels.instance}",
+                  "measures": [],
+                  "plotType": "STACKED_AREA",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "ray_node_network_receive_speed{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "Send: ${labels.instance}",
+                  "measures": [],
+                  "plotType": "STACKED_AREA",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "ray_node_network_send_speed{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "yPos": 144,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Node Count",
+            "xyChart": {
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "Active Nodes: ${labels.NodeType}",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(autoscaler_active_nodes{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) by (NodeType)",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "Failed Nodes: ${labels.NodeType}",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(autoscaler_recently_failed_nodes{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) by (NodeType)",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "Pending Nodes: ${labels.NodeType}",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(autoscaler_pending_nodes{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) by (NodeType)",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": []
+            }
+          }
+        },
+        {
+          "xPos": 24,
+          "yPos": 144,
+          "width": 24,
+          "height": 16,
+          "widget": {
+            "title": "Cluster Utilization",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "ray_node_cpu_utilization",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "avg(ray_node_cpu_utilization{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "ray_node_gpus_utilization",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_node_gpus_utilization{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / on() (sum(autoscaler_cluster_resources{resource='GPU',cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(1))",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "ray_node_mem_utilization",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_node_mem_used{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / on() (sum(ray_node_mem_total{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})) * 100",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "ray_node_gram_utilization",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_node_gram_used{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / on() (sum(ray_node_gram_available{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) + sum(ray_node_gram_used{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})) * 100",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "ray_object_store_memory_utilization",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_object_store_memory{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / on() sum(ray_resources{Name=\"object_store_memory\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) * 100",
+                    "unitOverride": ""
+                  }
+                },
+                {
+                  "breakdowns": [],
+                  "dimensions": [],
+                  "legendTemplate": "ray_node_disk_utilization",
+                  "measures": [],
+                  "plotType": "LINE",
+                  "targetAxis": "Y1",
+                  "timeSeriesQuery": {
+                    "prometheusQuery": "sum(ray_node_disk_usage{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / on() (sum(ray_node_disk_free{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) + sum(ray_node_disk_usage{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})) * 100",
+                    "unitOverride": ""
+                  }
+                }
+              ],
+              "thresholds": [],
+              "yAxis": {
+                "label": "",
+                "scale": "LINEAR"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "labels": {}
+  }

@@ -1,5 +1,5 @@
 {
-  "category": "CUSTOM",
+  "displayName": "Airflow Scheduler Prometheus Overview",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -17,13 +17,13 @@
       "templateVariable": "Namespace"
     }
   ],
-  "displayName": "Airflow Scheduler Prometheus Overview",
-  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 3,
+        "yPos": 20,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Tasks: Starving, Executable",
           "xyChart": {
@@ -32,59 +32,73 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "airflow_scheduler_tasks_starving{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "airflow_scheduler_tasks_starving{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               },
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "airflow_scheduler_tasks_executable{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "airflow_scheduler_tasks_executable{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 0
+        }
       },
       {
-        "height": 3,
+        "yPos": 12,
+        "width": 24,
+        "height": 8,
         "widget": {
-          "title": "Heartbeat",
+          "title": "Scheduler Heartbeat",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "airflow_scheduler_heartbeat{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "max(airflow_scheduler_heartbeat{${Cluster},${Location},${Namespace}})",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 0
+        }
       },
       {
-        "height": 3,
+        "yPos": 28,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Orphaned Tasks Cleared",
           "xyChart": {
@@ -93,25 +107,30 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "airflow_scheduler_orphaned_tasks_cleared{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "airflow_scheduler_orphaned_tasks_cleared{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 3
+        }
       },
       {
-        "height": 3,
+        "yPos": 36,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Orphaned Tasks Adopted",
           "xyChart": {
@@ -120,25 +139,30 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "airflow_scheduler_orphaned_tasks_adopted{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "airflow_scheduler_orphaned_tasks_adopted{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 3
+        }
       },
       {
-        "height": 3,
+        "yPos": 44,
+        "width": 24,
+        "height": 8,
         "widget": {
           "title": "Critical Section Duration",
           "xyChart": {
@@ -147,23 +171,267 @@
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "airflow_scheduler_critical_section_duration{${Cluster},${Location},${Namespace}}"
+                  "prometheusQuery": "airflow_scheduler_critical_section_duration{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 6
+        }
+      },
+      {
+        "yPos": 8,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Scheduler",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 8,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "title": "Executor",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Scheduler Heartbeat",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "airflow_scheduler_heartbeat{${Cluster},${Location},${Namespace}}",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 8,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "DAG Import Errors",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "sum(airflow_dag_processing_import_errors{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 16,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Scheduler Tasks Starving",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "sum(airflow_scheduler_tasks_starving{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Scheduler Tasks Running",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "sum(airflow_scheduler_tasks_running{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 32,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Pool Open Slots",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "sum(airflow_pool_open_slots{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 40,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "title": "Triggers Running",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "sum(airflow_triggers_running{${Cluster},${Location},${Namespace}})",
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 12,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Executor Open Slots",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "airflow_executor_open_slots{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 20,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Executor Queued Tasks",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "airflow_executor_queued_tasks{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 28,
+        "width": 24,
+        "height": 8,
+        "widget": {
+          "title": "Executor Running Tasks",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "airflow_executor_running_tasks{${Cluster},${Location},${Namespace}}",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
       }
     ]
-  }
+  },
+  "labels": {}
 }
