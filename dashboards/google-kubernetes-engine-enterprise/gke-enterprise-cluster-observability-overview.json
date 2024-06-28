@@ -32,6 +32,9 @@
         }
       },
       {
+        "xPos": 24,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Memory Request % Used (Top 5 Clusters)",
           "xyChart": {
@@ -54,12 +57,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "height": 16,
-        "width": 24,
-        "xPos": 24
+        }
       },
       {
+        "yPos": 16,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Container Restarts/Min. (Top 5 Clusters)",
           "xyChart": {
@@ -82,10 +85,93 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "height": 16,
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 32,
         "width": 24,
-        "yPos": 16
+        "height": 16,
+        "widget": {
+          "title": "Container Error Logs/Sec. (Top 5 Clusters)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric logging.googleapis.com/log_entry_count\n| filter metric.severity =~ \"ERROR|CRITICAL|ALERT|EMERGENCY\"\n| align rate(1m)\n| every 1m\n| group_by [resource.location, resource.cluster_name], .sum()\n| top 5",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 16,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Managed Prometheus Samples Ingested (Top 5 Clusters)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch monitoring.googleapis.com/MetricIngestionAttribution\n| metric monitoring.googleapis.com/collection/attribution/write_sample_count\n| filter metric.metric_domain == \"prometheus.googleapis.com\"\n| filter metric.resource_type == \"prometheus_target\"\n| filter resource.attribution_dimension == \"cluster\"\n| group_by [resource.attribution_id, resource.location], .sum()\n| align rate(1m)\n| top 5",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 32,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Pod Warning Events (Top 5 Clusters)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_pod\n| metric logging.googleapis.com/log_entry_count\n| filter metric.log == \"events\"\n| filter metric.severity =~ \"WARNING|ERROR|CRITICAL|ALERT|EMERGENCY\"\n| align delta(1m)\n| every 1m\n| group_by [resource.location, resource.cluster_name], .sum()\n| top 5",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
       }
     ]
   },
