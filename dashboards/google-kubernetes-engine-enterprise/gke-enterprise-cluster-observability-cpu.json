@@ -1,0 +1,294 @@
+{
+  "category": "CUSTOM",
+  "displayName": "GKE Enterprise Cluster Observability CPU",
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "widget": {
+          "title": "CPU Request % Used (Top 5 Clusters)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/cpu/core_usage_time\n      | rate\n      | every 1m\n      | align next_older(2m)\n    ; metric kubernetes.io/container/cpu/request_cores\n      | align next_older(2m) }\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | outer_join 0\n  | div\n; fetch k8s_container\n  | { metric kubernetes.io/anthos/container/cpu/core_usage_time\n      | rate\n      | every 1m\n      | align next_older(2m)\n    ; metric kubernetes.io/anthos/container/cpu/request_cores\n      | align next_older(2m) }\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | outer_join 0\n  | div }\n| union\n| top 5\n| scale \"%\"",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24
+      },
+      {
+        "widget": {
+          "title": " Cores Used (Top 5 Clusters)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric kubernetes.io/container/cpu/core_usage_time\n  | align rate(1m)\n  | every 1m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_container\n  | metric kubernetes.io/anthos/container/cpu/core_usage_time\n  | align rate(1m)\n  | every 1m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n| top 5",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "xPos": 24
+      },
+      {
+        "widget": {
+          "title": "Requested Cores (Top 5 Clusters)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric kubernetes.io/container/cpu/request_cores\n  | align next_older(1m)\n  | every 1m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_container\n  | metric kubernetes.io/anthos/container/cpu/request_cores\n  | align next_older(1m)\n  | every 1m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n| top 5",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "yPos": 16
+      },
+      {
+        "widget": {
+          "title": "Requested Cores Unused (Top 5 Clusters)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/container/cpu/core_usage_time\n      | rate\n      | every 1m }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub\n; fetch k8s_container\n  | { metric kubernetes.io/anthos/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/core_usage_time\n      | rate\n      | every 1m }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub }\n| union\n| top 5",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "xPos": 24,
+        "yPos": 16
+      },
+      {
+        "widget": {
+          "title": "Cluster CPU % Used (Top 5 Clusters)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | { metric kubernetes.io/node/cpu/core_usage_time\n      | rate\n      | every 1m\n      | align next_older(2m)\n    ; metric kubernetes.io/node/cpu/total_cores\n      | align next_older(2m) }\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div\n; fetch k8s_node\n  | { metric kubernetes.io/anthos/node/cpu/core_usage_time\n      | rate\n      | every 1m\n      | align next_older(2m)\n    ; metric kubernetes.io/anthos/node/cpu/total_cores\n      | align next_older(2m) }\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div }\n| union\n| top 5\n| scale \"%\"",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "yPos": 32
+      },
+      {
+        "widget": {
+          "title": "Cluster Cores Unused (Top 5 Clusters)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | { metric kubernetes.io/node/cpu/total_cores\n      | align next_older(2m)\n    ; metric kubernetes.io/node/cpu/core_usage_time\n      | rate\n      | every 1m\n      | align next_older(2m) }\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub\n; fetch k8s_node\n  | { metric kubernetes.io/anthos/node/cpu/total_cores\n      | align next_older(2m)\n    ; metric kubernetes.io/anthos/node/cpu/core_usage_time\n      | rate\n      | every 1m\n      | align next_older(2m) }\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub }\n| union\n| top 5",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "xPos": 24,
+        "yPos": 32
+      },
+      {
+        "widget": {
+          "title": "Cluster CPU % Requested (Top 5 Clusters)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ { fetch k8s_container\n    | metric kubernetes.io/container/cpu/request_cores\n  ; fetch k8s_node\n    | metric kubernetes.io/node/cpu/allocatable_cores }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div\n; { fetch k8s_container\n    | metric kubernetes.io/anthos/container/cpu/request_cores\n  ; fetch k8s_node\n    | metric kubernetes.io/anthos/node/cpu/allocatable_cores }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div }\n| union\n| top 5\n| scale \"%\"",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "yPos": 48
+      },
+      {
+        "widget": {
+          "title": "Cluster Unrequested Cores (Top 5 Clusters)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ { fetch k8s_node\n    | metric kubernetes.io/node/cpu/allocatable_cores\n  ; fetch k8s_container\n    | metric kubernetes.io/container/cpu/request_cores }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub\n; { fetch k8s_node\n    | metric kubernetes.io/anthos/node/cpu/allocatable_cores\n  ; fetch k8s_container\n    | metric kubernetes.io/anthos/container/cpu/request_cores }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub }\n| union\n| top 5",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "xPos": 24,
+        "yPos": 48
+      },
+      {
+        "widget": {
+          "title": "Cluster Total Cores (Top 5 Clusters)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | metric kubernetes.io/node/cpu/total_cores\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_node\n  | metric kubernetes.io/anthos/node/cpu/total_cores\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n| top 5",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "yPos": 64
+      },
+      {
+        "widget": {
+          "title": "Cluster Allocatable Cores (Top 5 Clusters)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | metric kubernetes.io/node/cpu/allocatable_cores\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_node\n  | metric kubernetes.io/anthos/node/cpu/allocatable_cores\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n| top 5",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "xPos": 24,
+        "yPos": 64
+      }
+    ]
+  },
+  "dashboardFilters": [],
+  "labels": {}
+}
