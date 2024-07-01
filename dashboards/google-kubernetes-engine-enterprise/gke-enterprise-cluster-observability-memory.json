@@ -10,33 +10,25 @@
         "widget": {
           "title": "Memory Request % Used (Top 5 Clusters)",
           "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
             "dataSets": [
               {
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/memory/used_bytes\n    ; metric kubernetes.io/container/memory/request_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | outer_join 0\n  | div\n; fetch k8s_container\n  | { metric kubernetes.io/anthos/container/memory/used_bytes\n    ; metric kubernetes.io/anthos/container/memory/request_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | outer_join 0\n  | div }\n| union\n| top 5\n| scale \"%\"",
-                  "unitOverride": "",
-                  "outputFullDuration": false
-                },
                 "plotType": "LINE",
-                "legendTemplate": "",
                 "targetAxis": "Y1",
-                "dimensions": [],
-                "measures": [],
-                "breakdowns": []
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/memory/used_bytes\n    ; metric kubernetes.io/container/memory/request_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | outer_join 0\n  | div\n; fetch k8s_container\n  | { metric kubernetes.io/anthos/container/memory/used_bytes\n    ; metric kubernetes.io/anthos/container/memory/request_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | outer_join 0\n  | div }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5\n| scale \"%\"",
+                  "unitOverride": ""
+                }
               }
             ],
             "thresholds": [],
             "yAxis": {
               "label": "",
               "scale": "LINEAR"
-            },
-            "chartOptions": {
-              "mode": "COLOR",
-              "showLegend": false,
-              "displayHorizontal": false
             }
-          },
-          "id": ""
+          }
         }
       },
       {
@@ -46,33 +38,25 @@
         "widget": {
           "title": "Memory Used (Top 5 Clusters)",
           "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
             "dataSets": [
               {
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric kubernetes.io/container/memory/used_bytes\n  | align next_older(1m)\n  | every 1m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_container\n  | metric kubernetes.io/anthos/container/memory/used_bytes\n  | align next_older(1m)\n  | every 1m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n| top 5",
-                  "unitOverride": "",
-                  "outputFullDuration": false
-                },
                 "plotType": "LINE",
-                "legendTemplate": "",
                 "targetAxis": "Y1",
-                "dimensions": [],
-                "measures": [],
-                "breakdowns": []
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric kubernetes.io/container/memory/used_bytes\n  | align next_older(1m)\n  | every 1m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_container\n  | metric kubernetes.io/anthos/container/memory/used_bytes\n  | align next_older(1m)\n  | every 1m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
+                  "unitOverride": ""
+                }
               }
             ],
             "thresholds": [],
             "yAxis": {
               "label": "",
               "scale": "LINEAR"
-            },
-            "chartOptions": {
-              "mode": "COLOR",
-              "showLegend": false,
-              "displayHorizontal": false
             }
-          },
-          "id": ""
+          }
         }
       },
       {
@@ -82,33 +66,25 @@
         "widget": {
           "title": "Requested Memory (Top 5 Clusters)",
           "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
             "dataSets": [
               {
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric kubernetes.io/container/memory/request_bytes\n  | align next_older(1m)\n  | every 1m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_container\n  | metric kubernetes.io/anthos/container/memory/request_bytes\n  | align next_older(1m)\n  | every 1m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n| top 5",
-                  "unitOverride": "",
-                  "outputFullDuration": false
-                },
                 "plotType": "LINE",
-                "legendTemplate": "",
                 "targetAxis": "Y1",
-                "dimensions": [],
-                "measures": [],
-                "breakdowns": []
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric kubernetes.io/container/memory/request_bytes\n  | align next_older(1m)\n  | every 1m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_container\n  | metric kubernetes.io/anthos/container/memory/request_bytes\n  | align next_older(1m)\n  | every 1m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
+                  "unitOverride": ""
+                }
               }
             ],
             "thresholds": [],
             "yAxis": {
               "label": "",
               "scale": "LINEAR"
-            },
-            "chartOptions": {
-              "mode": "COLOR",
-              "showLegend": false,
-              "displayHorizontal": false
             }
-          },
-          "id": ""
+          }
         }
       },
       {
@@ -119,33 +95,25 @@
         "widget": {
           "title": "Requested Memory Unused (Top 5 Clusters)",
           "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
             "dataSets": [
               {
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/memory/request_bytes\n    ; metric kubernetes.io/container/memory/used_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub\n; fetch k8s_container\n  | { metric kubernetes.io/anthos/container/memory/request_bytes\n    ; metric kubernetes.io/anthos/container/memory/used_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub }\n| union\n| top 5",
-                  "unitOverride": "",
-                  "outputFullDuration": false
-                },
                 "plotType": "LINE",
-                "legendTemplate": "",
                 "targetAxis": "Y1",
-                "dimensions": [],
-                "measures": [],
-                "breakdowns": []
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/memory/request_bytes\n    ; metric kubernetes.io/container/memory/used_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub\n; fetch k8s_container\n  | { metric kubernetes.io/anthos/container/memory/request_bytes\n    ; metric kubernetes.io/anthos/container/memory/used_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
+                  "unitOverride": ""
+                }
               }
             ],
             "thresholds": [],
             "yAxis": {
               "label": "",
               "scale": "LINEAR"
-            },
-            "chartOptions": {
-              "mode": "COLOR",
-              "showLegend": false,
-              "displayHorizontal": false
             }
-          },
-          "id": ""
+          }
         }
       },
       {
@@ -155,33 +123,25 @@
         "widget": {
           "title": "Cluster Memory % Used (Top 5 Clusters)",
           "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
             "dataSets": [
               {
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | { metric kubernetes.io/node/memory/used_bytes\n    ; metric kubernetes.io/node/memory/total_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div\n; fetch k8s_node\n  | { metric kubernetes.io/anthos/node/memory/used_bytes\n    ; metric kubernetes.io/anthos/node/memory/total_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div }\n| union\n| top 5\n| scale \"%\"",
-                  "unitOverride": "",
-                  "outputFullDuration": false
-                },
                 "plotType": "LINE",
-                "legendTemplate": "",
                 "targetAxis": "Y1",
-                "dimensions": [],
-                "measures": [],
-                "breakdowns": []
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | { metric kubernetes.io/node/memory/used_bytes\n    ; metric kubernetes.io/node/memory/total_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div\n; fetch k8s_node\n  | { metric kubernetes.io/anthos/node/memory/used_bytes\n    ; metric kubernetes.io/anthos/node/memory/total_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5\n| scale \"%\"",
+                  "unitOverride": ""
+                }
               }
             ],
             "thresholds": [],
             "yAxis": {
               "label": "",
               "scale": "LINEAR"
-            },
-            "chartOptions": {
-              "mode": "COLOR",
-              "showLegend": false,
-              "displayHorizontal": false
             }
-          },
-          "id": ""
+          }
         }
       },
       {
@@ -192,33 +152,25 @@
         "widget": {
           "title": "Requested Memory Unused (Top 5 Clusters)",
           "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
             "dataSets": [
               {
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/memory/request_bytes\n    ; metric kubernetes.io/container/memory/used_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub\n; fetch k8s_container\n  | { metric kubernetes.io/anthos/container/memory/request_bytes\n    ; metric kubernetes.io/anthos/container/memory/used_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub }\n| union\n| top 5",
-                  "unitOverride": "",
-                  "outputFullDuration": false
-                },
                 "plotType": "LINE",
-                "legendTemplate": "",
                 "targetAxis": "Y1",
-                "dimensions": [],
-                "measures": [],
-                "breakdowns": []
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/memory/request_bytes\n    ; metric kubernetes.io/container/memory/used_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub\n; fetch k8s_container\n  | { metric kubernetes.io/anthos/container/memory/request_bytes\n    ; metric kubernetes.io/anthos/container/memory/used_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
+                  "unitOverride": ""
+                }
               }
             ],
             "thresholds": [],
             "yAxis": {
               "label": "",
               "scale": "LINEAR"
-            },
-            "chartOptions": {
-              "mode": "COLOR",
-              "showLegend": false,
-              "displayHorizontal": false
             }
-          },
-          "id": ""
+          }
         }
       },
       {
@@ -228,36 +180,32 @@
         "widget": {
           "title": "Cluster Memory % Requested (Top 5 Clusters)",
           "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
             "dataSets": [
               {
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ { fetch k8s_container\n    | metric kubernetes.io/container/memory/request_bytes\n  ; fetch k8s_node\n    | metric kubernetes.io/node/memory/allocatable_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div\n; { fetch k8s_container\n    | metric kubernetes.io/anthos/container/memory/request_bytes\n  ; fetch k8s_node\n    | metric kubernetes.io/anthos/node/memory/allocatable_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div }\n| union\n| top 5\n| scale \"%\"",
-                  "unitOverride": "",
-                  "outputFullDuration": false
-                },
                 "plotType": "LINE",
-                "legendTemplate": "",
                 "targetAxis": "Y1",
-                "dimensions": [],
-                "measures": [],
-                "breakdowns": []
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ { fetch k8s_container\n    | metric kubernetes.io/container/memory/request_bytes\n  ; fetch k8s_node\n    | metric kubernetes.io/node/memory/allocatable_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div\n; { fetch k8s_container\n    | metric kubernetes.io/anthos/container/memory/request_bytes\n  ; fetch k8s_node\n    | metric kubernetes.io/anthos/node/memory/allocatable_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5\n| scale \"%\"",
+                  "unitOverride": ""
+                }
               }
             ],
             "thresholds": [],
             "yAxis": {
               "label": "",
               "scale": "LINEAR"
-            },
-            "chartOptions": {
-              "mode": "COLOR",
-              "showLegend": false,
-              "displayHorizontal": false
             }
-          },
-          "id": ""
+          }
         }
       },
       {
+        "xPos": 24,
+        "yPos": 48,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Cluster Memory Unused (Top 5 Clusters)",
           "xyChart": {
@@ -269,7 +217,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | { metric kubernetes.io/node/memory/total_bytes\n    ; metric kubernetes.io/node/memory/used_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub\n; fetch k8s_node\n  | { metric kubernetes.io/anthos/node/memory/total_bytes\n    ; metric kubernetes.io/anthos/node/memory/used_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub }\n| union\n| top 5",
+                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | { metric kubernetes.io/node/memory/total_bytes\n    ; metric kubernetes.io/node/memory/used_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub\n; fetch k8s_node\n  | { metric kubernetes.io/anthos/node/memory/total_bytes\n    ; metric kubernetes.io/anthos/node/memory/used_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
                   "unitOverride": ""
                 }
               }
@@ -280,13 +228,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "height": 16,
-        "width": 24,
-        "xPos": 24,
-        "yPos": 48
+        }
       },
       {
+        "yPos": 64,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Cluster Memory % Requested (Top 5 Clusters)",
           "xyChart": {
@@ -298,7 +245,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ { fetch k8s_container\n    | metric kubernetes.io/container/memory/request_bytes\n  ; fetch k8s_node\n    | metric kubernetes.io/node/memory/allocatable_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div\n; { fetch k8s_container\n    | metric kubernetes.io/anthos/container/memory/request_bytes\n  ; fetch k8s_node\n    | metric kubernetes.io/anthos/node/memory/allocatable_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div }\n| union\n| top 5\n| scale \"%\"",
+                  "timeSeriesQueryLanguage": "{ { fetch k8s_container\n    | metric kubernetes.io/container/memory/request_bytes\n  ; fetch k8s_node\n    | metric kubernetes.io/node/memory/allocatable_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div\n; { fetch k8s_container\n    | metric kubernetes.io/anthos/container/memory/request_bytes\n  ; fetch k8s_node\n    | metric kubernetes.io/anthos/node/memory/allocatable_bytes }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5\n| scale \"%\"",
                   "unitOverride": ""
                 }
               }
@@ -309,12 +256,13 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "height": 16,
-        "width": 24,
-        "yPos": 64
+        }
       },
       {
+        "xPos": 24,
+        "yPos": 64,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Cluster Unrequested Memory (Top 5 Clusters)",
           "xyChart": {
@@ -326,7 +274,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{{ fetch k8s_node\n  | metric kubernetes.io/node/memory/allocatable_bytes\n; fetch k8s_container\n  | metric kubernetes.io/container/memory/request_bytes }\n| align next_older(2m)\n| group_by [resource.location, resource.cluster_name], .sum()\n| join\n| sub;\n{ fetch k8s_node\n  | metric kubernetes.io/anthos/node/memory/allocatable_bytes\n; fetch k8s_container\n  | metric kubernetes.io/anthos/container/memory/request_bytes }\n| align next_older(2m)\n| group_by [resource.location, resource.cluster_name], .sum()\n| join\n| sub} | union\n| top 5",
+                  "timeSeriesQueryLanguage": "{{ fetch k8s_node\n  | metric kubernetes.io/node/memory/allocatable_bytes\n; fetch k8s_container\n  | metric kubernetes.io/container/memory/request_bytes }\n| align next_older(2m)\n| group_by [resource.location, resource.cluster_name], .sum()\n| join\n| sub;\n{ fetch k8s_node\n  | metric kubernetes.io/anthos/node/memory/allocatable_bytes\n; fetch k8s_container\n  | metric kubernetes.io/anthos/container/memory/request_bytes }\n| align next_older(2m)\n| group_by [resource.location, resource.cluster_name], .sum()\n| join\n| sub} | union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
                   "unitOverride": ""
                 }
               }
@@ -337,13 +285,12 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "height": 16,
-        "width": 24,
-        "xPos": 24,
-        "yPos": 64
+        }
       },
       {
+        "yPos": 80,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Cluster Total Memory (Top 5 Clusters)",
           "xyChart": {
@@ -355,7 +302,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | metric kubernetes.io/node/memory/total_bytes\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_node\n  | metric kubernetes.io/anthos/node/memory/total_bytes\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n| top 5",
+                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | metric kubernetes.io/node/memory/total_bytes\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_node\n  | metric kubernetes.io/anthos/node/memory/total_bytes\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
                   "unitOverride": ""
                 }
               }
@@ -366,12 +313,13 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "height": 16,
-        "width": 24,
-        "yPos": 80
+        }
       },
       {
+        "xPos": 24,
+        "yPos": 80,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Cluster Allocatable Memory (Top 5 Clusters)",
           "xyChart": {
@@ -383,7 +331,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | metric kubernetes.io/node/memory/allocatable_bytes\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_node\n  | metric kubernetes.io/anthos/node/memory/allocatable_bytes\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n#| top 5",
+                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | metric kubernetes.io/node/memory/allocatable_bytes\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_node\n  | metric kubernetes.io/anthos/node/memory/allocatable_bytes\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
                   "unitOverride": ""
                 }
               }
@@ -394,11 +342,7 @@
               "scale": "LINEAR"
             }
           }
-        },
-        "height": 16,
-        "width": 24,
-        "xPos": 24,
-        "yPos": 80
+        }
       }
     ]
   },
