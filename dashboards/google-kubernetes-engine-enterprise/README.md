@@ -7,7 +7,6 @@
 
 &nbsp;
 
-=======
 |Google Kubernetes Engine (GKE) Enterprise Cluster Observability CPU|
 |:---------------------|
 |Filename: [gke-enterprise-cluster-observability-cpu.json](gke-enterprise-cluster-observability-cpu.json)|
