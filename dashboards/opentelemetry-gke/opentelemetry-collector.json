@@ -1,0 +1,222 @@
+{
+  "displayName": "OpenTelemetry Collector GKE",
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "OpenTelemetry Collector Uptime",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/otelcol_process_uptime_total/counter\" resource.type=\"prometheus_target\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"version\"",
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"location\"",
+                        "resource.label.\"cluster\"",
+                        "resource.label.\"namespace\"",
+                        "resource.label.\"job\"",
+                        "resource.label.\"instance\""
+                      ]
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "Version: ${metric.labels.version}, Instance:${resource.labels.instance}",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 16,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Cloud Monitoring Metric Point Count",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/otelcol_googlecloudmonitoring_point_count_total/counter\" resource.type=\"prometheus_target\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"status\"",
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"location\"",
+                        "resource.label.\"cluster\"",
+                        "resource.label.\"namespace\"",
+                        "resource.label.\"job\"",
+                        "resource.label.\"instance\""
+                      ]
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "${metric.labels.status}${resource.labels.instance}",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 16,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Cloud Observability API Request Count",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/otelcol_grpc_io_client_completed_rpcs_total/counter\" resource.type=\"prometheus_target\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"grpc_client_status\"",
+                        "metric.label.\"grpc_client_method\"",
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"location\"",
+                        "resource.label.\"cluster\"",
+                        "resource.label.\"namespace\"",
+                        "resource.label.\"job\"",
+                        "resource.label.\"instance\""
+                      ]
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "OpenTelemetry Collector Memory Usage",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/otelcol_process_memory_rss/gauge\" resource.type=\"prometheus_target\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"location\"",
+                        "resource.label.\"cluster\"",
+                        "resource.label.\"namespace\"",
+                        "resource.label.\"job\"",
+                        "resource.label.\"instance\""
+                      ]
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "id": ""
+        }
+      }
+    ]
+  },
+  "dashboardFilters": [],
+  "labels": {}
+}
