@@ -1,0 +1,123 @@
+{
+  "category": "CUSTOM",
+  "displayName": "GKE Enterprise Namespace Observability Overview",
+  "dashboardFilters": [],
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "widget": {
+          "title": "CPU Request % Used (Top 5 Namespaces)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/cpu/core_usage_time\n      | rate\n      | every 1m\n      | align next_older(2m)\n    ; metric kubernetes.io/container/cpu/request_cores\n      | align next_older(2m) }\n  | group_by [resource.namespace_name], .sum()\n  | outer_join 0\n  | div\n; fetch k8s_container\n  | { metric kubernetes.io/anthos/container/cpu/core_usage_time\n      | rate\n      | every 1m\n      | align next_older(2m)\n    ; metric kubernetes.io/anthos/container/cpu/request_cores\n      | align next_older(2m) }\n  | group_by [resource.namespace_name], .sum()\n  | outer_join 0\n  | div }\n| union\n| top 5\n| scale \"%\"",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24
+      },
+      {
+        "widget": {
+          "title": "Memory Request % Used (Top 5 Namespaces)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/memory/used_bytes\n    ; metric kubernetes.io/container/memory/request_bytes }\n  | align next_older(2m)\n  | group_by [resource.namespace_name], .sum()\n  | outer_join 0\n  | div\n; fetch k8s_container\n  | { metric kubernetes.io/anthos/container/memory/used_bytes\n    ; metric kubernetes.io/anthos/container/memory/request_bytes }\n  | align next_older(2m)\n  | group_by [resource.namespace_name], .sum()\n  | outer_join 0\n  | div }\n| union\n| top 5\n| scale \"%\"",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "xPos": 24
+      },
+      {
+        "widget": {
+          "title": "Container Restarts/Min. (Top 5 Namespaces)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric kubernetes.io/container/restart_count\n  | align delta(1m)\n  | every 1m\n  | group_by [resource.namespace_name], .sum()\n; fetch k8s_container\n  | metric kubernetes.io/anthos/container/restart_count\n  | align delta(1m)\n  | every 1m\n  | group_by [resource.namespace_name], .sum() }\n| union\n| top 5",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "yPos": 16
+      },
+      {
+        "widget": {
+          "title": "Container Error Logs/Sec. (Top 5 Namespaces)",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric logging.googleapis.com/log_entry_count\n  | filter metric.severity =~ \"ERROR|CRITICAL|ALERT|EMERGENCY\"\n  | align rate(1m)\n  | every 1m\n  | group_by [resource.namespace_name], .sum()\n; fetch k8s_container\n  | metric logging.googleapis.com/log_entry_count\n  | filter metric.severity =~ \"ERROR|CRITICAL|ALERT|EMERGENCY\"\n  | align rate(1m)\n  | every 1m\n  | group_by [resource.namespace_name], .sum() }\n| union\n| top 5",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "xPos": 24,
+        "yPos": 16
+      }
+    ]
+  },
+  "labels": {}
+}
