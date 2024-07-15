@@ -38,7 +38,7 @@
 |Google Kubernetes Engine (GKE) Enterprise Namespace Observability CPU|
 |:---------------------|
 |Filename: [gke-enterprise-namespace-observability-cpu.json](gke-enterprise-namespace-observability-cpu.json)|
-|This top 5 namespace CPU dashboard has 4 charts using the related [Google Kubernetes Engine (GKE) metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes) and [GKE attached clusters metrics](https://cloud.google.com/kubernetes-engine/multi-cloud/docs/attached/eks/reference/versions/v1.29.0-gke.2/metrics).|
+|This top 5 namespace CPU dashboard has 4 charts using the related [Google Kubernetes Engine (GKE) metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes) and [GKE attached clusters metrics](https://cloud.google.com/kubernetes-engine/multi-cloud/docs/attached/generic/reference/versions/v1.29.0-gke.2/metrics).|
 
 &nbsp;
 
