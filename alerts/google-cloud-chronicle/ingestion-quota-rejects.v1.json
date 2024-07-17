@@ -1,12 +1,12 @@
 {
-  "displayName": "Ingestion Quota Rejection Alert Policy",
+  "displayName": "Ingestion Quota Limit Approaching Alert Policy",
   "userLabels": {},
   "conditions": [
     {
-      "displayName": "Ingestion Quota Rejection",
+      "displayName": "Quota Limit Approaching",
       "conditionMonitoringQueryLanguage": {
         "duration": "0s",
-        "query": "fetch chronicle.googleapis.com/Collector \n| metric 'chronicle.googleapis.com/ingestion/log/quota_rejected_bytes_count' \n| group_by [], sum(val()) \n| every 5m \n | window 5m \n| condition val() > 0 ",
+        "query": "{ \nfetch chronicle.googleapis.com/Collector \n| metric 'chronicle.googleapis.com/ingestion/log/bytes_count' \n| group_by [], sum(val()) \n| every 1s \n| window 10m \n; \nfetch chronicle.googleapis.com/Collector \n| metric 'chronicle.googleapis.com/ingestion/quota_limit' \n| filter (metric.quota_type == 'SHORT_TERM_DATA_RATE') \n| group_by [], [value_quota_limit_min: min(value.quota_limit)] \n| every 1s \n| window 10m \n} \n| join \n| div \n| condition val() > 0.5 ",
         "trigger": {
           "count": 1
         }
@@ -14,6 +14,12 @@
     }
   ],
   "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}  "alertStrategy": {
     "autoClose": "604800s"
   },
   "combiner": "OR",
