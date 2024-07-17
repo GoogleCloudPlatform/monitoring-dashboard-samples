@@ -1,0 +1,38 @@
+{
+  "category": "CUSTOM",
+  "displayName": "GKE Enterprise Project Observability Kubernetes Events",
+  "dashboardFilters": [],
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "widget": {
+          "title": "Container Error Logs/Sec.",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric logging.googleapis.com/log_entry_count\n| filter metric.severity =~ \"ERROR|CRITICAL|ALERT|EMERGENCY\"\n| align rate(1m)\n| every 1m\n| group_by [resource.project_id], .sum()",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24
+      }
+    ]
+  },
+  "labels": {}
+}
