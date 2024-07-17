@@ -1,0 +1,294 @@
+{
+  "category": "CUSTOM",
+  "displayName": "GKE Enterprise Project Observability Memory",
+  "dashboardFilters": [],
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "widget": {
+          "title": "Memory Request % Used",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/memory/used_bytes\n    ; metric kubernetes.io/anthos/container/memory/used_bytes }\n    | union\n  ; { metric kubernetes.io/container/memory/request_bytes\n    ; metric kubernetes.io/anthos/container/memory/request_bytes }\n    | union }\n| align next_older(2m)\n| group_by [resource.project_id], .sum()\n| outer_join 0\n| div\n| scale \"%\"",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24
+      },
+      {
+        "widget": {
+          "title": "Memory Used",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/memory/used_bytes\n  ; metric kubernetes.io/anthos/container/memory/used_bytes }\n| union\n| align next_older(1m)\n| every 1m\n| group_by [resource.project_id], .sum()",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "xPos": 24
+      },
+      {
+        "widget": {
+          "title": "Requested Memory",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/memory/request_bytes\n  ; metric kubernetes.io/anthos/container/memory/request_bytes }\n| union\n| align next_older(1m)\n| every 1m\n| group_by [resource.project_id], .sum()",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "yPos": 16
+      },
+      {
+        "widget": {
+          "title": "Requested Memory Unused",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/memory/request_bytes\n    ; metric kubernetes.io/anthos/container/memory/request_bytes }\n    | union\n  ; { metric kubernetes.io/container/memory/used_bytes\n    ; metric kubernetes.io/anthos/container/memory/used_bytes }\n    | union }\n| align next_older(2m)\n| group_by [resource.project_id], .sum()\n| join\n| sub",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "xPos": 24,
+        "yPos": 16
+      },
+      {
+        "widget": {
+          "title": "Cluster Memory % Used",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { { metric kubernetes.io/node/memory/used_bytes\n    ; metric kubernetes.io/anthos/node/memory/used_bytes }\n    | union\n  ; { metric kubernetes.io/node/memory/total_bytes\n    ; metric kubernetes.io/anthos/node/memory/total_bytes }\n    | union }\n| align next_older(2m)\n| group_by [resource.project_id], .sum()\n| join\n| div\n| scale \"%\"",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "yPos": 32
+      },
+      {
+        "widget": {
+          "title": "Cluster Memory Unused",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { { metric kubernetes.io/node/memory/total_bytes\n    ; metric kubernetes.io/anthos/node/memory/total_bytes }\n    | union\n  ; { metric kubernetes.io/node/memory/used_bytes\n    ; metric kubernetes.io/anthos/node/memory/used_bytes }\n    | union }\n| align next_older(2m)\n| group_by [resource.project_id], .sum()\n| join\n| sub",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "xPos": 24,
+        "yPos": 32
+      },
+      {
+        "widget": {
+          "title": "Cluster Memory % Requested",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/memory/request_bytes\n    ; metric kubernetes.io/anthos/container/memory/request_bytes }\n  | union\n; fetch k8s_node\n  | { metric kubernetes.io/node/memory/allocatable_bytes\n    ; metric kubernetes.io/anthos/node/memory/allocatable_bytes }\n  | union }\n| align next_older(2m)\n| group_by [resource.project_id], .sum()\n| join\n| div\n| scale \"%\"",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "yPos": 48
+      },
+      {
+        "widget": {
+          "title": "Cluster Unrequested Memory",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | { metric kubernetes.io/node/memory/allocatable_bytes\n    ; metric kubernetes.io/anthos/node/memory/allocatable_bytes }\n  | union\n; fetch k8s_container\n  | { metric kubernetes.io/container/memory/request_bytes\n    ; metric kubernetes.io/anthos/container/memory/request_bytes }\n  | union }\n| align next_older(2m)\n| group_by [resource.project_id], .sum()\n| join\n| sub",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "xPos": 24,
+        "yPos": 48
+      },
+      {
+        "widget": {
+          "title": "Cluster Total Memory",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { metric kubernetes.io/node/memory/total_bytes\n  ; metric kubernetes.io/anthos/node/memory/total_bytes }\n| union\n| align next_older(2m)\n| every 2m\n| group_by [resource.project_id], .sum()",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "yPos": 64
+      },
+      {
+        "widget": {
+          "title": "Cluster Allocatable Memory",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { metric kubernetes.io/node/memory/allocatable_bytes\n  ; metric kubernetes.io/anthos/node/memory/allocatable_bytes }\n| union\n| align next_older(2m)\n| every 2m\n| group_by [resource.project_id], .sum()",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "xPos": 24,
+        "yPos": 64
+      }
+    ]
+  },
+  "labels": {}
+}
