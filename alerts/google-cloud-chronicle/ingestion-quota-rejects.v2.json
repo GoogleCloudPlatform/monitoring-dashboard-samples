@@ -1,0 +1,19 @@
+{
+  "displayName": "Ingestion Quota Rejection Alert Policy",
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Ingestion Quota Rejection",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "300s",
+        "query": "sum(rate(chronicle_googleapis_com:ingestion_log_quota_rejected_bytes_count{monitored_resource=\"chronicle.googleapis.com/Collector\"}[5m])) > 0 "
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
