@@ -13,7 +13,7 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/cpu/core_usage_time\n      | rate\n      | every 1m\n      | align next_older(2m)\n    ; metric kubernetes.io/container/cpu/request_cores\n      | align next_older(2m) }\n  | group_by [resource.namespace_name], .sum()\n  | outer_join 0\n  | div\n; fetch k8s_container\n  | { metric kubernetes.io/anthos/container/cpu/core_usage_time\n      | rate\n      | every 1m\n      | align next_older(2m)\n    ; metric kubernetes.io/anthos/container/cpu/request_cores\n      | align next_older(2m) }\n  | group_by [resource.namespace_name], .sum()\n  | outer_join 0\n  | div }\n| union\n| top 5\n| scale \"%\"",
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m)\n  ; { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/request_cores }\n    | union\n    | align next_older(2m) }\n| group_by [resource.namespace_name], .sum()\n| outer_join 0\n| div\n| top 5\n| scale \"%\"",
                   "unitOverride": "",
                   "outputFullDuration": false
                 },
@@ -48,7 +48,7 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric kubernetes.io/container/cpu/core_usage_time\n  | align rate(1m)\n  | every 1m\n  | group_by [resource.namespace_name], .sum()\n; fetch k8s_container\n  | metric kubernetes.io/anthos/container/cpu/core_usage_time\n  | align rate(1m)\n  | every 1m\n  | group_by [resource.namespace_name], .sum() }\n| union\n| top 5",
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/cpu/core_usage_time\n  ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n| union\n| align rate(1m)\n| every 1m\n| group_by [resource.namespace_name], .sum()\n| top 5",
                   "unitOverride": "",
                   "outputFullDuration": false
                 },
@@ -88,7 +88,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric kubernetes.io/container/cpu/request_cores\n  | align next_older(1m)\n  | every 1m\n  | group_by [resource.namespace_name], .sum()\n; fetch k8s_container\n  | metric kubernetes.io/anthos/container/cpu/request_cores\n  | align next_older(1m)\n  | every 1m\n  | group_by [resource.namespace_name], .sum() }\n| union\n| top 5",
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/cpu/request_cores\n  ; metric kubernetes.io/anthos/container/cpu/request_cores }\n| union\n| align next_older(1m)\n| every 1m\n| group_by [resource.namespace_name], .sum()\n| top 5",
                   "unitOverride": ""
                 }
               }
@@ -117,7 +117,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/container/cpu/core_usage_time\n      | rate\n      | every 1m }\n  | align next_older(2m)\n  | group_by [resource.namespace_name], .sum()\n  | join\n  | sub\n; fetch k8s_container\n  | { metric kubernetes.io/anthos/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/core_usage_time\n      | rate\n      | every 1m }\n  | align next_older(2m)\n  | group_by [resource.namespace_name], .sum()\n  | join\n  | sub }\n| union\n| top 5",
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/request_cores }\n    | union\n  ; { metric kubernetes.io/container/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m }\n| align next_older(2m)\n| group_by [resource.namespace_name], .sum()\n| join\n| sub\n| top 5",
                   "unitOverride": ""
                 }
               }
