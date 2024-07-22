@@ -18,7 +18,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/cpu/core_usage_time\n      | rate\n      | every 1m\n      | align next_older(2m)\n    ; metric kubernetes.io/container/cpu/request_cores\n      | align next_older(2m) }\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | outer_join 0\n  | div\n; fetch k8s_container\n  | { metric kubernetes.io/anthos/container/cpu/core_usage_time\n      | rate\n      | every 1m\n      | align next_older(2m)\n    ; metric kubernetes.io/anthos/container/cpu/request_cores\n      | align next_older(2m) }\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | outer_join 0\n  | div }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5\n| scale \"%\"",
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m)\n  ; { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/request_cores }\n    | union\n    | align next_older(2m) }\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| outer_join 0\n| div\n| top 5\n| scale \"%\"",
                   "unitOverride": ""
                 }
               }
@@ -36,7 +36,7 @@
         "width": 24,
         "height": 16,
         "widget": {
-          "title": " Cores Used (Top 5 Clusters)",
+          "title": "Cores Used (Top 5 Clusters)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -46,7 +46,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric kubernetes.io/container/cpu/core_usage_time\n  | align rate(1m)\n  | every 1m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_container\n  | metric kubernetes.io/anthos/container/cpu/core_usage_time\n  | align rate(1m)\n  | every 1m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/cpu/core_usage_time\n  ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n| union\n| align rate(1m)\n| every 1m\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
                   "unitOverride": ""
                 }
               }
@@ -74,7 +74,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric kubernetes.io/container/cpu/request_cores\n  | align next_older(1m)\n  | every 1m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_container\n  | metric kubernetes.io/anthos/container/cpu/request_cores\n  | align next_older(1m)\n  | every 1m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/cpu/request_cores\n  ; metric kubernetes.io/anthos/container/cpu/request_cores }\n| union\n| align next_older(1m)\n| every 1m\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
                   "unitOverride": ""
                 }
               }
@@ -103,7 +103,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/container/cpu/core_usage_time\n      | rate\n      | every 1m }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub\n; fetch k8s_container\n  | { metric kubernetes.io/anthos/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/core_usage_time\n      | rate\n      | every 1m }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/request_cores }\n    | union\n  ; { metric kubernetes.io/container/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m }\n| align next_older(2m)\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| join\n| sub\n| top 5",
                   "unitOverride": ""
                 }
               }
@@ -131,7 +131,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | { metric kubernetes.io/node/cpu/core_usage_time\n      | rate\n      | every 1m\n      | align next_older(2m)\n    ; metric kubernetes.io/node/cpu/total_cores\n      | align next_older(2m) }\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div\n; fetch k8s_node\n  | { metric kubernetes.io/anthos/node/cpu/core_usage_time\n      | rate\n      | every 1m\n      | align next_older(2m)\n    ; metric kubernetes.io/anthos/node/cpu/total_cores\n      | align next_older(2m) }\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div }\n| union\n| top 5\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| scale \"%\"",
+                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { { metric kubernetes.io/node/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/node/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m)\n  ; { metric kubernetes.io/node/cpu/total_cores\n    ; metric kubernetes.io/anthos/node/cpu/total_cores }\n    | union\n    | align next_older(2m) }\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| join\n| div\n| top 5\n| scale \"%\"",
                   "unitOverride": ""
                 }
               }
@@ -188,7 +188,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ { fetch k8s_container\n    | metric kubernetes.io/container/cpu/request_cores\n  ; fetch k8s_node\n    | metric kubernetes.io/node/cpu/allocatable_cores }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div\n; { fetch k8s_container\n    | metric kubernetes.io/anthos/container/cpu/request_cores\n  ; fetch k8s_node\n    | metric kubernetes.io/anthos/node/cpu/allocatable_cores }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | div }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5\n| scale \"%\"",
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/request_cores }\n  | union\n; fetch k8s_node\n  | { metric kubernetes.io/node/cpu/allocatable_cores\n    ; metric kubernetes.io/anthos/node/cpu/allocatable_cores }\n  | union }\n| align next_older(2m)\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| join\n| div\n| top 5\n| scale \"%\"",
                   "unitOverride": ""
                 }
               }
@@ -217,7 +217,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ { fetch k8s_node\n    | metric kubernetes.io/node/cpu/allocatable_cores\n  ; fetch k8s_container\n    | metric kubernetes.io/container/cpu/request_cores }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub\n; { fetch k8s_node\n    | metric kubernetes.io/anthos/node/cpu/allocatable_cores\n  ; fetch k8s_container\n    | metric kubernetes.io/anthos/container/cpu/request_cores }\n  | align next_older(2m)\n  | group_by [resource.location, resource.cluster_name], .sum()\n  | join\n  | sub }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
+                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { { metric kubernetes.io/node/cpu/total_cores\n    ; metric kubernetes.io/anthos/node/cpu/total_cores }\n    | union\n    | align next_older(2m)\n  ; { metric kubernetes.io/node/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/node/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m) }\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| join\n| sub\n| top 5",
                   "unitOverride": ""
                 }
               }
@@ -245,7 +245,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | metric kubernetes.io/node/cpu/total_cores\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_node\n  | metric kubernetes.io/anthos/node/cpu/total_cores\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
+                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { metric kubernetes.io/node/cpu/total_cores\n  ; metric kubernetes.io/anthos/node/cpu/total_cores }\n| union\n| align next_older(2m)\n| every 2m\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
                   "unitOverride": ""
                 }
               }
@@ -274,7 +274,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | metric kubernetes.io/node/cpu/allocatable_cores\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_node\n  | metric kubernetes.io/anthos/node/cpu/allocatable_cores\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
+                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { metric kubernetes.io/node/cpu/allocatable_cores\n  ; metric kubernetes.io/anthos/node/cpu/allocatable_cores }\n| union\n| align next_older(2m)\n| every 2m\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
                   "unitOverride": ""
                 }
               }
