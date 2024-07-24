@@ -63,6 +63,13 @@
 
 &nbsp;
 
+|Google Kubernetes Engine (GKE) Enterprise Project Observability CPU|
+|:---------------------|
+|Filename: [gke-enterprise-project-observability-cpu.json](gke-enterprise-project-observability-cpu.json)|
+|This project CPU dashboard has 10 charts using the related [Google Kubernetes Engine (GKE) metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes) and [GKE attached clusters metrics](https://cloud.google.com/kubernetes-engine/multi-cloud/docs/attached/generic/reference/versions/v1.29.0-gke.2/metrics).|
+
+&nbsp;
+
 |Google Kubernetes Engine (GKE) Enterprise Project Observability Memory|
 |:---------------------|
 |Filename: [gke-enterprise-project-observability-memory.json](gke-enterprise-project-observability-memory.json)|
