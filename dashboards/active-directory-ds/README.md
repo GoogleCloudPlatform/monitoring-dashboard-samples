@@ -1,4 +1,4 @@
-### Dashboards for Active Directory Domain Services
+### Dashboards for Active Directory Domain
 
 #### Notes
 - These dashboards are based on Google's [Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent).
