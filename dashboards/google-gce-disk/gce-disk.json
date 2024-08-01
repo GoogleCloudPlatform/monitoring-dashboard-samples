@@ -1,0 +1,56 @@
+{
+  "displayName": "Disks",
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "width": 48,
+        "height": 35,
+        "widget": {
+          "title": "disk bytes used",
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "column": "device",
+                "visible": true
+              },
+              {
+                "column": "value",
+                "visible": true
+              },
+              {
+                "column": "system_labels.name",
+                "visible": true
+              }
+            ],
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"instance_id\"",
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"zone\"",
+                        "metadata.system_labels.\"name\"",
+                        "metric.label.\"device\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"agent.googleapis.com/disk/bytes_used\" resource.type=\"gce_instance\""
+                  }
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          }
+        }
+      }
+    ]
+  },
+  "dashboardFilters": [],
+  "labels": {}
+}
