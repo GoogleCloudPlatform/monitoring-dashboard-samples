@@ -1,0 +1,626 @@
+{
+  "displayName": "Go Runtime View",
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "yPos": 30,
+        "width": 24,
+        "height": 13,
+        "widget": {
+          "title": "Runtime estimated Memory Used",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by(project_id, location, cluster, job, namespace, instance) (go_memstats_sys_bytes{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"} - go_memstats_heap_released_bytes{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"})",
+                  "unitOverride": "By",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 30,
+        "width": 24,
+        "height": 13,
+        "widget": {
+          "title": "Stack Memory Used",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by(project_id, location, cluster, job, namespace, instance) (go_memstats_stack_sys_bytes{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"})",
+                  "unitOverride": "By",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 43,
+        "width": 24,
+        "height": 13,
+        "widget": {
+          "title": "Heap Memory Used",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by(project_id, location, cluster, job, namespace, instance) (go_memstats_heap_alloc_bytes{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"})",
+                  "unitOverride": "By",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 56,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Heap Bytes Allocated per Second",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by(project_id, location, cluster, job, namespace, instance) (rate(go_memstats_alloc_bytes_total{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"}[${__interval}]))",
+                  "unitOverride": "By",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 56,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Heap Object Allocated per Second",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by(project_id, location, cluster, job, namespace, instance) (rate(go_memstats_mallocs_total{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"}[${__interval}]))",
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 43,
+        "width": 24,
+        "height": 13,
+        "widget": {
+          "title": "Heap Objects Allocated",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by(project_id, location, cluster, job, namespace, instance) (go_memstats_heap_objects{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"})",
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 68,
+        "width": 24,
+        "height": 13,
+        "widget": {
+          "title": "GC Stop-The-World 100th percentile latency",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by(project_id, location, cluster, job, namespace, instance)(go_gc_duration_seconds{quantile=~\"1|1.0\", job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"})",
+                  "unitOverride": "s",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 68,
+        "width": 24,
+        "height": 13,
+        "widget": {
+          "title": "GC Heap Bytes Next Goal",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by(project_id, location, cluster, job, namespace, instance)(go_memstats_next_gc_bytes{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"})",
+                  "unitOverride": "By",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 30,
+        "width": 48,
+        "height": 51,
+        "widget": {
+          "title": "Memory",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 10,
+        "width": 48,
+        "height": 8,
+        "widget": {
+          "title": "Runtime Configuration",
+          "collapsibleGroup": {
+            "collapsed": true
+          },
+          "id": ""
+        }
+      },
+      {
+        "xPos": 17,
+        "yPos": 10,
+        "width": 15,
+        "height": 8,
+        "widget": {
+          "title": "GOGC",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "# NOTE: Grouping of this metric does little sense.\navg by(project_id, location, cluster, job, namespace, instance) (go_gc_gogc_percent{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"})",
+                  "unitOverride": "%",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "id": ""
+        }
+      },
+      {
+        "xPos": 32,
+        "yPos": 10,
+        "width": 15,
+        "height": 8,
+        "widget": {
+          "title": "GOMEMLIMIT",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "# NOTE: Grouping of this metric does little sense.\navg by(project_id, location, cluster, job, namespace, instance) (go_gc_gomemlimit_bytes{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"})",
+                  "unitOverride": "By",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 10,
+        "width": 17,
+        "height": 8,
+        "widget": {
+          "title": "GOMAXPROCS",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "# NOTE: Grouping of this metric does little sense.\navg by(project_id, location, cluster, job, namespace, instance) (go_sched_gomaxprocs_threads{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"})",
+                  "unitOverride": "1",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "width": 24,
+        "height": 10,
+        "widget": {
+          "title": "Job's Latest Versions (latest)",
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "column": "version",
+                "visible": true
+              },
+              {
+                "column": "value",
+                "visible": true
+              },
+              {
+                "column": "job",
+                "visible": true
+              }
+            ],
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "sum by(project_id, location, cluster, job, namespace, instance, version)(go_info{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"})",
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "displayColumnType": false,
+            "metricVisualization": "BAR",
+            "opsAnalyticsSettings": {
+              "maxRows": "0",
+              "pageSize": "0",
+              "showFilterBar": false
+            }
+          }
+        }
+      },
+      {
+        "width": 24,
+        "height": 10,
+        "widget": {
+          "title": "Instances by Version",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by(project_id, location, cluster, job, namespace, instance, version) (go_info{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"})",
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "width": 48,
+        "height": 10,
+        "widget": {
+          "title": "Version",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 18,
+        "width": 48,
+        "height": 12,
+        "widget": {
+          "title": "Concurrency",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 18,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Number of goroutines",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by(project_id, location, cluster, job, namespace, instance) (go_goroutines{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"})",
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 18,
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "goroutine Scheduling Latency",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.99, sum by (job, instance, le)(rate(go_sched_latencies_seconds_bucket[${__interval}])))",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "dashboardFilters": [
+    {
+      "labelKey": "location",
+      "templateVariable": "",
+      "stringValue": "",
+      "filterType": "RESOURCE_LABEL",
+      "valueType": "STRING"
+    },
+    {
+      "labelKey": "cluster",
+      "templateVariable": "",
+      "filterType": "RESOURCE_LABEL",
+      "valueType": "STRING"
+    },
+    {
+      "labelKey": "job",
+      "templateVariable": "job",
+      "stringValue": "",
+      "filterType": "RESOURCE_LABEL",
+      "valueType": "STRING"
+    },
+    {
+      "labelKey": "namespace",
+      "templateVariable": "namespace",
+      "stringValue": "",
+      "filterType": "RESOURCE_LABEL",
+      "valueType": "STRING"
+    },
+    {
+      "labelKey": "instance",
+      "templateVariable": "instance",
+      "stringValue": "",
+      "filterType": "RESOURCE_LABEL",
+      "valueType": "STRING"
+    }
+  ],
+  "labels": {}
+}
