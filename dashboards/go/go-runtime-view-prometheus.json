@@ -4,7 +4,7 @@
     "columns": 48,
     "tiles": [
       {
-        "yPos": 30,
+        "yPos": 41,
         "width": 24,
         "height": 13,
         "widget": {
@@ -41,7 +41,7 @@
       },
       {
         "xPos": 24,
-        "yPos": 30,
+        "yPos": 41,
         "width": 24,
         "height": 13,
         "widget": {
@@ -77,7 +77,7 @@
         }
       },
       {
-        "yPos": 43,
+        "yPos": 54,
         "width": 24,
         "height": 13,
         "widget": {
@@ -113,7 +113,7 @@
         }
       },
       {
-        "yPos": 56,
+        "yPos": 67,
         "width": 24,
         "height": 12,
         "widget": {
@@ -150,7 +150,7 @@
       },
       {
         "xPos": 24,
-        "yPos": 56,
+        "yPos": 67,
         "width": 24,
         "height": 12,
         "widget": {
@@ -187,7 +187,7 @@
       },
       {
         "xPos": 24,
-        "yPos": 43,
+        "yPos": 54,
         "width": 24,
         "height": 13,
         "widget": {
@@ -223,7 +223,7 @@
         }
       },
       {
-        "yPos": 68,
+        "yPos": 79,
         "width": 24,
         "height": 13,
         "widget": {
@@ -260,7 +260,7 @@
       },
       {
         "xPos": 24,
-        "yPos": 68,
+        "yPos": 79,
         "width": 24,
         "height": 13,
         "widget": {
@@ -296,7 +296,7 @@
         }
       },
       {
-        "yPos": 30,
+        "yPos": 41,
         "width": 48,
         "height": 51,
         "widget": {
@@ -308,7 +308,7 @@
         }
       },
       {
-        "yPos": 10,
+        "yPos": 18,
         "width": 48,
         "height": 8,
         "widget": {
@@ -321,7 +321,7 @@
       },
       {
         "xPos": 17,
-        "yPos": 10,
+        "yPos": 18,
         "width": 15,
         "height": 8,
         "widget": {
@@ -358,7 +358,7 @@
       },
       {
         "xPos": 32,
-        "yPos": 10,
+        "yPos": 18,
         "width": 15,
         "height": 8,
         "widget": {
@@ -394,7 +394,7 @@
         }
       },
       {
-        "yPos": 10,
+        "yPos": 18,
         "width": 17,
         "height": 8,
         "widget": {
@@ -431,11 +431,24 @@
       },
       {
         "xPos": 24,
+        "yPos": 4,
         "width": 24,
-        "height": 10,
+        "height": 14,
         "widget": {
           "title": "Job's Latest Versions (latest)",
           "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by(project_id, location, cluster, job, namespace, instance, version) (go_info{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"})",
+                  "unitOverride": "1",
+                  "outputFullDuration": true
+                },
+                "tableTemplate": "",
+                "minAlignmentPeriod": "0s"
+              }
+            ],
+            "metricVisualization": "BAR",
             "columnSettings": [
               {
                 "column": "version",
@@ -450,55 +463,56 @@
                 "visible": true
               }
             ],
-            "dataSets": [
-              {
-                "timeSeriesQuery": {
-                  "outputFullDuration": true,
-                  "prometheusQuery": "sum by(project_id, location, cluster, job, namespace, instance, version)(go_info{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"})",
-                  "unitOverride": "1"
-                }
-              }
-            ],
-            "displayColumnType": false,
-            "metricVisualization": "BAR",
             "opsAnalyticsSettings": {
               "maxRows": "0",
-              "pageSize": "0",
-              "showFilterBar": false
-            }
-          }
+              "showFilterBar": false,
+              "pageSize": "0"
+            },
+            "displayColumnType": false
+          },
+          "id": ""
         }
       },
       {
+        "yPos": 4,
         "width": 24,
-        "height": 10,
+        "height": 14,
         "widget": {
           "title": "Instances by Version",
           "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
             "dataSets": [
               {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "prometheusQuery": "sum by(project_id, location, cluster, job, namespace, instance, version) (go_info{job=~\"${job.value}\", namespace=~\"${namespace.value}\", instance=~\"${instance.value}\"})",
-                  "unitOverride": "1"
-                }
+                  "unitOverride": "1",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
               }
             ],
             "thresholds": [],
             "yAxis": {
               "label": "",
               "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
             }
-          }
+          },
+          "id": ""
         }
       },
       {
+        "yPos": 4,
         "width": 48,
-        "height": 10,
+        "height": 14,
         "widget": {
           "title": "Version",
           "collapsibleGroup": {
@@ -508,9 +522,9 @@
         }
       },
       {
-        "yPos": 18,
+        "yPos": 26,
         "width": 48,
-        "height": 12,
+        "height": 15,
         "widget": {
           "title": "Concurrency",
           "collapsibleGroup": {
@@ -520,11 +534,11 @@
         }
       },
       {
-        "yPos": 18,
+        "yPos": 26,
         "width": 24,
-        "height": 12,
+        "height": 15,
         "widget": {
-          "title": "Number of goroutines",
+          "title": "Goroutines Count",
           "xyChart": {
             "dataSets": [
               {
@@ -557,11 +571,11 @@
       },
       {
         "xPos": 24,
-        "yPos": 18,
+        "yPos": 26,
         "width": 24,
-        "height": 12,
+        "height": 11,
         "widget": {
-          "title": "goroutine Scheduling Latency",
+          "title": "Goroutines Scheduling Latency (99th percentile)",
           "xyChart": {
             "chartOptions": {
               "mode": "COLOR"
@@ -571,7 +585,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "histogram_quantile(0.99, sum by (job, instance, le)(rate(go_sched_latencies_seconds_bucket[${__interval}])))",
+                  "prometheusQuery": "histogram_quantile(0.99, sum by (project_id, location, cluster, job, namespace, instance, le)(rate(go_sched_latencies_seconds_bucket[${__interval}])))",
                   "unitOverride": ""
                 }
               }
@@ -583,43 +597,79 @@
             }
           }
         }
+      },
+      {
+        "xPos": 24,
+        "yPos": 37,
+        "width": 24,
+        "height": 4,
+        "widget": {
+          "text": {
+            "content": "This graph, requires an optional client_golang histogram metric. See an [example](https://github.com/prometheus/client_golang/blob/main/examples/gocollector/main.go).",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "text": {
+            "content": "This dashboard is based on Prometheus metrics exposed by Go the runtime via [Prometheus client_golang's (version 1.20.0+) default Go Collector metrics](https://github.com/prometheus/client_golang/blob/main/examples/gocollector/main.go) and collected by the Prometheus-compatible collection e.g. [Google Managed Service for Prometheus](https://cloud.google.com/stackdriver/docs/managed-prometheus).\n",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FEF8E6",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_CENTER",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
       }
     ]
   },
   "dashboardFilters": [
     {
+      "filterType": "RESOURCE_LABEL",
       "labelKey": "location",
-      "templateVariable": "",
       "stringValue": "",
-      "filterType": "RESOURCE_LABEL",
-      "valueType": "STRING"
+      "templateVariable": ""
     },
     {
+      "filterType": "RESOURCE_LABEL",
       "labelKey": "cluster",
-      "templateVariable": "",
-      "filterType": "RESOURCE_LABEL",
-      "valueType": "STRING"
+      "stringValue": "",
+      "templateVariable": ""
     },
     {
+      "filterType": "RESOURCE_LABEL",
       "labelKey": "job",
-      "templateVariable": "job",
       "stringValue": "",
-      "filterType": "RESOURCE_LABEL",
-      "valueType": "STRING"
+      "templateVariable": "job"
     },
     {
+      "filterType": "RESOURCE_LABEL",
       "labelKey": "namespace",
-      "templateVariable": "namespace",
       "stringValue": "",
-      "filterType": "RESOURCE_LABEL",
-      "valueType": "STRING"
+      "templateVariable": "namespace"
     },
     {
-      "labelKey": "instance",
-      "templateVariable": "instance",
-      "stringValue": "",
       "filterType": "RESOURCE_LABEL",
-      "valueType": "STRING"
+      "labelKey": "instance",
+      "stringValue": "",
+      "templateVariable": "instance"
     }
   ],
   "labels": {}
