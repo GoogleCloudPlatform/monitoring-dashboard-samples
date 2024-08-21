@@ -120,6 +120,12 @@ We recommend the following steps for debugging tiles with no data:
     inactive. You can do so by searching for the query's metric in the
     [Metrics Explorer](https://console.cloud.google.com/monitoring/metrics-explorer).
     If the metric doesn't exist, you will need to find an alternative metric.
+1.  Confirm that the metric is in the Prometheus domain. Only metrics in the Prometheus
+    domain can be converted. To verify the domain you can search for the metric in the
+    [Metrics Explorer](https://console.cloud.google.com/monitoring/metrics-explorer) and check
+    if the metric starts with `prometheus.googleapis.com`. If the metric is not in the
+    Prometheus domain you will need to find an alternative metric that is
+    [collected for Prometheus](https://cloud.google.com/stackdriver/docs/managed-prometheus#gmp-data-collection).
 1.  Confirm that the label matchers are valid.
     To validate this, first look at the query and determine if there are any
     hard equality matchers. For example, in the query `kube_pod_status_ready{container='foo'}`,
