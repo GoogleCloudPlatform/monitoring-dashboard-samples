@@ -1,792 +1,1108 @@
 {
-  "category": "CUSTOM",
+  "displayName": "GKE Compute Resources - Workload View",
   "dashboardFilters": [
     {
-      "filterType": "RESOURCE_LABEL",
       "labelKey": "project_id",
+      "templateVariable": "project_id",
       "stringValue": "",
-      "templateVariable": "project_id"
+      "filterType": "RESOURCE_LABEL",
+      "valueType": "STRING"
     },
     {
-      "filterType": "RESOURCE_LABEL",
       "labelKey": "location",
+      "templateVariable": "location",
       "stringValue": "",
-      "templateVariable": "location"
+      "filterType": "RESOURCE_LABEL",
+      "valueType": "STRING"
     },
     {
-      "filterType": "RESOURCE_LABEL",
       "labelKey": "cluster_name",
+      "templateVariable": "cluster_name",
       "stringValue": "",
-      "templateVariable": "cluster_name"
-    },
-    {
       "filterType": "RESOURCE_LABEL",
-      "labelKey": "namespace_name",
-      "stringValue": "",
-      "templateVariable": "namespace_name"
+      "valueType": "STRING"
     },
     {
-      "filterType": "SYSTEM_METADATA_LABEL",
-      "labelKey": "top_level_controller_name",
+      "labelKey": "namespace_name",
+      "templateVariable": "namespace_name",
       "stringValue": "",
-      "templateVariable": "top_level_controller_name"
+      "filterType": "RESOURCE_LABEL",
+      "valueType": "STRING"
+    },
+    {
+      "labelKey": "top_level_controller_name",
+      "templateVariable": "top_level_controller_name",
+      "stringValue": "",
+      "filterType": "SYSTEM_METADATA_LABEL",
+      "valueType": "STRING"
     }
   ],
-  "displayName": "GKE Compute Resources - Workload View",
+  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 4,
-        "widget": {
-          "title": "CPU usage by container",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "legendTemplate": "${resource.labels.pod_name} \n${resource.labels.container_name} ",
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_AREA",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"kubernetes.io/container/cpu/core_usage_time\" resource.type=\"k8s_container\" ${cluster_name} ${top_level_controller_name} ${project_id} ${location} ${namespace_name}",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"namespace_name\"",
-                        "resource.label.\"pod_name\"",
-                        "resource.label.\"container_name\"",
-                        "metadata.system_labels.\"top_level_controller_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 2
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Memory usage by container",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_AREA",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"namespace_name\"",
-                        "resource.label.\"pod_name\"",
-                        "resource.label.\"container_name\"",
-                        "metadata.system_labels.\"top_level_controller_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"kubernetes.io/container/memory/used_bytes\" resource.type=\"k8s_container\" metric.label.\"memory_type\"=\"non-evictable\" ${cluster_name} ${top_level_controller_name} ${project_id} ${location} ${namespace_name}"
-                  }
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 10
-      },
-      {
-        "height": 2,
+        "width": 8,
+        "height": 8,
         "widget": {
           "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "filter": "metric.type=\"kubernetes.io/container/uptime\" resource.type=\"k8s_container\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "perSeriesAligner": "ALIGN_MAX",
+                  "crossSeriesReducer": "REDUCE_MAX",
+                  "groupByFields": [
+                    "resource.label.\"location\"",
+                    "resource.label.\"cluster_name\"",
+                    "resource.label.\"namespace_name\"",
+                    "resource.label.\"pod_name\""
+                  ]
+                },
+                "secondaryAggregation": {
+                  "alignmentPeriod": "60s",
+                  "perSeriesAligner": "ALIGN_MEAN",
+                  "crossSeriesReducer": "REDUCE_COUNT",
+                  "groupByFields": []
+                }
+              },
+              "unitOverride": "",
+              "outputFullDuration": true
+            },
             "blankView": {},
             "thresholds": [],
-            "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/core_usage_time'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| align delta(5m)\n| every 5m\n| group_by [pod_name], [row_count: row_count()]\n| group_by [], [row_count: row_count()]"
-            }
+            "dimensions": [],
+            "measures": []
           },
           "title": "Total Pods"
-        },
-        "width": 2,
-        "xPos": 0,
-        "yPos": 0
+        }
       },
       {
-        "height": 2,
+        "xPos": 16,
+        "width": 8,
+        "height": 8,
         "widget": {
           "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesQueryLanguage": "{ t_0:fetch k8s_container\n| metric 'kubernetes.io/container/cpu/core_usage_time'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| align rate(5m)\n| every 5m\n| group_by [pod_name],[value_core_usage_time_aggregate: aggregate(value.core_usage_time)]; \n   t_1:\n   fetch k8s_container\n| metric 'kubernetes.io/container/cpu/limit_cores'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| group_by 5m, [value_limit_cores_mean: mean(value.limit_cores)]\n| every 5m\n| group_by [pod_name],[value_limit_cores_mean_aggregate: aggregate(value_limit_cores_mean)]\n}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_core_usage_time_aggregate,\n          t_1.value_limit_cores_mean_aggregate) * 100,\n        \"%\")]\n| group_by [], [.mean()]",
+              "unitOverride": "",
+              "outputFullDuration": false
+            },
             "blankView": {},
             "thresholds": [],
-            "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "{ t_0:fetch k8s_container\n| metric 'kubernetes.io/container/cpu/core_usage_time'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| align rate(5m)\n| every 5m\n| group_by [pod_name],[value_core_usage_time_aggregate: aggregate(value.core_usage_time)]; \n   t_1:\n   fetch k8s_container\n| metric 'kubernetes.io/container/cpu/limit_cores'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| group_by 5m, [value_limit_cores_mean: mean(value.limit_cores)]\n| every 5m\n| group_by [pod_name],[value_limit_cores_mean_aggregate: aggregate(value_limit_cores_mean)]\n}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_core_usage_time_aggregate,\n          t_1.value_limit_cores_mean_aggregate) * 100,\n        \"%\")]\n| group_by [], [.mean()]"
-            }
+            "dimensions": [],
+            "measures": []
           },
           "title": "Avg CPU Usage / Limit"
-        },
-        "width": 2,
-        "xPos": 4,
-        "yPos": 0
+        }
       },
       {
-        "height": 2,
+        "xPos": 32,
+        "width": 8,
+        "height": 8,
         "widget": {
           "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesQueryLanguage": "{ t_0:fetch k8s_container\n| metric 'kubernetes.io/container/memory/used_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| filter (metric.memory_type == 'non-evictable')\n| group_by 5m, [value_used_bytes_mean: mean(value.used_bytes)]\n| every 5m\n| group_by [pod_name],[value_used_bytes_mean_aggregate: aggregate(value_used_bytes_mean)]; \n   t_1:\n   fetch k8s_container\n| metric 'kubernetes.io/container/memory/limit_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| group_by 5m, [value_limit_bytes_mean: mean(value.limit_bytes)]\n| every 5m\n| group_by [pod_name],[value_limit_bytes_mean_aggregate: aggregate(value_limit_bytes_mean)]\n}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_used_bytes_mean_aggregate,\n          t_1.value_limit_bytes_mean_aggregate) * 100,\n        \"%\")]\n| group_by [], [.mean()]",
+              "unitOverride": "",
+              "outputFullDuration": false
+            },
             "blankView": {},
             "thresholds": [],
-            "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "{ t_0:fetch k8s_container\n| metric 'kubernetes.io/container/memory/used_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| filter (metric.memory_type == 'non-evictable')\n| group_by 5m, [value_used_bytes_mean: mean(value.used_bytes)]\n| every 5m\n| group_by [pod_name],[value_used_bytes_mean_aggregate: aggregate(value_used_bytes_mean)]; \n   t_1:\n   fetch k8s_container\n| metric 'kubernetes.io/container/memory/limit_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| group_by 5m, [value_limit_bytes_mean: mean(value.limit_bytes)]\n| every 5m\n| group_by [pod_name],[value_limit_bytes_mean_aggregate: aggregate(value_limit_bytes_mean)]\n}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_used_bytes_mean_aggregate,\n          t_1.value_limit_bytes_mean_aggregate) * 100,\n        \"%\")]\n| group_by [], [.mean()]"
-            }
+            "dimensions": [],
+            "measures": []
           },
           "title": "Avg Memory Usage / Limit"
-        },
-        "width": 2,
-        "xPos": 8,
-        "yPos": 0
+        }
       },
       {
-        "height": 2,
+        "xPos": 8,
+        "width": 8,
+        "height": 8,
         "widget": {
           "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/core_usage_time'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| align delta(5m)\n| every 5m\n| group_by [], [row_count: row_count()]",
+              "unitOverride": "",
+              "outputFullDuration": false
+            },
             "blankView": {},
             "thresholds": [],
-            "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/core_usage_time'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| align delta(5m)\n| every 5m\n| group_by [], [row_count: row_count()]"
-            }
+            "dimensions": [],
+            "measures": []
           },
           "title": "Total Containers"
-        },
-        "width": 2,
-        "xPos": 2,
-        "yPos": 0
+        }
       },
       {
-        "height": 2,
+        "xPos": 40,
+        "width": 8,
+        "height": 8,
         "widget": {
           "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesQueryLanguage": "{ t_0:fetch k8s_container\n| metric 'kubernetes.io/container/memory/used_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| filter (metric.memory_type == 'non-evictable')\n| group_by 5m, [value_used_bytes_mean: mean(value.used_bytes)]\n| every 5m\n| group_by [pod_name],[value_used_bytes_mean_aggregate: aggregate(value_used_bytes_mean)]; \n   t_1:\n   fetch k8s_container\n| metric 'kubernetes.io/container/memory/request_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| group_by 5m, [value_request_bytes_mean: mean(value.request_bytes)]\n| every 5m\n| group_by [pod_name],[value_request_bytes_mean_aggregate: aggregate(value_request_bytes_mean)]\n}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_used_bytes_mean_aggregate,\n          t_1.value_request_bytes_mean_aggregate) * 100,\n        \"%\")]\n| group_by [], [.mean()]",
+              "unitOverride": "",
+              "outputFullDuration": false
+            },
             "blankView": {},
             "thresholds": [],
-            "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "{ t_0:fetch k8s_container\n| metric 'kubernetes.io/container/memory/used_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| filter (metric.memory_type == 'non-evictable')\n| group_by 5m, [value_used_bytes_mean: mean(value.used_bytes)]\n| every 5m\n| group_by [pod_name],[value_used_bytes_mean_aggregate: aggregate(value_used_bytes_mean)]; \n   t_1:\n   fetch k8s_container\n| metric 'kubernetes.io/container/memory/request_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| group_by 5m, [value_request_bytes_mean: mean(value.request_bytes)]\n| every 5m\n| group_by [pod_name],[value_request_bytes_mean_aggregate: aggregate(value_request_bytes_mean)]\n}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_used_bytes_mean_aggregate,\n          t_1.value_request_bytes_mean_aggregate) * 100,\n        \"%\")]\n| group_by [], [.mean()]"
-            }
+            "dimensions": [],
+            "measures": []
           },
           "title": "Avg Memory Usage / Request"
-        },
-        "width": 2,
-        "xPos": 10,
-        "yPos": 0
+        }
       },
       {
-        "height": 4,
-        "widget": {
-          "title": "CPU usage by pod",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_AREA",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"kubernetes.io/container/cpu/core_usage_time\" resource.type=\"k8s_container\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"namespace_name\"",
-                        "resource.label.\"pod_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 2
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Memory usage by pod",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_AREA",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"namespace_name\"",
-                        "resource.label.\"pod_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"kubernetes.io/container/memory/used_bytes\" resource.type=\"k8s_container\" metric.label.\"memory_type\"=\"non-evictable\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}"
-                  }
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 10
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "CPU limit utilization by container",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/limit_utilization'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| group_by 1m, [value_limit_utilization_mean: mean(value.limit_utilization)]\n| every 1m\n| scale '%'"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 6
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "CPU request utilization by container",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_utilization'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| group_by 1m, [value_request_utilization_mean: mean(value.request_utilization)]\n| every 1m\n| scale '%'"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 6
-      },
-      {
-        "height": 2,
+        "xPos": 24,
+        "width": 8,
+        "height": 8,
         "widget": {
           "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesQueryLanguage": "{ t_0:fetch k8s_container\n| metric 'kubernetes.io/container/cpu/core_usage_time'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| align rate(5m)\n| every 5m\n| group_by [pod_name],[value_core_usage_time_aggregate: aggregate(value.core_usage_time)]; \n   t_1:\n   fetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_cores'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| group_by 5m, [value_request_cores_mean: mean(value.request_cores)]\n| every 5m\n| group_by [pod_name],[value_request_cores_mean_aggregate: aggregate(value_request_cores_mean)]\n}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_core_usage_time_aggregate,\n          t_1.value_request_cores_mean_aggregate) * 100,\n        \"%\")]\n| group_by [], [.mean()]",
+              "unitOverride": "",
+              "outputFullDuration": false
+            },
             "blankView": {},
             "thresholds": [],
-            "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "{ t_0:fetch k8s_container\n| metric 'kubernetes.io/container/cpu/core_usage_time'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| align rate(5m)\n| every 5m\n| group_by [pod_name],[value_core_usage_time_aggregate: aggregate(value.core_usage_time)]; \n   t_1:\n   fetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_cores'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| group_by 5m, [value_request_cores_mean: mean(value.request_cores)]\n| every 5m\n| group_by [pod_name],[value_request_cores_mean_aggregate: aggregate(value_request_cores_mean)]\n}\n| join\n| window 5m\n| value\n   [v_0:\n      cast_units(\n        div(t_0.value_core_usage_time_aggregate,\n          t_1.value_request_cores_mean_aggregate) * 100,\n        \"%\")]\n| group_by [], [.mean()]"
-            }
+            "dimensions": [],
+            "measures": []
           },
           "title": "Avg CPU Usage / Request"
-        },
-        "width": 2,
-        "xPos": 6,
-        "yPos": 0
+        }
       },
       {
-        "height": 8,
-        "widget": {
-          "collapsibleGroup": {
-            "collapsed": false
-          },
-          "title": "CPU"
-        },
+        "xPos": 24,
+        "yPos": 56,
         "width": 12,
-        "xPos": 0,
-        "yPos": 2
-      },
-      {
-        "height": 8,
+        "height": 16,
         "widget": {
-          "collapsibleGroup": {
-            "collapsed": false
-          },
-          "title": "Memory (non-evictable)"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 10
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Memory request utilization by container",
           "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
             "dataSets": [
               {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/request_utilization'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| filter (metric.memory_type == 'non-evictable')\n| group_by 1m, [value_request_utilization_mean: mean(value.request_utilization)]\n| every 1m\n| group_by [resource.pod_name, resource.container_name],\n    [value_request_utilization_mean_mean: mean(value_request_utilization_mean)]  \n| scale '%'"
-                }
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/request_utilization'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| filter (metric.memory_type == 'non-evictable')\n| group_by 1m, [value_request_utilization_mean: mean(value.request_utilization)]\n| every 1m\n| group_by [resource.pod_name, resource.container_name],\n    [value_request_utilization_mean_mean: mean(value_request_utilization_mean)]  \n| scale '%'",
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
               }
             ],
-            "thresholds": [],
             "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
             }
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 14
+          },
+          "title": "Memory request utilization by container"
+        }
       },
       {
-        "height": 4,
+        "xPos": 36,
+        "yPos": 56,
+        "width": 12,
+        "height": 16,
         "widget": {
-          "title": "Memory limit utilization by container",
           "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
             "dataSets": [
               {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/limit_utilization'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| filter (metric.memory_type == 'non-evictable')\n| group_by 1m, [value_limit_utilization_mean: mean(value.limit_utilization)]\n| every 1m\n| group_by [resource.pod_name, resource.container_name],\n    [value_limit_utilization_mean_mean: mean(value_limit_utilization_mean)]  | scale '%'"
-                }
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/memory/limit_utilization'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| filter (metric.memory_type == 'non-evictable')\n| group_by 1m, [value_limit_utilization_mean: mean(value.limit_utilization)]\n| every 1m\n| group_by [resource.pod_name, resource.container_name],\n    [value_limit_utilization_mean_mean: mean(value_limit_utilization_mean)]  | scale '%'",
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
               }
             ],
-            "thresholds": [],
             "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
             }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 14
+          },
+          "title": "Memory limit utilization by container"
+        }
       },
       {
-        "height": 4,
+        "yPos": 72,
+        "width": 48,
+        "height": 16,
         "widget": {
-          "title": "Receive bandwidth by pod",
+          "title": "Bandwidth",
+          "collapsibleGroup": {
+            "collapsed": false
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "width": 16,
+        "height": 16,
+        "widget": {
           "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
             "dataSets": [
               {
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_AREA",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
+                    "filter": "metric.type=\"kubernetes.io/container/cpu/core_usage_time\" resource.type=\"k8s_container\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_RATE"
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "groupByFields": []
                     },
-                    "filter": "metric.type=\"kubernetes.io/pod/network/received_bytes_count\" resource.type=\"k8s_pod\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
                     "secondaryAggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_MEAN"
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": []
                     }
-                  }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"kubernetes.io/container/cpu/limit_cores\" resource.type=\"k8s_container\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"kubernetes.io/container/cpu/request_cores\" resource.type=\"k8s_container\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "CPU - total usage / request / limit"
+        }
+      },
+      {
+        "yPos": 40,
+        "width": 16,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"kubernetes.io/container/memory/used_bytes\" resource.type=\"k8s_container\" metric.label.\"memory_type\"=\"non-evictable\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"kubernetes.io/container/memory/request_bytes\" resource.type=\"k8s_container\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"kubernetes.io/container/memory/limit_bytes\" resource.type=\"k8s_container\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Memory - total usage / request / limit"
+        }
+      },
+      {
+        "yPos": 88,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"networking.googleapis.com/pod_flow/ingress_packets_count\" resource.type=\"k8s_pod\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "groupByFields": []
+                    },
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "STACKED_AREA",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Rate of received packets by pod"
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 88,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"networking.googleapis.com/pod_flow/egress_packets_count\" resource.type=\"k8s_pod\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "groupByFields": []
+                    },
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "STACKED_AREA",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Rate of sent packets by pod"
+        }
+      },
+      {
+        "xPos": 16,
+        "yPos": 8,
+        "width": 16,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"kubernetes.io/container/cpu/core_usage_time\" resource.type=\"k8s_container\" ${cluster_name} ${top_level_controller_name} ${project_id} ${location} ${namespace_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "groupByFields": []
+                    },
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"namespace_name\"",
+                        "resource.label.\"pod_name\"",
+                        "resource.label.\"container_name\"",
+                        "metadata.system_labels.\"top_level_controller_name\""
+                      ]
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "STACKED_AREA",
+                "legendTemplate": "${resource.labels.pod_name} \n${resource.labels.container_name} ",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "CPU usage by container"
+        }
+      },
+      {
+        "xPos": 16,
+        "yPos": 40,
+        "width": 16,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"kubernetes.io/container/memory/used_bytes\" resource.type=\"k8s_container\" metric.label.\"memory_type\"=\"non-evictable\" ${cluster_name} ${top_level_controller_name} ${project_id} ${location} ${namespace_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"namespace_name\"",
+                        "resource.label.\"pod_name\"",
+                        "resource.label.\"container_name\"",
+                        "metadata.system_labels.\"top_level_controller_name\""
+                      ]
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "STACKED_AREA",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Memory usage by container"
+        }
+      },
+      {
+        "xPos": 32,
+        "yPos": 8,
+        "width": 16,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"kubernetes.io/container/cpu/core_usage_time\" resource.type=\"k8s_container\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "groupByFields": []
+                    },
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"namespace_name\"",
+                        "resource.label.\"pod_name\""
+                      ]
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "STACKED_AREA",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "CPU usage by pod"
+        }
+      },
+      {
+        "xPos": 32,
+        "yPos": 40,
+        "width": 16,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"kubernetes.io/container/memory/used_bytes\" resource.type=\"k8s_container\" metric.label.\"memory_type\"=\"non-evictable\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"namespace_name\"",
+                        "resource.label.\"pod_name\""
+                      ]
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "STACKED_AREA",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Memory usage by pod"
+        }
+      },
+      {
+        "xPos": 36,
+        "yPos": 24,
+        "width": 12,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/limit_utilization'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| group_by 1m, [value_limit_utilization_mean: mean(value.limit_utilization)]\n| every 1m\n| scale '%'",
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "CPU limit utilization by container"
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 24,
+        "width": 12,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/container/cpu/request_utilization'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| ${namespace_name}\n| ${top_level_controller_name}\n| group_by 1m, [value_request_utilization_mean: mean(value.request_utilization)]\n| every 1m\n| scale '%'",
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "CPU request utilization by container"
+        }
+      },
+      {
+        "yPos": 24,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Average CPU utilization by container",
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "column": "system_labels.top_level_controller_name",
+                "visible": true
+              },
+              {
+                "column": "pod_name",
+                "visible": true
+              },
+              {
+                "column": "value",
+                "displayName": "CPU cores used",
+                "visible": true
+              },
+              {
+                "column": "value-1",
+                "displayName": "Request utilization",
+                "visible": true
+              },
+              {
+                "column": "value-2",
+                "displayName": "Limit utilization",
+                "visible": true
+              },
+              {
+                "column": "metadata_system_top_level_controller_name",
+                "displayName": "Workload",
+                "visible": true
+              },
+              {
+                "column": "container_name",
+                "displayName": "Container",
+                "visible": true
+              }
+            ],
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "avg by (metadata_system_top_level_controller_name,container_name)(rate(kubernetes_io:container_cpu_core_usage_time{monitored_resource=\"k8s_container\", ${project_id}, ${cluster_name}, ${location}, ${namespace_name}, ${top_level_controller_name}}[${__interval}]))"
+                }
+              },
+              {
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "avg by (metadata_system_top_level_controller_name,container_name)(avg_over_time(kubernetes_io:container_cpu_request_utilization{monitored_resource=\"k8s_container\", ${project_id}, ${cluster_name}, ${location}, ${namespace_name}, ${top_level_controller_name}}[${__interval}])) * 100",
+                  "unitOverride": "%"
+                }
+              },
+              {
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "avg by (metadata_system_top_level_controller_name,container_name)(avg_over_time(kubernetes_io:container_cpu_limit_utilization{monitored_resource=\"k8s_container\", ${project_id}, ${cluster_name}, ${location}, ${namespace_name}, ${top_level_controller_name}}[${__interval}])) * 100",
+                  "unitOverride": "%"
                 }
               }
             ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
+            "displayColumnType": false,
+            "metricVisualization": "NUMBER",
+            "opsAnalyticsSettings": {
+              "maxRows": "0",
+              "pageSize": "0",
+              "showFilterBar": false
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 18
+        }
       },
       {
-        "height": 4,
+        "yPos": 56,
+        "width": 24,
+        "height": 16,
         "widget": {
-          "collapsibleGroup": {
-            "collapsed": false
-          },
-          "title": "Bandwidth"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 18
+          "title": "Average memory utilization by container",
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "column": "system_labels.top_level_controller_name",
+                "visible": true
+              },
+              {
+                "column": "pod_name",
+                "visible": true
+              },
+              {
+                "column": "value",
+                "displayName": "Memory used",
+                "visible": true
+              },
+              {
+                "column": "value-1",
+                "displayName": "Request utilization",
+                "visible": true
+              },
+              {
+                "column": "value-2",
+                "displayName": "Limit utilization",
+                "visible": true
+              },
+              {
+                "column": "metadata_system_top_level_controller_name",
+                "displayName": "Workload",
+                "visible": true
+              },
+              {
+                "column": "container_name",
+                "displayName": "Container",
+                "visible": true
+              }
+            ],
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "avg by (metadata_system_top_level_controller_name,container_name)(avg_over_time(kubernetes_io:container_memory_used_bytes{monitored_resource=\"k8s_container\", memory_type=\"non-evictable\",  ${project_id}, ${cluster_name}, ${location}, ${namespace_name}, ${top_level_controller_name}}[${__interval}]))"
+                }
+              },
+              {
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "avg by (metadata_system_top_level_controller_name,container_name)(avg_over_time(kubernetes_io:container_memory_request_utilization{monitored_resource=\"k8s_container\", ${project_id}, ${cluster_name}, ${location}, ${namespace_name}, ${top_level_controller_name}}[${__interval}])) * 100",
+                  "unitOverride": "%"
+                }
+              },
+              {
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "avg by (metadata_system_top_level_controller_name,container_name)(avg_over_time(kubernetes_io:container_memory_limit_utilization{monitored_resource=\"k8s_container\", ${project_id}, ${cluster_name}, ${location}, ${namespace_name}, ${top_level_controller_name}}[${__interval}])) * 100",
+                  "unitOverride": "%"
+                }
+              }
+            ],
+            "displayColumnType": false,
+            "metricVisualization": "NUMBER",
+            "opsAnalyticsSettings": {
+              "maxRows": "0",
+              "pageSize": "0",
+              "showFilterBar": false
+            }
+          }
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "yPos": 72,
+        "width": 24,
+        "height": 16,
         "widget": {
           "title": "Transmit bandwidth by pod",
           "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
             "dataSets": [
               {
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_AREA",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
                     "filter": "metric.type=\"kubernetes.io/pod/network/sent_bytes_count\" resource.type=\"k8s_pod\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "groupByFields": []
+                    },
                     "secondaryAggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_MEAN"
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "groupByFields": []
                     }
-                  }
-                }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "STACKED_AREA",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
               }
             ],
-            "thresholds": [],
             "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 18
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "CPU - total usage / request / limit",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
             },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"kubernetes.io/container/cpu/core_usage_time\" resource.type=\"k8s_container\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
-                }
-              },
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"kubernetes.io/container/cpu/limit_cores\" resource.type=\"k8s_container\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}"
-                  }
-                }
-              },
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"kubernetes.io/container/cpu/request_cores\" resource.type=\"k8s_container\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}"
-                  }
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 2
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Memory - total usage / request / limit",
-          "xyChart": {
             "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"kubernetes.io/container/memory/used_bytes\" resource.type=\"k8s_container\" metric.label.\"memory_type\"=\"non-evictable\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}"
-                  }
-                }
-              },
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"kubernetes.io/container/memory/request_bytes\" resource.type=\"k8s_container\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}"
-                  }
-                }
-              },
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"kubernetes.io/container/memory/limit_bytes\" resource.type=\"k8s_container\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}"
-                  }
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
             }
           }
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 10
+        }
       },
       {
-        "height": 4,
+        "yPos": 8,
+        "width": 48,
+        "height": 32,
         "widget": {
+          "title": "CPU",
           "collapsibleGroup": {
             "collapsed": false
-          },
-          "title": "Rate of packets"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 22
+          }
+        }
       },
       {
-        "height": 4,
+        "yPos": 40,
+        "width": 48,
+        "height": 32,
         "widget": {
-          "title": "Rate of received packets by pod",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_AREA",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"networking.googleapis.com/pod_flow/ingress_packets_count\" resource.type=\"k8s_pod\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
+          "title": "Memory (non-evictable)",
+          "collapsibleGroup": {
+            "collapsed": false
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 22
+        }
       },
       {
-        "height": 4,
+        "yPos": 72,
+        "width": 24,
+        "height": 16,
         "widget": {
-          "title": "Rate of sent packets by pod",
+          "title": "Receive bandwidth by pod",
           "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
             "dataSets": [
               {
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_AREA",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
+                    "filter": "metric.type=\"kubernetes.io/pod/network/received_bytes_count\" resource.type=\"k8s_pod\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_RATE"
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "groupByFields": []
                     },
-                    "filter": "metric.type=\"networking.googleapis.com/pod_flow/egress_packets_count\" resource.type=\"k8s_pod\" ${project_id} ${location} ${cluster_name} ${namespace_name} ${top_level_controller_name}",
                     "secondaryAggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_MEAN"
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "groupByFields": []
                     }
-                  }
-                }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "STACKED_AREA",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
               }
             ],
-            "thresholds": [],
             "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 22
+        }
+      },
+      {
+        "yPos": 88,
+        "width": 48,
+        "height": 16,
+        "widget": {
+          "title": "Rate of packets",
+          "collapsibleGroup": {
+            "collapsed": false
+          }
+        }
       }
     ]
   }
