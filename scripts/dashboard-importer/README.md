@@ -120,8 +120,9 @@ We recommend the following steps for debugging tiles with no data:
     inactive. You can do so by searching for the query's metric in the
     [Metrics Explorer](https://console.cloud.google.com/monitoring/metrics-explorer).
     If the metric doesn't exist, you will need to find an alternative metric.
-1.  Confirm that the metric is in the Prometheus domain. Only metrics in the Prometheus
-    domain can be converted. To verify the domain you can search for the metric in the
+1.  Confirm that the metric is in the Prometheus domain. Cloud Monitoring by default looks for
+    Prometheus metrics in a PromQL query under the Prometheus domain. To verify the domain you
+    can search for the metric in the
     [Metrics Explorer](https://console.cloud.google.com/monitoring/metrics-explorer) and check
     if the metric starts with `prometheus.googleapis.com`. If the metric is not in the
     Prometheus domain you will need to find an alternative metric that is
