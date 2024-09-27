@@ -111,15 +111,22 @@ In `reports/<date>/<time>/`, you will also find:
 
 We recommend the following steps for debugging tiles with no data:
 
+1.  Confirm that your dashboard uses PromQL expressions and Prometheus data sources.
+    Dashboards that use other forms of querying or data sources might not import successfully.
 1.  Confirm that the corresponding chart has data in Grafana as well. If your
     chart does not have data in Grafana, the chart in the converted dashboard
     most likely will not have data either.
-1.  Confirm all templating variables referenced in the queries exist in the Cloud Monitoring
-    dashboard. There are some templating variables that the importer doesn't handle. See the [missing templating variable section](#templating-variables-are-missing)
 1.  Confirm the metric(s) being referenced exist in Cloud Monitoring and are not
     inactive. You can do so by searching for the query's metric in the
     [Metrics Explorer](https://console.cloud.google.com/monitoring/metrics-explorer).
     If the metric doesn't exist, you will need to find an alternative metric.
+1.  Confirm your Prometheus metrics are ingested using one of the approved collection
+    options for [Google Cloud Managed Service for Prometheus](https://cloud.google.com/stackdriver/docs/managed-prometheus).
+    When using the Query Builder in Cloud Monitoring's [Metrics Explorer](https://console.cloud.google.com/monitoring/metrics-explorer), 
+    you can find properly ingested Prometheus metrics under the [prometheus.googleapis.com](http://prometheus.googleapis.com/) domain.
+    Metrics in this domain will be correctly referenced by converted dashboards.
+1.  Confirm all templating variables referenced in the queries exist in the Cloud Monitoring
+    dashboard. There are some templating variables that the importer doesn't handle. See the [missing templating variable section](#templating-variables-are-missing)
 1.  Confirm that the label matchers are valid.
     To validate this, first look at the query and determine if there are any
     hard equality matchers. For example, in the query `kube_pod_status_ready{container='foo'}`,
