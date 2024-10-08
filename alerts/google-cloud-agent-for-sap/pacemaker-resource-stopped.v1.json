@@ -10,12 +10,10 @@
   "conditions": [
     {
       "displayName": "Pacemaker resource is stopped",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "query": "fetch gce_instance\n| metric 'workload.googleapis.com/sap/cluster/failcounts'\n# Uncomment and modify the following line to filter by SID\n#| filter (metric.sid =~ 'SID')\n| group_by [metric.node, metric.resource, metric.sid], [min(val())]\n| window 3m\n| condition gt(val(), 999999)",
-        "trigger": {
-          "count": 1
-        }
+        "evaluationInterval": "30s",
+        "query": "min by (node,resource,sid)(workload_googleapis_com:sap_cluster_failcounts{\n    monitored_resource=\"gce_instance\",\n    #Uncomment the following line to filter by SID\n    #sid=~\"ABC|HDB|XYZ\"\n    }) > 999999"
       }
     }
   ],
