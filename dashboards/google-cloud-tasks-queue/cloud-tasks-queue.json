@@ -1,0 +1,260 @@
+{
+  "displayName": "Cloud Tasks",
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "width": 24,
+        "height": 24,
+        "widget": {
+          "title": "Incidents",
+          "incidentList": {
+            "monitoredResources": [
+              {
+                "labels": {},
+                "type": "cloud_tasks_queue"
+              }
+            ],
+            "policyNames": []
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "width": 24,
+        "height": 24,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"cloudtasks.googleapis.com/queue/task_attempt_count\" resource.type=\"cloud_tasks_queue\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"queue_id\""
+                      ]
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": true
+                },
+                "tableTemplate": "",
+                "minAlignmentPeriod": "60s"
+              }
+            ],
+            "metricVisualization": "NUMBER",
+            "columnSettings": [
+              {
+                "column": "Metric",
+                "visible": false
+              },
+              {
+                "column": "queue_id",
+                "visible": true
+              },
+              {
+                "column": "value",
+                "visible": false
+              }
+            ],
+            "opsAnalyticsSettings": {
+              "maxRows": "0",
+              "showFilterBar": false,
+              "pageSize": "0"
+            },
+            "displayColumnType": false
+          },
+          "title": "Inventory",
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"cloudtasks.googleapis.com/queue/task_attempt_count\" resource.type=\"cloud_tasks_queue\" metric.label.\"response_code\"=\"ok\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Tasks Executed",
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 16,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"cloudtasks.googleapis.com/queue/task_attempt_count\" resource.type=\"cloud_tasks_queue\" metric.label.\"response_code\"=\"unavailable\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Failed Tasks",
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 32,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"cloudtasks.googleapis.com/queue/task_attempt_delays\" resource.type=\"cloud_tasks_queue\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"cloudtasks.googleapis.com/queue/task_attempt_delays\" resource.type=\"cloud_tasks_queue\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_05",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"cloudtasks.googleapis.com/queue/task_attempt_delays\" resource.type=\"cloud_tasks_queue\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Execution Delay",
+          "id": ""
+        }
+      }
+    ]
+  },
+  "dashboardFilters": [],
+  "labels": {}
+}
