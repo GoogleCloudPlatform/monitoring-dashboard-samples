@@ -1,0 +1,37 @@
+{
+    "displayName": "Slot Usage - Background Metadata Cache Slot Usage Too High",
+    "documentation": {
+      "content": "This alert fires when the slot usage of the background metadata cache job types exceeds the configured threshold.",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Slot Usage - Background Metadata Cache Slot Usage",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "3600s",
+              "perSeriesAligner": "ALIGN_MAX",
+              "groupByFields": [
+                "metric.labels.reservation"
+              ],
+              "crossSeriesReducer": "REDUCE_PERCENTILE_95"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "21600s",
+          "filter": "resource.type = \"bigquery_project\" AND metric.labels.job_type = \"background_metadata_cache\" AND metric.type = \"bigquery.googleapis.com/slots/allocated\"",
+          "thresholdValue": 0,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true
+  }
