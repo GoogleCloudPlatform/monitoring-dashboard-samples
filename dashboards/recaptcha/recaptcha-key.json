@@ -23,21 +23,14 @@
                       ]
                     }
                   },
-                  "unitOverride": "",
                   "outputFullDuration": false
                 },
                 "plotType": "STACKED_BAR",
-                "legendTemplate": "",
                 "minAlignmentPeriod": "60s",
-                "targetAxis": "Y1",
-                "dimensions": [],
-                "measures": [],
-                "breakdowns": []
+                "targetAxis": "Y1"
               }
             ],
-            "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             },
             "chartOptions": {
@@ -46,8 +39,7 @@
               "displayHorizontal": false
             }
           },
-          "title": "Assessments per Response",
-          "id": ""
+          "title": "Assessments per Response"
         }
       },
       {
@@ -64,20 +56,14 @@
                     "aggregation": {
                       "alignmentPeriod": "60s",
                       "perSeriesAligner": "ALIGN_DELTA",
-                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
-                      "groupByFields": []
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50"
                     }
                   },
-                  "unitOverride": "",
                   "outputFullDuration": false
                 },
                 "plotType": "LINE",
-                "legendTemplate": "",
                 "minAlignmentPeriod": "60s",
-                "targetAxis": "Y1",
-                "dimensions": [],
-                "measures": [],
-                "breakdowns": []
+                "targetAxis": "Y1"
               },
               {
                 "timeSeriesQuery": {
@@ -86,25 +72,17 @@
                     "aggregation": {
                       "alignmentPeriod": "60s",
                       "perSeriesAligner": "ALIGN_DELTA",
-                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
-                      "groupByFields": []
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95"
                     }
                   },
-                  "unitOverride": "",
                   "outputFullDuration": false
                 },
                 "plotType": "LINE",
-                "legendTemplate": "",
                 "minAlignmentPeriod": "60s",
-                "targetAxis": "Y1",
-                "dimensions": [],
-                "measures": [],
-                "breakdowns": []
+                "targetAxis": "Y1"
               }
             ],
-            "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             },
             "chartOptions": {
@@ -113,8 +91,7 @@
               "displayHorizontal": false
             }
           },
-          "title": "Create Assessment Latencies",
-          "id": ""
+          "title": "Create Assessment Latencies"
         }
       },
       {
@@ -127,20 +104,13 @@
               {
                 "timeSeriesQuery": {
                   "timeSeriesQueryLanguage": "fetch recaptchaenterprise.googleapis.com/Key\n| metric 'recaptchaenterprise.googleapis.com/assessments'\n| { t_0:\n      group_by window(),\n        [x:\n           cast_units(sum(count_from(value.assessments)), '10^2.%')\n           * fraction_less_than(value.assessments, 0.2)]\n      | map add[risk: 'high']\n  ; t_1:\n      group_by window(),\n        [x:\n           cast_units(sum(count_from(value.assessments)), '10^2.%')\n           *\n           (fraction_less_than(value.assessments, 0.8)\n            - fraction_less_than(value.assessments, 0.2))]\n      | map add[risk: 'medium']\n  ; t_2:\n      group_by window(),\n        [x:\n           cast_units(sum(count_from(value.assessments)), '10^2.%')\n           *\n           (cast_units(1, '10^2.%')\n            - fraction_less_than(value.assessments, 0.8))]\n      | map add[risk: 'low'] }\n| union\n| group_by [risk], [x_aggregate: aggregate(x)]",
-                  "unitOverride": "",
                   "outputFullDuration": false
                 },
                 "plotType": "STACKED_BAR",
-                "legendTemplate": "",
-                "targetAxis": "Y1",
-                "dimensions": [],
-                "measures": [],
-                "breakdowns": []
+                "targetAxis": "Y1"
               }
             ],
-            "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             },
             "chartOptions": {
@@ -149,8 +119,7 @@
               "displayHorizontal": false
             }
           },
-          "title": "Assessments per Risk Level",
-          "id": ""
+          "title": "Assessments per Risk Level"
         }
       },
       {
@@ -164,20 +133,13 @@
               {
                 "timeSeriesQuery": {
                   "timeSeriesQueryLanguage": "fetch recaptchaenterprise.googleapis.com/Key\n| metric 'recaptchaenterprise.googleapis.com/executes'\n| { t_0:\n      group_by window(),\n        [x:\n           cast_units(sum(count_from(value.executes)), '10^2.%')\n           * fraction_less_than(value.executes, 0.2)]\n      | map add[risk: 'high']\n  ; t_1:\n      group_by window(),\n        [x:\n           cast_units(sum(count_from(value.executes)), '10^2.%')\n           *\n           (fraction_less_than(value.executes, 0.8)\n            - fraction_less_than(value.executes, 0.2))]\n      | map add[risk: 'medium']\n  ; t_2:\n      group_by window(),\n        [x:\n           cast_units(sum(count_from(value.executes)), '10^2.%')\n           *\n           (cast_units(1, '10^2.%') - fraction_less_than(value.executes, 0.8))]\n      | map add[risk: 'low'] }\n| union\n| group_by [risk], [x_aggregate: aggregate(x)]",
-                  "unitOverride": "",
                   "outputFullDuration": false
                 },
                 "plotType": "STACKED_BAR",
-                "legendTemplate": "",
-                "targetAxis": "Y1",
-                "dimensions": [],
-                "measures": [],
-                "breakdowns": []
+                "targetAxis": "Y1"
               }
             ],
-            "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             },
             "chartOptions": {
@@ -186,8 +148,7 @@
               "displayHorizontal": false
             }
           },
-          "title": "Executes per Risk Level",
-          "id": ""
+          "title": "Executes per Risk Level"
         }
       },
       {
@@ -211,21 +172,14 @@
                       ]
                     }
                   },
-                  "unitOverride": "",
                   "outputFullDuration": false
                 },
                 "plotType": "STACKED_BAR",
-                "legendTemplate": "",
                 "minAlignmentPeriod": "60s",
-                "targetAxis": "Y1",
-                "dimensions": [],
-                "measures": [],
-                "breakdowns": []
+                "targetAxis": "Y1"
               }
             ],
-            "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             },
             "chartOptions": {
@@ -234,8 +188,7 @@
               "displayHorizontal": false
             }
           },
-          "title": "Assessments per Action",
-          "id": ""
+          "title": "Assessments per Action"
         }
       },
       {
@@ -252,25 +205,17 @@
                     "aggregation": {
                       "alignmentPeriod": "60s",
                       "perSeriesAligner": "ALIGN_SUM",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": []
+                      "crossSeriesReducer": "REDUCE_SUM"
                     }
                   },
-                  "unitOverride": "",
                   "outputFullDuration": false
                 },
                 "plotType": "HEATMAP",
-                "legendTemplate": "",
                 "minAlignmentPeriod": "60s",
-                "targetAxis": "Y1",
-                "dimensions": [],
-                "measures": [],
-                "breakdowns": []
+                "targetAxis": "Y1"
               }
             ],
-            "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             },
             "chartOptions": {
@@ -279,8 +224,7 @@
               "displayHorizontal": false
             }
           },
-          "title": " Execute Score Distribution",
-          "id": ""
+          "title": " Execute Score Distribution"
         }
       },
       {
@@ -298,25 +242,17 @@
                     "aggregation": {
                       "alignmentPeriod": "60s",
                       "perSeriesAligner": "ALIGN_SUM",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": []
+                      "crossSeriesReducer": "REDUCE_SUM"
                     }
                   },
-                  "unitOverride": "",
                   "outputFullDuration": false
                 },
                 "plotType": "HEATMAP",
-                "legendTemplate": "",
                 "minAlignmentPeriod": "60s",
-                "targetAxis": "Y1",
-                "dimensions": [],
-                "measures": [],
-                "breakdowns": []
+                "targetAxis": "Y1"
               }
             ],
-            "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             },
             "chartOptions": {
@@ -325,8 +261,7 @@
               "displayHorizontal": false
             }
           },
-          "title": "Assessment Score Distribution",
-          "id": ""
+          "title": "Assessment Score Distribution"
         }
       },
       {
@@ -367,7 +302,5 @@
         }
       }
     ]
-  },
-  "dashboardFilters": [],
-  "labels": {}
+  }
 }
