@@ -1,0 +1,26 @@
+{
+    "displayName": "SAP HANA Replication is not in sync",
+    "documentation": {
+        "content": "The replication status of SAP HANA instance ${metric.label.sid} on ${metric.label.metadata_system_name} has returned value \t\n${metric.label.value} and is not in sync. Verify that both SAP HANA primary and secondary sites running and that there they are able to communicate with one another.\n\nFor more information on interpreting the system replication return values refer to the [official SAP HANA Administration guide](https://help.sap.com/docs/SAP_HANA_PLATFORM/4e9b18c116aa42fc84c7dbfd02111aba/f6b1bd1020984ee69e902b21b702c096.html).",
+        "mimeType": "text/markdown",
+      "subject": "SAP HANA Replication issue detected on ${metric.label.sid}"
+      },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "SAP HANA replication not in sync",
+        "conditionPrometheusQueryLanguage": {
+            "duration": "60s",
+            "evaluationInterval": "60s",
+            "query": "topk(1,max by (metadata_system_name,sid)(\n    workload_googleapis_com:sap_hana_ha_replication{\n        monitored_resource=\"gce_instance\",\n        #Uncomment the following line to filter by SID\n        #sid=~\"ABC|HDB|XYZ\"\n    }) <= 11)"
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "1800s"
+    },
+    "combiner": "OR",
+    "enabled": false,
+    "notificationChannels": [],
+    "severity": "WARNING"
+}

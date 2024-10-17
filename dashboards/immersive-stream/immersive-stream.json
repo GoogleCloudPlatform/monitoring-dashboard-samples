@@ -1,0 +1,120 @@
+{
+  "displayName": "Immersive Stream XR - Service Instances",
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "width": 48,
+        "height": 16,
+        "widget": {
+          "title": "Available Capacity",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [
+                        "metric.label.\"streaming_location\"",
+                        "resource.label.\"stream_instance_id\"",
+                        "resource.label.\"resource_container\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"stream.googleapis.com/stream_instance/capacity\" resource.type=\"stream.googleapis.com/StreamInstance\" metric.label.\"type\"=\"Available\""
+                  }
+                }
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "width": 48,
+        "height": 16,
+        "widget": {
+          "title": "Hits",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "86400s",
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "86400s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"stream_instance_id\"",
+                        "resource.label.\"resource_container\""
+                      ],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"stream.googleapis.com/stream_instance/hits_count\" resource.type=\"stream.googleapis.com/StreamInstance\""
+                  }
+                }
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 32,
+        "width": 48,
+        "height": 16,
+        "widget": {
+          "title": "Session Lengths 50th Percentile",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "86400s",
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "86400s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": [
+                        "metric.label.\"streaming_location\"",
+                        "resource.label.\"stream_instance_id\"",
+                        "resource.label.\"resource_container\""
+                      ],
+                      "perSeriesAligner": "ALIGN_SUM"
+                    },
+                    "filter": "metric.type=\"stream.googleapis.com/stream_instance/session_lengths\" resource.type=\"stream.googleapis.com/StreamInstance\""
+                  }
+                }
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
