@@ -1,0 +1,252 @@
+{
+  "displayName": "VPN Migration",
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "incidentList": {
+            "monitoredResources": [
+              {
+                "type": "vpn_gateway"
+              }
+            ]
+          },
+          "title": "Incidents"
+        }
+      },
+      {
+        "xPos": 24,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"vpn.googleapis.com/tunnel_established\" resource.type=\"vpn_gateway\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"gateway_name\"",
+                        "resource.label.\"gateway_id\"",
+                        "resource.label.\"region\""
+                      ]
+                    }
+                  },
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "${metric.labels.gateway_name}",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1"
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Tunnel Status"
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 16,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Received Bytes",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "${metric.labels.gateway_name}",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"gateway_name\"",
+                        "resource.label.\"gateway_id\"",
+                        "resource.label.\"region\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"vpn.googleapis.com/network/received_bytes_count\" resource.type=\"vpn_gateway\""
+                  }
+                }
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 32,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"vpn.googleapis.com/network/sent_bytes_count\" resource.type=\"vpn_gateway\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"gateway_name\"",
+                        "resource.label.\"gateway_id\"",
+                        "resource.label.\"region\""
+                      ]
+                    }
+                  },
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "${metric.labels.gateway_name}",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1"
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Sent Bytes"
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 48,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"vpn.googleapis.com/network/dropped_received_packets_count\" resource.type=\"vpn_gateway\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"gateway_name\"",
+                        "resource.label.\"gateway_id\"",
+                        "resource.label.\"region\""
+                      ]
+                    }
+                  },
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "${metric.labels.gateway_name}: ${shortMetric}",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1"
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"vpn.googleapis.com/network/dropped_sent_packets_count\" resource.type=\"vpn_gateway\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"gateway_name\"",
+                        "resource.label.\"gateway_id\"",
+                        "resource.label.\"region\""
+                      ]
+                    }
+                  },
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "${metric.labels.gateway_name}: ${shortMetric}",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1"
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Dropped Packets"
+        }
+      },
+      {
+        "widget": {
+          "title": "Gateways",
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"gateway_name\"",
+                        "metric.label.\"tunnel_name\"",
+                        "resource.label.\"gateway_id\"",
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"region\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"vpn.googleapis.com/network/received_bytes_count\" resource.type=\"vpn_gateway\"",
+                    "pickTimeSeriesFilter": {
+                      "direction": "TOP",
+                      "numTimeSeries": 30,
+                      "rankingMethod": "METHOD_MEAN"
+                    }
+                  }
+                }
+              }
+            ],
+            "displayColumnType": false,
+            "metricVisualization": "BAR"
+          }
+        },
+        "height": 16,
+        "width": 24,
+        "yPos": 16
+      }
+    ]
+  }
+}
