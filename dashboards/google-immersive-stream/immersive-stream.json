@@ -23,7 +23,9 @@
                       "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_MEAN",
                       "groupByFields": [
-                        "metric.label.\"streaming_location\""
+                        "metric.label.\"streaming_location\"",
+                        "resource.label.\"stream_instance_id\"",
+                        "resource.label.\"resource_container\""
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
@@ -58,6 +60,10 @@
                     "aggregation": {
                       "alignmentPeriod": "86400s",
                       "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"stream_instance_id\"",
+                        "resource.label.\"resource_container\""
+                      ],
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
                     "filter": "metric.type=\"stream.googleapis.com/stream_instance/hits_count\" resource.type=\"stream.googleapis.com/StreamInstance\""
@@ -91,6 +97,11 @@
                     "aggregation": {
                       "alignmentPeriod": "86400s",
                       "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": [
+                        "metric.label.\"streaming_location\"",
+                        "resource.label.\"stream_instance_id\"",
+                        "resource.label.\"resource_container\""
+                      ],
                       "perSeriesAligner": "ALIGN_SUM"
                     },
                     "filter": "metric.type=\"stream.googleapis.com/stream_instance/session_lengths\" resource.type=\"stream.googleapis.com/StreamInstance\""
