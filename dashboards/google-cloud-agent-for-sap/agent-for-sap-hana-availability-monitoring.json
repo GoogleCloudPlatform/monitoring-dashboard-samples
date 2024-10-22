@@ -1,12 +1,273 @@
 {
-  "displayName": "SAP HANA Availability Monitoring",
+  "displayName": "SAP HANA Interactive Playbook - Availability",
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "yPos": 19,
+        "width": 47,
+        "height": 8,
+        "widget": {
+          "title": "System Outage per node",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace((min(workload_googleapis_com:sap_cluster_nodes{monitored_resource=\"gce_instance\"}) by (node,sid) < 2) != bool 2, \"status\", \"Node is offline\",  \"\",\"\")\nor \nlabel_replace((max(workload_googleapis_com:sap_hana_availability{monitored_resource=\"gce_instance\"}) by  (metadata_system_name,sid) < 1) <bool 1, \"status\", \"has a degraded service\",  \"\",\"\")\n",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 15,
+        "yPos": 31,
+        "width": 32,
+        "height": 11,
+        "widget": {
+          "title": "Was any HANA service observed as unavailable?",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "min by (metadata_system_name,service_name) (workload_googleapis_com:sap_hana_service{monitored_resource=\"gce_instance\"}) <bool 1 \n",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 9,
+        "yPos": 60,
+        "width": 38,
+        "height": 10,
+        "widget": {
+          "title": "Was SAP HANA replication in sync?",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "max(workload_googleapis_com:sap_hana_ha_replication{monitored_resource=\"gce_instance\"}) by (metadata_system_name)",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "README",
+          "sectionHeader": {
+            "subtitle": "Begin with reading the instructions here.",
+            "dividerBelow": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 15,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Identify timeframe of outage.",
+          "sectionHeader": {
+            "subtitle": "The following chart visualizes the timeline during which an SAP HANA instance was in a degraded state or if the node was offline. If no data is available, then no outage was detected.",
+            "dividerBelow": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 27,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Identify service unavailabilty",
+          "sectionHeader": {
+            "subtitle": "",
+            "dividerBelow": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 42,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Verify failover",
+          "sectionHeader": {
+            "subtitle": "Identify whether the impacted SAP HANA system failed over to the other zone/site. Secondary node should have become the new primary node.",
+            "dividerBelow": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "xPos": 9,
+        "yPos": 46,
+        "width": 38,
+        "height": 10,
+        "widget": {
+          "title": "Which node is HANA Primary located on?",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "max by (metadata_system_name)(workload_googleapis_com:sap_hana_ha_availability{monitored_resource=\"gce_instance\"})",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 56,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Check replication status",
+          "sectionHeader": {
+            "subtitle": "A failover cannot take place if the two HANA systems were not in sync prior to the outage. Both sites must return the value 15 in order for a failover to be possible.",
+            "dividerBelow": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 60,
+        "width": 9,
+        "height": 10,
+        "widget": {
+          "text": {
+            "content": "|**Value**|**Status**|\n|-|-|\n|0|Unknown error|\n|10|Replication disabled|\n|11|Connection error|\n|12|Secondary disconnected|\n|13|Initial sync in progress|\n|14|Sync in progress|\n|15|System is fully in sync|\n",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_MEDIUM",
+              "horizontalAlignment": "H_CENTER",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_CENTER"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 46,
+        "width": 9,
+        "height": 10,
+        "widget": {
+          "text": {
+            "content": "|**Value**|**Status**|\n|----|------|\n|0|Node is in unknown state|\n|1|Current secondary node|\n|2|Primary node, unavailable|\n|3|Primary node, not in sync|\n|4|Primary node, in sync|",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_MEDIUM",
+              "horizontalAlignment": "H_CENTER",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_CENTER"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 4,
+        "width": 47,
+        "height": 11,
+        "widget": {
+          "text": {
+            "content": "This playbook will assist you with troubleshooting issues related to SAP HANA unavailability, replication status, and whether a failover successfully took place.\n\nPrerequisites to use this dashboard:\n* [Google Agent for SAP](https://cloud.google.com/solutions/sap/docs/agent-for-sap/latest/install-config) is installed on all compute instances running SAP HANA\n* Each installed agent has [Process Monitoring metrics collection is enabled](https://cloud.google.com/solutions/sap/docs/agent-for-sap/latest/configure-process-monitoring#enable_process_monitoring_metrics_collection)\n\nIf this Google Cloud project has several SAP HANA system deployed then it is recommended to use the dropdown menu to filter by a SAP HANA [SID](https://help.sap.com/docs/SAP_HANA_PLATFORM/4e9b18c116aa42fc84c7dbfd02111aba/f6b1bd1020984ee69e902b21b702c096.html).\n\nA VM Reset pin on the timeline indicates when the instance was reset by Pacemaker or an end-user if it is a standalone system.",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 31,
+        "width": 15,
+        "height": 11,
+        "widget": {
+          "title": "Notes",
+          "text": {
+            "content": "An unavailable `hdbdaemon` service typically means the all SAP HANA services were unavailable. If a node went offline then it is expected to see all of the node's services to become temporarily unavailable after the node comes back online.\n\nWith the exception of `hdbindexserver`, all HANA services should instantly be restarted by `hdbdaemon`. As such, this brief unavailability may not always be captured by this chart.\n\nFurthermore, on SUSE clusters an `hdbindexserver` unavailability may not necessarily result in a failover if SAP HANA is configured to restart the service using [susChkSrv.py hook](https://www.suse.com/c/emergency-braking-for-sap-hana-dying-indexserver/).\n\nIn general, to understand why a service was unavailable, inspect the [SAP HANA trace logs](https://help.sap.com/docs/SAP_HANA_PLATFORM/6b94445c94ae495c83a19646e7c3fd56/335e2374c20245e78c9c4c6ce5b0fec6.html ) for further clues.",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      }
+    ]
+  },
   "dashboardFilters": [
-    {
-      "filterType": "SYSTEM_METADATA_LABEL",
-      "labelKey": "name",
-      "stringValue": "",
-      "templateVariable": ""
-    },
     {
       "filterType": "METRIC_LABEL",
       "labelKey": "sid",
@@ -14,171 +275,5 @@
       "templateVariable": ""
     }
   ],
-  "mosaicLayout": {
-    "columns": 48,
-    "tiles": [
-      {
-        "width": 24,
-        "height": 16,
-        "widget": {
-          "title": "HANA System Availability",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "${labels.metadata\\.system\\.name} ${labels.metric\\.sid}:${labels.metric\\.instance_nr} ${labels.status}",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/sap/hana/availability'\n| group_by [metadata.system_labels.name, metric.sid,metric.instance_nr], \n| map add[status:\n        if(val() == 1, 'All processes are active','One or more processes are not active')]",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "xPos": 24,
-        "yPos": 16,
-        "width": 24,
-        "height": 16,
-        "widget": {
-          "title": "HANA High Availability Status",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "${labels.metadata\\.system\\.name} ${labels.metric\\.sid}:${labels.metric\\.instance_nr} ${labels.status}",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/sap/hana/ha/availability'\n| group_by[metadata.system_labels.name, metric.sid,metric.instance_nr]\n| every 1m\n| map add[status:\n        if(val() == 4, ' is primary, in sync',\n            if(val() == 3, ' is primary, not in sync',\n                if(val() == 2, ' is primary but has sync error',\n                    if(val() == 1, '  is secondary',' Unknown'))))]\n",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 16,
-        "width": 24,
-        "height": 16,
-        "widget": {
-          "title": "HANA Service Availability",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "${labels.metadata\\.system\\.name} ${labels.metric\\.sid}:${labels.metric\\.instance_nr} ${labels.metric\\.service_name} ${labels.status}",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/sap/hana/service'\n| group_by [ metadata.system_labels.name, metric.sid,metric.instance_nr, metric.service_name]\n| map add[status:\n        if(val() == 1, 'Running','Not running')]",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "xPos": 24,
-        "width": 24,
-        "height": 16,
-        "widget": {
-          "title": "HANA Replication Status",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "${labels.metadata\\.system\\.name} ${labels.metric\\.sid}:${labels.metric\\.instance_nr} ${labels.status}",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/sap/hana/ha/replication'\n| group_by [metadata.system_labels.name, metric.sid], min(val())\n| map add[status:\n        if(val() == 15, 'is Primary',\n            if(val() == 12, 'is Secondary',\n                if(val() == 10, 'has replication disabled','in status ERROR')))]",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "xPos": 24,
-        "yPos": 32,
-        "width": 24,
-        "height": 16,
-        "widget": {
-          "title": "Pacemaker Resource Agent Status",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/sap/cluster/resources'\n| map add[status:\n        if(val() == 3, ' Running',\n            if(val() == 2, ' Starting',\n                if(val() == 1, ' Stopped',\n                    if(val() == 0, ' Failed',' Unknown'))))]",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LOG10"
-            }
-          }
-        }
-      }
-    ]
-  },
   "labels": {}
 }
