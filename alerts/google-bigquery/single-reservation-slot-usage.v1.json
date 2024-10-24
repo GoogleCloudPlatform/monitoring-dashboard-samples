@@ -1,0 +1,22 @@
+{
+  "displayName": "Slot Usage - Reservation ${FULL_RESERVATION_ID} Slot Usage Too High",
+  "documentation": {
+    "content": "This alert fires when the slot usage of reservation ${FULL_RESERVATION_ID} exceeds 95% of the assigned slots.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Slot Usage - Reservation ${FULL_RESERVATION_ID} Slot Usage Too High",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "3600s",
+        "query": "max by (location) (label_replace(avg_over_time(bigquery_googleapis_com:slots_allocated{monitored_resource =\"bigquery_project\", reservation=~\"projects/.*/${RESERVATION_NAME}\"}[1h]), \"reservation\", \"$1\", \"reservation\", \".*/.*/(.*)\" )) / ignoring(reservation, job_type) max by (location)(avg_over_time(bigquery_googleapis_com:slots_assigned{monitored_resource = \"bigquery_project\", reservation=\"${RESERVATION_NAME}\"}[1h])) > 0.95"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}

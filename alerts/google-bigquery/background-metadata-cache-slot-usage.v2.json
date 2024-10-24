@@ -1,0 +1,22 @@
+{
+  "displayName": "Slot Usage - Background Metadata Cache Slot Usage Too High",
+  "documentation": {
+    "content": "This alert fires when the slot usage of a background metadata cache job type reservation exceeds 95% of the allocated slots.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Slot Usage - Background Metadata Cache Slot Usage",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "3600s",
+        "query": "max by (location,reservation) (label_replace(avg_over_time(bigquery_googleapis_com:slots_allocated{monitored_resource =\"bigquery_project\", job_type=\"background_metadata_cache\"}[1h]), \"reservation\", \"$1\", \"reservation\", \".*/.*/(.*)\" )) /  on(reservation, location) group_left max by (location, reservation)(avg_over_time( bigquery_googleapis_com:slots_assigned{monitored_resource = \"bigquery_project\", job_type=\"BACKGROUND\"}[1h]))  > 0.95"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
