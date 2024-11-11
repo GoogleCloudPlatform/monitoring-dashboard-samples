@@ -24,17 +24,36 @@
         "width": 24,
         "height": 16,
         "widget": {
-          "title": "Table count",
+          "title": "Datasets",
           "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "column": "dataset_id",
+                "displayName": "Name",
+                "visible": true
+              },
+              {
+                "column": "project_id",
+                "displayName": "Project",
+                "visible": true
+              },
+              {
+                "column": "value",
+                "displayName": "Table Count",
+                "visible": true
+              }
+            ],
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
                 "timeSeriesQuery": {
+                  "outputFullDuration": true,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
+                        "resource.label.\"dataset_id\"",
                         "resource.label.\"project_id\""
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
@@ -44,7 +63,13 @@
                 }
               }
             ],
-            "metricVisualization": "NUMBER"
+            "displayColumnType": false,
+            "metricVisualization": "NUMBER",
+            "opsAnalyticsSettings": {
+              "maxRows": "0",
+              "pageSize": "0",
+              "showFilterBar": false
+            }
           }
         }
       },
