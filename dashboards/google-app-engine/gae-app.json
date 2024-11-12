@@ -1078,47 +1078,68 @@
         "width": 24,
         "height": 15,
         "widget": {
+          "title": "App Versions",
           "timeSeriesTable": {
-            "dataSets": [
-              {
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "filter": "metric.type=\"appengine.googleapis.com/system/instance_count\" resource.type=\"gae_app\"",
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_MEAN",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"module_id\"",
-                        "resource.label.\"project_id\""
-                      ]
-                    }
-                  },
-                  "unitOverride": "",
-                  "outputFullDuration": true
-                },
-                "tableTemplate": "",
-                "minAlignmentPeriod": "60s"
-              }
-            ],
-            "metricVisualization": "NUMBER",
             "columnSettings": [
               {
                 "column": "module_id",
+                "displayName": "Service",
                 "visible": true
               },
               {
                 "column": "project_id",
+                "displayName": "Project",
                 "visible": true
               },
               {
                 "column": "value",
                 "visible": false
+              },
+              {
+                "column": "version_id",
+                "displayName": "Version",
+                "visible": true
+              },
+              {
+                "column": "monitored_resource_container",
+                "visible": true
+              },
+              {
+                "column": "zone",
+                "displayName": "Location",
+                "visible": true
               }
             ],
-            "displayColumnType": false
-          },
-          "title": "App Versions"
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"module_id\"",
+                        "resource.label.\"version_id\"",
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"zone\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"appengine.googleapis.com/system/instance_count\" resource.type=\"gae_app\""
+                  }
+                }
+              }
+            ],
+            "displayColumnType": false,
+            "metricVisualization": "NUMBER",
+            "opsAnalyticsSettings": {
+              "maxRows": "0",
+              "pageSize": "0",
+              "showFilterBar": false
+            }
+          }
         }
       },
       {
