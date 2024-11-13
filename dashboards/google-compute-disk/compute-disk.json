@@ -1,27 +1,45 @@
 {
   "displayName": "Disks",
-  "dashboardFilters": [],
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
       {
         "width": 48,
-        "height": 28,
+        "height": 19,
         "widget": {
-          "title": "Disk Bytes Used per Disk",
+          "title": "Disks",
           "timeSeriesTable": {
             "columnSettings": [
               {
                 "column": "device",
+                "displayName": "Device",
                 "visible": true
               },
               {
                 "column": "value",
+                "displayName": "Size",
                 "visible": true
               },
               {
                 "column": "system_labels.name",
+                "displayName": "Disk",
                 "visible": true
+              },
+              {
+                "column": "Name (from instance_id)",
+                "visible": false
+              },
+              {
+                "column": "instance_id",
+                "visible": false
+              },
+              {
+                "column": "project_id",
+                "visible": false
+              },
+              {
+                "column": "zone",
+                "visible": false
               }
             ],
             "dataSets": [
@@ -57,141 +75,173 @@
         }
       },
       {
-        "yPos": 28,
+        "yPos": 19,
         "width": 24,
         "height": 16,
         "widget": {
-          "title": "Incidents",
           "incidentList": {
             "monitoredResources": [
               {
-                "labels": {},
-                "type": "gce_disk"
+                "type": "gce_disk",
+                "labels": {}
               }
             ],
             "policyNames": []
-          }
+          },
+          "title": "Incidents",
+          "id": ""
         }
       },
       {
         "xPos": 24,
-        "yPos": 28,
+        "yPos": 19,
         "width": 24,
         "height": 16,
         "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"agent.googleapis.com/disk/read_bytes_count\" resource.type=\"gce_instance\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"instance_id\""
+                      ]
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"agent.googleapis.com/disk/write_bytes_count\" resource.type=\"gce_instance\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"instance_id\""
+                      ]
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
           "title": "Volume Throughput",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"project_id\"",
-                        "resource.label.\"instance_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"agent.googleapis.com/disk/read_bytes_count\" resource.type=\"gce_instance\""
-                  }
-                }
-              },
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"project_id\"",
-                        "resource.label.\"instance_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"agent.googleapis.com/disk/write_bytes_count\" resource.type=\"gce_instance\""
-                  }
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
+          "id": ""
         }
       },
       {
         "xPos": 24,
-        "yPos": 44,
+        "yPos": 35,
         "width": 24,
         "height": 16,
         "widget": {
-          "title": "Volume IOPS",
           "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
             "dataSets": [
               {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
+                    "filter": "metric.type=\"compute.googleapis.com/instance/disk/read_ops_count\" resource.type=\"gce_instance\"",
                     "aggregation": {
                       "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
                         "metric.label.\"instance_name\"",
                         "resource.label.\"project_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"compute.googleapis.com/instance/disk/read_ops_count\" resource.type=\"gce_instance\""
-                  }
-                }
+                      ]
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
               },
               {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
+                    "filter": "metric.type=\"compute.googleapis.com/instance/disk/write_ops_count\" resource.type=\"gce_instance\"",
                     "aggregation": {
                       "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
                         "metric.label.\"instance_name\"",
                         "resource.label.\"project_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"compute.googleapis.com/instance/disk/write_ops_count\" resource.type=\"gce_instance\""
-                  }
-                }
+                      ]
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
               }
             ],
             "thresholds": [],
             "yAxis": {
               "label": "",
               "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
             }
-          }
+          },
+          "title": "Volume IOPS",
+          "id": ""
         }
       }
     ]
   },
+  "dashboardFilters": [],
   "labels": {}
 }
