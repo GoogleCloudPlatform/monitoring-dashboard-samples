@@ -1,0 +1,182 @@
+platforms:
+- type: GCE
+  launch_stage: GA
+  install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party/mysql
+  agent_requirement:
+    logs_minimum_supported_version:
+      major: 2
+      minor: 33
+      patch: 0
+    metrics_minimum_supported_version:
+      major: 2
+      minor: 33
+      patch: 0
+  detections:
+  - characteristic_log:
+      log_name_regex: mysql5.7
+  - characteristic_metric:
+      metric_type: workload.googleapis.com/mysql.threads
+  default_logs:
+  - name: mysql_general
+    fields:
+    - name: jsonPayload.message
+      type: string
+      description: Log of the database action
+    - name: jsonPayload.command
+      type: string
+      description: Type of database action being logged
+    - name: jsonPayload.tid
+      type: number
+      description: Thread ID where the log originated
+    - name: severity
+      type: string
+      description: ''
+  - name: mysql_slow
+    fields:
+    - name: jsonPayload.message
+      type: string
+      description: Full text of the query
+    - name: jsonPayload.user
+      type: string
+      description: User that executed the query
+    - name: jsonPayload.database
+      type: string
+      description: Database where the query was executed
+    - name: jsonPayload.host
+      type: string
+      description: Host of the database instance
+    - name: jsonPayload.ipAddress
+      type: string
+      description: Address of the database instance
+    - name: jsonPayload.tid
+      type: number
+      description: Thread ID where the query was logged
+    - name: jsonPayload.queryTime
+      type: number
+      description: The statement execution time in seconds
+    - name: jsonPayload.lockTime
+      type: number
+      description: The time to acquire locks in seconds
+    - name: jsonPayload.rowsSent
+      type: number
+      description: The number of rows sent to the client
+    - name: jsonPayload.rowsExamined
+      type: number
+      description: The number of rows examined by the server layer
+    - name: severity
+      type: string
+      description: ''
+    - name: jsonPayload.level
+      type: string
+      description: Log entry level
+  default_metrics:
+  - name: workload.googleapis.com/mysql.buffer_pool_data_pages
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - instrumentation_source
+    - status
+  - name: workload.googleapis.com/mysql.buffer_pool_limit
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - instrumentation_source
+  - name: workload.googleapis.com/mysql.buffer_pool_operations
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - instrumentation_source
+    - operation
+  - name: workload.googleapis.com/mysql.buffer_pool_page_flushes
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - instrumentation_source
+  - name: workload.googleapis.com/mysql.buffer_pool_pages
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - instrumentation_source
+    - kind
+  - name: workload.googleapis.com/mysql.buffer_pool_size
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - instrumentation_source
+    - kind
+  - name: workload.googleapis.com/mysql.commands
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - command
+    - instrumentation_source
+  - name: workload.googleapis.com/mysql.double_writes
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - instrumentation_source
+    - kind
+  - name: workload.googleapis.com/mysql.handlers
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - instrumentation_source
+    - kind
+  - name: workload.googleapis.com/mysql.locks
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - instrumentation_source
+    - kind
+  - name: workload.googleapis.com/mysql.log_operations
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - instrumentation_source
+    - operation
+  - name: workload.googleapis.com/mysql.operations
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - instrumentation_source
+    - operation
+  - name: workload.googleapis.com/mysql.page_operations
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - instrumentation_source
+    - operation
+  - name: workload.googleapis.com/mysql.replica.time_behind_source
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - instrumentation_source
+  - name: workload.googleapis.com/mysql.replica.sql_delay
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - instrumentation_source
+  - name: workload.googleapis.com/mysql.row_locks
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - instrumentation_source
+    - kind
+  - name: workload.googleapis.com/mysql.row_operations
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - instrumentation_source
+    - operation
+  - name: workload.googleapis.com/mysql.sorts
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - instrumentation_source
+    - kind
+  - name: workload.googleapis.com/mysql.threads
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - instrumentation_source
+    - kind

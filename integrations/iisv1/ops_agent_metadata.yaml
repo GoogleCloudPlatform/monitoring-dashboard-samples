@@ -8,14 +8,14 @@ platforms:
       minor: 14
       patch: 0
     metrics_minimum_supported_version:
-      major: 2
-      minor: 15
+      major: 1
+      minor: 0
       patch: 0
   detections:
   - characteristic_log:
-      log_name_regex: iis
+      log_name_regex: iisv1
   - characteristic_metric:
-      metric_type: workload.googleapis.com/iis.request.count
+      metric_type: agent.googleapis.com/iis/request_count
   default_logs:
   - name: iis_access
     fields:
@@ -56,54 +56,21 @@ platforms:
       type: string
       description: ''
   default_metrics:
-  - name: workload.googleapis.com/iis.request.count
-    value_type: INT64
-    kind: CUMULATIVE
-    labels:
-    - request
-  - name: workload.googleapis.com/iis.request.rejected
-    value_type: INT64
-    kind: CUMULATIVE
-    labels: []
-  - name: workload.googleapis.com/iis.request.queue.count
-    value_type: INT64
+  - name: agent.googleapis.com/iis/current_connections
+    value_type: DOUBLE
     kind: GAUGE
     labels: []
-  - name: workload.googleapis.com/iis.request.queue.age.max
-    value_type: INT64
-    kind: GAUGE
-    labels: []
-  - name: workload.googleapis.com/iis.network.file.count
+  - name: agent.googleapis.com/iis/network/transferred_bytes_count
     value_type: INT64
     kind: CUMULATIVE
     labels:
     - direction
-  - name: workload.googleapis.com/iis.network.blocked
+  - name: agent.googleapis.com/iis/new_connection_count
     value_type: INT64
     kind: CUMULATIVE
     labels: []
-  - name: workload.googleapis.com/iis.network.io
+  - name: agent.googleapis.com/iis/request_count
     value_type: INT64
     kind: CUMULATIVE
     labels:
-    - direction
-  - name: workload.googleapis.com/iis.connection.attempt.count
-    value_type: INT64
-    kind: CUMULATIVE
-    labels: []
-  - name: workload.googleapis.com/iis.connection.active
-    value_type: INT64
-    kind: GAUGE
-    labels: []
-  - name: workload.googleapis.com/iis.connection.anonymous
-    value_type: INT64
-    kind: CUMULATIVE
-    labels: []
-  - name: workload.googleapis.com/iis.thread.active
-    value_type: INT64
-    kind: GAUGE
-    labels: []
-  - name: workload.googleapis.com/iis.uptime
-    value_type: INT64
-    kind: GAUGE
-    labels: []
+    - http_method

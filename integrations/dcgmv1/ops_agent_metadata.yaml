@@ -1,0 +1,64 @@
+platforms:
+- type: GCE
+  launch_stage: GA
+  install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party-nvidia
+  agent_requirement:
+    metrics_minimum_supported_version:
+      major: 2
+      minor: 38
+      patch: 0
+  detections:
+  - characteristic_metric:
+      metric_type: workload.googleapis.com/dcgm.gpu.profiling.sm_utilization
+  default_metrics:
+  - name: workload.googleapis.com/dcgm.gpu.profiling.sm_utilization
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - gpu_number
+    - instrumentation_source
+    - model
+    - uuid
+  - name: workload.googleapis.com/dcgm.gpu.profiling.sm_occupancy
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - gpu_number
+    - instrumentation_source
+    - model
+    - uuid
+  - name: workload.googleapis.com/dcgm.gpu.profiling.pipe_utilization
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - gpu_number
+    - instrumentation_source
+    - model
+    - pipe
+    - uuid
+  - name: workload.googleapis.com/dcgm.gpu.profiling.dram_utilization
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - gpu_number
+    - instrumentation_source
+    - model
+    - uuid
+  - name: workload.googleapis.com/dcgm.gpu.profiling.pcie_traffic_rate
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - direction
+    - gpu_number
+    - instrumentation_source
+    - model
+    - uuid
+  - name: workload.googleapis.com/dcgm.gpu.profiling.nvlink_traffic_rate
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - direction
+    - gpu_number
+    - instrumentation_source
+    - model
+    - uuid
