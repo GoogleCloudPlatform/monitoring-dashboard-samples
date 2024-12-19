@@ -1,6 +1,7 @@
 platforms:
 - type: GCE
   launch_stage: GA
+  version: '1'
   install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party-nvidia
   agent_requirement:
     metrics_minimum_supported_version:
@@ -53,6 +54,123 @@ platforms:
     kind: GAUGE
     labels:
     - direction
+    - gpu_number
+    - model
+    - uuid
+- type: GCE
+  launch_stage: GA
+  version: '2'
+  install_documentation_url: https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/third-party-nvidia
+  agent_requirement:
+    metrics_minimum_supported_version:
+      major: 2
+      minor: 51
+      patch: 0
+  detections:
+  - characteristic_metric:
+      metric_type: workload.googleapis.com/gpu.dcgm.memory.bytes_used
+  default_metrics:
+  - name: workload.googleapis.com/gpu.dcgm.utilization
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - gpu_number
+    - model
+    - uuid
+  - name: workload.googleapis.com/gpu.dcgm.sm.utilization
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - gpu_number
+    - model
+    - uuid
+  - name: workload.googleapis.com/gpu.dcgm.pipe.utilization
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - gpu_number
+    - model
+    - pipe
+    - uuid
+  - name: workload.googleapis.com/gpu.dcgm.codec.encoder.utilization
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - gpu_number
+    - model
+    - uuid
+  - name: workload.googleapis.com/gpu.dcgm.codec.decoder.utilization
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - gpu_number
+    - model
+    - uuid
+  - name: workload.googleapis.com/gpu.dcgm.memory.bytes_used
+    value_type: INT64
+    kind: GAUGE
+    labels:
+    - gpu_number
+    - model
+    - state
+    - uuid
+  - name: workload.googleapis.com/gpu.dcgm.memory.bandwidth_utilization
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - gpu_number
+    - model
+    - uuid
+  - name: workload.googleapis.com/gpu.dcgm.pcie.io
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - direction
+    - gpu_number
+    - model
+    - uuid
+  - name: workload.googleapis.com/gpu.dcgm.nvlink.io
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - direction
+    - gpu_number
+    - model
+    - uuid
+  - name: workload.googleapis.com/gpu.dcgm.energy_consumption
+    value_type: DOUBLE
+    kind: CUMULATIVE
+    labels:
+    - gpu_number
+    - model
+    - uuid
+  - name: workload.googleapis.com/gpu.dcgm.temperature
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - gpu_number
+    - model
+    - uuid
+  - name: workload.googleapis.com/gpu.dcgm.clock.frequency
+    value_type: DOUBLE
+    kind: GAUGE
+    labels:
+    - gpu_number
+    - model
+    - uuid
+  - name: workload.googleapis.com/gpu.dcgm.clock.throttle_duration.time
+    value_type: DOUBLE
+    kind: CUMULATIVE
+    labels:
+    - gpu_number
+    - model
+    - uuid
+    - violation
+  - name: workload.googleapis.com/gpu.dcgm.ecc_errors
+    value_type: INT64
+    kind: CUMULATIVE
+    labels:
+    - error_type
     - gpu_number
     - model
     - uuid
