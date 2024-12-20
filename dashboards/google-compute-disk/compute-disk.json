@@ -7,23 +7,46 @@
         "width": 24,
         "height": 19,
         "widget": {
-          "title": "Disks",
           "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"agent.googleapis.com/disk/bytes_used\" resource.type=\"gce_instance\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"instance_id\"",
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"zone\"",
+                        "metadata.system_labels.\"name\"",
+                        "metric.label.\"device\""
+                      ]
+                    }
+                  }
+                },
+                "tableTemplate": "",
+                "minAlignmentPeriod": "60s"
+              }
+            ],
+            "metricVisualization": "NUMBER",
             "columnSettings": [
               {
                 "column": "device",
-                "displayName": "Device",
-                "visible": true
+                "visible": true,
+                "displayName": "Device"
               },
               {
                 "column": "value",
-                "displayName": "Bytes Used",
-                "visible": true
+                "visible": true,
+                "displayName": "Bytes Used"
               },
               {
                 "column": "system_labels.name",
-                "displayName": "Disk",
-                "visible": true
+                "visible": true,
+                "displayName": "Disk"
               },
               {
                 "column": "instance_id",
@@ -38,36 +61,14 @@
                 "visible": false
               }
             ],
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"instance_id\"",
-                        "resource.label.\"project_id\"",
-                        "resource.label.\"zone\"",
-                        "metadata.system_labels.\"name\"",
-                        "metric.label.\"device\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"agent.googleapis.com/disk/bytes_used\" resource.type=\"gce_instance\""
-                  }
-                }
-              }
-            ],
-            "displayColumnType": false,
-            "metricVisualization": "NUMBER",
             "opsAnalyticsSettings": {
               "maxRows": "0",
-              "pageSize": "0",
-              "showFilterBar": false
-            }
-          }
+              "showFilterBar": false,
+              "pageSize": "0"
+            },
+            "displayColumnType": false
+          },
+          "title": "Disks"
         }
       },
       {
@@ -78,7 +79,8 @@
           "incidentList": {
             "monitoredResources": [
               {
-                "type": "gce_disk"
+                "type": "gce_disk",
+                "labels": {}
               }
             ],
             "policyNames": []
@@ -129,13 +131,12 @@
                   }
                 },
                 "plotType": "LINE",
+                "legendTemplate": "",
                 "minAlignmentPeriod": "60s",
                 "targetAxis": "Y1"
               }
             ],
-            "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             },
             "chartOptions": {
@@ -171,6 +172,7 @@
                   }
                 },
                 "plotType": "LINE",
+                "legendTemplate": "",
                 "minAlignmentPeriod": "60s",
                 "targetAxis": "Y1"
               },
@@ -190,11 +192,13 @@
                   }
                 },
                 "plotType": "LINE",
+                "legendTemplate": "",
                 "minAlignmentPeriod": "60s",
                 "targetAxis": "Y1"
               }
             ],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             },
             "chartOptions": {
