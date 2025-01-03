@@ -7,121 +7,190 @@
         "width": 24,
         "height": 16,
         "widget": {
-          "title": "Incidents",
           "incidentList": {
             "monitoredResources": [
               {
-                "labels": {},
                 "type": "bigquery_dataset"
               }
-            ],
-            "policyNames": []
-          }
+            ]
+          },
+          "title": "Incidents"
         }
       },
       {
-        "yPos": 16,
+        "xPos": 24,
         "width": 24,
         "height": 16,
         "widget": {
-          "title": "Datasets",
           "timeSeriesTable": {
-            "columnSettings": [
-              {
-                "column": "dataset_id",
-                "displayName": "Name",
-                "visible": true
-              },
-              {
-                "column": "project_id",
-                "displayName": "Project",
-                "visible": true
-              },
-              {
-                "column": "value",
-                "displayName": "Table Count",
-                "visible": true
-              }
-            ],
             "dataSets": [
               {
-                "minAlignmentPeriod": "60s",
                 "timeSeriesQuery": {
-                  "outputFullDuration": true,
                   "timeSeriesFilter": {
+                    "filter": "metric.type=\"bigquery.googleapis.com/storage/table_count\" resource.type=\"bigquery_dataset\"",
                     "aggregation": {
                       "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
                         "resource.label.\"dataset_id\"",
                         "resource.label.\"project_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"bigquery.googleapis.com/storage/table_count\" resource.type=\"bigquery_dataset\""
+                      ]
+                    }
                   }
-                }
+                },
+                "minAlignmentPeriod": "60s"
               }
             ],
-            "displayColumnType": false,
             "metricVisualization": "NUMBER",
+            "columnSettings": [
+              {
+                "column": "dataset_id",
+                "visible": true,
+                "displayName": "Name"
+              },
+              {
+                "column": "project_id",
+                "visible": true,
+                "displayName": "Project"
+              },
+              {
+                "column": "value",
+                "visible": true,
+                "displayName": "Table Count"
+              }
+            ],
             "opsAnalyticsSettings": {
               "maxRows": "0",
-              "pageSize": "0",
-              "showFilterBar": false
-            }
-          }
-        }
-      },
-      {
-        "xPos": 24,
-        "width": 24,
-        "height": 16,
-        "widget": {
-          "singleViewGroup": {}
-        }
-      },
-      {
-        "xPos": 24,
-        "width": 24,
-        "height": 16,
-        "widget": {
-          "title": " Queries In Flight",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
+              "showFilterBar": false,
+              "pageSize": "0"
             },
+            "displayColumnType": false
+          },
+          "title": "Datasets"
+        }
+      },
+      {
+        "yPos": 48,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
             "dataSets": [
               {
-                "legendTemplate": "${resource.labels.project_id}",
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
+                    "filter": "metric.type=\"bigquery.googleapis.com/storage/table_count\" resource.type=\"bigquery_dataset\"",
                     "aggregation": {
                       "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
-                        "resource.label.\"project_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"bigquery.googleapis.com/query/count\" resource.type=\"global\""
+                        "resource.label.\"dataset_id\""
+                      ]
+                    }
                   }
-                }
+                },
+                "plotType": "LINE",
+                "legendTemplate": "${resource.labels.dataset_id}",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1"
               }
             ],
-            "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
             }
-          }
+          },
+          "title": " Tables"
         }
       },
       {
         "xPos": 24,
+        "yPos": 48,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"bigquery.googleapis.com/storage/stored_bytes\" resource.type=\"bigquery_dataset\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"table\""
+                      ]
+                    }
+                  }
+                },
+                "plotType": "LINE",
+                "legendTemplate": "${resource.labels.dataset_id}: ${metric.labels.table}",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1"
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Stored Bytes"
+        }
+      },
+      {
+        "yPos": 64,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"bigquery.googleapis.com/storage/uploaded_row_count\" resource.type=\"bigquery_dataset\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"table\""
+                      ]
+                    }
+                  }
+                },
+                "plotType": "LINE",
+                "legendTemplate": "${resource.labels.dataset_id}: ${metric.labels.table}",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1"
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Uploaded Rows"
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 16,
         "width": 24,
         "height": 16,
         "widget": {
@@ -148,224 +217,166 @@
                 }
               }
             ],
-            "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 24,
+        "yPos": 16,
         "width": 24,
         "height": 16,
         "widget": {
-          "title": "Slot Utilization",
           "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
             "dataSets": [
               {
-                "legendTemplate": "${resource.labels.project_id}: ${shortMetric}",
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
+                    "filter": "metric.type=\"bigquery.googleapis.com/query/count\" resource.type=\"global\"",
                     "aggregation": {
                       "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"project_id\""
+                      ]
+                    }
+                  }
+                },
+                "plotType": "LINE",
+                "legendTemplate": "${resource.labels.project_id}",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1"
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": " Queries In Flight"
+        }
+      },
+      {
+        "yPos": 32,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"bigquery.googleapis.com/slots/allocated_for_project\" resource.type=\"global\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
                       "crossSeriesReducer": "REDUCE_MEAN",
                       "groupByFields": [
                         "resource.label.\"project_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"bigquery.googleapis.com/slots/allocated_for_project\" resource.type=\"global\""
+                      ]
+                    }
                   }
-                }
+                },
+                "plotType": "LINE",
+                "legendTemplate": "${resource.labels.project_id}: ${shortMetric}",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1"
               },
               {
-                "legendTemplate": "${resource.labels.project_id}: ${shortMetric} for ${metric.labels.job_type} jobs",
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
+                    "filter": "metric.type=\"bigquery.googleapis.com/slots/assigned\" resource.type=\"bigquery_project\"",
                     "aggregation": {
                       "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
                       "crossSeriesReducer": "REDUCE_MEAN",
                       "groupByFields": [
                         "resource.label.\"project_id\"",
                         "metric.label.\"job_type\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"bigquery.googleapis.com/slots/assigned\" resource.type=\"bigquery_project\""
+                      ]
+                    }
                   }
-                }
-              },
-              {
+                },
+                "plotType": "LINE",
                 "legendTemplate": "${resource.labels.project_id}: ${shortMetric} for ${metric.labels.job_type} jobs",
                 "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
+                "targetAxis": "Y1"
+              },
+              {
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
+                    "filter": "metric.type=\"bigquery.googleapis.com/slots/max_assigned\" resource.type=\"bigquery_project\"",
                     "aggregation": {
                       "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
                       "crossSeriesReducer": "REDUCE_MEAN",
                       "groupByFields": [
                         "resource.label.\"project_id\"",
                         "metric.label.\"job_type\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"bigquery.googleapis.com/slots/max_assigned\" resource.type=\"bigquery_project\""
+                      ]
+                    }
                   }
-                }
+                },
+                "plotType": "LINE",
+                "legendTemplate": "${resource.labels.project_id}: ${shortMetric} for ${metric.labels.job_type} jobs",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1"
               }
             ],
-            "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
             }
+          },
+          "title": "Slot Utilization"
+        }
+      },
+      {
+        "yPos": 16,
+        "width": 48,
+        "height": 32,
+        "widget": {
+          "title": "Project Metrics",
+          "collapsibleGroup": {
+            "collapsed": false
           }
         }
       },
       {
-        "xPos": 24,
-        "yPos": 16,
-        "width": 24,
-        "height": 16,
+        "yPos": 48,
+        "width": 48,
+        "height": 32,
         "widget": {
-          "singleViewGroup": {}
-        }
-      },
-      {
-        "xPos": 24,
-        "yPos": 16,
-        "width": 24,
-        "height": 16,
-        "widget": {
-          "title": " Tables",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "legendTemplate": "${resource.labels.dataset_id}",
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"dataset_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"bigquery.googleapis.com/storage/table_count\" resource.type=\"bigquery_dataset\""
-                  }
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "xPos": 24,
-        "yPos": 16,
-        "width": 24,
-        "height": 16,
-        "widget": {
-          "title": "Stored Bytes",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "legendTemplate": "${resource.labels.dataset_id}: ${metric.labels.table}",
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "metric.label.\"table\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"bigquery.googleapis.com/storage/stored_bytes\" resource.type=\"bigquery_dataset\""
-                  }
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "xPos": 24,
-        "yPos": 16,
-        "width": 24,
-        "height": 16,
-        "widget": {
-          "title": "Uploaded Rows",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "legendTemplate": "${resource.labels.dataset_id}: ${metric.labels.table}",
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "metric.label.\"table\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"bigquery.googleapis.com/storage/uploaded_row_count\" resource.type=\"bigquery_dataset\""
-                  }
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
+          "title": "Dataset Metrics",
+          "collapsibleGroup": {
+            "collapsed": false
           }
         }
       }
     ]
   },
-  "dashboardFilters": [],
-  "labels": {}
+  "dashboardFilters": [
+    {
+      "labelKey": "project_id",
+      "filterType": "RESOURCE_LABEL"
+    },
+    {
+      "labelKey": "location",
+      "filterType": "RESOURCE_LABEL"
+    },
+    {
+      "labelKey": "dataset_id",
+      "filterType": "RESOURCE_LABEL"
+    }
+  ]
 }
