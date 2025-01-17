@@ -35,7 +35,7 @@
                     "aggregation": {
                       "alignmentPeriod": "60s",
                       "perSeriesAligner": "ALIGN_DELTA",
-                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
                       "groupByFields": [
                         "resource.label.\"model_user_id\"",
                         "resource.label.\"location\""
@@ -101,7 +101,7 @@
               {
                 "column": "value-1",
                 "visible": true,
-                "displayName": "p50 invocation latency"
+                "displayName": "p99 invocation latency"
               },
               {
                 "column": "value-2",
@@ -609,7 +609,7 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (model_user_id) (rate(aiplatform_googleapis_com:publisher_online_serving_token_count{monitored_resource=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))\n/ sum by (model_user_id) (rate(aiplatform_googleapis_com:publisher_online_serving_model_invocation_count{monitored_resource=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))",
+                  "prometheusQuery": "sum by (model_user_id) (rate(aiplatform_googleapis_com:publisher_online_serving_token_count{monitored_resource=\"aiplatform.googleapis.com/PublisherModel\"}[5m]))\n/ sum by (model_user_id) (rate(aiplatform_googleapis_com:publisher_online_serving_model_invocation_count{monitored_resource=\"aiplatform.googleapis.com/PublisherModel\"}[5m]))",
                   "unitOverride": "",
                   "outputFullDuration": false
                 },
