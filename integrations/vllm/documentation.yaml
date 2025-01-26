@@ -1,0 +1,44 @@
+exporter_type: included
+app_name_short: vLLM
+app_name: {{app_name_short}}
+app_site_name: {{app_name_short}}
+app_site_url: https://docs.vllm.ai/en/latest/
+exporter_name: the {{app_name_short}} exporter
+exporter_pkg_name: vLLM
+exporter_repo_url: https://docs.vllm.ai/en/stable/serving/metrics.html
+additional_prereq_info: |
+  {{app_site_name}} exposes Prometheus-format metrics automatically; you do not
+  have to install it separately. To verify that {{exporter_name}} is emitting
+  metrics on the expected endpoints, do the following:
+
+  1. Set up port forwarding by using the following command:
+
+  <pre class="devsite-click-to-copy">
+  kubectl -n {{namespace_name}} port-forward {{pod_name}} 8000
+  </pre>
+
+  2. Access the endpoint `localhost:8000/metrics` by using the browser
+  or the `curl` utility in another terminal session.
+dashboard_available: true
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: vllm
+    labels:
+      app.kubernetes.io/name: vllm
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: 8000
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+        app: vllm-gemma-server
+additional_podmonitoring_info: |
+  Ensure that the values of the `port` and `matchLabels` fields match those of the {{app_name_short}} pods you want to monitor.
+sample_promql_query: up{job="vllm", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
