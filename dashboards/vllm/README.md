@@ -1,4 +1,4 @@
-### Dashboards for Velero
+### Dashboards for vLLM
 
 #### Notes
 

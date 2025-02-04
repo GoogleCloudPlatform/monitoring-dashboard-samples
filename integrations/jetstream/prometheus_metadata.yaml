@@ -1,0 +1,82 @@
+platforms:
+  - type: GKE
+    launch_stage: HIDDEN
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/jetstream_request_success_count_total/counter
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/jetstream_time_per_request/histogram
+    exporter_metadata:
+      name: Jetstream Prometheus Exporter
+      doc_url: https://github.com/AI-Hypercomputer/JetStream/blob/main/docs/observability-prometheus-metrics-in-jetstream-server.md
+      minimum_supported_version: v0.2.2
+    default_metrics:
+      - name: prometheus.googleapis.com/jetstream_generate_backlog_size/gauge
+        prometheus_name: jetstream_generate_backlog_size
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/jetstream_model_load_time/gauge
+        prometheus_name: jetstream_model_load_time
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/jetstream_prefill_backlog_size/gauge
+        prometheus_name: jetstream_prefill_backlog_size
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/jetstream_queue_duration/histogram
+        prometheus_name: jetstream_queue_duration
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/jetstream_request_input_length/histogram
+        prometheus_name: jetstream_request_input_length
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/jetstream_request_output_length/histogram
+        prometheus_name: jetstream_request_output_length
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/jetstream_request_success_count_total/counter
+        prometheus_name: jetstream_request_success_count_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/jetstream_server_startup_latency/gauge
+        prometheus_name: jetstream_server_startup_latency
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/jetstream_slots_available_percentage/gauge
+        prometheus_name: jetstream_slots_available_percentage
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/jetstream_slots_used_percentage/gauge
+        prometheus_name: jetstream_slots_used_percentage
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/jetstream_time_per_output_token/histogram
+        prometheus_name: jetstream_time_per_output_token
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/jetstream_time_per_prefill_token/histogram
+        prometheus_name: jetstream_time_per_prefill_token
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/jetstream_time_per_request/histogram
+        prometheus_name: jetstream_time_per_request
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/jetstream_time_to_first_token/histogram
+        prometheus_name: jetstream_time_to_first_token
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/jetstream_total_tokens_in_current_batch/gauge
+        prometheus_name: jetstream_total_tokens_in_current_batch
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/jetstream_transfer_backlog_size/gauge
+        prometheus_name: jetstream_transfer_backlog_size
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/jetstream_wait_time_per_request/histogram
+        prometheus_name: jetstream_wait_time_per_request
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/jetstream
