@@ -1,0 +1,39 @@
+exporter_type: included
+app_name_short: JetStream
+app_name: {{app_name_short}}
+app_site_name: {{app_name_short}}
+app_site_url: https://github.com/AI-Hypercomputer/JetStream
+exporter_name: {{app_name_short}}
+exporter_repo_url: https://github.com/AI-Hypercomputer/JetStream/blob/main/docs/observability-prometheus-metrics-in-jetstream-server.md
+additional_prereq_info: |
+  To collect Prometheus-format metrics from {{app_name_short}}, you must first [build and upload a {{app_name_short}} PyTorch server image](https://github.com/AI-Hypercomputer/jetstream-pytorch/tree/main/docker/jetstream-pytorch-server).
+additional_install_info: |
+  To verify that {{exporter_name}} is emitting metrics on the expected endpoints, do the following:
+
+    1. Set up port forwarding by using the following command:
+      <pre class="devsite-click-to-copy">
+      kubectl -n {{namespace_name}} port-forward {{pod_name}} 9090
+      </pre>
+    2. Access the endpoint `localhost:9090/metrics` by using the browser
+      or the `curl` utility in another terminal session.
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: jetstream
+    labels:
+      app.kubernetes.io/name: jetstream
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: 9090
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+        app: jetstream-pytorch-server
+sample_promql_query: up{job="jetstream", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+dashboard_available: true
+multiple_dashboards: false
+dashboard_display_name: {{app_name}} Prometheus Overview
