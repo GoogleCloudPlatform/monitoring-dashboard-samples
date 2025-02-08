@@ -1,0 +1,1009 @@
+{
+  "displayName": "TensorFlow Serving Prometheus Overview",
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "yPos": 8,
+        "width": 16,
+        "height": 8,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:serving:request_count/counter\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace} ${model_name}",
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "perSeriesAligner": "ALIGN_RATE",
+                  "crossSeriesReducer": "REDUCE_SUM",
+                  "groupByFields": []
+                }
+              },
+              "unitOverride": "",
+              "outputFullDuration": true
+            },
+            "blankView": {},
+            "thresholds": [],
+            "dimensions": [],
+            "measures": []
+          },
+          "title": "Request rate",
+          "id": ""
+        }
+      },
+      {
+        "yPos": 16,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Throughput",
+          "sectionHeader": {
+            "subtitle": "Inspect the rate at which the model server is handling requests and processing tokens.",
+            "dividerBelow": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 20,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:serving:request_count/counter\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace} ${model_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"status\""
+                      ]
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "STACKED_BAR",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Request rate",
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 20,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:core:graph_pending_queue_length_histogram/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "p50",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:core:graph_pending_queue_length_histogram/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "p95",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:core:graph_pending_queue_length_histogram/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "p99",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Pending task distribution in graph executor",
+          "id": ""
+        }
+      },
+      {
+        "yPos": 36,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Latency",
+          "sectionHeader": {
+            "subtitle": "Inspect the processing time taken per request.",
+            "dividerBelow": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 40,
+        "width": 24,
+        "height": 18,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:serving:request_latency/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace} ${model_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "p50",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:serving:request_latency/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace} ${model_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "p95",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:serving:request_latency/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace} ${model_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "p99",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Request latency (us)",
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 40,
+        "width": 24,
+        "height": 18,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:serving:runtime_latency/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace} ${model_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "p50",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:serving:runtime_latency/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace} ${model_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "p95",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:serving:runtime_latency/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace} ${model_name}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "p99",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Runtime latency (us)",
+          "id": ""
+        }
+      },
+      {
+        "xPos": 16,
+        "yPos": 8,
+        "width": 16,
+        "height": 8,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:serving:request_latency/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace} ${model_name}",
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "perSeriesAligner": "ALIGN_DELTA",
+                  "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                  "groupByFields": []
+                }
+              },
+              "unitOverride": "",
+              "outputFullDuration": true
+            },
+            "blankView": {},
+            "thresholds": [],
+            "dimensions": [],
+            "measures": []
+          },
+          "title": "p50 Serving Request Latency (us)",
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 114,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum(rate(:tensorflow:core:graph_build_time_usecs{${cluster}, ${location}, ${namespace}}[${__interval}]))",
+                  "unitOverride": "us",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Graph build time (us)",
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 98,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:core:graph_build_calls/counter\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace}",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Graph build calls",
+          "id": ""
+        }
+      },
+      {
+        "yPos": 74,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Errors",
+          "sectionHeader": {
+            "subtitle": "Inspect error logs and the rate of requests with status != \"OK\" and logs. Populate the cluster / location / namespace filters to drill down to the relevant logs.",
+            "dividerBelow": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 78,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (status) (rate(:tensorflow:serving:request_count{status!=\"OK\", ${cluster}, ${location}, ${namespace}}[${__interval}])) \n/ \nsum (rate(:tensorflow:serving:request_count{${cluster}, ${location}, ${namespace}}[${__interval}])) * 100 > 0\n\nor\n\nlabel_replace(\n  clamp(\n    sum (rate(:tensorflow:serving:request_count{${cluster}, ${location}, ${namespace}}[${__interval}])), 0, 0),\n  \"status\", \"NOT_OK\", \"\", \"\")\n"
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1"
+              }
+            ],
+            "chartOptions": {
+              "mode": "COLOR",
+              "displayHorizontal": false
+            },
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Unsuccessful request rate by status"
+        }
+      },
+      {
+        "yPos": 78,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "logsPanel": {
+            "filter": "resource.type=\"k8s_container\"\n${cluster}\n${location}\n${namespace}\n",
+            "resourceNames": [
+              "projects/chelseychen-gke-test/locations/global/logScopes/_Default"
+            ]
+          },
+          "title": "Error logs",
+          "id": ""
+        }
+      },
+      {
+        "yPos": 94,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Graph metrics",
+          "sectionHeader": {
+            "subtitle": "The following graph metrics provide insight into the underlying Tensorflow execution performance.",
+            "dividerBelow": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 130,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:core:graph_run_input_tensor_bytes/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace}",
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": []
+                    }
+                  }
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "minAlignmentPeriod": "60s",
+                "legendTemplate": "p50"
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:core:graph_run_input_tensor_bytes/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace}",
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": []
+                    }
+                  }
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "minAlignmentPeriod": "60s",
+                "legendTemplate": "p95"
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:core:graph_run_input_tensor_bytes/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace}",
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": []
+                    }
+                  }
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "minAlignmentPeriod": "60s",
+                "legendTemplate": "p99"
+              }
+            ],
+            "chartOptions": {
+              "mode": "COLOR",
+              "displayHorizontal": false
+            },
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Graph input tensor bytes"
+        }
+      },
+      {
+        "yPos": 114,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum(rate(:tensorflow:core:graph_run_time_usecs{${cluster},${location},${namespace}}[${__interval}]))",
+                  "unitOverride": "us"
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1"
+              }
+            ],
+            "chartOptions": {
+              "mode": "COLOR",
+              "displayHorizontal": false
+            },
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Total graph execution time (us)"
+        }
+      },
+      {
+        "yPos": 98,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:core:graph_runs/counter\" resource.type=\"prometheus_target\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": []
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": false
+                },
+                "plotType": "LINE",
+                "legendTemplate": "",
+                "minAlignmentPeriod": "60s",
+                "targetAxis": "Y1",
+                "dimensions": [],
+                "measures": [],
+                "breakdowns": []
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR",
+              "showLegend": false,
+              "displayHorizontal": false
+            }
+          },
+          "title": "Graph execution rate",
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 130,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:core:graph_optimization_usecs/counter\" resource.type=\"prometheus_target\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"kind\"",
+                        "metric.label.\"name\""
+                      ]
+                    },
+                    "pickTimeSeriesFilter": {
+                      "rankingMethod": "METHOD_MEAN",
+                      "numTimeSeries": 30,
+                      "direction": "TOP"
+                    }
+                  },
+                  "unitOverride": "",
+                  "outputFullDuration": true
+                },
+                "tableTemplate": "",
+                "minAlignmentPeriod": "60s"
+              }
+            ],
+            "metricVisualization": "BAR",
+            "opsAnalyticsSettings": {
+              "maxRows": "0",
+              "showFilterBar": false,
+              "pageSize": "0"
+            },
+            "displayColumnType": false
+          },
+          "title": "Graph optimization time by kind (us)",
+          "id": ""
+        }
+      },
+      {
+        "yPos": 58,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "topk(30, sum by (model_path)(rate(:tensorflow:cc:saved_model:load_latency{${cluster}, ${location}, ${namespace}, ${model_name}}[${__interval}])))\n#This query may not fully reflect the original configuration.",
+                  "unitOverride": "us",
+                  "outputFullDuration": true
+                },
+                "minAlignmentPeriod": "60s"
+              }
+            ],
+            "metricVisualization": "BAR",
+            "columnSettings": [
+              {
+                "column": "Metric",
+                "visible": false
+              },
+              {
+                "column": "model_path",
+                "visible": true
+              },
+              {
+                "column": "value",
+                "visible": true
+              }
+            ]
+          },
+          "title": "Saved model load latency"
+        }
+      },
+      {
+        "yPos": 130,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "",
+          "singleViewGroup": {
+            "displayType": "DROPDOWN"
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 130,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:core:graph_run_output_tensor_bytes/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace}",
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": []
+                    }
+                  }
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "minAlignmentPeriod": "60s",
+                "legendTemplate": "p50"
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:core:graph_run_output_tensor_bytes/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace}",
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": []
+                    }
+                  }
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "minAlignmentPeriod": "60s",
+                "legendTemplate": "p95"
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:core:graph_run_output_tensor_bytes/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace}",
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": []
+                    }
+                  }
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "minAlignmentPeriod": "60s",
+                "legendTemplate": "p99"
+              }
+            ],
+            "chartOptions": {
+              "mode": "COLOR",
+              "displayHorizontal": false
+            },
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Graph output tensor bytes"
+        }
+      },
+      {
+        "yPos": 114,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "",
+          "singleViewGroup": {
+            "displayType": "DROPDOWN"
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 114,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:core:graph_run_time_usecs_histogram/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace}",
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": []
+                    }
+                  }
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "minAlignmentPeriod": "60s",
+                "legendTemplate": "p50"
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:core:graph_run_time_usecs_histogram/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace}",
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": []
+                    }
+                  }
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "minAlignmentPeriod": "60s",
+                "legendTemplate": "p95"
+              },
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/:tensorflow:core:graph_run_time_usecs_histogram/histogram\" resource.type=\"prometheus_target\" ${cluster} ${location} ${namespace}",
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": []
+                    }
+                  }
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "minAlignmentPeriod": "60s",
+                "legendTemplate": "p99"
+              }
+            ],
+            "chartOptions": {
+              "mode": "COLOR",
+              "displayHorizontal": false
+            },
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Graph execution time distribution (us)"
+        }
+      },
+      {
+        "width": 48,
+        "height": 8,
+        "widget": {
+          "text": {
+            "content": "Use the filter dropdowns above to drill down to a single cluster / location / namespace / model. Some of these charts (e.g. p50 latency) may not show meaningful values when aggregated over multiple models.\n\nFor more information on setting up Tensorflow Serving in your GKE cluster, see [Serve a model with a single GPU in GKE ](https://cloud.google.com/kubernetes-engine/docs/tutorials/online-ml-inference).",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#E7EFFE",
+              "textColor": "#212121",
+              "horizontalAlignment": "H_LEFT",
+              "verticalAlignment": "V_TOP",
+              "padding": "P_EXTRA_SMALL",
+              "fontSize": "FS_LARGE",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED"
+            }
+          },
+          "title": "Instructions"
+        }
+      },
+      {
+        "xPos": 32,
+        "yPos": 8,
+        "width": 16,
+        "height": 8,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum (rate(:tensorflow:serving:request_count{status!=\"OK\", ${cluster}, ${location}, ${namespace}}[${__interval}])) \n/ \nsum (rate(:tensorflow:serving:request_count{${cluster}, ${location}, ${namespace}}[${__interval}])) * 100 > 0\n\nor\n\nclamp(sum (rate(:tensorflow:serving:request_count{${cluster}, ${location}, ${namespace}}[${__interval}])), 0, 0)",
+              "outputFullDuration": true
+            },
+            "thresholds": [],
+            "blankView": {}
+          },
+          "title": "Error rate (%)"
+        }
+      }
+    ]
+  },
+  "dashboardFilters": [
+    {
+      "labelKey": "cluster",
+      "templateVariable": "cluster",
+      "stringValue": "",
+      "filterType": "RESOURCE_LABEL",
+      "valueType": "STRING"
+    },
+    {
+      "labelKey": "location",
+      "templateVariable": "location",
+      "stringValue": "",
+      "filterType": "RESOURCE_LABEL",
+      "valueType": "STRING"
+    },
+    {
+      "labelKey": "namespace",
+      "templateVariable": "namespace",
+      "stringValue": "",
+      "filterType": "RESOURCE_LABEL",
+      "valueType": "STRING"
+    },
+    {
+      "labelKey": "model_name",
+      "templateVariable": "model_name",
+      "stringValue": "",
+      "filterType": "METRIC_LABEL",
+      "valueType": "STRING"
+    }
+  ],
+  "labels": {}
+}
