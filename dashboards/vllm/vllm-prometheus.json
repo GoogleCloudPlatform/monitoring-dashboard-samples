@@ -4,7 +4,7 @@
     "columns": 48,
     "tiles": [
       {
-        "xPos": 32,
+        "xPos": 24,
         "width": 8,
         "height": 8,
         "widget": {
@@ -21,8 +21,7 @@
               },
               "unitOverride": "",
               "outputFullDuration": true
-            },
-            "thresholds": []
+            }
           },
           "title": "Generation tokens / s"
         }
@@ -46,7 +45,10 @@
               "unitOverride": "",
               "outputFullDuration": true
             },
-            "thresholds": []
+            "blankView": {},
+            "thresholds": [],
+            "dimensions": [],
+            "measures": []
           },
           "title": "Prompt tokens / s"
         }
@@ -70,7 +72,10 @@
               "unitOverride": "",
               "outputFullDuration": true
             },
-            "thresholds": []
+            "blankView": {},
+            "thresholds": [],
+            "dimensions": [],
+            "measures": []
           },
           "title": "Requests / s"
         }
@@ -85,22 +90,20 @@
               "timeSeriesFilter": {
                 "filter": "metric.type=\"prometheus.googleapis.com/vllm:request_prompt_tokens/histogram\" resource.type=\"prometheus_target\"",
                 "aggregation": {
-                  "alignmentPeriod": "60s",
                   "perSeriesAligner": "ALIGN_DELTA",
                   "crossSeriesReducer": "REDUCE_MEAN",
-                  "groupByFields": []
+                  "groupByFields": [],
+                  "alignmentPeriod": "60s"
                 }
               },
-              "unitOverride": "",
               "outputFullDuration": true
             },
-            "thresholds": []
           },
-          "title": "Prompt tokens per request"
+          "title": "Prompt tokens / request"
         }
       },
       {
-        "xPos": 24,
+        "xPos": 32,
         "width": 8,
         "height": 8,
         "widget": {
@@ -109,24 +112,24 @@
               "timeSeriesFilter": {
                 "filter": "metric.type=\"prometheus.googleapis.com/vllm:request_generation_tokens/histogram\" resource.type=\"prometheus_target\"",
                 "aggregation": {
-                  "alignmentPeriod": "60s",
                   "perSeriesAligner": "ALIGN_DELTA",
                   "crossSeriesReducer": "REDUCE_MEAN",
-                  "groupByFields": []
+                  "groupByFields": [],
+                  "alignmentPeriod": "60s"
                 }
               },
-              "unitOverride": "",
               "outputFullDuration": true
             },
-            "thresholds": []
+            "thresholds": [],
+            "blankView": {}
           },
-          "title": "Generation tokens per request"
+          "title": "Generation tokens / request"
         }
       },
       {
         "xPos": 8,
         "yPos": 8,
-        "width": 10,
+        "width": 8,
         "height": 8,
         "widget": {
           "scorecard": {
@@ -134,27 +137,24 @@
               "timeSeriesFilter": {
                 "filter": "metric.type=\"prometheus.googleapis.com/vllm:time_to_first_token_seconds/histogram\" resource.type=\"prometheus_target\"",
                 "aggregation": {
-                  "alignmentPeriod": "60s",
                   "perSeriesAligner": "ALIGN_DELTA",
                   "crossSeriesReducer": "REDUCE_PERCENTILE_50",
-                  "groupByFields": []
+                  "groupByFields": [],
+                  "alignmentPeriod": "60s"
                 }
               },
-              "unitOverride": "",
               "outputFullDuration": true
             },
-            "sparkChartView": {
-              "sparkChartType": "SPARK_LINE"
-            },
-            "thresholds": []
+            "thresholds": [],
+            "blankView": {}
           },
           "title": "P50 time to first token (s)"
         }
       },
       {
-        "xPos": 28,
+        "xPos": 24,
         "yPos": 8,
-        "width": 10,
+        "width": 8,
         "height": 8,
         "widget": {
           "scorecard": {
@@ -162,27 +162,24 @@
               "timeSeriesFilter": {
                 "filter": "metric.type=\"prometheus.googleapis.com/vllm:e2e_request_latency_seconds/histogram\" resource.type=\"prometheus_target\"",
                 "aggregation": {
-                  "alignmentPeriod": "60s",
                   "perSeriesAligner": "ALIGN_DELTA",
                   "crossSeriesReducer": "REDUCE_PERCENTILE_50",
-                  "groupByFields": []
+                  "groupByFields": [],
+                  "alignmentPeriod": "60s"
                 }
               },
-              "unitOverride": "",
               "outputFullDuration": true
             },
-            "sparkChartView": {
-              "sparkChartType": "SPARK_LINE"
-            },
-            "thresholds": []
+            "thresholds": [],
+            "blankView": {}
           },
           "title": "P50 E2E request latency (s)"
         }
       },
       {
-        "xPos": 18,
+        "xPos": 16,
         "yPos": 8,
-        "width": 10,
+        "width": 8,
         "height": 8,
         "widget": {
           "scorecard": {
@@ -190,27 +187,24 @@
               "timeSeriesFilter": {
                 "filter": "metric.type=\"prometheus.googleapis.com/vllm:time_to_first_token_seconds/histogram\" resource.type=\"prometheus_target\"",
                 "aggregation": {
-                  "alignmentPeriod": "60s",
                   "perSeriesAligner": "ALIGN_DELTA",
                   "crossSeriesReducer": "REDUCE_PERCENTILE_95",
-                  "groupByFields": []
+                  "groupByFields": [],
+                  "alignmentPeriod": "60s"
                 }
               },
-              "unitOverride": "",
               "outputFullDuration": true
             },
-            "sparkChartView": {
-              "sparkChartType": "SPARK_LINE"
-            },
-            "thresholds": []
+            "thresholds": [],
+            "blankView": {}
           },
           "title": "P95 time to first token (s)"
         }
       },
       {
-        "xPos": 38,
+        "xPos": 32,
         "yPos": 8,
-        "width": 10,
+        "width": 8,
         "height": 8,
         "widget": {
           "scorecard": {
@@ -218,21 +212,50 @@
               "timeSeriesFilter": {
                 "filter": "metric.type=\"prometheus.googleapis.com/vllm:e2e_request_latency_seconds/histogram\" resource.type=\"prometheus_target\"",
                 "aggregation": {
-                  "alignmentPeriod": "60s",
                   "perSeriesAligner": "ALIGN_DELTA",
                   "crossSeriesReducer": "REDUCE_PERCENTILE_95",
-                  "groupByFields": []
+                  "groupByFields": [],
+                  "alignmentPeriod": "60s"
                 }
               },
-              "unitOverride": "",
               "outputFullDuration": true
             },
-            "sparkChartView": {
-              "sparkChartType": "SPARK_LINE"
-            },
-            "thresholds": []
+            "thresholds": [],
+            "blankView": {}
           },
           "title": "P95 E2E request latency (s)"
+        }
+      },
+      {
+        "xPos": 40,
+        "yPos": 8,
+        "width": 8,
+        "height": 8,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "timeSeriesFilter": {
+                "filter": "metric.type=\"prometheus.googleapis.com/vllm:num_requests_waiting/gauge\" resource.type=\"prometheus_target\"",
+                "aggregation": {
+                  "perSeriesAligner": "ALIGN_MEAN",
+                  "crossSeriesReducer": "REDUCE_SUM",
+                  "groupByFields": [],
+                  "alignmentPeriod": "60s"
+                }
+              },
+              "outputFullDuration": true
+            },
+            "thresholds": [
+              {
+                "value": 0,
+                "targetAxis": "Y1",
+                "color": "YELLOW",
+                "direction": "ABOVE"
+              }
+            ],
+            "blankView": {}
+          },
+          "title": "Num requests waiting"
         }
       },
       {

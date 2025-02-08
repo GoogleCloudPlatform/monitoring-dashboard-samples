@@ -104,36 +104,20 @@
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "filter": "metric.type=\"prometheus.googleapis.com/nv_inference_request_duration_us/counter\" resource.type=\"prometheus_target\"",
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_RATE",
-                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
-                      "groupByFields": [
-                        "metric.label.\"model\""
-                      ]
-                    }
-                  },
-                  "unitOverride": "",
-                  "outputFullDuration": false
+                  "prometheusQuery": "quantile by (model)(0.50,rate(nv_inference_request_duration_us[${__interval}]))",
+                  "unitOverride": "us"
                 },
                 "plotType": "LINE",
-                "legendTemplate": "",
-                "minAlignmentPeriod": "60s",
-                "targetAxis": "Y1",
-                "breakdowns": []
+                "targetAxis": "Y1"
               }
             ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            },
             "chartOptions": {
               "mode": "COLOR",
-              "showLegend": false,
               "displayHorizontal": false
+            },
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
             }
           },
           "title": "P50 inference latency by model"
@@ -430,7 +414,7 @@
                   "outputFullDuration": false
                 },
                 "plotType": "STACKED_AREA",
-                "legendTemplate": "",
+                "legendTemplate": "queue",
                 "targetAxis": "Y1",
                 "breakdowns": []
               },
@@ -441,7 +425,7 @@
                   "outputFullDuration": false
                 },
                 "plotType": "STACKED_AREA",
-                "legendTemplate": "",
+                "legendTemplate": "compute_input",
                 "targetAxis": "Y1",
                 "breakdowns": []
               },
@@ -452,7 +436,7 @@
                   "outputFullDuration": false
                 },
                 "plotType": "STACKED_AREA",
-                "legendTemplate": "",
+                "legendTemplate": "compute_infer",
                 "targetAxis": "Y1",
                 "breakdowns": []
               },
@@ -463,7 +447,7 @@
                   "outputFullDuration": false
                 },
                 "plotType": "STACKED_AREA",
-                "legendTemplate": "",
+                "legendTemplate": "compute_output",
                 "targetAxis": "Y1",
                 "breakdowns": []
               }
@@ -616,81 +600,46 @@
         "width": 24,
         "height": 16,
         "widget": {
-          "title": "Inference latency by percentile",
           "xyChart": {
             "dataSets": [
               {
                 "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "filter": "metric.type=\"prometheus.googleapis.com/nv_inference_request_duration_us/counter\" resource.type=\"prometheus_target\"",
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_RATE",
-                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
-                      "groupByFields": []
-                    }
-                  },
-                  "unitOverride": "",
-                  "outputFullDuration": false
+                  "prometheusQuery": "quantile(0.50,rate(nv_inference_request_duration_us[${__interval}]))",
+                  "unitOverride": "us"
                 },
-                "plotType": "LINE",
                 "legendTemplate": "p50",
-                "minAlignmentPeriod": "60s",
-                "targetAxis": "Y1",
-                "breakdowns": []
+                "plotType": "LINE",
+                "targetAxis": "Y1"
               },
               {
                 "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "filter": "metric.type=\"prometheus.googleapis.com/nv_inference_request_duration_us/counter\" resource.type=\"prometheus_target\"",
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_RATE",
-                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
-                      "groupByFields": []
-                    }
-                  },
-                  "unitOverride": "",
-                  "outputFullDuration": false
+                  "prometheusQuery": "quantile(0.95,rate(nv_inference_request_duration_us[${__interval}]))",
+                  "unitOverride": "us"
                 },
-                "plotType": "LINE",
                 "legendTemplate": "p95",
-                "minAlignmentPeriod": "60s",
-                "targetAxis": "Y1",
-                "breakdowns": []
+                "plotType": "LINE",
+                "targetAxis": "Y1"
               },
               {
                 "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "filter": "metric.type=\"prometheus.googleapis.com/nv_inference_request_duration_us/counter\" resource.type=\"prometheus_target\"",
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_RATE",
-                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
-                      "groupByFields": []
-                    }
-                  },
-                  "unitOverride": "",
-                  "outputFullDuration": false
+                  "prometheusQuery": "quantile(0.99,rate(nv_inference_request_duration_us[${__interval}]))",
+                  "unitOverride": "us"
                 },
-                "plotType": "LINE",
                 "legendTemplate": "p99",
-                "minAlignmentPeriod": "60s",
-                "targetAxis": "Y1",
-                "breakdowns": []
+                "plotType": "LINE",
+                "targetAxis": "Y1"
               }
             ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            },
             "chartOptions": {
               "mode": "COLOR",
-              "showLegend": false,
               "displayHorizontal": false
+            },
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
             }
-          }
+          },
+          "title": "Inference latency by percentile"
         }
       },
       {
