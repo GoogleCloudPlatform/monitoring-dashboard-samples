@@ -1,0 +1,119 @@
+exporter_type: included
+app_name_short: TorchServe
+app_name: TorchServe
+app_site_name: {{app_name_short}}
+app_site_url: https://pytorch.org/serve/index.html
+exporter_name: the {{app_name_short}} exporter
+exporter_pkg_name: TorchServe
+exporter_repo_url: https://pytorch.org/serve/metrics.html
+additional_prereq_info: |
+  {{app_site_name}} exposes Prometheus-format metrics automatically when the `metrics_mode` flag is specified either in the `config.properties` file or as an environment variable. If you are following [this guide](https://cloud.google.com/kubernetes-engine/docs/tutorials/scalable-ml-models-torchserve), we recommend making the following edits to your `config.properties` file:
+
+  ```
+    inference_address=http://0.0.0.0:8080
+    management_address=http://0.0.0.0:8081
+  + metrics_address=http://0.0.0.0:8082
+  + metrics_mode=prometheus
+    number_of_netty_threads=32
+    job_queue_size=1000
+    install_py_dep_per_model=true
+    model_store=/home/model-server/model-store
+    load_models=all
+  ```
+
+  Also, when deploying this image to GKE, modify your deployment and service YAML to expose this port:
+  ```
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: t5-inference
+      labels:
+        model: t5
+        version: v1.0
+        machine: gpu
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          model: t5
+          version: v1.0
+          machine: gpu
+      template:
+        metadata:
+          labels:
+            model: t5
+            version: v1.0
+            machine: gpu
+        spec:
+          nodeSelector:
+            cloud.google.com/gke-accelerator: nvidia-l4
+          containers:
+            - name: inference
+              ...
+              args: ["torchserve", "--start", "--foreground"]
+              resources:
+                ...
+              ports:
+                - containerPort: 8080
+                  name: http
+                - containerPort: 8081
+                  name: management
+    +           - containerPort: 8082
+    +             name: metrics
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: t5-inference
+      labels:
+        model: t5
+        version: v1.0
+        machine: gpu
+    spec:
+      ...
+      ports:
+        - port: 8080
+          name: http
+          targetPort: http
+        - port: 8081
+          name: management
+          targetPort: management
+    +   - port: 8082
+    +     name: metrics
+    +     targetPort: metrics
+
+  To verify that {{exporter_name}} is emitting metrics on the expected endpoints, do the following:
+
+  1. Set up port forwarding by using the following command:
+
+  <pre class="devsite-click-to-copy">
+  kubectl -n {{namespace_name}} port-forward {{service_name}} 8082
+  </pre>
+
+  2. Access the endpoint `localhost:8082/metrics` by using the browser
+  or the `curl` utility in another terminal session.
+dashboard_available: true
+multiple_dashboards: false
+dashboard_display_name: {{app_name_short}} Prometheus Overview
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: torchserve
+    labels:
+      app.kubernetes.io/name: torchserve
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: 8082
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+        model: t5
+        version: v1.0
+        machine: gpu
+additional_podmonitoring_info: |
+  Ensure that the values of the `port` and `matchLabels` fields match those of the {{app_name_short}} pods you want to monitor.
+sample_promql_query: up{job="torchserve", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
