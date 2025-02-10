@@ -5,8 +5,9 @@ app_site_name: {{app_name_short}}
 app_site_url: https://pytorch.org/serve/index.html
 exporter_name: the {{app_name_short}} exporter
 exporter_repo_url: https://pytorch.org/serve/metrics.html
+gke_setup_url: /kubernetes-engine/docs/tutorials/scalable-ml-models-torchserve
 additional_prereq_info: |
-  {{app_site_name}} exposes Prometheus-format metrics automatically when the `metrics_mode` flag is specified either in the `config.properties` file or as an environment variable. If you are following [this guide](https://cloud.google.com/kubernetes-engine/docs/tutorials/scalable-ml-models-torchserve), we recommend making the following edits to your `config.properties` file:
+  {{app_name_short}} exposes Prometheus-format metrics automatically when the `metrics_mode` flag is specified either in the `config.properties` file or as an environment variable. If you are following [this guide]({{gke_setup_url}}), we recommend making the following edits to your `config.properties` file:
 
   ```
     inference_address=http://0.0.0.0:8080
@@ -20,7 +21,7 @@ additional_prereq_info: |
     load_models=all
   ```
 
-  Also, when deploying this image to GKE, modify your deployment and service YAML to expose this port:
+  Also, when deploying this image to GKE, modify your deployment and service YAML to expose the added metrics port:
   ```
     apiVersion: apps/v1
     kind: Deployment
