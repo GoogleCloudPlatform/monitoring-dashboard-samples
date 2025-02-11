@@ -10,4 +10,9 @@
 |Agent for SAP - HANA Raw Metrics|
 |:------------------|
 |Filename: [agent-for-sap-hana-raw-metrics.json](agent-for-sap-hana-raw-metrics.json)|
-|This dashboard based on Google's [Google Cloud Agent for SAP](https://cloud.google.com/solutions/sap/docs/agent-for-sap/latest/all-guides) and has charts displaying raw metric values for `HANA Availability`, `HANA High Availability`, `HANA HA Replication`, `HANA Service Status`, `HA Cluster - Node State`,`HA Cluster - Resource State` for SAP Instances. The charts in this dashboard indicate the raw metrics. The decription of different possible values can be found in MQL for respective charts.|
+|This dashboard is based on Google's [Google Cloud Agent for SAP](https://cloud.google.com/solutions/sap/docs/agent-for-sap/latest/all-guides) and has charts displaying raw metric values for `HANA Availability`, `HANA High Availability`, `HANA HA Replication`, `HANA Service Status`, `HA Cluster - Node State`,`HA Cluster - Resource State` for SAP Instances. The charts in this dashboard indicate the raw metrics. The description of different possible values can be found in MQL for respective charts.|
+
+|Agent for SAP - Maintenance Events|
+|:------------------|
+|Filename: [agent-for-sap-maintenance-events.json](agent-for-sap-maintenance-events.json)|
+|This dashboard has charts displaying log queries for `Scheduled`, `In Progress`, and `Completed` Maintenance Events.|
