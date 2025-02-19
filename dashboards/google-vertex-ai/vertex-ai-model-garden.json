@@ -557,46 +557,42 @@
                 "timeSeriesQuery": {
                   "timeSeriesFilterRatio": {
                     "numerator": {
-                      "filter": "metric.type=\"serviceruntime.googleapis.com/api/request_count\" resource.type=\"consumed_api\" resource.label.\"service\"=\"aiplatform.googleapis.com\" metric.label.\"response_code_class\"=one_of(\"4xx\",\"5xx\") resource.label.\"method\"=\"google.cloud.aiplatform.v1.PredictionService.StreamGenerateContent\"",
+                      "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\" metric.label.\"response_code\"!=monitoring.regex.full_match(\"2[0-9][0-9]\")",
                       "aggregation": {
-                        "alignmentPeriod": "60s",
                         "perSeriesAligner": "ALIGN_RATE",
                         "crossSeriesReducer": "REDUCE_SUM",
                         "groupByFields": [
-                          "resource.label.\"method\""
-                        ]
+                          "metric.label.\"response_code\""
+                        ],
+                        "alignmentPeriod": "60s"
                       }
                     },
                     "denominator": {
-                      "filter": "metric.type=\"serviceruntime.googleapis.com/api/request_count\" resource.type=\"consumed_api\" resource.label.\"service\"=\"aiplatform.googleapis.com\" resource.label.\"method\"=\"google.cloud.aiplatform.v1.PredictionService.StreamGenerateContent\"",
+                      "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\"",
                       "aggregation": {
                         "perSeriesAligner": "ALIGN_RATE",
                         "crossSeriesReducer": "REDUCE_SUM",
-                        "groupByFields": [
-                          "resource.label.\"method\""
-                        ]
+                        "groupByFields": []
                       }
                     }
-                  },
-                  "outputFullDuration": false
+                  }
                 },
                 "plotType": "LINE",
-                "legendTemplate": "Rate of 4xx and 5xx",
-                "targetAxis": "Y1"
+                "targetAxis": "Y1",
+                "minAlignmentPeriod": "60s",
+                "legendTemplate": "${metric.labels.response_code}"
               }
             ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            },
             "chartOptions": {
               "mode": "COLOR",
-              "showLegend": false,
               "displayHorizontal": false
+            },
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
             }
           },
-          "title": "API Error Rate (%)"
+          "title": "Model invocations error rate (%)"
         }
       },
       {
@@ -784,37 +780,32 @@
               {
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
-                    "filter": "metric.type=\"serviceruntime.googleapis.com/api/request_count\" resource.type=\"consumed_api\" resource.label.\"service\"=\"aiplatform.googleapis.com\" resource.label.\"method\"=\"google.cloud.aiplatform.v1.PredictionService.StreamGenerateContent\"",
+                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\"",
                     "aggregation": {
-                      "alignmentPeriod": "60s",
                       "perSeriesAligner": "ALIGN_RATE",
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
                         "metric.label.\"response_code\""
                       ]
                     }
-                  },
-                  "unitOverride": "",
-                  "outputFullDuration": false
+                  }
                 },
                 "plotType": "STACKED_BAR",
-                "legendTemplate": "${metric.labels.response_code}",
+                "targetAxis": "Y1",
                 "minAlignmentPeriod": "60s",
-                "targetAxis": "Y1"
+                "legendTemplate": "${metric.labels.response_code}"
               }
             ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            },
             "chartOptions": {
               "mode": "COLOR",
-              "showLegend": false,
               "displayHorizontal": false
+            },
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
             }
           },
-          "title": "API Calls by Response Code"
+          "title": "Model invocations by response code"
         }
       },
       {
