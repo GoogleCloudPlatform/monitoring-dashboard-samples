@@ -7,4 +7,4 @@
 |TorchServe Prometheus Overview|
 |:------------------|
 |Filename: [torchserve-prometheus.json](torchserve-prometheus.json)|
-|This dashboard has charts displaying throughput, latency, error rate and other resource utilization metrics for TorchServe inference.|
+|This dashboard has charts displaying throughput, latency, resource usage, errors, and other metrics for inference.|
