@@ -2,5 +2,5 @@
 
 |TensorFlow Serving Prometheus Overview|
 |:------------------|
-|Filename: [tf-serving-prometheus.json](tf-serving-prometheus.json)|
+|Filename: [tensorflow-serving-prometheus.json](tensorflow-serving-prometheus.json)|
 |This dashboard has charts displaying throughput, latency, errors, and other metrics for inference. |
