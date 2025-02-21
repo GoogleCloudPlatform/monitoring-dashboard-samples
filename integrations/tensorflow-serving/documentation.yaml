@@ -1,0 +1,116 @@
+exporter_type: included
+app_name_short: TF Serving
+app_name: TensorFlow Serving
+app_site_name: {{app_name}}
+app_site_url: https://github.com/tensorflow/serving
+exporter_name: {{app_name_short}}
+exporter_repo_url: https://www.tensorflow.org/tfx/serving/serving_config#monitoring_configuration
+additional_prereq_info: |
+  {{app_name_short}} exposes Prometheus-format metrics when the `--monitoring_config_file` flag
+  is used to specify a file containing a MonitoringConfig protocol buffer.
+  
+  This is an example:
+  ```
+  prometheus_config {
+    enable: true,
+    path: "/monitoring/prometheus/metrics"
+  }
+  ```
+config_mods: |
+  # Copyright 2025 Google LLC
+  #
+  # Licensed under the Apache License, Version 2.0 (the "License");
+  # you may not use this file except in compliance with the License.
+  # You may obtain a copy of the License at
+  #
+  #      http://www.apache.org/licenses/LICENSE-2.0
+  #
+  # Unless required by applicable law or agreed to in writing, software
+  # distributed under the License is distributed on an "AS IS" BASIS,
+  # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  # See the License for the specific language governing permissions and
+  # limitations under the License.
+
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: tfserve-deployment
+    labels:
+      app: tfserve-server
+  spec:
+    selector:
+      matchLabels:
+        app: tfserve
+    replicas: 1
+    template:
+      metadata:
+        labels:
+          app: tfserve
+        annotations:
+          gke-gcsfuse/volumes: "true"
+      spec:
+        nodeSelector:
+          cloud.google.com/gke-accelerator: "nvidia-l4"
+        containers:
+        - name: tfserve-server
+          image: tensorflow/serving:2.13.1-gpu
+  +       command: [ "tensorflow_model_server", "--model_name=$MODEL_NAME", "--model_base_path=/data/tfserve-model-repository/$MODEL_NAME", "--rest_api_port=8000", "--monitoring_config_file=$PATH_TO_MONITORING_CONFIG" ]
+          ports:
+          - name: http
+            containerPort: 8000
+          - name: grpc
+            containerPort: 8500
+          resources:
+            limits:
+              cpu: "4"
+              memory: "16Gi"
+              ephemeral-storage: "1Gi"
+              nvidia.com/gpu: 1
+            requests:
+              cpu: "4"
+              memory: "16Gi"
+              ephemeral-storage: "1Gi"
+              nvidia.com/gpu: 1
+          volumeMounts:
+          - name: gcs-fuse-csi-vol
+            mountPath: /data
+            readOnly: false
+        serviceAccountName: $K8S_SA_NAME
+        volumes:
+        - name: gcs-fuse-csi-vol
+          csi:
+            driver: gcsfuse.csi.storage.gke.io
+            readOnly: false
+            volumeAttributes:
+              bucketName: $GSBUCKET
+              mountOptions: "implicit-dirs"
+additional_install_info: |
+  To verify that {{exporter_name}} is emitting metrics on the expected endpoints, do the following:
+
+    1. Set up port forwarding by using the following command:
+      <pre class="devsite-click-to-copy">
+      kubectl -n {{namespace_name}} port-forward {{pod_name}} 8000
+      </pre>
+    2. Access the endpoint `localhost:8000/monitoring/prometheus/metrics` by using the browser
+      or the `curl` utility in another terminal session.
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: tfserve
+    labels:
+      app.kubernetes.io/name: tfserve
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: 8000
+      scheme: http
+      interval: 30s
+      path: /monitoring/prometheus/metrics
+    selector:
+      matchLabels:
+        app: tfserve
+sample_promql_query: up{job="tfserve", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
+dashboard_available: true
+multiple_dashboards: false
+dashboard_display_name: {{app_name}} Prometheus Overview
