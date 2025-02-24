@@ -1,0 +1,47 @@
+platforms:
+  - type: GKE
+    launch_stage: HIDDEN
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/inference_model_request_total/counter
+    exporter_metadata:
+      name: Inference Extension Metrics Overview
+      doc_url: https://github.com/kubernetes-sigs/gateway-api-inference-extension/blob/main/site-src/guides/metrics.md
+    default_metrics:
+      - name: prometheus.googleapis.com/inference_model_request_total/counter
+        prometheus_name: inference_model_request_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/inference_model_request_error_total/counter
+        prometheus_name: inference_model_request_error_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/inference_model_request_duration_seconds/histogram
+        prometheus_name: inference_model_request_duration_seconds
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/inference_model_input_tokens/histogram
+        prometheus_name: inference_model_input_tokens
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/inference_model_output_tokens/histogram
+        prometheus_name: inference_model_output_tokens
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/inference_model_request_sizes/histogram
+        prometheus_name: inference_model_request_sizes
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/inference_model_response_sizes/histogram
+        prometheus_name: inference_model_response_sizes
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/inference_pool_average_kv_cache_utilization/gauge
+        prometheus_name: inference_pool_average_kv_cache_utilization
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/inference_pool_average_queue_size/gauge
+        prometheus_name: inference_pool_average_queue_size
+        kind: GAUGE
+        value_type: DOUBLE
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/inference-extension
