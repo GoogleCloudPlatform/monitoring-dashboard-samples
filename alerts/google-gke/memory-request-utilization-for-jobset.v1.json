@@ -1,0 +1,34 @@
+{
+    "displayName": "High Memory Request Utilization (JobSet: ${JOBSET_NAME})",
+    "documentation": {
+      "content": "[View JobSet details](https://console.cloud.google.com/kubernetes/aiml/deployments/jobset/${PROJECT_ID}/${CLUSTER_KIND}/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${JOBSET_NAME}/observability?project=${PROJECT_ID}).\n- The likelihood of Out-Of-Memory (OOM) failures and container restarts increase when the memory usage of the workload nears the total requested memory of its containers. [View Documentation](https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [View Documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth)",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "Memory Request Utilization is high for: ${JOBSET_NAME}",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "60s",
+              "perSeriesAligner": "ALIGN_MEAN",
+              "crossSeriesReducer": "REDUCE_NONE"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"k8s_container\" AND metric.type = \"kubernetes.io/container/memory/request_utilization\" AND resource.labels.project_id=\"${PROJECT_ID}\" AND resource.labels.cluster_name=\"${CLUSTER_NAME}\" AND resource.labels.location=\"${CLUSTER_LOCATION}\" AND resource.labels.namespace_name=\"${NAMESPACE_NAME}\" AND metadata.user_labels.\"jobset.sigs.k8s.io/jobset-name\"=\"${JOBSET_NAME}\"",
+          "thresholdValue": 0.9,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true
+  }
