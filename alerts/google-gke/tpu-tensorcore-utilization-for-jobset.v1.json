@@ -1,0 +1,34 @@
+{
+    "displayName": "High TPU Tensorcore Utilization (JobSet: ${JOBSET_NAME})",
+    "documentation": {
+      "content": "[View JobSet details](https://console.cloud.google.com/kubernetes/aiml/deployments/jobset/${PROJECT_ID}/${CLUSTER_KIND}/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${JOBSET_NAME}/observability?project=${PROJECT_ID}).\n- To learn how to configure TPUs for GKE [view the documentation](https://cloud.google.com/kubernetes-engine/docs/concepts/plan-tpus)",
+      "mimeType": "text/markdown"
+    },
+    "userLabels": {},
+    "conditions": [
+      {
+        "displayName": "TPU Tensorcore Utilization is high for: ${JOBSET_NAME}",
+        "conditionThreshold": {
+          "aggregations": [
+            {
+              "alignmentPeriod": "60s",
+              "perSeriesAligner": "ALIGN_MEAN",
+              "crossSeriesReducer": "REDUCE_NONE"
+            }
+          ],
+          "comparison": "COMPARISON_GT",
+          "duration": "0s",
+          "filter": "resource.type = \"k8s_container\" AND metric.type = \"kubernetes.io/container/accelerator/tensorcore_utilization\" AND resource.labels.project_id=\"${PROJECT_ID}\" AND resource.labels.cluster_name=\"${CLUSTER_NAME}\" AND resource.labels.location=\"${CLUSTER_LOCATION}\" AND resource.labels.namespace_name=\"${NAMESPACE_NAME}\" AND metadata.user_labels.\"jobset.sigs.k8s.io/jobset-name\"=\"${JOBSET_NAME}\"",
+          "thresholdValue": 0.9,
+          "trigger": {
+            "count": 1
+          }
+        }
+      }
+    ],
+    "alertStrategy": {
+      "autoClose": "604800s"
+    },
+    "combiner": "OR",
+    "enabled": true
+  }
