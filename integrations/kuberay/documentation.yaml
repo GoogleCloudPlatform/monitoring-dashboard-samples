@@ -1,0 +1,31 @@
+exporter_type: included
+app_name_short: KubeRay
+app_name: {{app_name_short}}
+app_site_name: {{app_name_short}}
+app_site_url: https://ray-project.github.io/kuberay
+exporter_name: the {{app_name_short}} exporter
+exporter_repo_url: https://docs.ray.io/en/latest/cluster/metrics.html
+gke_setup_url: /kubernetes-engine/docs/add-on/ray-on-gke/concepts/overview
+dashboard_available: true
+multiple_dashboards: false
+dashboard_display_name: Ray on GKE Overview
+podmonitoring_config: |
+  apiVersion: monitoring.googleapis.com/v1
+  kind: PodMonitoring
+  metadata:
+    name: ray
+    labels:
+      app.kubernetes.io/name: ray
+      app.kubernetes.io/part-of: google-cloud-managed-prometheus
+  spec:
+    endpoints:
+    - port: 8000
+      scheme: http
+      interval: 30s
+      path: /metrics
+    selector:
+      matchLabels:
+        ray.io/is-ray-node: "yes"
+additional_podmonitoring_info: |
+  Ensure that the values of the `port` and `matchLabels` fields match those of the {{app_name_short}} pods you want to monitor.
+sample_promql_query: up{job="ray", cluster="{{cluster_name}}", namespace="{{namespace_name}}"}
