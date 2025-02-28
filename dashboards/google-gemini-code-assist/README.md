@@ -1,8 +1,8 @@
 ### Setup
 
-**The sample dashboard contains a placeholder value, `PROJECT_ID`, for your project ID. Before running the export [script](../../scripts/dashboard/dashboard.sh) to create the dashboard, replace the placeholder value.**
+**The sample dashboard contains a placeholder value, `PROJECT_ID`, for your project ID. Before running the import [script](../../scripts/dashboard/dashboard.sh) to create the dashboard, replace the placeholder value.**
 
-The dashboard contains daily metrics that are best viewed with a time window greater than 1 day.
+The dashboard contains daily metrics that must be viewed with a time window greater than 1 day.
 Note that the dashboard is configured to query from the `_Default` log view of the log bucket. To manage log views see the [Google Cloud documentation](https://cloud.google.com/logging/docs/logs-views).
 
 ### Dashboards for Gemini Code Assist
