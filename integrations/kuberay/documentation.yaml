@@ -6,6 +6,19 @@ app_site_url: https://ray-project.github.io/kuberay
 exporter_name: the {{app_name_short}} exporter
 exporter_repo_url: https://docs.ray.io/en/latest/cluster/metrics.html
 gke_setup_url: /kubernetes-engine/docs/add-on/ray-on-gke/concepts/overview
+additional_prereq_info: |
+  {{app_site_name}} exposes Prometheus-format metrics automatically; you do not
+  have to install it separately. To verify that {{exporter_name}} is emitting
+  metrics on the expected endpoints, do the following:
+
+  1. Set up port forwarding by using the following command:
+
+  <pre class="devsite-click-to-copy">
+  kubectl -n {{namespace_name}} port-forward {{pod_name}} 8080:8080
+  </pre>
+
+  2. Access the endpoint `localhost:8080/metrics` by using the browser
+  or the `curl` utility in another terminal session.
 dashboard_available: true
 multiple_dashboards: false
 dashboard_display_name: Ray on GKE Overview
