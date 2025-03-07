@@ -8,18 +8,16 @@
   "userLabels": {},
   "conditions": [
     {
-      "displayName": "Character Throughput > 80% of Limit",
+      "displayName": "Provisioned Throughput Utilization Exceeded 80%",
       "conditionPrometheusQueryLanguage": {
         "duration": "0s",
         "evaluationInterval": "30s",
-        "query": "sum by (model_user_id,location)(rate(aiplatform_googleapis_com:publisher_online_serving_consumed_throughput{monitored_resource=\"aiplatform.googleapis.com/PublisherModel\"}[60s]))\n/\n\n\nsum by (model_user_id,location)(aiplatform_googleapis_com:publisher_online_serving_dedicated_character_limit{monitored_resource=\"aiplatform.googleapis.com/PublisherModel\"})\n\n> .8\n"
+        "query": "sum by (model_user_id,location)(rate(aiplatform_googleapis_com:publisher_online_serving_consumed_throughput{monitored_resource=\"aiplatform.googleapis.com/PublisherModel\"}[60s]))\n/\n\n\nsum by (model_user_id,location)(aiplatform_googleapis_com:publisher_online_serving_dedicated_character_limit{monitored_resource=\"aiplatform.googleapis.com/PublisherModel\"})\n\n> .8"
       }
     }
   ],
   "alertStrategy": {
-    "notificationPrompts": [
-      "OPENED"
-    ]
+    "notificationPrompts": ["OPENED"]
   },
   "combiner": "OR",
   "enabled": true
