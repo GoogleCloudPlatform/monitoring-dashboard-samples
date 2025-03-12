@@ -290,7 +290,7 @@
                     },
                     "queryHandle": "",
                     "savedQueryId": "",
-                    "sql": "SELECT\n SUM(CAST(JSON_VALUE(json_payload, '$.codeAcceptance.linesCount') AS INT)) as lines_count,\n CAST(max_timestamp AS DATE) AS line_count_day\nFROM\n `PROJECT_ID.global._Default._Default` as t1\nINNER JOIN (\n SELECT\n   JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') as request_id,\n   MAX(timestamp) as max_timestamp\n FROM\n   `PROJECT_ID.global._Default._Default`\n WHERE\n   JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') is not NULL\n   AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\n GROUP BY\n   request_id\n ) AS t2 ON JSON_VALUE(t1.json_payload, '$.codeAcceptance.originalRequestId') = t2.request_id\nWHERE\n t1.timestamp = t2.max_timestamp\n AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\n line_count_day\nORDER BY\n line_count_day"
+                    "sql": "SELECT\n SUM(lines) as lines_count,\n CAST(max_timestamp AS DATE) AS line_count_day\nFROM\n(\n SELECT\n   JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') as request_id,\n   MAX(CAST(JSON_VALUE(json_payload, '$.codeAcceptance.linesCount') AS INT)) as lines,\n   MAX(timestamp) as max_timestamp\n FROM\n   `PROJECT_ID.global._Default._Default`\n WHERE\n   JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') is not NULL\n   AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\n GROUP BY\n   request_id\n )\nGROUP BY\n line_count_day\nORDER BY\n line_count_day"
                   },
                   "outputFullDuration": false,
                   "unitOverride": ""
