@@ -1,0 +1,1930 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_GCP",
+      "label": "GCP",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "stackdriver",
+      "pluginName": "Google Cloud Monitoring"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "11.2.0"
+    },
+    {
+      "type": "datasource",
+      "id": "stackdriver",
+      "name": "Google Cloud Monitoring",
+      "version": "11.2.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Kafka UI",
+      "tooltip": "Open Kafka Ui",
+      "type": "link",
+      "url": "https://kafka-ui.example.com"
+    }
+  ],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "panels": [],
+      "title": "Broker Health",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 4,
+          "min": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 2000000000
+                    },
+                    {
+                      "color": "red",
+                      "value": 2400000000
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": true,
+        "text": {
+          "titleSize": 25
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "hide": false,
+          "promQLQuery": {
+            "expr": "sum by (broker_index)(avg_over_time(managedkafka_googleapis_com:memory_usage{monitored_resource=\"managedkafka.googleapis.com/Cluster\"}[${__interval}]))",
+            "projectName": "$cluster",
+            "step": "10s"
+          },
+          "queryType": "promQL",
+          "refId": "A",
+          "timeSeriesList": {
+            "alignmentPeriod": "cloud-monitoring-auto",
+            "crossSeriesReducer": "REDUCE_NONE",
+            "filters": [
+              "metric.type",
+              "=",
+              "managedkafka.googleapis.com/memory/usage"
+            ],
+            "groupBys": [
+              "metric.label.broker_index"
+            ],
+            "perSeriesAligner": "ALIGN_MEAN",
+            "preprocessor": "none",
+            "projectName": "$cluster",
+            "view": "FULL"
+          }
+        },
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "hide": false,
+          "promQLQuery": {
+            "expr": "sum by (broker_index)(avg_over_time(managedkafka_googleapis_com:memory_limit{monitored_resource=\"managedkafka.googleapis.com/Cluster\"}[${__interval}]))",
+            "projectName": "$cluster",
+            "step": "10s"
+          },
+          "queryType": "promQL",
+          "refId": "B",
+          "timeSeriesList": {
+            "alignmentPeriod": "cloud-monitoring-auto",
+            "crossSeriesReducer": "REDUCE_NONE",
+            "filters": [
+              "metric.type",
+              "=",
+              "managedkafka.googleapis.com/memory/limit"
+            ],
+            "groupBys": [
+              "metric.label.broker_index"
+            ],
+            "perSeriesAligner": "ALIGN_MEAN",
+            "preprocessor": "none",
+            "projectName": "$cluster",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Memory Usage",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "flops"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 0.5
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": true,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "hide": false,
+          "promQLQuery": {
+            "expr": "sum by (broker_index)(rate(managedkafka_googleapis_com:cpu_core_usage_time{monitored_resource=\"managedkafka.googleapis.com/Cluster\"}[${__interval}]))\n\n\n\n\n",
+            "projectName": "$cluster",
+            "step": "10s"
+          },
+          "queryType": "promQL",
+          "refId": "A",
+          "timeSeriesList": {
+            "alignmentPeriod": "cloud-monitoring-auto",
+            "crossSeriesReducer": "REDUCE_NONE",
+            "filters": [
+              "metric.type",
+              "=",
+              "managedkafka.googleapis.com/cpu/core_usage_time"
+            ],
+            "groupBys": [],
+            "perSeriesAligner": "ALIGN_NONE",
+            "preprocessor": "rate",
+            "projectName": "$cluster",
+            "view": "FULL"
+          }
+        },
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "hide": false,
+          "promQLQuery": {
+            "expr": "sum by (broker_index) (\n  managedkafka_googleapis_com:cpu_limit{monitored_resource=\"managedkafka.googleapis.com/Cluster\"} \n)\n",
+            "projectName": "$cluster",
+            "step": "10s"
+          },
+          "queryType": "promQL",
+          "refId": "B",
+          "timeSeriesList": {
+            "alignmentPeriod": "cloud-monitoring-auto",
+            "crossSeriesReducer": "REDUCE_NONE",
+            "filters": [
+              "metric.type",
+              "=",
+              "managedkafka.googleapis.com/cpu/limit"
+            ],
+            "groupBys": [],
+            "perSeriesAligner": "ALIGN_MEAN",
+            "preprocessor": "none",
+            "projectName": "$cluster",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "CPU Usage",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 4,
+          "min": 1,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 11
+      },
+      "id": 5,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto",
+        "text": {
+          "titleSize": 11
+        }
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "hide": false,
+          "promQLQuery": {
+            "expr": "sum by (broker_index, request) (rate(managedkafka_googleapis_com:request_count{monitored_resource=\"managedkafka.googleapis.com/Cluster\"}[$__interval]))\n",
+            "projectName": "$cluster",
+            "step": "10s"
+          },
+          "queryType": "promQL",
+          "refId": "A",
+          "timeSeriesList": {
+            "alignmentPeriod": "cloud-monitoring-auto",
+            "crossSeriesReducer": "REDUCE_NONE",
+            "filters": [
+              "metric.type",
+              "=",
+              "managedkafka.googleapis.com/cpu/core_usage_time"
+            ],
+            "groupBys": [],
+            "perSeriesAligner": "ALIGN_NONE",
+            "preprocessor": "rate",
+            "projectName": "$cluster",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Request Count Usage",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "format": "auto",
+            "keepTime": false,
+            "replace": false,
+            "source": "Value"
+          }
+        }
+      ],
+      "type": "gauge"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "id": 6,
+      "panels": [],
+      "title": "Cluster Performance",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 7,
+        "x": 0,
+        "y": 22
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "promQLQuery": {
+            "expr": "sum(managedkafka_googleapis_com:offline_partitions{monitored_resource=\"managedkafka.googleapis.com/Cluster\"})\n",
+            "projectName": "$cluster",
+            "step": "10s"
+          },
+          "queryType": "promQL",
+          "refId": "A",
+          "timeSeriesList": {
+            "filters": [],
+            "projectName": "$cluster",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Offline Partitions",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 9,
+        "x": 7,
+        "y": 22
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "promQLQuery": {
+            "expr": "sum by (broker_index)(managedkafka_googleapis_com:partitions{monitored_resource=\"managedkafka.googleapis.com/Cluster\"})",
+            "projectName": "$cluster",
+            "step": "10s"
+          },
+          "queryType": "promQL",
+          "refId": "A",
+          "timeSeriesList": {
+            "filters": [],
+            "projectName": "$cluster",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Total Partitions Per Broker",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 1000000000
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 22
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "promQLQuery": {
+            "expr": "avg_over_time(managedkafka_googleapis_com:storage_long_term_usage{monitored_resource=\"managedkafka.googleapis.com/Cluster\"}[$__interval])",
+            "projectName": "$cluster",
+            "step": "10s"
+          },
+          "queryType": "promQL",
+          "refId": "A",
+          "timeSeriesList": {
+            "filters": [],
+            "projectName": "$cluster",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Long-Term Storage Usage",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 28
+      },
+      "id": 10,
+      "panels": [],
+      "title": "Traffic & Throughput",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 29
+      },
+      "id": 11,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "promQLQuery": {
+            "expr": "sum by (topic_id) (\n  rate(managedkafka_googleapis_com:byte_in_count{\n    monitored_resource=\"managedkafka.googleapis.com/Topic\"\n  }[$__interval])\n)\n",
+            "projectName": "$cluster",
+            "step": "10s"
+          },
+          "queryType": "promQL",
+          "refId": "In",
+          "timeSeriesList": {
+            "filters": [],
+            "projectName": "",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Byte In Per Topic",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 29
+      },
+      "id": 12,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "promQLQuery": {
+            "expr": "sum by (topic_id) (\n  rate(managedkafka_googleapis_com:byte_out_count{\n    monitored_resource=\"managedkafka.googleapis.com/Topic\"\n  }[$__interval])\n)\n",
+            "projectName": "$cluster",
+            "step": "10s"
+          },
+          "queryType": "promQL",
+          "refId": "In",
+          "timeSeriesList": {
+            "filters": [],
+            "projectName": "",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Byte out Per Topic",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 1000
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 37
+      },
+      "id": 20,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "promQLQuery": {
+            "expr": "sum by (topic_id) (\n  rate(managedkafka_googleapis_com:topic_request_count{\n    monitored_resource=\"managedkafka.googleapis.com/Topic\"\n  }[$__interval])\n)\n",
+            "projectName": "$cluster",
+            "step": "10s"
+          },
+          "queryType": "promQL",
+          "refId": "In",
+          "timeSeriesList": {
+            "filters": [],
+            "projectName": "",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Topic Request Count",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 37
+      },
+      "id": 21,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "promQLQuery": {
+            "expr": "sum by (topic_id) (\n  rate(managedkafka_googleapis_com:topic_error_count{\n    monitored_resource=\"managedkafka.googleapis.com/Topic\"\n  }[$__interval])\n)\n",
+            "projectName": "$cluster",
+            "step": "10s"
+          },
+          "queryType": "promQL",
+          "refId": "In",
+          "timeSeriesList": {
+            "filters": [],
+            "projectName": "",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Topic Error Count",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 45
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "promQLQuery": {
+            "expr": "sum by (topic_id) (\n  rate(managedkafka_googleapis_com:message_in_count{\n    monitored_resource=\"managedkafka.googleapis.com/Topic\"\n  }[$__interval])\n)\n",
+            "projectName": "$cluster",
+            "step": "10s"
+          },
+          "queryType": "promQL",
+          "refId": "In",
+          "timeSeriesList": {
+            "filters": [],
+            "projectName": "",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Messages Per Topic",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 45
+      },
+      "id": 15,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "promQLQuery": {
+            "expr": "sum by (broker_index, request) (\n  managedkafka_googleapis_com:request_latencies{\n    monitored_resource=\"managedkafka.googleapis.com/Cluster\",\n    percentile=\"50\",\n    request=~\"Produce|FetchConsumer\"\n  }\n)",
+            "projectName": "$cluster",
+            "step": "10s"
+          },
+          "queryType": "promQL",
+          "refId": "In",
+          "timeSeriesList": {
+            "filters": [],
+            "projectName": "",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Request Latency Per Broker (P50)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 45
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "promQLQuery": {
+            "expr": "sum by (broker_index, request) (\n  managedkafka_googleapis_com:request_latencies{\n    monitored_resource=\"managedkafka.googleapis.com/Cluster\",\n    percentile=\"99\",\n    request=~\"Produce|FetchConsumer\"\n  }\n)",
+            "projectName": "$cluster",
+            "step": "10s"
+          },
+          "queryType": "promQL",
+          "refId": "In",
+          "timeSeriesList": {
+            "filters": [],
+            "projectName": "",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Request Latency Per Broker (P99)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 45
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "promQLQuery": {
+            "expr": "sum by (broker_index, request) (\n  managedkafka_googleapis_com:request_latencies{\n    monitored_resource=\"managedkafka.googleapis.com/Cluster\",\n    percentile=\"50\",\n    request=~\"Produce|FetchConsumer\"\n  }\n)",
+            "projectName": "$cluster",
+            "step": "10s"
+          },
+          "queryType": "promQL",
+          "refId": "In",
+          "timeSeriesList": {
+            "filters": [],
+            "projectName": "",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Request Latency Per Broker (P999)",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 53
+      },
+      "id": 17,
+      "panels": [],
+      "title": "Consumer Metrics",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "noValue": "No Consumer Lag !!!",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 54
+      },
+      "id": 18,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "promQLQuery": {
+            "expr": "sum by (topic_id, broker_index, partition_index) (\n  avg_over_time(managedkafka_googleapis_com:consumer_lag{\n    monitored_resource=\"managedkafka.googleapis.com/TopicPartition\"\n  }[$__interval])\n) > 0\n",
+            "projectName": "$cluster",
+            "step": "1m"
+          },
+          "queryType": "promQL",
+          "refId": "A",
+          "timeSeriesList": {
+            "filters": [],
+            "projectName": "",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Consumer Lag Per Topic",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 6,
+        "y": 54
+      },
+      "id": 19,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "same_as_value",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "promQLQuery": {
+            "expr": "sum by (broker_index) (managedkafka_googleapis_com:consumer_groups{monitored_resource=\"managedkafka.googleapis.com/Cluster\", state=\"Stable\"})\n",
+            "projectName": "$cluster",
+            "step": "1m"
+          },
+          "queryType": "promQL",
+          "refId": "A",
+          "timeSeriesList": {
+            "filters": [],
+            "projectName": "",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Stable Consumer Groups Per Broker",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 15,
+        "y": 54
+      },
+      "id": 23,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "promQLQuery": {
+            "expr": "sum by (broker_index) (managedkafka_googleapis_com:consumer_groups{monitored_resource=\"managedkafka.googleapis.com/Cluster\", state=\"PreparingRebalance\"})",
+            "projectName": "$cluster",
+            "step": "1m"
+          },
+          "queryType": "promQL",
+          "refId": "A",
+          "timeSeriesList": {
+            "filters": [],
+            "projectName": "",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Rebalancing Consumer Groups Per Broker",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 0,
+        "y": 62
+      },
+      "id": 22,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "promQLQuery": {
+            "expr": "sum by (broker_index) (managedkafka_googleapis_com:consumer_groups{monitored_resource=\"managedkafka.googleapis.com/Cluster\", state=\"Dead\"})\n",
+            "projectName": "$cluster",
+            "step": "1m"
+          },
+          "queryType": "promQL",
+          "refId": "A",
+          "timeSeriesList": {
+            "filters": [],
+            "projectName": "",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Dead Consumer Groups Per Broker",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "stackdriver",
+        "uid": "${DS_GCP}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 9,
+        "y": 62
+      },
+      "id": 24,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "stackdriver",
+            "uid": "${DS_GCP}"
+          },
+          "promQLQuery": {
+            "expr": "sum by (broker_index) (managedkafka_googleapis_com:consumer_groups{monitored_resource=\"managedkafka.googleapis.com/Cluster\", state=\"Empty\"})\n",
+            "projectName": "$cluster",
+            "step": "1m"
+          },
+          "queryType": "promQL",
+          "refId": "A",
+          "timeSeriesList": {
+            "filters": [],
+            "projectName": "",
+            "view": "FULL"
+          }
+        }
+      ],
+      "title": "Empty Consumer Groups Per Broker",
+      "type": "stat"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": [
+    " Cloud Monitoring",
+    "Kafka",
+    "GCP"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": {
+          "type": "stackdriver",
+          "uid": "${DS_GCP}"
+        },
+        "definition": "",
+        "hide": 0,
+        "includeAll": false,
+        "label": "cluster",
+        "multi": false,
+        "name": "cluster",
+        "options": [],
+        "query": {
+          "labelKey": "",
+          "loading": false,
+          "projectName": "$cluster",
+          "projects": [
+            {
+              "label": "$cluster",
+              "value": "$cluster"
+            }
+          ],
+          "refId": "CloudMonitoringVariableQueryEditor-VariableQuery",
+          "selectedMetricType": "actions.googleapis.com/smarthome_action/camerastream/first_frame_latencies",
+          "selectedQueryType": "projects",
+          "selectedSLOService": "",
+          "selectedService": "actions.googleapis.com",
+          "sloServices": []
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Managed Kafka",
+  "uid": "aeff2g49qgc8wa",
+  "version": 19,
+  "weekStart": ""
+}
