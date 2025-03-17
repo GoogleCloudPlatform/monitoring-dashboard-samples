@@ -73,6 +73,6 @@
 |GKE TPU Node Pool Status|
 |:---------------------|
 |Filename: [gke-tpu-node-pool-status.json](gke-tpu-node-pool-status.json)|
-|This dashboard has 18 charts for the related [Kubernetes metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes), including metrics for the multi-host TPU node pool status and availability.|
+|This dashboard has charts for the related [Kubernetes metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes), including metrics for the multi-host TPU node pool status and availability.|
 
 
