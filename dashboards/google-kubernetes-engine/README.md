@@ -68,4 +68,11 @@
 |Filename: [gke-dpv2-observability-drilldown-view.json](gke-dpv2-observability-drilldown-view.json)|
 |This dashboard features 6 charts providing pod-to-workload traffic data that is groupable and filterable (e.g. by workload, namespace), letting you gain more detailed insight into the traffic within your GKE cluster. Understand which workloads generate the most traffic, drill down which pods drop traffic and what's the reason, and more. [Google Managed Prometheus](https://cloud.google.com/managed-prometheus) and [Dataplane V2 metrics](https://cloud.google.com/kubernetes-engine/docs/how-to/configure-dpv2-observability) must be enabled to make use of this dashboard.|
 
+&nbsp;
+
+|GKE TPU Node Pool Status|
+|:---------------------|
+|Filename: [gke-tpu-node-pool-status.json](gke-tpu-node-pool-status.json)|
+|This dashboard has charts for the related [Kubernetes metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes), including metrics for the multi-host TPU node pool status and availability.|
+
 
