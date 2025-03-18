@@ -1,7 +1,7 @@
 {
   "displayName": "Provisioned Throughput Usage Reached Limit",
   "documentation": {
-    "content": "GCP Project ${project} has reached its existing Provisioned Throughput quota limit for ${resource.label.model_user_id}. Depending on the configuration of the order, this may cause traffic to shift to the shared tier. Consider purchasing additional [Provisioned Throughput](https://console.cloud.google.com/vertex-ai/provisioned-throughput/create) to guarantee your capacity.",
+    "content": "GCP Project ${project} has reached its existing Provisioned Throughput quota limit for ${metric_or_resource.label.model_user_id}. Depending on the configuration of the order, this may cause traffic to shift to the shared tier. Consider purchasing additional [Provisioned Throughput ](https://console.cloud.google.com/vertex-ai/provisioned-throughput/create) to guarantee your capacity.",
     "mimeType": "text/markdown",
     "subject": "Provisioned Throughput Usage Reached Limit"
   },
@@ -12,7 +12,7 @@
       "conditionPrometheusQueryLanguage": {
         "duration": "0s",
         "evaluationInterval": "30s",
-        "query": "sum by (model_user_id,location)(rate(aiplatform_googleapis_com:publisher_online_serving_consumed_throughput{monitored_resource=\"aiplatform.googleapis.com/PublisherModel\"}[60s]))\n/\n\n\nsum by (model_user_id,location)(aiplatform_googleapis_com:publisher_online_serving_dedicated_character_limit{monitored_resource=\"aiplatform.googleapis.com/PublisherModel\"})\n\n>= 1"
+        "query": "(sum by (model_user_id,location)(rate(aiplatform_googleapis_com:publisher_online_serving_consumed_throughput{monitored_resource=\"aiplatform.googleapis.com/PublisherModel\"}[60s]))\n\n/\n\nsum by (model_user_id,location)(aiplatform_googleapis_com:publisher_online_serving_dedicated_character_limit{monitored_resource=\"aiplatform.googleapis.com/PublisherModel\"})>= 1\n)\n\nOR \n\n(\n    sum by (model_user_id,location)(rate(aiplatform_googleapis_com:publisher_online_serving_consumed_token_throughput{monitored_resource=\"aiplatform.googleapis.com/PublisherModel\"}[60s]))\n\n/\n\nsum by (model_user_id,location)(aiplatform_googleapis_com:publisher_online_serving_dedicated_token_limit{monitored_resource=\"aiplatform.googleapis.com/PublisherModel\"})>= 1\n)\n\n\n"
       }
     }
   ],
