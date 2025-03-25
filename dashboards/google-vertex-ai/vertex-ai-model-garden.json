@@ -1017,6 +1017,131 @@
             }
           }
         }
+      },
+      {
+        "yPos": 178,
+        "height": 4,
+        "width": 48,
+        "widget": {
+          "title": "Provisioned Throughput",
+          "sectionHeader": {
+            "dividerBelow": false,
+            "subtitle": "Provisioned Throughput is a fixed-cost monthly subscription or weekly service that reserves throughput for supported generative AI models on Vertex AI."
+          }
+        }
+      },
+      {
+        "yPos": 182,
+        "height": 17,
+        "width": 29,
+        "widget": {
+          "title": "Provisioned Throughput Utilization",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "${resource.labels.model_user_id} ${resource.labels.location}${resource.labels.monitored_resource_container}",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilterRatio": {
+                    "numerator": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_MAX",
+                        "groupByFields": [
+                          "resource.label.\"model_user_id\"",
+                          "resource.label.\"location\"",
+                          "resource.label.\"monitored_resource_container\""
+                        ],
+                        "perSeriesAligner": "ALIGN_RATE"
+                      },
+                      "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\" metric.label.\"request_type\"=\"dedicated\""
+                    },
+                    "denominator": {
+                      "aggregation": {
+                        "crossSeriesReducer": "REDUCE_MEAN",
+                        "groupByFields": [
+                          "resource.label.\"model_user_id\"",
+                          "resource.label.\"location\"",
+                          "resource.label.\"monitored_resource_container\""
+                        ],
+                        "perSeriesAligner": "ALIGN_MEAN"
+                      },
+                      "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/dedicated_character_limit\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                    }
+                  }
+                }
+              },
+              {
+                "legendTemplate": "${resource.labels.model_user_id}${resource.labels.location}${resource.labels.monitored_resource_container}",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilterRatio": {
+                    "numerator": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_MAX",
+                        "groupByFields": [
+                          "resource.label.\"model_user_id\"",
+                          "resource.label.\"location\"",
+                          "resource.label.\"monitored_resource_container\""
+                        ],
+                        "perSeriesAligner": "ALIGN_RATE"
+                      },
+                      "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_token_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\" metric.label.\"request_type\"=\"dedicated\""
+                    },
+                    "denominator": {
+                      "aggregation": {
+                        "crossSeriesReducer": "REDUCE_MEAN",
+                        "groupByFields": [
+                          "resource.label.\"model_user_id\"",
+                          "resource.label.\"location\"",
+                          "resource.label.\"monitored_resource_container\""
+                        ],
+                        "perSeriesAligner": "ALIGN_MEAN"
+                      },
+                      "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/dedicated_token_limit\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                    }
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "Throughput",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 182,
+        "xPos": 29,
+        "height": 17,
+        "width": 19,
+        "widget": {
+          "title": "",
+          "text": {
+            "content": "[Provisioned Throughput](https://cloud.google.com/vertex-ai/generative-ai/docs/provisioned-throughput) ensures available capacity for Vertex AI model traffic.\n\nIf utilization is high and it's likely that future traffic for critical model requests will increase, it may make sense to [buy more provisioned throughput](https://cloud.google.com/vertex-ai/generative-ai/docs/purchase-provisioned-throughput). \n\nYou can view character and token throughput for individual models on the [Provisioned Throughput page in your Cloud Console](https://console.cloud.google.com/vertex-ai/provisioned-throughput/utilization-summary).",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_EXTRA_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
       }
     ]
   }
