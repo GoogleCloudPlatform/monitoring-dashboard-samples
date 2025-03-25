@@ -1,9 +1,15 @@
-### Setup
+### Set up instructions:
 
-**The sample dashboard contains a placeholder value, `PROJECT_ID`, for your project ID. Before running the import [script](../../scripts/dashboard/dashboard.sh) to create the dashboard, replace the placeholder value.**
+- Under Google Cloud Monitoring, go to 'Dashboards'.
+- Click on 'Create Custom Dashboard'.
+- On the top right, click on the 'Settings' icon.
+- Under 'JSON' -> 'JSON Editor'
+- Copy the content of [this](https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples/blob/master/dashboards/google-gemini-code-assist/gemini-code-assist-overview-from-metadata-logs.json) file, replacing Project_ID with your own Project_ID.
+- Click on Apply changes.
 
-The dashboard contains daily metrics that must be viewed with a time window greater than 1 day.
-Note that the dashboard is configured to query from the `_Default` log view of the log bucket. To manage log views see the [Google Cloud documentation](https://cloud.google.com/logging/docs/logs-views).
+#### Considerations:
+- The dashboard contains daily metrics that must be viewed with a time window greater than one day.
+- The dashboard is configured to query from the `_Default` log view of the log bucket. To manage log views see the [Google Cloud documentation](https://cloud.google.com/logging/docs/logs-views).
 
 ### Dashboards for Gemini Code Assist
 
