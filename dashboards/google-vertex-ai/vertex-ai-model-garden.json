@@ -29,7 +29,7 @@
         "widget": {
           "title": "About",
           "text": {
-            "content": "Use this dashboard to monitor your invocations of [Google-managed foundational models](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models). \n\nUse the **Throughput**, **Latency** and **Errors** sections to view application golden signals and troubleshoot service health.\n\nThe **Tokens and Characters** section provide views into your consumption, which allows you to monitor costs and inspect whether you are approaching quota limits. If you rely on [Provisioned Throughput](https://cloud.google.com/vertex-ai/generative-ai/docs/provisioned-throughput#metrics), filter the `request_type` parameter to `dedicated` to track your provisioned character counts and throughputs.\n\n",
+            "content": "Use this dashboard to monitor your invocations of [Google-managed foundational models](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models). \n\nUse the **Throughput**, **Latency** and **Errors** sections to view application golden signals and troubleshoot service health.\n\nThe **Tokens and Characters** section provides views into your consumption, which allows you to monitor costs and inspect whether you are approaching quota limits. If you rely on [Provisioned Throughput](https://cloud.google.com/vertex-ai/generative-ai/docs/provisioned-throughput#metrics), filter the `request_type` parameter to `dedicated` to track your provisioned character counts and throughputs.\n\n",
             "format": "MARKDOWN",
             "style": {
               "backgroundColor": "#E7EFFE",
@@ -172,7 +172,7 @@
           "title": "Throughput",
           "sectionHeader": {
             "dividerBelow": false,
-            "subtitle": "Inspect the rate that requests are being made against the managed model(s)."
+            "subtitle": "Inspect the rate of requests being made against the managed model(s)."
           }
         }
       },
@@ -181,7 +181,7 @@
         "height": 18,
         "width": 24,
         "widget": {
-          "title": "Model request per second (QPS) ",
+          "title": "Model requests per second (QPS) ",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -251,7 +251,8 @@
                       "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
-                        "resource.label.\"model_user_id\""
+                        "resource.label.\"model_user_id\"",
+                        "resource.label.\"location\""
                       ],
                       "perSeriesAligner": "ALIGN_RATE"
                     },
@@ -276,7 +277,7 @@
         "widget": {
           "title": "",
           "text": {
-            "content": "To see the input/output token breakdown for a single model, use the filter dropdowns on the top to drill down to a single `model_user_id`.",
+            "content": "To see the input/output token breakdown for a single model, use the filter dropdowns at the top to drill down to a single `model_user_id`.",
             "format": "MARKDOWN",
             "style": {
               "backgroundColor": "#FEF8E6",
@@ -1078,7 +1079,7 @@
                 }
               },
               {
-                "legendTemplate": "${resource.labels.model_user_id}${resource.labels.location}${resource.labels.monitored_resource_container}",
+                "legendTemplate": "${resource.labels.model_user_id} ${resource.labels.location} ${resource.labels.monitored_resource_container}",
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
