@@ -237,6 +237,193 @@
       },
       {
         "yPos": 16,
+        "height": 24,
+        "width": 48,
+        "widget": {
+          "title": "Performance by Service",
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "displayName": "Project",
+                "alignment": "LEFT",
+                "column": "project_id",
+                "visible": true
+              },
+              {
+                "displayName": "Service Name",
+                "alignment": "LEFT",
+                "column": "service_name",
+                "visible": true
+              },
+              {
+                "displayName": "Location",
+                "alignment": "LEFT",
+                "column": "location",
+                "visible": true
+              },
+              {
+                "displayName": "Requests",
+                "alignment": "LEFT",
+                "column": "value",
+                "visible": true
+              },
+              {
+                "displayName": "p50 Latency",
+                "alignment": "LEFT",
+                "column": "value-1",
+                "visible": true
+              },
+              {
+                "displayName": "p95 Latency",
+                "alignment": "LEFT",
+                "column": "value-2",
+                "visible": true
+              },
+              {
+                "displayName": "4xx Error %",
+                "alignment": "LEFT",
+                "column": "value-3",
+                "visible": true
+              },
+              {
+                "displayName": "5xx Error %",
+                "alignment": "LEFT",
+                "column": "value-4",
+                "visible": true
+              },
+              {
+                "column": "Name",
+                "visible": false
+              }
+            ],
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"service_name\"",
+                        "resource.label.\"location\"",
+                        "resource.label.\"project_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"run.googleapis.com/request_count\" resource.type=\"cloud_run_revision\""
+                  }
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": [
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"service_name\"",
+                        "resource.label.\"location\""
+                      ],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"run.googleapis.com/request_latencies\" resource.type=\"cloud_run_revision\""
+                  }
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": [
+                        "resource.label.\"project_id\"",
+                        "resource.label.\"service_name\"",
+                        "resource.label.\"location\""
+                      ],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"run.googleapis.com/request_latencies\" resource.type=\"cloud_run_revision\""
+                  }
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "timeSeriesFilterRatio": {
+                    "numerator": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [
+                          "resource.label.\"project_id\"",
+                          "resource.label.\"service_name\"",
+                          "resource.label.\"location\""
+                        ],
+                        "perSeriesAligner": "ALIGN_RATE"
+                      },
+                      "filter": "metric.type=\"run.googleapis.com/request_count\" resource.type=\"cloud_run_revision\" metric.label.\"response_code_class\"=\"4xx\""
+                    },
+                    "denominator": {
+                      "aggregation": {
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [
+                          "resource.label.\"project_id\"",
+                          "resource.label.\"service_name\"",
+                          "resource.label.\"location\""
+                        ],
+                        "perSeriesAligner": "ALIGN_RATE"
+                      },
+                      "filter": "metric.type=\"run.googleapis.com/request_count\" resource.type=\"cloud_run_revision\""
+                    }
+                  }
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "timeSeriesFilterRatio": {
+                    "numerator": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [
+                          "resource.label.\"project_id\"",
+                          "resource.label.\"service_name\"",
+                          "resource.label.\"location\""
+                        ],
+                        "perSeriesAligner": "ALIGN_RATE"
+                      },
+                      "filter": "metric.type=\"run.googleapis.com/request_count\" resource.type=\"cloud_run_revision\" metric.label.\"response_code_class\"=\"5xx\""
+                    },
+                    "denominator": {
+                      "aggregation": {
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [
+                          "resource.label.\"project_id\"",
+                          "resource.label.\"service_name\"",
+                          "resource.label.\"location\""
+                        ],
+                        "perSeriesAligner": "ALIGN_RATE"
+                      },
+                      "filter": "metric.type=\"run.googleapis.com/request_count\" resource.type=\"cloud_run_revision\""
+                    }
+                  }
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          }
+        }
+      },
+      {
+        "yPos": 40,
         "height": 16,
         "width": 24,
         "widget": {
@@ -285,7 +472,7 @@
         }
       },
       {
-        "yPos": 16,
+        "yPos": 40,
         "xPos": 24,
         "height": 16,
         "width": 24,
@@ -335,7 +522,7 @@
         }
       },
       {
-        "yPos": 32,
+        "yPos": 56,
         "height": 16,
         "width": 24,
         "widget": {
@@ -385,7 +572,7 @@
         }
       },
       {
-        "yPos": 32,
+        "yPos": 56,
         "xPos": 24,
         "height": 16,
         "width": 24,
@@ -436,7 +623,7 @@
         }
       },
       {
-        "yPos": 48,
+        "yPos": 72,
         "height": 16,
         "width": 24,
         "widget": {
@@ -486,7 +673,7 @@
         }
       },
       {
-        "yPos": 48,
+        "yPos": 72,
         "height": 16,
         "width": 24,
         "widget": {
@@ -498,7 +685,7 @@
         }
       },
       {
-        "yPos": 48,
+        "yPos": 72,
         "height": 16,
         "width": 24,
         "widget": {
@@ -548,7 +735,7 @@
         }
       },
       {
-        "yPos": 48,
+        "yPos": 72,
         "height": 16,
         "width": 24,
         "widget": {
@@ -598,7 +785,7 @@
         }
       },
       {
-        "yPos": 48,
+        "yPos": 72,
         "xPos": 24,
         "height": 16,
         "width": 24,
@@ -649,7 +836,7 @@
         }
       },
       {
-        "yPos": 48,
+        "yPos": 72,
         "xPos": 24,
         "height": 16,
         "width": 24,
@@ -662,7 +849,7 @@
         }
       },
       {
-        "yPos": 48,
+        "yPos": 72,
         "xPos": 24,
         "height": 16,
         "width": 24,
@@ -713,7 +900,7 @@
         }
       },
       {
-        "yPos": 48,
+        "yPos": 72,
         "xPos": 24,
         "height": 16,
         "width": 24,
