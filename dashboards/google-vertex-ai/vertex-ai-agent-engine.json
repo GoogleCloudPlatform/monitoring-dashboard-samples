@@ -1,0 +1,383 @@
+{
+  "displayName": "Vertex AI Agent Engine Overview",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "resource_container",
+      "templateVariable": "",
+      "valueType": "STRING_ARRAY"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "templateVariable": "",
+      "valueType": "STRING_ARRAY"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "reasoning_engine_id",
+      "templateVariable": "",
+      "valueType": "STRING_ARRAY"
+    }
+  ],
+  "labels": {},
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "height": 4,
+        "width": 48,
+        "widget": {
+          "title": "Agent Engine Instances",
+          "id": "",
+          "sectionHeader": {
+            "dividerBelow": false,
+            "subtitle": ""
+          }
+        }
+      },
+      {
+        "yPos": 4,
+        "height": 16,
+        "width": 48,
+        "widget": {
+          "title": "Active instances",
+          "id": "",
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "displayName": "Reasoning Engine ID",
+                "column": "reasoning_engine_id",
+                "visible": true
+              },
+              {
+                "displayName": "Location",
+                "column": "location",
+                "visible": true
+              },
+              {
+                "displayName": "Total Queries",
+                "column": "value",
+                "visible": true
+              },
+              {
+                "displayName": "Resource Container",
+                "column": "resource_container",
+                "visible": true
+              }
+            ],
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "sum by (resource_container, location, reasoning_engine_id)(increase(aiplatform_googleapis_com:reasoning_engine_request_count{monitored_resource=\"aiplatform.googleapis.com/ReasoningEngine\"}[${__interval}]))",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "displayColumnType": false,
+            "metricVisualization": "BAR"
+          }
+        }
+      },
+      {
+        "yPos": 20,
+        "height": 4,
+        "width": 48,
+        "widget": {
+          "title": "Agent Engine Queries",
+          "id": "",
+          "sectionHeader": {
+            "dividerBelow": false,
+            "subtitle": ""
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Queries per second (QPS)",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "sum by (reasoning_engine_id)(rate(aiplatform_googleapis_com:reasoning_engine_request_count{monitored_resource=\"aiplatform.googleapis.com/ReasoningEngine\"}[${__interval}]))",
+                  "unitOverride": "1/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "p50",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "histogram_quantile(0.50,sum by (reasoning_engine_id,le)(increase(aiplatform_googleapis_com:reasoning_engine_request_latencies_bucket{monitored_resource=\"aiplatform.googleapis.com/ReasoningEngine\"}[${__interval}])))",
+                  "unitOverride": "ms"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Query latencies",
+          "id": "",
+          "singleViewGroup": {
+            "displayType": "TAB"
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "p95",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "histogram_quantile(0.95,sum by (reasoning_engine_id,le)(increase(aiplatform_googleapis_com:reasoning_engine_request_latencies_bucket{monitored_resource=\"aiplatform.googleapis.com/ReasoningEngine\"}[${__interval}])))",
+                  "unitOverride": "ms"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "p99",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "histogram_quantile(0.99,sum by (reasoning_engine_id,le)(increase(aiplatform_googleapis_com:reasoning_engine_request_latencies_bucket{monitored_resource=\"aiplatform.googleapis.com/ReasoningEngine\"}[${__interval}])))",
+                  "unitOverride": "ms"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 40,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Query error rate",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "sum by (reasoning_engine_id)(rate(aiplatform_googleapis_com:reasoning_engine_request_count{monitored_resource=\"aiplatform.googleapis.com/ReasoningEngine\",response_code!=\"200\"}[${__interval}]))\n/\nsum by (reasoning_engine_id)(rate(aiplatform_googleapis_com:reasoning_engine_request_count{monitored_resource=\"aiplatform.googleapis.com/ReasoningEngine\"}[${__interval}]))\n* 100",
+                  "unitOverride": "%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 56,
+        "height": 4,
+        "width": 48,
+        "widget": {
+          "title": "Agent Engine Resource Allocations",
+          "id": "",
+          "sectionHeader": {
+            "dividerBelow": false,
+            "subtitle": ""
+          }
+        }
+      },
+      {
+        "yPos": 60,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Container CPU allocation",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesQueryLanguage": "fetch aiplatform.googleapis.com/ReasoningEngine\n| metric 'aiplatform.googleapis.com/reasoning_engine/cpu/allocation_time'\n| align rate(1m)\n| every 1m\n| group_by [resource.reasoning_engine_id],\n    [value_allocation_time_aggregate: aggregate(value.allocation_time)]",
+                  "unitOverride": "s/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 60,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Container memory allocation",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesQueryLanguage": "fetch aiplatform.googleapis.com/ReasoningEngine\n| metric 'aiplatform.googleapis.com/reasoning_engine/memory/allocation_time'\n| align rate(1m)\n| every 1m\n| group_by [resource.reasoning_engine_id],\n    [value_allocation_time_aggregate: aggregate(value.allocation_time)]",
+                  "unitOverride": "GiB.s/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
+
