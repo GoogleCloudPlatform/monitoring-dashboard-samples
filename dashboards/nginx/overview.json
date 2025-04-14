@@ -82,40 +82,38 @@
             },
             "dataSets": [
               {
-                "legendTemplate": "Accepted",
+                "legendTemplate": "Accepted ${metadata.system_labels\.name}",
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_RATE"
+                   "aggregation": {
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [
+                        "metadata.system_labels.\"name\""
+                      ]
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/nginx.connections_accepted\" resource.type=\"gce_instance\"",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
+                    "filter": "metric.type=\"workload.googleapis.com/nginx.connections_accepted\" resource.type=\"gce_instance\""
                   }
                 }
               },
               {
-                "legendTemplate": "Handled",
+                "legendTemplate": "Handled ${metadata.system_labels\.name}",
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_RATE"
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [
+                        "metadata.system_labels.\"name\""
+                      ]
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/nginx.connections_handled\" resource.type=\"gce_instance\"",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
+                    "filter": "metric.type=\"workload.googleapis.com/nginx.connections_handled\" resource.type=\"gce_instance\""
                   }
                 }
               }
