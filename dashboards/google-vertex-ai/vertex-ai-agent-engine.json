@@ -3,12 +3,6 @@
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
-      "labelKey": "resource_container",
-      "templateVariable": "",
-      "valueType": "STRING_ARRAY"
-    },
-    {
-      "filterType": "RESOURCE_LABEL",
       "labelKey": "location",
       "templateVariable": "",
       "valueType": "STRING_ARRAY"
@@ -46,9 +40,8 @@
           "timeSeriesTable": {
             "columnSettings": [
               {
-                "displayName": "Reasoning Engine ID",
-                "column": "reasoning_engine_id",
-                "visible": true
+                "column": "resource_container",
+                "visible": false
               },
               {
                 "displayName": "Location",
@@ -56,29 +49,57 @@
                 "visible": true
               },
               {
-                "displayName": "Total Queries",
-                "column": "value",
+                "displayName": "Reasoning Engine ID",
+                "column": "reasoning_engine_id",
                 "visible": true
               },
               {
-                "displayName": "Resource Container",
-                "column": "resource_container",
+                "displayName": "Project ID",
+                "column": "project_id",
+                "visible": true
+              },
+              {
+                "displayName": "Total Queries",
+                "column": "value",
                 "visible": true
               }
             ],
             "dataSets": [
               {
                 "breakdowns": [],
+                "minAlignmentPeriod": "60s",
                 "tableTemplate": "",
                 "timeSeriesQuery": {
                   "outputFullDuration": true,
-                  "prometheusQuery": "sum by (resource_container, location, reasoning_engine_id)(increase(aiplatform_googleapis_com:reasoning_engine_request_count{monitored_resource=\"aiplatform.googleapis.com/ReasoningEngine\"}[${__interval}]))",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"resource_container\"",
+                        "resource.label.\"location\"",
+                        "resource.label.\"reasoning_engine_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/reasoning_engine/request_count\" resource.type=\"aiplatform.googleapis.com/ReasoningEngine\"",
+                    "pickTimeSeriesFilter": {
+                      "direction": "TOP",
+                      "numTimeSeries": 10,
+                      "rankingMethod": "METHOD_MEAN"
+                    }
+                  },
                   "unitOverride": ""
                 }
               }
             ],
             "displayColumnType": false,
-            "metricVisualization": "BAR"
+            "metricVisualization": "BAR",
+            "opsAnalyticsSettings": {
+              "maxRows": "0",
+              "pageSize": "0",
+              "showFilterBar": false
+            }
           }
         }
       },
@@ -114,12 +135,23 @@
                 "dimensions": [],
                 "legendTemplate": "",
                 "measures": [],
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "sum by (reasoning_engine_id)(rate(aiplatform_googleapis_com:reasoning_engine_request_count{monitored_resource=\"aiplatform.googleapis.com/ReasoningEngine\"}[${__interval}]))",
-                  "unitOverride": "1/s"
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"reasoning_engine_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/reasoning_engine/request_count\" resource.type=\"aiplatform.googleapis.com/ReasoningEngine\""
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
@@ -128,6 +160,19 @@
               "label": "",
               "scale": "LINEAR"
             }
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Query latencies (by Reasoning Engine ID)",
+          "id": "",
+          "singleViewGroup": {
+            "displayType": "TAB"
           }
         }
       },
@@ -151,12 +196,23 @@
                 "dimensions": [],
                 "legendTemplate": "",
                 "measures": [],
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.50,sum by (reasoning_engine_id,le)(increase(aiplatform_googleapis_com:reasoning_engine_request_latencies_bucket{monitored_resource=\"aiplatform.googleapis.com/ReasoningEngine\"}[${__interval}])))",
-                  "unitOverride": "ms"
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": [
+                        "resource.label.\"reasoning_engine_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/reasoning_engine/request_latencies\" resource.type=\"aiplatform.googleapis.com/ReasoningEngine\""
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
@@ -165,19 +221,6 @@
               "label": "",
               "scale": "LINEAR"
             }
-          }
-        }
-      },
-      {
-        "yPos": 24,
-        "xPos": 24,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "Query latencies",
-          "id": "",
-          "singleViewGroup": {
-            "displayType": "TAB"
           }
         }
       },
@@ -201,12 +244,23 @@
                 "dimensions": [],
                 "legendTemplate": "",
                 "measures": [],
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.95,sum by (reasoning_engine_id,le)(increase(aiplatform_googleapis_com:reasoning_engine_request_latencies_bucket{monitored_resource=\"aiplatform.googleapis.com/ReasoningEngine\"}[${__interval}])))",
-                  "unitOverride": "ms"
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": [
+                        "resource.label.\"reasoning_engine_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/reasoning_engine/request_latencies\" resource.type=\"aiplatform.googleapis.com/ReasoningEngine\""
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
@@ -238,12 +292,23 @@
                 "dimensions": [],
                 "legendTemplate": "",
                 "measures": [],
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.99,sum by (reasoning_engine_id,le)(increase(aiplatform_googleapis_com:reasoning_engine_request_latencies_bucket{monitored_resource=\"aiplatform.googleapis.com/ReasoningEngine\"}[${__interval}])))",
-                  "unitOverride": "ms"
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": [
+                        "resource.label.\"reasoning_engine_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/reasoning_engine/request_latencies\" resource.type=\"aiplatform.googleapis.com/ReasoningEngine\""
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
@@ -271,13 +336,103 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (reasoning_engine_id)(rate(aiplatform_googleapis_com:reasoning_engine_request_count{monitored_resource=\"aiplatform.googleapis.com/ReasoningEngine\",response_code!=\"200\"}[${__interval}]))\n/\nsum by (reasoning_engine_id)(rate(aiplatform_googleapis_com:reasoning_engine_request_count{monitored_resource=\"aiplatform.googleapis.com/ReasoningEngine\"}[${__interval}]))\n* 100",
+                  "prometheusQuery": "sum by (reasoning_engine_id)(rate(aiplatform_googleapis_com:reasoning_engine_request_count{monitored_resource=\"aiplatform.googleapis.com/ReasoningEngine\",response_code!=\"200\"}[${__interval}])) / sum by (reasoning_engine_id)(rate(aiplatform_googleapis_com:reasoning_engine_request_count{monitored_resource=\"aiplatform.googleapis.com/ReasoningEngine\"}[${__interval}])) * 100",
                   "unitOverride": "%"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 40,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Query latencies (by percentile)",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "p50",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/reasoning_engine/request_latencies\" resource.type=\"aiplatform.googleapis.com/ReasoningEngine\""
+                  },
+                  "unitOverride": ""
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "p95",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/reasoning_engine/request_latencies\" resource.type=\"aiplatform.googleapis.com/ReasoningEngine\""
+                  },
+                  "unitOverride": ""
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "p99",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/reasoning_engine/request_latencies\" resource.type=\"aiplatform.googleapis.com/ReasoningEngine\""
+                  },
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -315,12 +470,23 @@
                 "dimensions": [],
                 "legendTemplate": "",
                 "measures": [],
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "fetch aiplatform.googleapis.com/ReasoningEngine\n| metric 'aiplatform.googleapis.com/reasoning_engine/cpu/allocation_time'\n| align rate(1m)\n| every 1m\n| group_by [resource.reasoning_engine_id],\n    [value_allocation_time_aggregate: aggregate(value.allocation_time)]",
-                  "unitOverride": "s/s"
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"reasoning_engine_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/reasoning_engine/cpu/allocation_time\" resource.type=\"aiplatform.googleapis.com/ReasoningEngine\""
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
@@ -352,12 +518,23 @@
                 "dimensions": [],
                 "legendTemplate": "",
                 "measures": [],
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "fetch aiplatform.googleapis.com/ReasoningEngine\n| metric 'aiplatform.googleapis.com/reasoning_engine/memory/allocation_time'\n| align rate(1m)\n| every 1m\n| group_by [resource.reasoning_engine_id],\n    [value_allocation_time_aggregate: aggregate(value.allocation_time)]",
-                  "unitOverride": "GiB.s/s"
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"reasoning_engine_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/reasoning_engine/memory/allocation_time\" resource.type=\"aiplatform.googleapis.com/ReasoningEngine\""
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
