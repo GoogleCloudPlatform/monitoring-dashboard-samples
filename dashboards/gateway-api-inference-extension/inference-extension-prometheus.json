@@ -20,6 +20,7 @@
       "valueType": "STRING"
     }
   ],
+  "labels": {},
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
@@ -27,6 +28,8 @@
         "height": 4,
         "width": 48,
         "widget": {
+          "title": "",
+          "id": "",
           "text": {
             "content": "### Please refer to the [official documentation](https://github.com/kubernetes-sigs/gateway-api-inference-extension/blob/main/site-src/guides/metrics.md) for more details of underlying metrics used in the dashboard.",
             "format": "MARKDOWN",
@@ -57,16 +60,65 @@
       },
       {
         "yPos": 8,
+        "height": 8,
+        "width": 48,
+        "widget": {
+          "title": "Running requests",
+          "scorecard": {
+            "sparkChartView": {
+              "sparkChartType": "SPARK_LINE"
+            },
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": false,
+              "prometheusQuery": "sum by (model_name) (inference_model_running_requests)",
+              "unitOverride": "1"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "height": 73,
+        "width": 48,
+        "widget": {
+          "title": "Inference Model",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 16,
         "height": 17,
         "width": 48,
         "widget": {
-          "title": "E2E Request Latency",
+          "title": "Request Latency",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
+              {
+                "legendTemplate": "p999",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.999, sum by(le) (rate(inference_model_request_duration_seconds_bucket{}[${__interval}])))",
+                  "unitOverride": "s"
+                }
+              },
+              {
+                "legendTemplate": "p99",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(inference_model_request_duration_seconds_bucket{}[${__interval}])))",
+                  "unitOverride": "s"
+                }
+              },
               {
                 "legendTemplate": "p95",
                 "plotType": "LINE",
@@ -81,7 +133,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "histogram_quantile(0.9, sum by(le) (rate(inference_model_request_duration_seconds_bucket{}[${__interval}])))",
+                  "prometheusQuery": "histogram_quantile(0.90, sum by(le) (rate(inference_model_request_duration_seconds_bucket{}[${__interval}])))",
                   "unitOverride": "s"
                 }
               },
@@ -90,7 +142,16 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "histogram_quantile(0.5, sum by(le) (rate(inference_model_request_duration_seconds_bucket{}[${__interval}])))",
+                  "prometheusQuery": "histogram_quantile(0.50, sum by(le) (rate(inference_model_request_duration_seconds_bucket{}[${__interval}])))",
+                  "unitOverride": "s"
+                }
+              },
+              {
+                "legendTemplate": "avg",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum(rate(inference_model_request_duration_seconds_sum{}[${__interval}])) / sum(rate(inference_model_request_duration_seconds_count{}[${__interval}]))",
                   "unitOverride": "s"
                 }
               }
@@ -103,19 +164,7 @@
         }
       },
       {
-        "yPos": 8,
-        "height": 65,
-        "width": 48,
-        "widget": {
-          "title": "Inference Model",
-          "collapsibleGroup": {
-            "collapsed": false
-          },
-          "id": ""
-        }
-      },
-      {
-        "yPos": 25,
+        "yPos": 33,
         "height": 16,
         "width": 24,
         "widget": {
@@ -151,7 +200,7 @@
         }
       },
       {
-        "yPos": 25,
+        "yPos": 33,
         "xPos": 24,
         "height": 16,
         "width": 24,
@@ -167,7 +216,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (error_code,model_name,target_model_name) (rate(inference_model_request_error_total[${__interval}]))"
+                  "prometheusQuery": "(\n  sum by (error_code, model_name, target_model_name) (rate(inference_model_request_error_total[${__interval}]))\n) or on() vector(0)\n"
                 }
               }
             ],
@@ -179,7 +228,7 @@
         }
       },
       {
-        "yPos": 41,
+        "yPos": 49,
         "height": 16,
         "width": 24,
         "widget": {
@@ -190,6 +239,15 @@
               "mode": "COLOR"
             },
             "dataSets": [
+              {
+                "legendTemplate": "p99",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(inference_model_request_sizes_bucket{}[${__interval}])))",
+                  "unitOverride": "By"
+                }
+              },
               {
                 "legendTemplate": "p95",
                 "plotType": "LINE",
@@ -204,7 +262,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "histogram_quantile(0.9, sum by(le) (rate(inference_model_request_sizes_bucket{}[${__interval}])))",
+                  "prometheusQuery": "histogram_quantile(0.90, sum by(le) (rate(inference_model_request_sizes_bucket{}[${__interval}])))",
                   "unitOverride": "By"
                 }
               },
@@ -226,7 +284,7 @@
         }
       },
       {
-        "yPos": 41,
+        "yPos": 49,
         "xPos": 24,
         "height": 16,
         "width": 24,
@@ -238,6 +296,15 @@
               "mode": "COLOR"
             },
             "dataSets": [
+              {
+                "legendTemplate": "p99",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(inference_model_response_sizes_bucket{}[${__interval}])))",
+                  "unitOverride": "By"
+                }
+              },
               {
                 "legendTemplate": "p95",
                 "plotType": "LINE",
@@ -252,7 +319,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "histogram_quantile(0.9, sum by(le) (rate(inference_model_response_sizes_bucket{}[${__interval}])))",
+                  "prometheusQuery": "histogram_quantile(0.90, sum by(le) (rate(inference_model_response_sizes_bucket{}[${__interval}])))",
                   "unitOverride": "By"
                 }
               },
@@ -274,128 +341,11 @@
         }
       },
       {
-        "yPos": 57,
+        "yPos": 65,
         "height": 16,
         "width": 24,
         "widget": {
           "title": "Input Token Count",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p95",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.95, sum by(le) (rate(inference_model_input_tokens_bucket{}[${__interval}])))",
-                  "unitOverride": ""
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p90",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.9, sum by(le) (rate(inference_model_input_tokens_bucket{}[${__interval}])))",
-                  "unitOverride": ""
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p50",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.5, sum by(le) (rate(inference_model_input_tokens_bucket{}[${__interval}])))",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": []
-          }
-        }
-      },
-      {
-        "yPos": 57,
-        "xPos": 24,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "Output Token Count",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p95",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.95, sum by(le) (rate(inference_model_output_tokens_bucket{}[${__interval}])))",
-                  "unitOverride": ""
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p90",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.9, sum by(le) (rate(inference_model_output_tokens_bucket{}[${__interval}])))",
-                  "unitOverride": ""
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p50",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.5, sum by(le) (rate(inference_model_output_tokens_bucket{}[${__interval}])))",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": []
-          }
-        }
-      },
-      {
-        "yPos": 73,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "Average KV Cache Utilization",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -403,11 +353,59 @@
             },
             "dataSets": [
               {
+                "legendTemplate": "p99",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (name)(avg_over_time(inference_pool_average_kv_cache_utilization[${__interval}]))*100",
-                  "unitOverride": "%"
+                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(inference_model_input_tokens_bucket{}[${__interval}])))"
+                }
+              },
+              {
+                "legendTemplate": "p95",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.95, sum by(le) (rate(inference_model_input_tokens_bucket{}[${__interval}])))"
+                }
+              },
+              {
+                "legendTemplate": "p90",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.90, sum by(le) (rate(inference_model_input_tokens_bucket{}[${__interval}])))"
+                }
+              },
+              {
+                "legendTemplate": "p50",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.50, sum by(le) (rate(inference_model_input_tokens_bucket{}[${__interval}])))"
+                }
+              },
+              {
+                "legendTemplate": "avg",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum(rate(inference_model_input_tokens_sum{}[${__interval}])) / sum(rate(inference_model_input_tokens_count{}[${__interval}]))\n"
+                }
+              },
+              {
+                "legendTemplate": "max",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(1, sum by(le) (rate(inference_model_input_tokens_bucket{}[${__interval}])))"
+                }
+              },
+              {
+                "legendTemplate": "min",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0, sum by(le) (rate(inference_model_input_tokens_bucket{}[${__interval}])))"
                 }
               }
             ],
@@ -419,8 +417,121 @@
         }
       },
       {
-        "yPos": 73,
+        "yPos": 65,
+        "xPos": 24,
         "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Output Token Count",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "p99",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(inference_model_output_tokens_bucket{}[${__interval}])))"
+                }
+              },
+              {
+                "legendTemplate": "p95",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.95, sum by(le) (rate(inference_model_output_tokens_bucket{}[${__interval}])))"
+                }
+              },
+              {
+                "legendTemplate": "p90",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.90, sum by(le) (rate(inference_model_output_tokens_bucket{}[${__interval}])))"
+                }
+              },
+              {
+                "legendTemplate": "p50",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.5, sum by(le) (rate(inference_model_output_tokens_bucket{}[${__interval}])))"
+                }
+              },
+              {
+                "legendTemplate": "avg",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum(rate(inference_model_output_tokens_bucket{}[${__interval}])) / sum(rate(inference_model_output_tokens_bucket{}[${__interval}]))\n"
+                }
+              },
+              {
+                "legendTemplate": "max",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(1, sum by(le) (rate(inference_model_output_tokens_bucket{}[${__interval}])))"
+                }
+              },
+              {
+                "legendTemplate": "min",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0, sum by(le) (rate(inference_model_output_tokens_bucket{}[${__interval}])))"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 81,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Average KV Cache Utilization",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "sum by (name)(avg_over_time(inference_pool_average_kv_cache_utilization[${__interval}]))",
+                  "unitOverride": "10^2.%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 81,
+        "height": 32,
         "width": 48,
         "widget": {
           "title": "Inference Pool",
@@ -431,7 +542,7 @@
         }
       },
       {
-        "yPos": 73,
+        "yPos": 81,
         "xPos": 24,
         "height": 16,
         "width": 24,
@@ -468,7 +579,43 @@
         }
       },
       {
-        "yPos": 89,
+        "yPos": 97,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Ready pods",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "sum(inference_pool_ready_pods) by (name)",
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 113,
         "height": 4,
         "width": 48,
         "widget": {
@@ -481,7 +628,7 @@
         }
       },
       {
-        "yPos": 93,
+        "yPos": 117,
         "height": 32,
         "width": 48,
         "widget": {
@@ -493,7 +640,7 @@
         }
       },
       {
-        "yPos": 93,
+        "yPos": 117,
         "xPos": 1,
         "height": 16,
         "width": 24,
@@ -539,18 +686,27 @@
         }
       },
       {
-        "yPos": 93,
+        "yPos": 117,
         "xPos": 25,
         "height": 16,
         "width": 23,
         "widget": {
-          "title": "E2E Request Latency",
+          "title": "Request Latency",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
+              {
+                "legendTemplate": "p99",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(vllm:e2e_request_latency_seconds_bucket[${__interval}])))",
+                  "unitOverride": "s"
+                }
+              },
               {
                 "legendTemplate": "p95",
                 "plotType": "LINE",
@@ -565,7 +721,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "histogram_quantile(0.9, sum by(le) (rate(vllm:e2e_request_latency_seconds_bucket[${__interval}])))",
+                  "prometheusQuery": "histogram_quantile(0.90, sum by(le) (rate(vllm:e2e_request_latency_seconds_bucket[${__interval}])))",
                   "unitOverride": "s"
                 }
               },
@@ -587,18 +743,27 @@
         }
       },
       {
-        "yPos": 109,
+        "yPos": 133,
         "xPos": 1,
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Time Per Output Token Latency",
+          "title": "TPOT (Time Per Output Token Latency)",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
+              {
+                "legendTemplate": "p99",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(vllm:time_per_output_token_seconds_bucket[${__interval}])))",
+                  "unitOverride": "s"
+                }
+              },
               {
                 "legendTemplate": "p95",
                 "plotType": "LINE",
@@ -635,18 +800,27 @@
         }
       },
       {
-        "yPos": 109,
+        "yPos": 133,
         "xPos": 25,
         "height": 16,
         "width": 23,
         "widget": {
-          "title": "Time To First Token Latency",
+          "title": "TTFT (Time To First Token Latency)",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
+              {
+                "legendTemplate": "p99",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(vllm:time_to_first_token_seconds_bucket[${__interval}])))",
+                  "unitOverride": "s"
+                }
+              },
               {
                 "legendTemplate": "p95",
                 "plotType": "LINE",
