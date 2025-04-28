@@ -6,6 +6,28 @@
     "columns": 48,
     "tiles": [
       {
+        "height": 9,
+        "width": 48,
+        "widget": {
+          "title": "About",
+          "id": "",
+          "text": {
+            "content": "Use this dashboard to monitor your [continuous queries](https://cloud.google.com/bigquery/docs/continuous-queries-introduction).\n\nThis dashboard relies on continuous query [metrics](https://cloud.google.com/bigquery/docs/monitoring-dashboard#metrics), and was designed to monitor a single continuous query. Use the filter dropdowns on the top to specify the BigQuery job id of a continuous query to drill down to a single continuous query.\n\nThe dashboard will also work for monitoring your continuous queries in aggregate. However, note that the records read, records written, and estimated bytes processed charts group by stage id, which may not have the same semantics across different continuous queries.",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#E7EFFE",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 9,
         "height": 25,
         "width": 24,
         "widget": {
@@ -50,6 +72,7 @@
         }
       },
       {
+        "yPos": 9,
         "xPos": 24,
         "height": 25,
         "width": 24,
@@ -86,7 +109,7 @@
         }
       },
       {
-        "yPos": 25,
+        "yPos": 34,
         "height": 25,
         "width": 24,
         "widget": {
@@ -131,7 +154,7 @@
         }
       },
       {
-        "yPos": 25,
+        "yPos": 34,
         "xPos": 24,
         "height": 25,
         "width": 24,
@@ -177,7 +200,7 @@
         }
       },
       {
-        "yPos": 50,
+        "yPos": 59,
         "height": 25,
         "width": 24,
         "widget": {
@@ -199,8 +222,8 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "delta(bigquery_googleapis_com:job_continuous_records_read{monitored_resource=\"bigquery.googleapis.com/ContinuousJob\"}[5m])",
-                  "unitOverride": ""
+                  "prometheusQuery": "deriv(bigquery_googleapis_com:job_continuous_records_read{monitored_resource=\"bigquery.googleapis.com/ContinuousJob\"}[${__interval}])",
+                  "unitOverride": "1/s"
                 }
               }
             ],
@@ -213,7 +236,7 @@
         }
       },
       {
-        "yPos": 50,
+        "yPos": 59,
         "xPos": 24,
         "height": 25,
         "width": 24,
@@ -236,8 +259,8 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "delta(bigquery_googleapis_com:job_continuous_records_written{monitored_resource=\"bigquery.googleapis.com/ContinuousJob\"}[5m])",
-                  "unitOverride": ""
+                  "prometheusQuery": "deriv(bigquery_googleapis_com:job_continuous_records_written{monitored_resource=\"bigquery.googleapis.com/ContinuousJob\"}[${__interval}])",
+                  "unitOverride": "1/s"
                 }
               }
             ],
@@ -250,7 +273,7 @@
         }
       },
       {
-        "yPos": 75,
+        "yPos": 84,
         "height": 25,
         "width": 24,
         "widget": {
@@ -272,8 +295,8 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "delta(bigquery_googleapis_com:job_continuous_estimated_bytes_processed{monitored_resource=\"bigquery.googleapis.com/ContinuousJob\"}[5m])",
-                  "unitOverride": "By"
+                  "prometheusQuery": "deriv(bigquery_googleapis_com:job_continuous_estimated_bytes_processed{monitored_resource=\"bigquery.googleapis.com/ContinuousJob\"}[${__interval}])",
+                  "unitOverride": "By/s"
                 }
               }
             ],
