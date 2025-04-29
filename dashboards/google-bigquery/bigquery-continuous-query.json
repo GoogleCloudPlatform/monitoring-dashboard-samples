@@ -1,0 +1,292 @@
+{
+  "displayName": "BigQuery Continuous Query Monitoring",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "job_id",
+      "valueType": "STRING_ARRAY"
+    }
+  ],
+  "labels": {},
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "height": 9,
+        "width": 48,
+        "widget": {
+          "title": "About",
+          "id": "",
+          "text": {
+            "content": "Use this dashboard to monitor your [continuous queries](https://cloud.google.com/bigquery/docs/continuous-queries-introduction).\n\nThis dashboard relies on continuous query [metrics](https://cloud.google.com/bigquery/docs/monitoring-dashboard#metrics), and was designed to monitor a single continuous query. Use the filter dropdowns on the top to specify the BigQuery job id of a continuous query to drill down to a single continuous query.\n\nThe dashboard will also work for monitoring your continuous queries in aggregate. However, note that the records read, records written, and estimated bytes processed charts group by stage id, which may not have the same semantics across different continuous queries.",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#E7EFFE",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 9,
+        "height": 25,
+        "width": 24,
+        "widget": {
+          "title": "Slots consumed (slot time per second)",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"bigquery.googleapis.com/job/continuous/slots/used_time\" resource.type=\"bigquery.googleapis.com/ContinuousJob\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 9,
+        "xPos": 24,
+        "height": 25,
+        "width": 24,
+        "widget": {
+          "title": "Watermark age",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "min without (stage_id) (time() * 1000000 - bigquery_googleapis_com:job_continuous_output_watermark) / 1000000",
+                  "unitOverride": "s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 34,
+        "height": 25,
+        "width": 24,
+        "widget": {
+          "title": "Estimated backlog records",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"bigquery.googleapis.com/job/continuous/backlog_records\" resource.type=\"bigquery.googleapis.com/ContinuousJob\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 34,
+        "xPos": 24,
+        "height": 25,
+        "width": 24,
+        "widget": {
+          "title": "Estimated backlog logical bytes",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"bigquery.googleapis.com/job/continuous/estimated_backlog_logical_bytes\" resource.type=\"bigquery.googleapis.com/ContinuousJob\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 59,
+        "height": 25,
+        "width": 24,
+        "widget": {
+          "title": "Records read",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "deriv(bigquery_googleapis_com:job_continuous_records_read{monitored_resource=\"bigquery.googleapis.com/ContinuousJob\"}[${__interval}])",
+                  "unitOverride": "1/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 59,
+        "xPos": 24,
+        "height": 25,
+        "width": 24,
+        "widget": {
+          "title": "Records written",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "deriv(bigquery_googleapis_com:job_continuous_records_written{monitored_resource=\"bigquery.googleapis.com/ContinuousJob\"}[${__interval}])",
+                  "unitOverride": "1/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 84,
+        "height": 25,
+        "width": 24,
+        "widget": {
+          "title": "Estimated bytes processed",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "deriv(bigquery_googleapis_com:job_continuous_estimated_bytes_processed{monitored_resource=\"bigquery.googleapis.com/ContinuousJob\"}[${__interval}])",
+                  "unitOverride": "By/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
