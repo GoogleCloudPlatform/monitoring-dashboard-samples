@@ -3,7 +3,7 @@
 #### Notes
 
 - This dashboard is based on the [Bindplane Collector source](https://bindplane.com/docs/resources/sources/bindplane-agent) and
-  [Google Cloud destination](https://bindplane.com/docs/resources/destinations/google-cloud) Bindplane resources.
+  [Google Prometheus Engine destination](https://bindplane.com/docs/resources/destinations/google-cloud-managed-service-for-prometheus) Bindplane resources.
 
 |Bindplane SecOps Exporter|
 |:------------------|
@@ -13,7 +13,7 @@
 #### Usage
 
 1. Configure the [Bindplane Collector source](https://bindplane.com/docs/resources/sources/bindplane-agent) and ensure Exporter metrics are enabled.
-2. Configure the [Google Cloud destination](https://bindplane.com/docs/resources/destinations/google-cloud).
+2. Configure the [Google Prometheus Engine destination](https://bindplane.com/docs/resources/destinations/google-cloud-managed-service-for-prometheus).
 3. Import the dashboard into your Google Cloud Monitoring workspace.
 
 
