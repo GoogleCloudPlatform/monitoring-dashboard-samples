@@ -2,7 +2,7 @@
 
 #### Notes
 
-- This dashboard is based on Google's [Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent).
+- This dashboard is based on  Google's [Ops Agent](https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent).
 
 
 |Aerospike GCE Overview|
