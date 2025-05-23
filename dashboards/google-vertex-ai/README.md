@@ -17,5 +17,5 @@
 |Vertex AI Custom Training|
 |:------------------|
 |Filename: [vertex-ai-custom-training.json](vertex-ai-custom-training.json)|
-|This is a dashboard for monitoring the resource usage metrics for vertex ai custom training jobs. |
+|This is a dashboard for monitoring the resource usage metrics for Vertex AI custom training jobs. |
 
