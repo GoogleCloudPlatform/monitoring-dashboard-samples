@@ -1,0 +1,186 @@
+{
+  "displayName": "Compute Engine - Instance Maintenance Events",
+  "dashboardFilters": [
+    {
+      "filterType": "VALUE_ONLY",
+      "labelKey": "",
+      "templateVariable": "machine_type_variable",
+      "timeSeriesQuery": {
+        "opsAnalyticsQuery": {
+          "queryExecutionRules": {
+            "useReservedSlots": false
+          },
+          "queryHandle": "",
+          "savedQueryId": "",
+          "sql": "SELECT distinct\n  JSON_VALUE(proto_payload.audit_log.metadata.machineType) AS machineType\nFROM\n  `REPLACE_PROJECT_ID.global._Required._AllLogs`\nWHERE\n  log_name=\"projects/REPLACE_PROJECT_ID/logs/cloudaudit.googleapis.com%2Fsystem_event\"\n  AND JSON_VALUE(proto_payload.audit_log.request['@type']) = \"type.googleapis.com/compute.instances.upcomingMaintenance\"\n"
+        },
+        "outputFullDuration": false,
+        "unitOverride": ""
+      },
+      "valueType": "STRING_ARRAY"
+    }
+  ],
+  "labels": {},
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "height": 17,
+        "width": 17,
+        "widget": {
+          "title": "Total Maintenance System Events",
+          "id": "",
+          "pieChart": {
+            "chartType": "DONUT",
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [
+                  {
+                    "column": "maintenanceStatus",
+                    "columnType": "STRING",
+                    "maxBinCount": 5,
+                    "sortColumn": "maintenanceStatus",
+                    "sortOrder": "SORT_ORDER_ASCENDING"
+                  }
+                ],
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "count"
+                    },
+                    "column": ""
+                  }
+                ],
+                "sliceNameTemplate": "",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "queryExecutionRules": {
+                      "useReservedSlots": false
+                    },
+                    "queryHandle": "",
+                    "savedQueryId": "",
+                    "sql": "\nSELECT * FROM (\n  SELECT\n    timestamp,\n    JSON_VALUE(ARRAY(\n      SELECT sub_logs.proto_payload.audit_log.metadata.machineType \n      FROM `REPLACE_PROJECT_ID.global._Required._AllLogs` AS sub_logs\n      WHERE sub_logs.log_name=\"projects/REPLACE_PROJECT_ID/logs/cloudaudit.googleapis.com%2Fsystem_event\"\n      AND JSON_VALUE(sub_logs.proto_payload.audit_log.request['@type']) = \"type.googleapis.com/compute.instances.upcomingMaintenance\"\n      AND sub_logs.proto_payload.audit_log.resource_name = all_logs.proto_payload.audit_log.resource_name\n      AND sub_logs.proto_payload.audit_log.metadata.machineType IS NOT NULL\n    )[OFFSET(0)]) AS machineType,\n    CASE\n      WHEN proto_payload.audit_log.metadata.maintenanceType IS NULL \n        AND STARTS_WITH(proto_payload.audit_log.status.message, \"Maintenance window has completed\") THEN 'SCHEDULED'\n      ELSE JSON_VALUE(proto_payload.audit_log.metadata.type)\n    END\n    AS maintenanceType,\n    CASE\n      WHEN proto_payload.audit_log.metadata.maintenanceStatus IS NULL \n        AND STARTS_WITH(proto_payload.audit_log.status.message, \"Maintenance window has completed\") THEN 'COMPLETE'\n      ELSE JSON_VALUE(proto_payload.audit_log.metadata.maintenanceStatus)\n  END\n    AS maintenanceStatus,\n    proto_payload.audit_log.resource_name,\n    JSON_VALUE(resource.labels.project_id) AS project_id,\n    JSON_VALUE(resource.labels.instance_id) AS instance_id,\n    JSON_VALUE(resource.labels.zone) AS zone,\n    CASE\n      WHEN proto_payload.audit_log.metadata.windowStartTime IS NULL THEN \"\"\n      ELSE JSON_VALUE(proto_payload.audit_log.metadata.windowStartTime)\n    END AS windowStartTime,\n    CASE\n      WHEN proto_payload.audit_log.metadata.windowEndTime IS NULL THEN \"\"\n      ELSE JSON_VALUE(proto_payload.audit_log.metadata.windowEndTime)\n    END AS windowEndTime,\n    proto_payload.audit_log.status.message,\n  FROM\n    `REPLACE_PROJECT_ID.global._Required._AllLogs` as all_logs\n  WHERE log_name=\"projects/REPLACE_PROJECT_ID/logs/cloudaudit.googleapis.com%2Fsystem_event\"\n  AND JSON_VALUE(proto_payload.audit_log.request['@type']) = \"type.googleapis.com/compute.instances.upcomingMaintenance\" \n  ORDER BY timestamp desc\n)\nWHERE\n  IF(\n    ARRAY_LENGTH(@machine_type_variable) = 0,\n    TRUE,\n    machineType IN UNNEST(@machine_type_variable)\n  )\n"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "showLabels": false,
+            "showTotal": false,
+            "sliceAggregatedThreshold": 0
+          }
+        }
+      },
+      {
+        "xPos": 17,
+        "height": 17,
+        "width": 31,
+        "widget": {
+          "title": "Maintenance System Events",
+          "text": {
+            "content": "The widgets on this dashboard show the Maintenance System Events from Log analytics.\n\n### Data\n\nThe data shown on the dashboard is for the selected time range.  Expand the time range to see historical information.\n\n### Enabling\n\nUpgrade the **_Required** <a href=\"http://console.cloud.google.com/logs/storage\" target=\"_blank\">Log Storage</a>.  There are no additional charges for this.\n\nOnce the Log Storage is upgraded all new maintenance system events will be shown here.",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 17,
+        "height": 32,
+        "width": 48,
+        "widget": {
+          "title": "Maintenance System Events By Instance",
+          "id": "",
+          "timeSeriesTable": {
+            "columnSettings": [],
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "queryExecutionRules": {
+                      "useReservedSlots": false
+                    },
+                    "queryHandle": "CgixfYRcdhZQ7RIgam9iX3ZHb2pSNW5PeW9rSWFTb3dna1gyTHgya2dHZEoaAlVTQJ-0rpWPHQ",
+                    "savedQueryId": "",
+                    "sql": "\nSELECT \n  machineType as machine_type,\n  ARRAY_REVERSE(SPLIT(resource_name, \"/\"))[SAFE_OFFSET(0)] AS instance_name,\n  ARRAY_AGG(\n    JSON_OBJECT(\n      'timestamp', timestamp,\n      'maintenanceType', maintenanceType,\n      'maintenanceStatus', maintenanceStatus,\n      'windowStart', windowStartTime,\n      'windowEnd', windowEndTime,\n      'message', message\n    )\n  ) AS maintenance_events\nFROM (\n\n  SELECT\n    timestamp,\n    JSON_VALUE(ARRAY(\n      SELECT sub_logs.proto_payload.audit_log.metadata.machineType \n      FROM `REPLACE_PROJECT_ID.global._Required._AllLogs` AS sub_logs\n      WHERE sub_logs.log_name = \"projects/REPLACE_PROJECT_ID/logs/cloudaudit.googleapis.com%2Fsystem_event\"\n      AND JSON_VALUE(sub_logs.proto_payload.audit_log.request['@type']) = \"type.googleapis.com/compute.instances.upcomingMaintenance\"\n      AND sub_logs.proto_payload.audit_log.resource_name = all_logs.proto_payload.audit_log.resource_name\n      AND sub_logs.proto_payload.audit_log.metadata.machineType IS NOT NULL\n    )[OFFSET(0)]) AS machineType,\n    CASE\n      WHEN proto_payload.audit_log.metadata.maintenanceType IS NULL \n        AND STARTS_WITH(proto_payload.audit_log.status.message, \"Maintenance window has completed\") THEN 'SCHEDULED'\n      ELSE JSON_VALUE(proto_payload.audit_log.metadata.type)\n  END\n    AS maintenanceType,\n    CASE\n      WHEN proto_payload.audit_log.metadata.maintenanceStatus IS NULL \n        AND STARTS_WITH(proto_payload.audit_log.status.message, \"Maintenance window has completed\") THEN 'COMPLETE'\n      ELSE JSON_VALUE(proto_payload.audit_log.metadata.maintenanceStatus)\n  END\n    AS maintenanceStatus,\n    proto_payload.audit_log.resource_name,\n    JSON_VALUE(resource.labels.project_id) AS project_id,\n    JSON_VALUE(resource.labels.instance_id) AS instance_id,\n    JSON_VALUE(resource.labels.zone) AS zone,\n    CASE\n      WHEN proto_payload.audit_log.metadata.windowStartTime IS NULL THEN \"\"\n      ELSE JSON_VALUE(proto_payload.audit_log.metadata.windowStartTime)\n    END AS windowStartTime,\n    CASE\n      WHEN proto_payload.audit_log.metadata.windowEndTime IS NULL THEN \"\"\n      ELSE JSON_VALUE(proto_payload.audit_log.metadata.windowEndTime)\n    END AS windowEndTime,\n    proto_payload.audit_log.status.message,\n  FROM\n    `REPLACE_PROJECT_ID.global._Required._AllLogs` as all_logs\n  WHERE log_name = \"projects/REPLACE_PROJECT_ID/logs/cloudaudit.googleapis.com%2Fsystem_event\"\n  AND JSON_VALUE(proto_payload.audit_log.request['@type']) = \"type.googleapis.com/compute.instances.upcomingMaintenance\" \n  ORDER BY timestamp desc\n)\nWHERE\n  IF(\n    ARRAY_LENGTH(@machine_type_variable) = 0,\n    TRUE,\n    machineType IN UNNEST(@machine_type_variable)\n  )\ngroup by resource_name, machineType\norder by machineType, instance_name\n"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "displayColumnType": false,
+            "metricVisualization": "NUMBER",
+            "opsAnalyticsSettings": {
+              "maxRows": "0",
+              "pageSize": "0",
+              "showFilterBar": false
+            }
+          }
+        }
+      },
+      {
+        "yPos": 17,
+        "height": 32,
+        "width": 48,
+        "widget": {
+          "title": "",
+          "id": "",
+          "singleViewGroup": {
+            "displayType": "TAB"
+          }
+        }
+      },
+      {
+        "yPos": 17,
+        "height": 32,
+        "width": 48,
+        "widget": {
+          "title": "All Maintenance System Events",
+          "id": "",
+          "timeSeriesTable": {
+            "columnSettings": [],
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "queryExecutionRules": {
+                      "useReservedSlots": false
+                    },
+                    "queryHandle": "CgixfYRcdhZQ7RIgam9iX3ZVd2NhM3h0MXlfZ2p4aHF4LWoxZzhqQ3JueFMaAlVTQJ-0rpWPHQ",
+                    "savedQueryId": "",
+                    "sql": "\nSELECT * FROM (\n  SELECT\n    timestamp,\n    JSON_VALUE(ARRAY(\n      SELECT sub_logs.proto_payload.audit_log.metadata.machineType \n      FROM `REPLACE_PROJECT_ID.global._Required._AllLogs` AS sub_logs\n      WHERE sub_logs.log_name = \"projects/REPLACE_PROJECT_ID/logs/cloudaudit.googleapis.com%2Fsystem_event\"\n      AND JSON_VALUE(sub_logs.proto_payload.audit_log.request['@type']) = \"type.googleapis.com/compute.instances.upcomingMaintenance\"\n      AND sub_logs.proto_payload.audit_log.resource_name = all_logs.proto_payload.audit_log.resource_name\n      AND sub_logs.proto_payload.audit_log.metadata.machineType IS NOT NULL\n    )[OFFSET(0)]) AS machineType,\n    CASE\n      WHEN proto_payload.audit_log.metadata.maintenanceType IS NULL \n        AND STARTS_WITH(proto_payload.audit_log.status.message, \"Maintenance window has completed\") THEN 'SCHEDULED'\n      ELSE JSON_VALUE(proto_payload.audit_log.metadata.type)\n    END\n    AS maintenanceType,\n    CASE\n      WHEN proto_payload.audit_log.metadata.maintenanceStatus IS NULL \n        AND STARTS_WITH(proto_payload.audit_log.status.message, \"Maintenance window has completed\") THEN 'COMPLETE'\n      ELSE JSON_VALUE(proto_payload.audit_log.metadata.maintenanceStatus)\n  END\n    AS maintenanceStatus,\n    ARRAY_REVERSE(SPLIT(proto_payload.audit_log.resource_name, \"/\"))[SAFE_OFFSET(0)] AS instance_name,\n    JSON_VALUE(resource.labels.project_id) AS project_id,\n    JSON_VALUE(resource.labels.instance_id) AS instance_id,\n    JSON_VALUE(resource.labels.zone) AS zone,\n    CASE\n      WHEN proto_payload.audit_log.metadata.windowStartTime IS NULL THEN \"\"\n      ELSE FORMAT_TIMESTAMP(\"%c %Z\", TIMESTAMP(JSON_VALUE(proto_payload.audit_log.metadata.windowStartTime)))\n    END AS windowStartTime,\n    CASE\n      WHEN proto_payload.audit_log.metadata.windowEndTime IS NULL THEN \"\"\n      ELSE FORMAT_TIMESTAMP(\"%c %Z\", TIMESTAMP(JSON_VALUE(proto_payload.audit_log.metadata.windowEndTime)))\n    END AS windowEndTime,\n    proto_payload.audit_log.status.message,\n  FROM\n    `REPLACE_PROJECT_ID.global._Required._AllLogs` as all_logs\n  WHERE log_name = \"projects/REPLACE_PROJECT_ID/logs/cloudaudit.googleapis.com%2Fsystem_event\"\n  AND JSON_VALUE(proto_payload.audit_log.request['@type']) = \"type.googleapis.com/compute.instances.upcomingMaintenance\" \n  ORDER BY timestamp desc\n)\nWHERE\n  IF(\n    ARRAY_LENGTH(@machine_type_variable) = 0,\n    TRUE,\n    machineType IN UNNEST(@machine_type_variable)\n  )\n"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "displayColumnType": false,
+            "metricVisualization": "NUMBER",
+            "opsAnalyticsSettings": {
+              "maxRows": "0",
+              "pageSize": "0",
+              "showFilterBar": false
+            }
+          }
+        }
+      }
+    ]
+  }
+}
