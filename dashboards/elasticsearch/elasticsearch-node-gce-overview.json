@@ -1,14 +1,18 @@
 {
   "displayName": "Elasticsearch Node GCE Overview",
+  "dashboardFilters": [],
+  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 4,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Disk Space Available",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -16,26 +20,28 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/elasticsearch.node.fs.disk.available'\n| group_by 1m, [value_available_mean: mean(value.available)]\n| every 1m\n| group_by [metadata.system.name],\n    [value_available_mean_mean: mean(value_available_mean)]\n| cast_units 'By'"
+                  "prometheusQuery": "avg by (metadata_system_name) (\n  avg_over_time(\n    workload_googleapis_com:elasticsearch_node_fs_disk_available{\n      monitored_resource=\"gce_instance\"\n    }[1m]\n  )\n)",
+                  "unitOverride": "By"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 0
+        }
       },
       {
-        "height": 4,
+        "xPos": 16,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Shard Size",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -43,26 +49,28 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/elasticsearch.node.shards.size'\n| group_by 1m, [value_size_mean: mean(value.size)]\n| every 1m\n| group_by [metadata.system.name]\n| cast_units 'By'"
+                  "prometheusQuery": "avg by (metadata_system_name) (\n  avg_over_time(\n    workload_googleapis_com:elasticsearch_node_shards_size{\n      monitored_resource=\"gce_instance\"\n    }[1m]\n  )\n)",
+                  "unitOverride": "By"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 0
+        }
       },
       {
-        "height": 4,
+        "xPos": 32,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Network (Sent)",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -70,26 +78,28 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/elasticsearch.node.cluster.io'\n| filter (metric.direction == 'sent')\n| align rate(1m)\n| every 1m\n| group_by [metadata.system.name]\n| cast_units 'By/s'"
+                  "prometheusQuery": "sum by (metadata_system_name) (\n  rate(\n    workload_googleapis_com:elasticsearch_node_cluster_io{\n      monitored_resource=\"gce_instance\",\n      direction=\"sent\"\n    }[1m]\n  )\n)",
+                  "unitOverride": "By/s"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 0
+        }
       },
       {
-        "height": 4,
+        "yPos": 16,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Network (Received)",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -97,26 +107,29 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/elasticsearch.node.cluster.io'\n| filter (metric.direction == 'received')\n| align rate(1m)\n| every 1m\n| group_by [metadata.system.name]\n| cast_units 'By/s'"
+                  "prometheusQuery": "sum by (metadata_system_name) (\n  rate(\n    workload_googleapis_com:elasticsearch_node_cluster_io{\n      monitored_resource=\"gce_instance\",\n      direction=\"received\"\n    }[1m]\n  )\n)",
+                  "unitOverride": "By/s"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 4
+        }
       },
       {
-        "height": 4,
+        "yPos": 16,
+        "xPos": 16,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "HTTP Connections",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -124,26 +137,28 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/elasticsearch.node.http.connections'\n| group_by 1m, [value_connections_mean: mean(value.connections)]\n| every 1m\n| group_by [metadata.system.name]"
+                  "prometheusQuery": "avg by (metadata_system_name) (\n  avg_over_time(\n    workload_googleapis_com:elasticsearch_node_http_connections{\n      monitored_resource=\"gce_instance\"\n    }[1m]\n  )\n)"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 4
+        }
       },
       {
-        "height": 4,
+        "yPos": 16,
+        "xPos": 32,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Internal Connections",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -151,26 +166,27 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/elasticsearch.node.cluster.connections'\n| group_by 1m, [value_connections_mean: mean(value.connections)]\n| every 1m\n| group_by [metadata.system.name]"
+                  "prometheusQuery": "avg by (metadata_system_name) (\n  avg_over_time(\n    workload_googleapis_com:elasticsearch_node_cluster_connections{\n      monitored_resource=\"gce_instance\"\n    }[1m]\n  )\n)"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 4
+        }
       },
       {
-        "height": 4,
+        "yPos": 32,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Active Documents",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -178,26 +194,28 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/elasticsearch.node.documents'\n| filter (metric.state == 'active')\n| group_by 1m, [value_documents_mean: mean(value.documents)]\n| every 1m\n| group_by [metadata.system.name]"
+                  "prometheusQuery": "avg by (metadata_system_name) (\n  avg_over_time(\n    workload_googleapis_com:elasticsearch_node_documents{\n      monitored_resource=\"gce_instance\",\n      state=\"active\"\n    }[1m]\n  )\n)"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 8
+        }
       },
       {
-        "height": 4,
+        "yPos": 32,
+        "xPos": 16,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Deleted Documents",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -205,26 +223,28 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/elasticsearch.node.documents'\n| filter (metric.state == 'deleted')\n| group_by 1m, [value_documents_mean: mean(value.documents)]\n| every 1m\n| group_by [metadata.system.name]"
+                  "prometheusQuery": "avg by (metadata_system_name) (\n  avg_over_time(\n    workload_googleapis_com:elasticsearch_node_documents{\n      monitored_resource=\"gce_instance\",\n      state=\"deleted\"\n    }[1m]\n  )\n)"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 8
+        }
       },
       {
-        "height": 4,
+        "yPos": 32,
+        "xPos": 32,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Field Data Cache Evictions",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -232,26 +252,27 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/elasticsearch.node.cache.evictions'\n| filter (metric.cache_name == 'fielddata')\n| align rate(1m)\n| every 1m\n| group_by [metadata.system.name]"
+                  "prometheusQuery": "avg by (metadata_system_name) (\n  avg_over_time(\n    workload_googleapis_com:elasticsearch_node_cache_evictions{\n      monitored_resource=\"gce_instance\",\n      cache_name=\"fielddata\"\n    }[1m]\n  )\n)"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 8
+        }
       },
       {
-        "height": 4,
+        "yPos": 48,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Query Cache Evictions",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -259,26 +280,28 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/elasticsearch.node.cache.evictions'\n| filter (metric.cache_name == 'query')\n| align rate(1m)\n| every 1m\n| group_by [metadata.system.name]"
+                  "prometheusQuery": "avg by (metadata_system_name) (\n  avg_over_time(\n    workload_googleapis_com:elasticsearch_node_cache_evictions{\n      monitored_resource=\"gce_instance\",\n      cache_name=\"query\"\n    }[1m]\n  )\n)"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 12
+        }
       },
       {
-        "height": 4,
+        "yPos": 48,
+        "xPos": 16,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Query Cache Memory",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -286,26 +309,28 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/elasticsearch.node.cache.memory.usage'\n| filter (metric.cache_name == 'query')\n| group_by 1m, [value_usage_mean: mean(value.usage)]\n| every 1m\n| group_by [metadata.system.name]"
+                  "prometheusQuery": "avg by (metadata_system_name) (\n  avg_over_time(\n    workload_googleapis_com:elasticsearch_node_cache_memory_usage{\n      monitored_resource=\"gce_instance\",\n      cache_name=\"query\"\n    }[1m]\n  )\n)"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 12
+        }
       },
       {
-        "height": 4,
+        "yPos": 48,
+        "xPos": 32,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Field Data Cache Memory",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -313,119 +338,127 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/elasticsearch.node.cache.memory.usage'\n| filter (metric.cache_name == 'fielddata')\n| group_by 1m, [value_usage_mean: mean(value.usage)]\n| every 1m\n| group_by [metadata.system.name]"
+                  "prometheusQuery": "avg by (metadata_system_name) (\n  avg_over_time(\n    workload_googleapis_com:elasticsearch_node_cache_memory_usage{\n      monitored_resource=\"gce_instance\",\n      cache_name=\"fielddata\"\n    }[1m]\n  )\n)"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 12
+        }
       },
       {
-        "height": 4,
+        "yPos": 64,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Memory % Top 5 VMs",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
-                "legendTemplate": "${labels.metadata\\.system\\.name} (${labels.resource\\.zone})",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "def top_5_memory_filtered_by_metric filter_metric =\n  fetch gce_instance\n  | { t_memory:\n        metric 'agent.googleapis.com/memory/percent_used'\n        | filter metric.state = 'used'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value val(0)\n  | group_by [metadata.system.name, resource.project_id, resource.zone], 1m,\n      .mean()\n  | top 5\n  | every 1m;\n\n@top_5_memory_filtered_by_metric\n  'workload.googleapis.com/elasticsearch.node.http.connections'"
+                  "prometheusQuery": "topk(5,\n  avg by (instance_id, project_id, zone) (\n    avg_over_time(\n      agent_googleapis_com:memory_percent_used{monitored_resource=\"gce_instance\", state=\"used\"}[1m]\n    )\n    and on(instance_id, project_id, zone)\n    (workload_googleapis_com:elasticsearch_node_http_connections{monitored_resource=\"gce_instance\"})\n  )\n)"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 16
+        }
       },
       {
-        "height": 4,
+        "yPos": 64,
+        "xPos": 16,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "CPU % Top 5 VMs",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
-                "legendTemplate": "${labels.metric\\.instance_name} (${labels.resource\\.zone})",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "def top_5_cpu_filtered_by_metric filter_metric =\n  fetch gce_instance\n  | { t_cpu: metric 'compute.googleapis.com/instance/cpu/utilization'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value t_cpu.value.utilization\n  | group_by [resource.project_id, resource.zone, metric.instance_name], 1m,\n      [value_utilization_mean: mean(t_cpu.value.utilization)]\n  | top 5\n  | every 1m;\n\n@top_5_cpu_filtered_by_metric\n  'workload.googleapis.com/elasticsearch.node.http.connections'"
+                  "prometheusQuery": "topk(5, 100 *\n  avg by (project_id, zone, instance_name) (\n    avg_over_time(\n      compute_googleapis_com:instance_cpu_utilization{monitored_resource=\"gce_instance\"}[1m]\n    )\n    and\n    on(instance_id, project_id, zone)\n    (\n      workload_googleapis_com:elasticsearch_node_http_connections{monitored_resource=\"gce_instance\"}\n    )\n  )\n)"
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 16
+        }
       },
       {
-        "height": 4,
+        "yPos": 64,
+        "xPos": 32,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Elasticsearch VMs by Region",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
-                "legendTemplate": "${labels.region}",
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "def vms_with_metric_count_by_region metric =\n  fetch gce_instance\n  | metric $metric\n  # Shift points forward from the past 2 minutes so a VM that misses a point\n  # won't temporarily shift down the number of VMs.\n  | align next_older(2m)\n  | group_by [resource.project_id, resource.zone, resource.instance_id], 1m, .pick_any\n  | group_by [resource.project_id, resource.zone], 1m, .count\n  | map\n      add[\n        region: re_extract(resource.zone, '([^-]+-[^-]+)-[^-]+', '\\\\1')]\n  | group_by [region], .sum\n  | every 1m;\n\n@vms_with_metric_count_by_region 'workload.googleapis.com/elasticsearch.node.http.connections'"
+                  "prometheusQuery": "count by (region) (\n  label_replace(\n    sum by (project_id, zone, instance_id) (\n      count_over_time(workload_googleapis_com:elasticsearch_node_http_connections{monitored_resource=\"gce_instance\"}[2m])\n    ),\n    \"region\",\n    \"$1\",\n    \"zone\",\n    \"([^-]+-[^-]+)-.*\"\n  )\n)"
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 16
+        }
       },
       {
-        "height": 4,
+        "yPos": 80,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Thread Pool Queued Tasks",
+          "id": "",
           "xyChart": {
             "chartOptions": {
-              "mode": "COLOR"
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
+                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -436,39 +469,49 @@
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
                     "filter": "metric.type=\"workload.googleapis.com/elasticsearch.node.thread_pool.tasks.queued\" resource.type=\"gce_instance\""
-                  }
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 20
+        }
       },
       {
-        "height": 4,
+        "yPos": 80,
+        "xPos": 16,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Thread Pool Completed Tasks",
+          "id": "",
           "xyChart": {
             "chartOptions": {
-              "mode": "COLOR"
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
+                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"workload.googleapis.com/elasticsearch.node.thread_pool.tasks.finished\" resource.type=\"gce_instance\" metric.label.\"state\"=\"completed\"",
@@ -480,39 +523,49 @@
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     }
-                  }
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 20
+        }
       },
       {
-        "height": 4,
+        "yPos": 80,
+        "xPos": 32,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Thread Pool Rejected Tasks",
+          "id": "",
           "xyChart": {
             "chartOptions": {
-              "mode": "COLOR"
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
+                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"workload.googleapis.com/elasticsearch.node.thread_pool.tasks.finished\" resource.type=\"gce_instance\" metric.label.\"state\"=\"rejected\"",
@@ -524,35 +577,44 @@
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     }
-                  }
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 20
+        }
       },
       {
-        "height": 4,
+        "yPos": 96,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Thread Pool Active Threads",
+          "id": "",
           "xyChart": {
             "chartOptions": {
-              "mode": "COLOR"
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
+                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -563,48 +625,68 @@
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
                     "filter": "metric.type=\"workload.googleapis.com/elasticsearch.node.thread_pool.threads\" resource.type=\"gce_instance\" metric.label.\"state\"=\"active\""
-                  }
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 24
+        }
       },
       {
-        "height": 4,
+        "yPos": 96,
+        "xPos": 16,
+        "height": 16,
+        "width": 16,
         "widget": {
+          "title": "Elasticsearch Monitoring Links",
+          "id": "",
           "text": {
             "content": "[How to Configure Elasticsearch Monitoring](https://cloud.google.com/monitoring/agent/ops-agent/third-party/elasticsearch)\n\n[View Elasticsearch Logs](https://console.cloud.google.com/logs/query?query=logName:%22elasticsearch_default_json%22%0Aresource.type%3D%22gce_instance%22)\n\n[View Elasticsearch GC Logs](https://console.cloud.google.com/logs/query?query=logName:%22elasticsearch_default_gc%22%0Aresource.type%3D%22gce_instance%22)",
-            "format": "MARKDOWN"
-          },
-          "title": "Elasticsearch Monitoring Links"
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 24
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "",
+              "fontSize": "FONT_SIZE_UNSPECIFIED",
+              "horizontalAlignment": "HORIZONTAL_ALIGNMENT_UNSPECIFIED",
+              "padding": "PADDING_SIZE_UNSPECIFIED",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "",
+              "verticalAlignment": "VERTICAL_ALIGNMENT_UNSPECIFIED"
+            }
+          }
+        }
       },
       {
-        "height": 4,
+        "yPos": 96,
+        "xPos": 32,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Thread Pool Idle Threads",
+          "id": "",
           "xyChart": {
             "chartOptions": {
-              "mode": "COLOR"
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
+                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -615,19 +697,19 @@
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
                     "filter": "metric.type=\"workload.googleapis.com/elasticsearch.node.thread_pool.threads\" resource.type=\"gce_instance\" metric.label.\"state\"=\"idle\""
-                  }
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 24
+        }
       }
     ]
   }
