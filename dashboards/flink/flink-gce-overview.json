@@ -966,17 +966,24 @@
         "width": 16,
         "widget": {
           "title": "CPU % Top 5 VMs",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR"
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "topk(5, 100 * avg_over_time(compute_googleapis_com:instance_cpu_utilization{monitored_resource=\"gce_instance\"}[30s]))\n  and on(project_id, zone, instance_id)\n  (workload_googleapis_com:flink_jvm_cpu_load{monitored_resource=\"gce_instance\"})",
+                  "outputFullDuration": false,
+                  "prometheusQuery": "topk(5, 100 *\n  avg by (project_id, zone, instance_name) (\n    avg_over_time(\n      compute_googleapis_com:instance_cpu_utilization{monitored_resource=\"gce_instance\"}[1m]\n    )\n    and\n    on(instance_id, project_id, zone)\n    (workload_googleapis_com:flink_jvm_cpu_load{monitored_resource=\"gce_instance\"})\n  )\n)",
                   "unitOverride": "%"
                 }
               }
@@ -984,6 +991,7 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -1013,7 +1021,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "topk(5, avg_over_time(agent_googleapis_com:memory_percent_used{monitored_resource=\"gce_instance\", state=\"used\"}[1m]))\n  and on (name, project_id, zone)\n  (workload_googleapis_com:flink_jvm_cpu_load{monitored_resource=\"gce_instance\"})",
+                  "prometheusQuery": "topk(5,\n  avg by (project_id, zone, instance_id) (\n    avg_over_time(\n      agent_googleapis_com:memory_percent_used{monitored_resource=\"gce_instance\", state=\"used\"}[1m]\n    )\n  )\n  and on(instance_id, project_id, zone) (\n    workload_googleapis_com:flink_jvm_cpu_load{monitored_resource=\"gce_instance\"}\n  )\n)",
                   "unitOverride": "%"
                 }
               }
