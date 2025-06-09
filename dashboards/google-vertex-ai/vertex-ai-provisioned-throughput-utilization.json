@@ -1,0 +1,85 @@
+{
+  "xyChart": {
+    "dataSets": [
+      {
+        "timeSeriesQuery": {
+          "timeSeriesFilterRatio": {
+            "numerator": {
+              "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\" metric.label.\"request_type\"=\"dedicated\"",
+              "aggregation": {
+                "perSeriesAligner": "ALIGN_RATE",
+                "crossSeriesReducer": "REDUCE_MAX",
+                "groupByFields": [
+                  "resource.label.\"model_user_id\"",
+                  "resource.label.\"location\"",
+                  "resource.label.\"monitored_resource_container\""
+                ],
+                "alignmentPeriod": "60s"
+              }
+            },
+            "denominator": {
+              "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/dedicated_character_limit\" resource.type=\"aiplatform.googleapis.com/PublisherModel\"",
+              "aggregation": {
+                "perSeriesAligner": "ALIGN_MEAN",
+                "crossSeriesReducer": "REDUCE_MEAN",
+                "groupByFields": [
+                  "resource.label.\"model_user_id\"",
+                  "resource.label.\"location\"",
+                  "resource.label.\"monitored_resource_container\""
+                ]
+              }
+            }
+          }
+        },
+        "plotType": "LINE",
+        "targetAxis": "Y2",
+        "minAlignmentPeriod": "60s",
+        "legendTemplate": "${resource.labels.model_user_id} ${resource.labels.location}${resource.labels.monitored_resource_container}"
+      },
+      {
+        "timeSeriesQuery": {
+          "timeSeriesFilterRatio": {
+            "numerator": {
+              "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_token_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\" metric.label.\"request_type\"=\"dedicated\"",
+              "aggregation": {
+                "perSeriesAligner": "ALIGN_RATE",
+                "crossSeriesReducer": "REDUCE_MAX",
+                "groupByFields": [
+                  "resource.label.\"model_user_id\"",
+                  "resource.label.\"location\"",
+                  "resource.label.\"monitored_resource_container\""
+                ],
+                "alignmentPeriod": "60s"
+              }
+            },
+            "denominator": {
+              "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/dedicated_token_limit\" resource.type=\"aiplatform.googleapis.com/PublisherModel\"",
+              "aggregation": {
+                "perSeriesAligner": "ALIGN_MEAN",
+                "crossSeriesReducer": "REDUCE_MEAN",
+                "groupByFields": [
+                  "resource.label.\"model_user_id\"",
+                  "resource.label.\"location\"",
+                  "resource.label.\"monitored_resource_container\""
+                ]
+              }
+            }
+          }
+        },
+        "plotType": "LINE",
+        "targetAxis": "Y2",
+        "minAlignmentPeriod": "60s",
+        "legendTemplate": "${resource.labels.model_user_id}${resource.labels.location}${resource.labels.monitored_resource_container}"
+      }
+    ],
+    "chartOptions": {
+      "mode": "COLOR",
+      "displayHorizontal": false
+    },
+    "thresholds": [],
+    "y2Axis": {
+      "scale": "LINEAR",
+      "label": "Throughput"
+    }
+  }
+}
