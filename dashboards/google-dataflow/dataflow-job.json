@@ -1,253 +1,35 @@
 {
   "displayName": "Dataflow",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "job_name",
+      "templateVariable": "",
+      "valueType": "STRING"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "project_id",
+      "templateVariable": "",
+      "valueType": "STRING"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "region",
+      "templateVariable": "",
+      "valueType": "STRING"
+    }
+  ],
+  "labels": {},
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
       {
-        "xPos": 24,
+        "height": 16,
         "width": 24,
-        "height": 16,
-        "widget": {
-          "incidentList": {
-            "monitoredResources": [
-              {
-                "type": "dataflow_job"
-              }
-            ]
-          },
-          "title": "Incidents"
-        }
-      },
-      {
-        "yPos": 16,
-        "width": 24,
-        "height": 16,
-        "widget": {
-          "xyChart": {
-            "dataSets": [
-              {
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "filter": "metric.type=\"dataflow.googleapis.com/job/system_lag\" resource.type=\"dataflow_job\"",
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  },
-                  "outputFullDuration": false
-                },
-                "plotType": "LINE",
-                "minAlignmentPeriod": "60s",
-                "targetAxis": "Y1"
-              }
-            ],
-            "yAxis": {
-              "scale": "LINEAR"
-            },
-            "chartOptions": {
-              "mode": "COLOR",
-              "showLegend": false,
-              "displayHorizontal": false
-            }
-          },
-          "title": "System Lag"
-        }
-      },
-      {
-        "xPos": 24,
-        "yPos": 16,
-        "width": 24,
-        "height": 16,
-        "widget": {
-          "xyChart": {
-            "dataSets": [
-              {
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "filter": "metric.type=\"dataflow.googleapis.com/job/element_count\" resource.type=\"dataflow_job\"",
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
-                },
-                "plotType": "LINE",
-                "minAlignmentPeriod": "60s",
-                "targetAxis": "Y1"
-              }
-            ],
-            "yAxis": {
-              "scale": "LINEAR"
-            },
-            "chartOptions": {
-              "mode": "COLOR",
-              "showLegend": false,
-              "displayHorizontal": false
-            }
-          },
-          "title": "Elements"
-        }
-      },
-      {
-        "yPos": 32,
-        "width": 24,
-        "height": 16,
-        "widget": {
-          "xyChart": {
-            "dataSets": [
-              {
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch dataflow_job\n| metric 'dataflow.googleapis.com/job/estimated_byte_count'\n| group_by 1m,\n    [value_estimated_byte_count_mean: mean(value.estimated_byte_count)]\n| every 1m",
-                  "outputFullDuration": false
-                },
-                "plotType": "LINE",
-                "targetAxis": "Y1"
-              }
-            ],
-            "yAxis": {
-              "scale": "LINEAR"
-            },
-            "chartOptions": {
-              "mode": "COLOR",
-              "showLegend": false,
-              "displayHorizontal": false
-            }
-          },
-          "title": "Estimated Bytes"
-        }
-      },
-      {
-        "yPos": 48,
-        "width": 23,
-        "height": 16,
-        "widget": {
-          "xyChart": {
-            "dataSets": [
-              {
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "filter": "metric.type=\"dataflow.googleapis.com/job/total_vcpu_time\" resource.type=\"dataflow_job\"",
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  },
-                  "outputFullDuration": false
-                },
-                "plotType": "LINE",
-                "minAlignmentPeriod": "60s",
-                "targetAxis": "Y1"
-              }
-            ],
-            "yAxis": {
-              "scale": "LINEAR"
-            },
-            "chartOptions": {
-              "mode": "COLOR",
-              "showLegend": false,
-              "displayHorizontal": false
-            }
-          },
-          "title": "CPU Usage"
-        }
-      },
-      {
-        "xPos": 23,
-        "yPos": 48,
-        "width": 24,
-        "height": 16,
-        "widget": {
-          "xyChart": {
-            "dataSets": [
-              {
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "filter": "metric.type=\"dataflow.googleapis.com/job/total_memory_usage_time\" resource.type=\"dataflow_job\"",
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
-                },
-                "plotType": "LINE",
-                "minAlignmentPeriod": "60s",
-                "targetAxis": "Y1"
-              }
-            ],
-            "yAxis": {
-              "scale": "LINEAR"
-            },
-            "chartOptions": {
-              "mode": "COLOR",
-              "showLegend": false,
-              "displayHorizontal": false
-            }
-          },
-          "title": "Memory Usage"
-        }
-      },
-      {
-        "yPos": 64,
-        "width": 23,
-        "height": 16,
-        "widget": {
-          "xyChart": {
-            "dataSets": [
-              {
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "filter": "metric.type=\"dataflow.googleapis.com/job/total_pd_usage_time\" resource.type=\"dataflow_job\"",
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  },
-                  "outputFullDuration": false
-                },
-                "plotType": "LINE",
-                "minAlignmentPeriod": "60s",
-                "targetAxis": "Y1"
-              }
-            ],
-            "yAxis": {
-              "scale": "LINEAR"
-            },
-            "chartOptions": {
-              "mode": "COLOR",
-              "showLegend": false,
-              "displayHorizontal": false
-            }
-          },
-          "title": "PD Usage"
-        }
-      },
-      {
-        "yPos": 16,
-        "width": 48,
-        "height": 32,
-        "widget": {
-          "title": "Job Metrics",
-          "collapsibleGroup": {
-            "collapsed": false
-          }
-        }
-      },
-      {
-        "yPos": 48,
-        "width": 48,
-        "height": 32,
-        "widget": {
-          "title": "System Metrics",
-          "collapsibleGroup": {
-            "collapsed": false
-          }
-        }
-      },
-      {
-        "width": 24,
-        "height": 16,
         "widget": {
           "title": "Jobs",
+          "id": "",
           "timeSeriesTable": {
             "columnSettings": [
               {
@@ -255,13 +37,13 @@
                 "visible": false
               },
               {
-                "column": "job_name",
                 "displayName": "Name",
+                "column": "job_name",
                 "visible": true
               },
               {
-                "column": "region",
                 "displayName": "Region",
+                "column": "region",
                 "visible": true
               },
               {
@@ -271,7 +53,9 @@
             ],
             "dataSets": [
               {
+                "breakdowns": [],
                 "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
                 "timeSeriesQuery": {
                   "outputFullDuration": true,
                   "timeSeriesFilter": {
@@ -285,7 +69,8 @@
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
                     "filter": "metric.type=\"dataflow.googleapis.com/job/element_count\" resource.type=\"dataflow_job\""
-                  }
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
@@ -293,24 +78,301 @@
             "metricVisualization": "NUMBER"
           }
         }
+      },
+      {
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Incidents",
+          "id": "",
+          "incidentList": {
+            "groupBy": "GROUP_BY_TYPE_UNSPECIFIED",
+            "monitoredResources": [
+              {
+                "labels": {},
+                "type": "dataflow_job"
+              }
+            ],
+            "policyNames": [],
+            "userLabels": {}
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "System Lag",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"dataflow.googleapis.com/job/system_lag\" resource.type=\"dataflow_job\""
+                  },
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "height": 32,
+        "width": 48,
+        "widget": {
+          "title": "Job Metrics",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 16,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Elements",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"dataflow.googleapis.com/job/element_count\" resource.type=\"dataflow_job\""
+                  },
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 32,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Estimated Bytes",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "avg_over_time(\n  dataflow_googleapis_com:job_estimated_byte_count{monitored_resource=\"dataflow_job\"}[1m]\n)\n",
+                  "unitOverride": "By"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "height": 16,
+        "width": 23,
+        "widget": {
+          "title": "CPU Usage",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"dataflow.googleapis.com/job/total_vcpu_time\" resource.type=\"dataflow_job\""
+                  },
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "height": 32,
+        "width": 48,
+        "widget": {
+          "title": "System Metrics",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 48,
+        "xPos": 23,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Memory Usage",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"dataflow.googleapis.com/job/total_memory_usage_time\" resource.type=\"dataflow_job\""
+                  },
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 64,
+        "height": 16,
+        "width": 23,
+        "widget": {
+          "title": "PD Usage",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"dataflow.googleapis.com/job/total_pd_usage_time\" resource.type=\"dataflow_job\""
+                  },
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
       }
     ]
-  },
-  "dashboardFilters": [
-    {
-      "labelKey": "job_name",
-      "filterType": "RESOURCE_LABEL",
-      "valueType": "STRING"
-    },
-    {
-      "labelKey": "project_id",
-      "filterType": "RESOURCE_LABEL",
-      "valueType": "STRING"
-    },
-    {
-      "labelKey": "region",
-      "filterType": "RESOURCE_LABEL",
-      "valueType": "STRING"
-    }
-  ]
+  }
 }
