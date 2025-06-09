@@ -19,3 +19,7 @@
 |Filename: [vertex-ai-custom-training.json](vertex-ai-custom-training.json)|
 |This is a dashboard for monitoring the resource usage metrics for Vertex AI custom training jobs. |
 
+|Vertex AI Provisioned Throughput Utilization|
+|:------------------|
+|Filename: [vertex-ai-provisioned-throughput-utilization.json](vertex-ai-provisioned-throughput-utilization.json)|
+|This is a dashboard for monitoring the utilization of purchased GSUs by model. |
