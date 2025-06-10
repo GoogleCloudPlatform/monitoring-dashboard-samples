@@ -1,16 +1,18 @@
 {
-  "category": "CUSTOM",
   "displayName": "GKE Enterprise Cluster Observability Memory",
+  "dashboardFilters": [],
+  "labels": {},
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
       {
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Memory Request % Used (Top 5 Clusters)",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -18,14 +20,13 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/memory/used_bytes\n    ; metric kubernetes.io/anthos/container/memory/used_bytes }\n    | union\n  ; { metric kubernetes.io/container/memory/request_bytes\n    ; metric kubernetes.io/anthos/container/memory/request_bytes }\n    | union }\n| align next_older(2m)\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| outer_join 0\n| div\n| top 5\n| scale \"%\"",
-                  "unitOverride": ""
+                  "prometheusQuery": "topk(5, 100 *\n    label_replace(\n        sum by (location, cluster_name) (\n            kubernetes_io:container_memory_used_bytes{monitored_resource=\"k8s_container\"}\n            or \n            kubernetes_io:anthos_container_memory_used_bytes{monitored_resource=\"k8s_container\"}\n        )\n        /\n        sum by (location, cluster_name) (\n            kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n            or \n            kubernetes_io:anthos_container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n        ),\n        \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n    )\n)",
+                  "unitOverride": "%"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -33,12 +34,13 @@
       },
       {
         "xPos": 24,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Memory Used (Top 5 Clusters)",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -46,14 +48,13 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/memory/used_bytes\n  ; metric kubernetes.io/anthos/container/memory/used_bytes }\n| union\n| align next_older(1m)\n| every 1m\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
-                  "unitOverride": ""
+                  "prometheusQuery": "topk(5,\n    label_replace(\n        sum by (location, cluster_name) (\n            kubernetes_io:container_memory_used_bytes{monitored_resource=\"k8s_container\"}\n            or \n            kubernetes_io:anthos_container_memory_used_bytes{monitored_resource=\"k8s_container\"}\n        ),\n        \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n    )\n)",
+                  "unitOverride": "By"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -61,12 +62,13 @@
       },
       {
         "yPos": 16,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Requested Memory (Top 5 Clusters)",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -74,28 +76,28 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/memory/request_bytes\n  ; metric kubernetes.io/anthos/container/memory/request_bytes }\n| union\n| align next_older(1m)\n| every 1m\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
-                  "unitOverride": ""
+                  "prometheusQuery": "topk(5,\n    label_replace(\n        sum by (location, cluster_name) (\n            kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n            or \n            kubernetes_io:anthos_container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n        ),\n        \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n    )\n)",
+                  "unitOverride": "By"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 24,
         "yPos": 16,
-        "width": 24,
+        "xPos": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Requested Memory Unused (Top 5 Clusters)",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -103,14 +105,13 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/memory/request_bytes\n    ; metric kubernetes.io/anthos/container/memory/request_bytes }\n    | union\n  ; { metric kubernetes.io/container/memory/used_bytes\n    ; metric kubernetes.io/anthos/container/memory/used_bytes }\n    | union }\n| align next_older(2m)\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| join\n| sub\n| top 5",
-                  "unitOverride": ""
+                  "prometheusQuery": "topk(5,\n    label_replace(\n        sum by (location, cluster_name) (\n            kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n            or \n            kubernetes_io:anthos_container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n        )\n        -\n        sum by (location, cluster_name) (\n            kubernetes_io:container_memory_used_bytes{monitored_resource=\"k8s_container\"}\n            or \n            kubernetes_io:anthos_container_memory_used_bytes{monitored_resource=\"k8s_container\"}\n        ),\n        \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n    )\n)",
+                  "unitOverride": "By"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -118,12 +119,13 @@
       },
       {
         "yPos": 32,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster Memory % Used (Top 5 Clusters)",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -131,28 +133,28 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { { metric kubernetes.io/node/memory/used_bytes\n    ; metric kubernetes.io/anthos/node/memory/used_bytes }\n    | union\n  ; { metric kubernetes.io/node/memory/total_bytes\n    ; metric kubernetes.io/anthos/node/memory/total_bytes }\n    | union }\n| align next_older(2m)\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| join\n| div\n| top 5\n| scale \"%\"",
-                  "unitOverride": ""
+                  "prometheusQuery": "topk(5, 100 *\n    label_replace(\n        sum by (location, cluster_name) (\n            kubernetes_io:node_memory_used_bytes{monitored_resource=\"k8s_node\"}\n            or \n            kubernetes_io:anthos_node_memory_used_bytes{monitored_resource=\"k8s_node\"}\n        )\n        /\n        sum by (location, cluster_name) (\n            kubernetes_io:node_memory_total_bytes{monitored_resource=\"k8s_node\"}\n            or \n            kubernetes_io:anthos_node_memory_total_bytes{monitored_resource=\"k8s_node\"}\n        ),\n        \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n    )\n)",
+                  "unitOverride": "%"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 24,
         "yPos": 32,
-        "width": 24,
+        "xPos": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster Memory Unused (Top 5 Clusters)",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -160,14 +162,13 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { { metric kubernetes.io/node/memory/total_bytes\n    ; metric kubernetes.io/anthos/node/memory/total_bytes }\n    | union\n  ; { metric kubernetes.io/node/memory/used_bytes\n    ; metric kubernetes.io/anthos/node/memory/used_bytes }\n    | union }\n| align next_older(2m)\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| join\n| sub\n| top 5",
-                  "unitOverride": ""
+                  "prometheusQuery": "topk(5,\n    label_replace(\n        sum by (location, cluster_name) (\n            kubernetes_io:node_memory_total_bytes{monitored_resource=\"k8s_node\"}\n            or \n            kubernetes_io:anthos_node_memory_total_bytes{monitored_resource=\"k8s_node\"}\n        )\n        -\n        sum by (location, cluster_name) (\n            kubernetes_io:node_memory_used_bytes{monitored_resource=\"k8s_node\"}\n            or \n            kubernetes_io:anthos_node_memory_used_bytes{monitored_resource=\"k8s_node\"}\n        ),\n        \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n    )\n)",
+                  "unitOverride": "By"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -175,12 +176,13 @@
       },
       {
         "yPos": 48,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster Memory % Requested (Top 5 Clusters)",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -188,28 +190,28 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/memory/request_bytes\n    ; metric kubernetes.io/anthos/container/memory/request_bytes }\n  | union\n; fetch k8s_node\n  | { metric kubernetes.io/node/memory/allocatable_bytes\n    ; metric kubernetes.io/anthos/node/memory/allocatable_bytes }\n  | union }\n| align next_older(2m)\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| join\n| div\n| top 5\n| scale \"%\"",
-                  "unitOverride": ""
+                  "prometheusQuery": "topk(5, 100 *\n    label_replace(\n        sum by (location, cluster_name) (\n            kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n            or \n            kubernetes_io:anthos_container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n        )\n        /\n        sum by (location, cluster_name) (\n            kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\"}\n            or \n            kubernetes_io:anthos_node_memory_allocatable_bytes{monitored_resource=\"k8s_node\"}\n        ),\n        \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n    )\n)",
+                  "unitOverride": "%"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 24,
         "yPos": 48,
-        "width": 24,
+        "xPos": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster Unrequested Memory (Top 5 Clusters)",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -217,14 +219,13 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | { metric kubernetes.io/node/memory/allocatable_bytes\n    ; metric kubernetes.io/anthos/node/memory/allocatable_bytes }\n  | union\n; fetch k8s_container\n  | { metric kubernetes.io/container/memory/request_bytes\n    ; metric kubernetes.io/anthos/container/memory/request_bytes }\n  | union }\n| align next_older(2m)\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| join\n| sub\n| top 5",
-                  "unitOverride": ""
+                  "prometheusQuery": "topk(5,\n    label_replace(\n        sum by (location, cluster_name) (\n            kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\"}\n            or \n            kubernetes_io:anthos_node_memory_allocatable_bytes{monitored_resource=\"k8s_node\"}\n        )\n        -\n        sum by (location, cluster_name) (\n            kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n            or \n            kubernetes_io:anthos_container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n        ),\n        \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n    )\n)",
+                  "unitOverride": "By"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -232,12 +233,13 @@
       },
       {
         "yPos": 64,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster Total Memory (Top 5 Clusters)",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -245,28 +247,28 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { metric kubernetes.io/node/memory/total_bytes\n  ; metric kubernetes.io/anthos/node/memory/total_bytes }\n| union\n| align next_older(2m)\n| every 2m\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
-                  "unitOverride": ""
+                  "prometheusQuery": "topk(5,\n    label_replace(\n        sum by (location, cluster_name) (\n            kubernetes_io:node_memory_total_bytes{monitored_resource=\"k8s_node\"}\n            or \n            kubernetes_io:anthos_node_memory_total_bytes{monitored_resource=\"k8s_node\"}\n        ),\n        \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n    )\n)",
+                  "unitOverride": "By"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 24,
         "yPos": 64,
-        "width": 24,
+        "xPos": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster Unrequested Memory (Top 5 Clusters)",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -274,14 +276,13 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{{ fetch k8s_node\n  | metric kubernetes.io/node/memory/allocatable_bytes\n; fetch k8s_container\n  | metric kubernetes.io/container/memory/request_bytes }\n| align next_older(2m)\n| group_by [resource.location, resource.cluster_name], .sum()\n| join\n| sub;\n{ fetch k8s_node\n  | metric kubernetes.io/anthos/node/memory/allocatable_bytes\n; fetch k8s_container\n  | metric kubernetes.io/anthos/container/memory/request_bytes }\n| align next_older(2m)\n| group_by [resource.location, resource.cluster_name], .sum()\n| join\n| sub} | union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
-                  "unitOverride": ""
+                  "prometheusQuery": "topk(5, \n    label_replace(\n        (\n            sum by (location, cluster_name) (\n                kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\"}\n            )\n            -\n            sum by (location, cluster_name) (\n                kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n            )\n        )\n        or\n        (\n            sum by (location, cluster_name) (\n                kubernetes_io:anthos_node_memory_allocatable_bytes{monitored_resource=\"k8s_node\"}\n            )\n            -\n            sum by (location, cluster_name) (\n                kubernetes_io:anthos_container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n            )\n        ),\n        \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n    )\n)",
+                  "unitOverride": "By"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -289,12 +290,13 @@
       },
       {
         "yPos": 80,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster Total Memory (Top 5 Clusters)",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -302,28 +304,28 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | metric kubernetes.io/node/memory/total_bytes\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum()\n; fetch k8s_node\n  | metric kubernetes.io/anthos/node/memory/total_bytes\n  | align next_older(2m)\n  | every 2m\n  | group_by [resource.location, resource.cluster_name], .sum() }\n| union\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
-                  "unitOverride": ""
+                  "prometheusQuery": "topk(5,\n    label_replace(\n        sum by (location, cluster_name) (\n            kubernetes_io:node_memory_total_bytes{monitored_resource=\"k8s_node\"}\n        )\n        or\n        sum by (location, cluster_name) (\n            kubernetes_io:anthos_node_memory_total_bytes{monitored_resource=\"k8s_node\"}\n        ),\n        \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n    )\n)\n\n",
+                  "unitOverride": "By"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 24,
         "yPos": 80,
-        "width": 24,
+        "xPos": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster Allocatable Memory (Top 5 Clusters)",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -331,21 +333,18 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { metric kubernetes.io/node/memory/allocatable_bytes\n  ; metric kubernetes.io/anthos/node/memory/allocatable_bytes }\n| union\n| align next_older(2m)\n| every 2m\n| group_by [resource.location, resource.cluster_name], .sum()\n| map\n    update[\n      resource.cluster_name: re_extract(resource.cluster_name, '(?:.+/|^)(.+)')]\n| top 5",
-                  "unitOverride": ""
+                  "prometheusQuery": "topk(5,\n    label_replace(\n        sum by (location, cluster_name) (\n            kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\"}\n            or\n            kubernetes_io:anthos_node_memory_allocatable_bytes{monitored_resource=\"k8s_node\"}\n        ),\n        \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n    )\n)",
+                  "unitOverride": "By"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       }
     ]
-  },
-  "dashboardFilters": [],
-  "labels": {}
+  }
 }
