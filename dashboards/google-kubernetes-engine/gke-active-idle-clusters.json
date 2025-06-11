@@ -1,61 +1,72 @@
 {
-  "category": "CUSTOM",
   "displayName": "GKE Active/Idle clusters",
+  "dashboardFilters": [],
+  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 8,
+        "height": 32,
+        "width": 8,
         "widget": {
-          "timeSeriesTable": {
-            "dataSets": [
-              {
-                "tableDisplayOptions": {},
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ clusters_container_count: \n    fetch k8s_container\n    | { kube_system_containers:\n        metric 'kubernetes.io/container/uptime'\n        | filter resource.namespace_name == 'kube-system'\n        | every 7d\n        | group_by [resource.cluster_name, resource.location, resource.project_id],\n            [row_count1: row_count()]\n    ; all_other_containers:\n        metric 'kubernetes.io/container/uptime'\n        | filter (resource.namespace_name != 'istio-system'\n            && resource.namespace_name != 'gatekeeper-system'\n            && resource.namespace_name != 'gke-system')\n        | every 7d\n        | group_by [resource.cluster_name, resource.location, resource.project_id],\n            [row_count2: row_count()] }\n    | join\n    | value [val(1) - val(0)]\n    |{ident; group_by sliding(8d)}\n    | outer_join 0\n\n; clusters_active: \n    fetch k8s_container\n    | metric 'kubernetes.io/container/uptime'\n    | filter resource.namespace_name == 'kube-system'\n    | every 7d\n    | group_by [resource.cluster_name, resource.location, resource.project_id],\n        [row_count3: row_count()]\n    | { ident\n    ; group_by sliding(8d) }\n    | outer_join 0\n    | value val(0)\n    | add [cluster_status: (if(val(0) < 1, \"deleted\", \"running\"))]\n    | filter cluster_status = 'running'\n}\n| join"
-                }
-              }
-            ],
-            "metricVisualization": "NUMBER"
-          },
-          "title": "Container count in user namespaces within last 7 days"
-        },
-        "width": 5,
-        "xPos": 7,
-        "yPos": 0
-      },
-      {
-        "height": 8,
-        "widget": {
-          "timeSeriesTable": {
-            "dataSets": [
-              {
-                "tableDisplayOptions": {},
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ cpu_utiization:\n  { fetch k8s_container\n    | metric 'kubernetes.io/container/cpu/core_usage_time'\n    |filter\n      (resource.namespace_name != 'kube-system'\n      && resource.namespace_name != 'istio-system'\n      && resource.namespace_name != 'gatekeeper-system'\n      && resource.namespace_name != 'gke-system')\n    | align delta(7d)\n    | every 7d\n    | group_by [resource.cluster_name, resource.location, resource.project_id],\n        [value_core_usage_time_aggregate: aggregate(value.core_usage_time)]\n  ; fetch k8s_node\n    | metric 'kubernetes.io/node/cpu/allocatable_cores'\n    | group_by 7d, [value_allocatable_cores_mean: mean(value.allocatable_cores)]\n    | every 7d\n    | group_by [resource.cluster_name, resource.location, resource.project_id],\n        [value_request_cores_mean_aggregate:\n          aggregate(value_allocatable_cores_mean)]\n    | mul (604800) }\n  | join\n  | div\n  | cast_units (\"10^2.%\")\n  |{ident; group_by sliding(8d)}\n  | outer_join 0\n  | value val(0)\n; clusters_active: \n    fetch k8s_container\n    | metric 'kubernetes.io/container/uptime'\n    | filter resource.namespace_name == 'kube-system'\n    | group_by 7d, [value_uptime_mean: mean(value.uptime)]\n    | every 7d\n    | group_by [resource.cluster_name, resource.location, resource.project_id],\n        [row_count3: row_count()]\n    | { ident\n    ; group_by sliding(8d) }\n    | outer_join 0\n    | value val(0)\n    | add [cluster_status: (if(val(0) < 1, \"deleted\", \"running\"))]\n    | filter cluster_status = 'running'\n}\n| join"
-                }
-              }
-            ],
-            "metricVisualization": "NUMBER"
-          },
-          "title": "Container CPU utilization in user namespaces within last 7 days"
-        },
-        "width": 5,
-        "xPos": 2,
-        "yPos": 0
-      },
-      {
-        "height": 8,
-        "widget": {
+          "title": "How to interpret the charts",
+          "id": "",
           "text": {
             "content": "If __container count in user namespaces__ is zero, it means the cluster is idle.\n\nIf in user namespaces,  __container CPU utilization__ is low (e.g. < 1%), the cluster is **likely** idle.\n\n__Note:__ User namespace is any namespace except __kube-system__, __istio-system__, __gatekeeper-system__, __gke-system__. If needed, you can update the filter in the charts.\n\nDespite what is selected in the Time Period at the top, reports are computed based on the last 7 days.\n\nYou can edit the dashboard and modify the query if you want to change durations such as **_7 days_** to the time window you want. \n\nYou can also filter and sort the values in the charts.\n\nIf a container restarted by GKE, it will be counted more than once since the container instances are different.\n\n\n\n\n\n",
-            "format": "MARKDOWN"
-          },
-          "title": "How to interpret the charts"
-        },
-        "width": 2,
-        "xPos": 0,
-        "yPos": 0
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "",
+              "fontSize": "FONT_SIZE_UNSPECIFIED",
+              "horizontalAlignment": "HORIZONTAL_ALIGNMENT_UNSPECIFIED",
+              "padding": "PADDING_SIZE_UNSPECIFIED",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "",
+              "verticalAlignment": "VERTICAL_ALIGNMENT_UNSPECIFIED"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 8,
+        "height": 32,
+        "width": 20,
+        "widget": {
+          "title": "Container CPU utilization in user namespaces within last 7 days",
+          "timeSeriesTable": {
+            "columnSettings": [],
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "label_replace(\n  (\n    sum by (cluster_name, location, project_id) (\n      increase(kubernetes_io:container_cpu_core_usage_time{\n        monitored_resource=\"k8s_container\",\n        namespace_name!~\"^(kube-system|istio-system|gatekeeper-system|gke-system)$\"\n      }[7d])\n    )\n    /\n    (\n      604800 *\n      sum by (cluster_name, location, project_id) (\n        avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\"}[7d])\n      )\n    )\n  ) * 100,\n  \"cluster_status\", \"running\", \"\", \"\"\n)\nand on (cluster_name, location, project_id)\n(\n  count by (cluster_name, location, project_id) (\n    avg_over_time(kubernetes_io:container_uptime{\n      monitored_resource=\"k8s_container\",\n      namespace_name=\"kube-system\"\n    }[7d])\n  ) > 0\n)\n"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          }
+        }
+      },
+      {
+        "xPos": 28,
+        "height": 32,
+        "width": 20,
+        "widget": {
+          "title": "Container count in user namespaces within last 7 days",
+          "timeSeriesTable": {
+            "columnSettings": [],
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "label_replace(\n    count by (cluster_name, location, project_id) (\n    kubernetes_io:container_uptime{monitored_resource=\"k8s_container\", namespace_name!~\"^istio-system|gatekeeper-system|gke-system$\"}\n    )\n    -\n    count by (cluster_name, location, project_id) (\n    kubernetes_io:container_uptime{monitored_resource=\"k8s_container\", namespace_name=\"kube-system\"}\n    ),\n    \"cluster_status\", \"running\", \"\", \"\"\n)\nand on (cluster_name, location, project_id)\n(\n    count by (cluster_name, location, project_id) (\n      kubernetes_io:container_uptime{monitored_resource=\"k8s_container\", namespace_name=\"kube-system\"}\n    ) > 0\n)\n\n"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          }
+        }
       }
     ]
   }
