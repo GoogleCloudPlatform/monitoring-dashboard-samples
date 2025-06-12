@@ -3,11 +3,11 @@
   "dashboardFilters": [],
   "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 4,
-        "width": 6,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Region Servers",
           "id": "",
@@ -50,9 +50,9 @@
         }
       },
       {
-        "xPos": 6,
-        "height": 4,
-        "width": 6,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Dead Region Servers",
           "id": "",
@@ -95,9 +95,9 @@
         }
       },
       {
-        "yPos": 4,
-        "height": 4,
-        "width": 6,
+        "yPos": 16,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Regions in Transition",
           "id": "",
@@ -140,10 +140,10 @@
         }
       },
       {
-        "yPos": 4,
-        "xPos": 6,
-        "height": 4,
-        "width": 6,
+        "yPos": 16,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Regions in Transition Over Threshold",
           "id": "",
@@ -186,9 +186,9 @@
         }
       },
       {
-        "yPos": 8,
-        "height": 4,
-        "width": 6,
+        "yPos": 32,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Read Requests",
           "id": "",
@@ -208,13 +208,12 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/hbase.region_server.request.count'\n| filter (metric.state == 'read')\n| group_by 1m, [value_count_mean: mean(value.count)]\n| every 1m",
+                  "prometheusQuery": "avg_over_time(workload_googleapis_com:hbase_region_server_request_count{monitored_resource=\"gce_instance\",state=\"read\"}[1m])",
                   "unitOverride": ""
                 }
               }
             ],
             "thresholds": [],
-            "timeshiftDuration": "0s",
             "yAxis": {
               "label": "",
               "scale": "LINEAR"
@@ -223,10 +222,10 @@
         }
       },
       {
-        "yPos": 8,
-        "xPos": 6,
-        "height": 4,
-        "width": 6,
+        "yPos": 32,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Write Requests",
           "id": "",
@@ -269,9 +268,9 @@
         }
       },
       {
-        "yPos": 12,
-        "height": 4,
-        "width": 6,
+        "yPos": 48,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Hbase System Logs",
           "id": "",
