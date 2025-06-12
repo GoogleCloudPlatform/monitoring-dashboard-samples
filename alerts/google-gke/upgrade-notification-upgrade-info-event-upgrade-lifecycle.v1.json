@@ -1,0 +1,32 @@
+{
+  "displayName": "GKE Resource Upgrade Complete",
+  "documentation": {
+    "content": "This informational alert indicates that an upgrade operation is complete.\n\nDetails:\n\n- State: ${log.extracted_label.state}\n- Resource Type: ${log.extracted_label.resourceType}\n- Upgrading From: ${log.extracted_label.upgrading_from}\n- Upgrading To: ${log.extracted_label.upgrading_to}\n- Operation: ${log.extracted_label.operation}\n\nFor more information on upgrade events, see the [GKE UpgradeInfoEvent documentation](https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/UpgradeInfoEvent).",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Log match condition",
+      "conditionMatchedLog": {
+        "filter": "resource.type=(\"gke_cluster\" OR \"gke_nodepool\") AND log_id(\"container.googleapis.com/notifications\") AND jsonPayload.@type=\"type.googleapis.com/google.container.v1beta1.UpgradeInfoEvent\" AND jsonPayload.eventType=\"UPGRADE_LIFECYCLE\"",
+        "labelExtractors": {
+          "state": "EXTRACT(jsonPayload.state)",
+          "upgrading_to": "EXTRACT(jsonPayload.targetVersion)",
+          "upgrading_from": "EXTRACT(jsonPayload.currentVersion)",
+          "resourceType": "EXTRACT(jsonPayload.resourceType)",
+          "operation": "EXTRACT(jsonPayload.operation)"
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "notificationRateLimit": {
+      "period": "3600s"
+    },
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}

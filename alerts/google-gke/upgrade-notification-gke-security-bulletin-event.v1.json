@@ -1,0 +1,32 @@
+{
+  "displayName": "GKE Security Bulletin Affecting Your Cluster",
+  "documentation": {
+    "content": "A security bulletin has been issued that affects your cluster. Check the bulletin details and follow the recommended steps to mitigate the vulnerability.\n\nBulletin details:\\\n[${log.extracted_label.bulletinId}](${log.extracted_label.bulletinUri}).\n\nDescription:\\\n${log.extracted_label.briefDescription}\n\nSuggested upgrade target:\\\n${log.extracted_label.suggestedUpgradeTarget}\n\nNote, if multiple clusters are affected, the alert system may suppress individual notifications due to high volume. You might receive only one alert even if many clusters require patching. Use the \"log match condition\" to see the full set of logs and verify if other clusters are also impacted.\n\nFor a general overview of security bulletins, see the [GKE Security Bulletins documentation](https://cloud.google.com/kubernetes-engine/docs/security-bulletins).\n\nFor more information on upgrade events, see the [GKE SecurityBulletinEvent documentation](https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/SecurityBulletinEvent).",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Log match condition",
+      "conditionMatchedLog": {
+        "filter": "resource.type=(\"gke_cluster\" OR \"gke_nodepool\") AND log_id(\"container.googleapis.com/notifications\") AND jsonPayload.@type=\"type.googleapis.com/google.container.v1beta1.SecurityBulletinEvent\"",
+        "labelExtractors": {
+          "severity": "EXTRACT(jsonPayload.severity)",
+          "suggestedUpgradeTarget": "EXTRACT(jsonPayload.suggestedUpgradeTarget)",
+          "briefDescription": "EXTRACT(jsonPayload.briefDescription)",
+          "bulletinId": "EXTRACT(jsonPayload.bulletinId)",
+          "bulletinUri": "EXTRACT(jsonPayload.bulletinUri)"
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "notificationRateLimit": {
+      "period": "3600s"
+    },
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}
