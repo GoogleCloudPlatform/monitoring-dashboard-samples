@@ -60,7 +60,7 @@
                 "minAlignmentPeriod": "60s",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "label_replace(\n    count by (cluster_name, location, project_id) (\n    kubernetes_io:container_uptime{monitored_resource=\"k8s_container\", namespace_name!~\"^istio-system|gatekeeper-system|gke-system$\"}\n    )\n    -\n    count by (cluster_name, location, project_id) (\n    kubernetes_io:container_uptime{monitored_resource=\"k8s_container\", namespace_name=\"kube-system\"}\n    ),\n    \"cluster_status\", \"running\", \"\", \"\"\n)\nand on (cluster_name, location, project_id)\n(\n    count by (cluster_name, location, project_id) (\n      kubernetes_io:container_uptime{monitored_resource=\"k8s_container\", namespace_name=\"kube-system\"}\n    ) > 0\n)\n\n"
+                  "prometheusQuery": "label_replace(\n    count by (cluster_name, location, project_id) (\n      count_over_time(\n        kubernetes_io:container_uptime{monitored_resource=\"k8s_container\", namespace_name!~\"^istio-system|gatekeeper-system|gke-system$\"}[7d]\n      )\n    )\n    -\n    count by (cluster_name, location, project_id) (\n      count_over_time(\n        kubernetes_io:container_uptime{monitored_resource=\"k8s_container\", namespace_name=\"kube-system\"}[7d]\n      )\n    )\n    ,\n    \"cluster_status\", \"running\", \"\", \"\"\n)\nand on (cluster_name, location, project_id)\n(\n    count by (cluster_name, location, project_id) (\n      count_over_time(\n        kubernetes_io:container_uptime{monitored_resource=\"k8s_container\", namespace_name=\"kube-system\"}[7d]\n      )\n    ) > 0\n)\n\n"
                 }
               }
             ],
