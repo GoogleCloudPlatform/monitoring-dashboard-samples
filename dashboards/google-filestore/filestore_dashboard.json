@@ -435,7 +435,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\nfetch filestore_instance\n| metric 'file.googleapis.com/nfs/server/used_bytes'\n| group_by 1m, [value_used_bytes_mean: mean(value.used_bytes)]\n| every 1m\n| group_by [resource.instance_name],\n    [value_used_bytes_mean_aggregate: aggregate(value_used_bytes_mean)]\n;\nfetch filestore_instance\n| metric 'file.googleapis.com/nfs/server/snapshots_used_bytes'\n| group_by 1m,\n    [value_snapshots_used_bytes_mean: mean(value.snapshots_used_bytes)]\n| every 1m\n| group_by [resource.instance_name],\n    [value_snapshots_used_bytes_mean_aggregate:\n       aggregate(value_snapshots_used_bytes_mean)]\n} \n| outer_join 0\n| add"
+                  "prometheusQuery": "sum by (instance_name) (\n  avg_over_time(file_googleapis_com:nfs_server_used_bytes{monitored_resource=\"filestore_instance\"}[1m])\n)\n+\nsum by (instance_name) (\n  avg_over_time(file_googleapis_com:nfs_server_snapshots_used_bytes{monitored_resource=\"filestore_instance\"}[1m])\n)\n",
+                  "unitOverride": "By"
                 }
               }
             ],
@@ -455,7 +456,9 @@
           "timeSeriesTable": {
             "columnSettings": [
               {
-                "column": "resource.instance_name",
+                "displayName": "resource.instance_name",
+                "alignment": "LEFT",
+                "column": "instance_name",
                 "visible": true
               },
               {
@@ -468,7 +471,8 @@
                 "minAlignmentPeriod": "60s",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "{\nfetch filestore_instance\n| metric 'file.googleapis.com/nfs/server/used_bytes'\n| group_by 1m, [value_used_bytes_mean: mean(value.used_bytes)]\n| every 1m\n| group_by [resource.instance_name],\n    [value_used_bytes_mean_aggregate: aggregate(value_used_bytes_mean)]\n;\nfetch filestore_instance\n| metric 'file.googleapis.com/nfs/server/snapshots_used_bytes'\n| group_by 1m,\n    [value_snapshots_used_bytes_mean: mean(value.snapshots_used_bytes)]\n| every 1m\n| group_by [resource.instance_name],\n    [value_snapshots_used_bytes_mean_aggregate:\n       aggregate(value_snapshots_used_bytes_mean)]\n} \n| outer_join 0\n| add   "
+                  "prometheusQuery": "sum by (instance_name) (\n  avg_over_time(file_googleapis_com:nfs_server_used_bytes{monitored_resource=\"filestore_instance\"}[1m])\n)\n+\nsum by (instance_name) (\n  avg_over_time(file_googleapis_com:nfs_server_snapshots_used_bytes{monitored_resource=\"filestore_instance\"}[1m])\n)",
+                  "unitOverride": "By"
                 }
               }
             ],
