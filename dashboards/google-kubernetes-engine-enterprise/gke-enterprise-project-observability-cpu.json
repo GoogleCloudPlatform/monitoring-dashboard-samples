@@ -1,17 +1,18 @@
 {
-  "category": "CUSTOM",
   "displayName": "GKE Enterprise Project Observability CPU",
   "dashboardFilters": [],
+  "labels": {},
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
       {
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "CPU Request % Used",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -19,14 +20,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m)\n  ; { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/request_cores }\n    | union\n    | align next_older(2m) }\n| group_by [resource.project_id], .sum()\n| outer_join 0\n| div\n| scale \"%\"",
-                  "unitOverride": ""
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m)\n  ; { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/request_cores }\n    | union\n    | align next_older(2m) }\n| group_by [resource.project_id], .sum()\n| outer_join 0\n| div\n| scale \"%\""
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -34,12 +33,13 @@
       },
       {
         "xPos": 24,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cores Used",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -47,14 +47,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/cpu/core_usage_time\n  ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n| union\n| align rate(1m)\n| every 1m\n| group_by [resource.project_id], .sum()",
-                  "unitOverride": ""
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/cpu/core_usage_time\n  ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n| union\n| align rate(1m)\n| every 1m\n| group_by [resource.project_id], .sum()"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -62,12 +60,13 @@
       },
       {
         "yPos": 16,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Requested Cores",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -75,28 +74,27 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/cpu/request_cores\n  ; metric kubernetes.io/anthos/container/cpu/request_cores }\n| union\n| align next_older(1m)\n| every 1m\n| group_by [resource.project_id], .sum()",
-                  "unitOverride": ""
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/cpu/request_cores\n  ; metric kubernetes.io/anthos/container/cpu/request_cores }\n| union\n| align next_older(1m)\n| every 1m\n| group_by [resource.project_id], .sum()"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 24,
         "yPos": 16,
-        "width": 24,
+        "xPos": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Requested Cores Unused",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -104,14 +102,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/request_cores }\n    | union\n  ; { metric kubernetes.io/container/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m }\n| align next_older(2m)\n| group_by [resource.project_id], .sum()\n| join\n| sub",
-                  "unitOverride": ""
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/request_cores }\n    | union\n  ; { metric kubernetes.io/container/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m }\n| align next_older(2m)\n| group_by [resource.project_id], .sum()\n| join\n| sub"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -119,12 +115,13 @@
       },
       {
         "yPos": 32,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster CPU % Used",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -132,28 +129,27 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/request_cores }\n  | union\n; fetch k8s_node\n  | { metric kubernetes.io/node/cpu/allocatable_cores\n    ; metric kubernetes.io/anthos/node/cpu/allocatable_cores }\n  | union }\n| align next_older(2m)\n| group_by [resource.project_id], .sum()\n| join\n| div\n| scale \"%\"",
-                  "unitOverride": ""
+                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/request_cores }\n  | union\n; fetch k8s_node\n  | { metric kubernetes.io/node/cpu/allocatable_cores\n    ; metric kubernetes.io/anthos/node/cpu/allocatable_cores }\n  | union }\n| align next_older(2m)\n| group_by [resource.project_id], .sum()\n| join\n| div\n| scale \"%\""
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 24,
         "yPos": 32,
-        "width": 24,
+        "xPos": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster Cores Unused",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -161,14 +157,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { { metric kubernetes.io/node/cpu/total_cores\n    ; metric kubernetes.io/anthos/node/cpu/total_cores }\n    | union\n    | align next_older(2m)\n  ; { metric kubernetes.io/node/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/node/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m) }\n| group_by [resource.project_id], .sum()\n| join\n| sub",
-                  "unitOverride": ""
+                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { { metric kubernetes.io/node/cpu/total_cores\n    ; metric kubernetes.io/anthos/node/cpu/total_cores }\n    | union\n    | align next_older(2m)\n  ; { metric kubernetes.io/node/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/node/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m) }\n| group_by [resource.project_id], .sum()\n| join\n| sub"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -176,12 +170,13 @@
       },
       {
         "yPos": 48,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster CPU % Requested",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -189,28 +184,27 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { { metric kubernetes.io/node/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/node/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m)\n  ; { metric kubernetes.io/node/cpu/total_cores\n    ; metric kubernetes.io/anthos/node/cpu/total_cores }\n    | union\n    | align next_older(2m) }\n| group_by [resource.project_id], .sum()\n| join\n| div\n| scale \"%\"",
-                  "unitOverride": ""
+                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { { metric kubernetes.io/node/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/node/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m)\n  ; { metric kubernetes.io/node/cpu/total_cores\n    ; metric kubernetes.io/anthos/node/cpu/total_cores }\n    | union\n    | align next_older(2m) }\n| group_by [resource.project_id], .sum()\n| join\n| div\n| scale \"%\""
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 24,
         "yPos": 48,
-        "width": 24,
+        "xPos": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster Unrequested Cores",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -218,14 +212,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { { metric kubernetes.io/node/cpu/total_cores\n    ; metric kubernetes.io/anthos/node/cpu/total_cores }\n    | union\n    | align next_older(2m)\n  ; { metric kubernetes.io/node/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/node/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m) }\n| group_by [resource.project_id], .sum()\n| join\n| sub",
-                  "unitOverride": ""
+                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { { metric kubernetes.io/node/cpu/total_cores\n    ; metric kubernetes.io/anthos/node/cpu/total_cores }\n    | union\n    | align next_older(2m)\n  ; { metric kubernetes.io/node/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/node/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m) }\n| group_by [resource.project_id], .sum()\n| join\n| sub"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -233,12 +225,13 @@
       },
       {
         "yPos": 64,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster Total Cores",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -246,28 +239,27 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { metric kubernetes.io/node/cpu/total_cores\n  ; metric kubernetes.io/anthos/node/cpu/total_cores }\n| union\n| align next_older(2m)\n| every 2m\n| group_by [resource.project_id], .sum()",
-                  "unitOverride": ""
+                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { metric kubernetes.io/node/cpu/total_cores\n  ; metric kubernetes.io/anthos/node/cpu/total_cores }\n| union\n| align next_older(2m)\n| every 2m\n| group_by [resource.project_id], .sum()"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 24,
         "yPos": 64,
-        "width": 24,
+        "xPos": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster Allocatable Cores",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -275,20 +267,17 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { metric kubernetes.io/node/cpu/allocatable_cores\n  ; metric kubernetes.io/anthos/node/cpu/allocatable_cores }\n| union\n| align next_older(2m)\n| every 2m\n| group_by [resource.project_id], .sum()",
-                  "unitOverride": ""
+                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { metric kubernetes.io/node/cpu/allocatable_cores\n  ; metric kubernetes.io/anthos/node/cpu/allocatable_cores }\n| union\n| align next_older(2m)\n| every 2m\n| group_by [resource.project_id], .sum()"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       }
     ]
-  },
-  "labels": {}
+  }
 }
