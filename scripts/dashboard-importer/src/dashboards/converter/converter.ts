@@ -124,19 +124,21 @@ export default class GrafanaDashboardConverter {
   convertPanel(panel: Panel) {
     const targets = panel.targets || [];
 
-    if (panel.type === 'row') {
-      this.warnings.push(
-        `Panel '${panel.title}': Collapsible groups currently are not yet fully supported. Charts will be unnested`,
-      );
-    }
     if (panel.panels && panel.panels.length > 0) {
+      if (panel.type === 'row') {
+        this.warnings.push(
+            `Panel '${
+                panel
+                    .title}': Collapsible groups currently are not yet fully supported. Charts will be unnested`,
+        );
+      }
       const panels = panel.panels || [];
       for (const subpanel of panels) {
         this.convertPanel(subpanel);
       }
     } else {
       const tile = this.constructTile(panel, targets);
-      // Monitoring dashboard API has a hard cap of 40 tiles per dashboard
+      // Monitoring dashboard API has a hard cap of 100 tiles per dashboard
       if (this.tiles.length === MAX_TILE_COUNT) {
         this.warnings.push(
           `Panel '${panel.title}' was skipped as the maximum number of tiles: ${MAX_TILE_COUNT} has been reached`,
