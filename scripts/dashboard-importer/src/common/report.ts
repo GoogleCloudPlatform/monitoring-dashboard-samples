@@ -89,7 +89,12 @@ export function generateWarningSummary(warnings: string[], numPanels: number): s
         }
       } else if (curr.includes('skipped as the maximum number of tiles')) {
         if (!hasMaxTileWarning) {
-          acc.push([`- Cloud Monitoring only supports up to 40 tiles, ${numPanels - MAX_TILE_COUNT} tiles have been skipped`, 1]);
+          acc.push([
+            `- Cloud Monitoring only supports up to ${
+                MAX_TILE_COUNT + 1} tiles, ${
+                numPanels - MAX_TILE_COUNT} tiles have been skipped`,
+            1
+          ]);
           hasMaxTileWarning = true;
         }
       } else {
