@@ -695,7 +695,6 @@
                     },
                     "filter": "metric.type=\"workload.googleapis.com/redis.cpu.time\" resource.type=\"gce_instance\"",
                     "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
                       "groupByFields": [],
                       "perSeriesAligner": "ALIGN_MEAN"
                     }
@@ -1055,7 +1054,6 @@
               }
             ],
             "thresholds": [],
-            "timeshiftDuration": "0s",
             "yAxis": {
               "label": "",
               "scale": "LINEAR"
@@ -1069,17 +1067,23 @@
         "width": 24,
         "widget": {
           "title": "CPU Utilization by VM",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR"
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
-                "legendTemplate": "${labels.instance_name} (${labels.zone})",
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "outputFullDuration": false,
                   "prometheusQuery": "avg_over_time(compute_googleapis_com:instance_cpu_utilization{monitored_resource=\"gce_instance\"}[${__interval}])\nand on(project_id,instance_id,zone)\ngroup by(project_id,instance_id,zone) (\n  workload_googleapis_com:redis_cpu_time{monitored_resource=\"gce_instance\"}\n)",
                   "unitOverride": "10^2.%"
                 }
@@ -1088,6 +1092,7 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -1100,17 +1105,23 @@
         "width": 24,
         "widget": {
           "title": "Memory Utilization by VM",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR"
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
-                "legendTemplate": "${labels.metadata_system_name} (${labels.zone})",
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "outputFullDuration": false,
                   "prometheusQuery": "sum by (metadata_system_name,project_id,instance_id,zone) (\n  avg_over_time(agent_googleapis_com:memory_percent_used{monitored_resource=\"gce_instance\", state=\"used\"}[${__interval}])\n)\nand on(project_id,instance_id,zone)\ngroup by(project_id,instance_id,zone) (\n  workload_googleapis_com:redis_memory_used{monitored_resource=\"gce_instance\"}\n)",
                   "unitOverride": "%"
                 }
@@ -1119,6 +1130,7 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
