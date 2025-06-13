@@ -195,7 +195,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch dataflow_job\n| metric 'dataflow.googleapis.com/job/estimated_byte_count'\n| group_by 1m,\n    [value_estimated_byte_count_mean: mean(value.estimated_byte_count)]\n| every 1m"
+                  "prometheusQuery": "avg_over_time(\n  dataflow_googleapis_com:job_estimated_byte_count{monitored_resource=\"dataflow_job\"}[1m]\n)\n",
+                  "unitOverride": "By"
                 }
               }
             ],
