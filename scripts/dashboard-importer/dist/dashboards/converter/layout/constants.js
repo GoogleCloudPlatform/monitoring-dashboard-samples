@@ -22,6 +22,6 @@ exports.DEFAULT_HEIGHT = 3;
 exports.DEFAULT_COLS = 24;
 // Cloud ops tiles must have a height of 2 or more
 exports.MIN_HEIGHT = 2;
-// Maximum number of tiles for cloud ops
-exports.MAX_TILE_COUNT = 39;
+// Maximum number of tiles for cloud ops (-1 for the import info tile)
+exports.MAX_TILE_COUNT = 99;
 //# sourceMappingURL=constants.js.map
