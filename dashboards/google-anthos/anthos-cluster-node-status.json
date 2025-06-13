@@ -1,23 +1,34 @@
 {
   "displayName": "Anthos Cluster Node Status",
+  "dashboardFilters": [],
   "gridLayout": {
     "columns": "2",
     "widgets": [
       {
         "title": "Node Count by Condition and Status",
+        "id": "",
         "xyChart": {
           "chartOptions": {
-            "mode": "COLOR"
+            "displayHorizontal": false,
+            "mode": "COLOR",
+            "showLegend": false
           },
           "dataSets": [
             {
+              "breakdowns": [],
+              "dimensions": [],
+              "legendTemplate": "",
+              "measures": [],
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric 'kubernetes.io/anthos/kube_node_status_condition'\n  | add [cluster: resource.cluster_name]\n  | group_by 1m, [value_mean: mean(value.kube_node_status_condition)]\n  | every 1m\n  | group_by\n      [resource.project_id, resource.location, cluster, metric.condition,\n       metric.status],\n      [value_mean_aggregate: aggregate(value_mean)]\n; fetch prometheus_target\n  | metric 'kubernetes.io/anthos/kube_node_status_condition/gauge'\n  | add [cluster: resource.cluster]\n  | group_by 1m, [value_mean: mean(value.gauge)]\n  | every 1m\n  | group_by\n      [resource.project_id, resource.location, cluster, metric.condition,\n       metric.status],\n      [value_mean_aggregate: aggregate(value_mean)] }\n| union"
+                "outputFullDuration": false,
+                "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric 'kubernetes.io/kube_node_status_condition'\n  | add [cluster: resource.cluster_name]\n  | group_by 1m, [value_mean: mean(value.kube_node_status_condition)]\n  | every 1m\n  | group_by\n      [resource.project_id, resource.location, cluster, metric.condition,\n       metric.status],\n      [value_mean_aggregate: aggregate(value_mean)]\n; fetch prometheus_target\n  | metric 'kubernetes.io/kube_node_status_condition/gauge'\n  | add [cluster: resource.cluster]\n  | group_by 1m, [value_mean: mean(value.gauge)]\n  | every 1m\n  | group_by\n      [resource.project_id, resource.location, cluster, metric.condition,\n       metric.status],\n      [value_mean_aggregate: aggregate(value_mean)] }\n| union",
+                "unitOverride": ""
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -29,6 +40,7 @@
         "title": "CPU Usage Per Node Per Mode Per CPU (s/s)",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -36,10 +48,11 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'kubernetes.io/anthos/node/cpu/core_usage_time'\n| align rate(1m)\n| every 1m"
+                "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'kubernetes.io/node/cpu/core_usage_time'\n| align rate(1m)\n| every 1m"
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -51,6 +64,7 @@
         "title": "Allocatable CPU Cores Per Node",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -58,10 +72,11 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'kubernetes.io/anthos/node/cpu/allocatable_cores'\n| group_by 1m, [value_allocatable_cores_mean: mean(value.allocatable_cores)]\n| every 1m"
+                "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'kubernetes.io/node/cpu/allocatable_cores'\n| group_by 1m, [value_allocatable_cores_mean: mean(value.allocatable_cores)]\n| every 1m"
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -73,6 +88,7 @@
         "title": "Memory Usage Per Node (Bytes)",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -84,13 +100,15 @@
                 "timeSeriesFilter": {
                   "aggregation": {
                     "alignmentPeriod": "60s",
+                    "groupByFields": [],
                     "perSeriesAligner": "ALIGN_MEAN"
                   },
-                  "filter": "metric.type=\"kubernetes.io/anthos/node/memory/used_bytes\" resource.type=\"k8s_node\""
+                  "filter": "metric.type=\"kubernetes.io/node/memory/used_bytes\" resource.type=\"k8s_node\""
                 }
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -102,6 +120,7 @@
         "title": "Allocatable Memory Per Node (Bytes)",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -109,10 +128,11 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'kubernetes.io/anthos/node/memory/allocatable_bytes'\n| group_by 1m, [value_allocatable_bytes_mean: mean(value.allocatable_bytes)]\n| every 1m"
+                "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'kubernetes.io/node/memory/allocatable_bytes'\n| group_by 1m, [value_allocatable_bytes_mean: mean(value.allocatable_bytes)]\n| every 1m"
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -122,19 +142,29 @@
       },
       {
         "title": "Available Filesystem Size Per Node Per Device (Bytes)",
+        "id": "",
         "xyChart": {
           "chartOptions": {
-            "mode": "COLOR"
+            "displayHorizontal": false,
+            "mode": "COLOR",
+            "showLegend": false
           },
           "dataSets": [
             {
+              "breakdowns": [],
+              "dimensions": [],
+              "legendTemplate": "",
+              "measures": [],
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | metric 'kubernetes.io/anthos/node_filesystem_free_bytes'\n  | add [cluster: resource.cluster_name, node: resource.node_name]\n  | group_by 1m, [value_mean: mean(value.node_filesystem_free_bytes)]\n  | every 1m\n  | group_by\n      [resource.project_id, resource.location, cluster, node, metric.device],\n      [value_mean_aggregate: aggregate(value_mean)]\n; fetch prometheus_target\n  | metric 'kubernetes.io/anthos/node_filesystem_free_bytes/gauge'\n  | add [cluster: resource.cluster, node: resource.instance]\n  | group_by 1m, [value_mean: mean(value.gauge)]\n  | every 1m\n  | group_by\n      [resource.project_id, resource.location, cluster, node, metric.device],\n      [value_mean_aggregate: aggregate(value_mean)] }\n| union"
+                "outputFullDuration": false,
+                "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | metric 'kubernetes.io/node_filesystem_free_bytes'\n  | add [cluster: resource.cluster_name, node: resource.node_name]\n  | group_by 1m, [value_mean: mean(value.node_filesystem_free_bytes)]\n  | every 1m\n  | group_by\n      [resource.project_id, resource.location, cluster, node, metric.device],\n      [value_mean_aggregate: aggregate(value_mean)]\n; fetch prometheus_target\n  | metric 'kubernetes.io/node_filesystem_free_bytes/gauge'\n  | add [cluster: resource.cluster, node: resource.instance]\n  | group_by 1m, [value_mean: mean(value.gauge)]\n  | every 1m\n  | group_by\n      [resource.project_id, resource.location, cluster, node, metric.device],\n      [value_mean_aggregate: aggregate(value_mean)] }\n| union",
+                "unitOverride": ""
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -146,6 +176,7 @@
         "title": "Kubernetes Node - Memory Allocatable Utilization",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -157,13 +188,15 @@
                 "timeSeriesFilter": {
                   "aggregation": {
                     "alignmentPeriod": "60s",
+                    "groupByFields": [],
                     "perSeriesAligner": "ALIGN_MEAN"
                   },
-                  "filter": "metric.type=\"kubernetes.io/anthos/node/memory/allocatable_utilization\" resource.type=\"k8s_node\""
+                  "filter": "metric.type=\"kubernetes.io/node/memory/allocatable_utilization\" resource.type=\"k8s_node\""
                 }
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -175,6 +208,7 @@
         "title": "Kubernetes Node - CPU Allocatable Utilization",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -186,13 +220,15 @@
                 "timeSeriesFilter": {
                   "aggregation": {
                     "alignmentPeriod": "60s",
+                    "groupByFields": [],
                     "perSeriesAligner": "ALIGN_MEAN"
                   },
-                  "filter": "metric.type=\"kubernetes.io/anthos/node/cpu/allocatable_utilization\" resource.type=\"k8s_node\""
+                  "filter": "metric.type=\"kubernetes.io/node/cpu/allocatable_utilization\" resource.type=\"k8s_node\""
                 }
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
