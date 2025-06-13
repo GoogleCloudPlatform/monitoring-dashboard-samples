@@ -28,9 +28,9 @@
         "height": 8,
         "width": 24,
         "widget": {
-          "title": "PostgreSQL - Top 5 Highest Connections",
+          "title": "PostgreSQL - Connections",
           "text": {
-            "content": "The top 5 highest connections on PostgreSQL instances",
+            "content": "Number of connections on PostgreSQL instances",
             "format": "RAW",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -49,9 +49,9 @@
         "height": 8,
         "width": 24,
         "widget": {
-          "title": "MySQL/SQL Server - Top 5 Highest Connections",
+          "title": "MySQL/SQL Server - Connections",
           "text": {
-            "content": "The top 5 highest connections on MySQL/SQL Server instances",
+            "content": "The number of connections on MySQL/SQL Server instances",
             "format": "RAW",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -70,7 +70,7 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "PostgreSQL - Top 5 Highest Connections",
+          "title": "PostgreSQL - Connections",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -81,7 +81,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/postgresql/num_backends'\n| top 5\n| every 1m\n"
+                  "prometheusQuery": "cloudsql_googleapis_com:database_postgresql_num_backends{monitored_resource=\"cloudsql_database\"}\n"
                 }
               }
             ],
@@ -99,7 +99,7 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "MySQL/SQL Server - Top 5 Highest Connections",
+          "title": "MySQL/SQL Server - Connections",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -110,7 +110,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/network/connections'\n| top 5\n| every 1m\n"
+                  "prometheusQuery": "cloudsql_googleapis_com:database_network_connections{monitored_resource=\"cloudsql_database\"}\n"
                 }
               }
             ],
@@ -127,9 +127,9 @@
         "height": 8,
         "width": 24,
         "widget": {
-          "title": "Top 5 Highest Network Received Bytes",
+          "title": "Network Received Bytes",
           "text": {
-            "content": "The top 5 instances with the highest received bytes.",
+            "content": "Received bytes per instance.",
             "format": "RAW",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -149,9 +149,9 @@
         "height": 8,
         "width": 24,
         "widget": {
-          "title": "Top 5 Highest Network Sent Bytes",
+          "title": "Network Sent Bytes",
           "text": {
-            "content": "The top 5 instances with the highest sent bytes",
+            "content": "Sent bytes per instance",
             "format": "RAW",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -170,7 +170,7 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Top 5 Highest Network Received Bytes",
+          "title": "Network Received Bytes",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -181,7 +181,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/network/received_bytes_count'\n| align rate(1m)\n| top 5\n| every 1m\n"
+                  "prometheusQuery": "rate(cloudsql_googleapis_com:database_network_received_bytes_count{monitored_resource=\"cloudsql_database\"}[1m])\n",
+                  "unitOverride": "By/s"
                 }
               }
             ],
@@ -199,7 +200,7 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Top 5 Highest Network Sent Bytes",
+          "title": "Network Sent Bytes",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -210,7 +211,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/network/sent_bytes_count'\n| align rate(1m)\n| top 5\n| every 1m\n"
+                  "prometheusQuery": "rate(cloudsql_googleapis_com:database_network_sent_bytes_count{monitored_resource=\"cloudsql_database\"}[1m])\n",
+                  "unitOverride": "By/s"
                 }
               }
             ],
@@ -227,9 +229,9 @@
         "height": 8,
         "width": 16,
         "widget": {
-          "title": "MySQL - Top 5 Highest Queries",
+          "title": "MySQL - Queries",
           "text": {
-            "content": "Top 5 instances that have the highest number of queries executed against the db.",
+            "content": "Number of queries executed against the db.",
             "format": "RAW",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -249,9 +251,9 @@
         "height": 8,
         "width": 16,
         "widget": {
-          "title": "PostgreSQL - Top 5 Highest Transactions",
+          "title": "PostgreSQL - Transactions",
           "text": {
-            "content": "The top 5 PostgreSQL instances with the highest transaction count to see which instance has the most activity",
+            "content": "PostgreSQL instance transaction count",
             "format": "RAW",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -271,9 +273,9 @@
         "height": 8,
         "width": 16,
         "widget": {
-          "title": "PostgreSQL - Top 5 Highest DB Rows Affected",
+          "title": "PostgreSQL - DB Rows Affected",
           "text": {
-            "content": "The top 5 PostgreSQL instances with highest number of rows being altered.",
+            "content": "PostgreSQL instance number of rows being altered.",
             "format": "RAW",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -292,7 +294,7 @@
         "height": 16,
         "width": 16,
         "widget": {
-          "title": "MySQL - Top 5 Highest Queries",
+          "title": "MySQL - Queries",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -303,7 +305,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/mysql/queries'\n| align rate(1m)\n| top 5\n| every 1m\n"
+                  "prometheusQuery": "rate(cloudsql_googleapis_com:database_mysql_queries{monitored_resource=\"cloudsql_database\"}[1m])\n",
+                  "unitOverride": "1/s"
                 }
               }
             ],
@@ -321,7 +324,7 @@
         "height": 16,
         "width": 16,
         "widget": {
-          "title": "PostgreSQL - Top 5 Highest Transactions",
+          "title": "PostgreSQL - Transactions",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -332,7 +335,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/postgresql/transaction_count'\n| align rate(1m)\n| group_by [resource.database_id]\n| top 5\n| every 1m\n"
+                  "prometheusQuery": "sum by (database_id) (\n  rate(cloudsql_googleapis_com:database_postgresql_transaction_count{monitored_resource=\"cloudsql_database\"}[1m])\n)\n",
+                  "unitOverride": "1/s"
                 }
               }
             ],
@@ -350,7 +354,7 @@
         "height": 16,
         "width": 16,
         "widget": {
-          "title": "PostgreSQL - Top 5 Highest DB Rows Affected",
+          "title": "PostgreSQL - DB Rows Affected",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -361,7 +365,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/postgresql/tuples_processed_count'\n| align rate(1m)\n| group_by[resource.database_id, metric.operation_type]\n| top 5\n| every 1m"
+                  "prometheusQuery": "sum by (database_id, operation_type) (\n  rate(cloudsql_googleapis_com:database_postgresql_tuples_processed_count{monitored_resource=\"cloudsql_database\"}[1m])\n)\n",
+                  "unitOverride": "1/s"
                 }
               }
             ],

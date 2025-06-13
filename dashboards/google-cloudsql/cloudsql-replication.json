@@ -49,9 +49,9 @@
         "height": 8,
         "width": 24,
         "widget": {
-          "title": "Top 5 Replications with Highest Memory Usage",
+          "title": "Replication Memory Usage",
           "text": {
-            "content": "Top 5 replication instances with the highest memory usage that indicates what replications are under the most load.",
+            "content": "Replication instance memory usage indicates replication load.",
             "format": "RAW",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -114,7 +114,7 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Top 5 Replications with Highest Memory Usage",
+          "title": "Replication Memory Usage",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -125,7 +125,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "def top_5_memory_filtered_by_metric filter_metric =\n  fetch cloudsql_database\n  | { t_memory:\n        metric 'cloudsql.googleapis.com/database/memory/utilization'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value val(0)\n  | group_by [metadata.system.name, resource.project_id]\n  | top 5\n  | every 1m;\n\n  @top_5_memory_filtered_by_metric 'cloudsql.googleapis.com/database/replication/state'"
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id, region) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_memory_utilization{monitored_resource=\"cloudsql_database\"}[1m]\n    )\n    and\n    on(project_id, database_id, region)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
                 }
               }
             ],
@@ -142,9 +142,9 @@
         "height": 8,
         "width": 24,
         "widget": {
-          "title": "Top 5 Replications with Highest CPU Usage",
+          "title": "Replication CPU Usage",
           "text": {
-            "content": "Top 5 replication instances with the highest CPU usage that indicates what replications are under the most load.",
+            "content": "Replication instance CPU usage indicates replication load.",
             "format": "RAW",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -164,9 +164,9 @@
         "height": 8,
         "width": 24,
         "widget": {
-          "title": "Top 5 Replications with Highest Log Archive Failures",
+          "title": "Replication Log Archive Failures",
           "text": {
-            "content": "Top 5 replicas that are the furthest behind the master node, in seconds.",
+            "content": "Total number of log archive failures per replica.",
             "format": "RAW",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -185,7 +185,7 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Top 5 Replications with Highest CPU Usage",
+          "title": "Replication CPU Usage",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -196,7 +196,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "def top_5_memory_filtered_by_metric filter_metric =\n  fetch cloudsql_database\n  | { t_memory:\n        metric 'cloudsql.googleapis.com/database/cpu/utilization'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value val(0)\n  | group_by [metadata.system.name, resource.project_id], 1m,\n      .mean()\n  | top 5\n  | every 1m;\n\n  @top_5_memory_filtered_by_metric 'cloudsql.googleapis.com/database/replication/state'"
+                  "prometheusQuery": "100*\nlabel_replace(\n  avg by (project_id, database_id, region) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_cpu_utilization{monitored_resource=\"cloudsql_database\"}[1m]\n    )\n    and on(project_id, database_id, region)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
@@ -214,7 +215,7 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Top 5 Replications with Highest Log Archive Failures",
+          "title": "Replication Log Archive Failures",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -225,7 +226,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "def top_5_memory_filtered_by_metric filter_metric =\n  fetch cloudsql_database\n  | { t_memory:\n        metric 'cloudsql.googleapis.com/database/replication/log_archive_failure_count'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value val(0)\n  | group_by [metadata.system.name, resource.project_id], 1m,\n      .mean()\n  | top 5\n  | every 1m;\n\n  @top_5_memory_filtered_by_metric 'cloudsql.googleapis.com/database/replication/state'"
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id, region) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_replication_log_archive_failure_count{monitored_resource=\"cloudsql_database\"}[1m]\n    )\n    and on(project_id, database_id, region)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
                 }
               }
             ],
@@ -242,9 +243,9 @@
         "height": 8,
         "width": 24,
         "widget": {
-          "title": "Top 5 Replications with Highest Replica Lag",
+          "title": "Replication Replica Lag",
           "text": {
-            "content": "Top 5 replicas that are the furthest behind the master node, in seconds.",
+            "content": "How far replicas are behind the master node, in seconds.",
             "format": "RAW",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -263,7 +264,7 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Top 5 Replications with Highest Replica Lag",
+          "title": "Replication Replica Lag",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -274,7 +275,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "def top_5_memory_filtered_by_metric filter_metric =\n  fetch cloudsql_database\n  | { t_memory:\n        metric 'cloudsql.googleapis.com/database/replication/replica_lag'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value val(0)\n  | group_by [metadata.system.name, resource.project_id], 1m,\n      .mean()\n  | top 5\n  | every 1m;\n\n  @top_5_memory_filtered_by_metric 'cloudsql.googleapis.com/database/replication/state'"
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_replication_replica_lag{monitored_resource=\"cloudsql_database\"}[1m]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
                 }
               }
             ],
