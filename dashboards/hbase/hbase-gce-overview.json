@@ -208,7 +208,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'workload.googleapis.com/hbase.region_server.request.count'\n| filter (metric.state == 'read')\n| group_by 1m, [value_count_mean: mean(value.count)]\n| every 1m",
+                  "prometheusQuery": "avg_over_time(workload_googleapis_com:hbase_region_server_request_count{monitored_resource=\"gce_instance\",state=\"read\"}[1m])",
                   "unitOverride": ""
                 }
               }
