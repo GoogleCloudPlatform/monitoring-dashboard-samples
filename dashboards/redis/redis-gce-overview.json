@@ -1048,7 +1048,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "def vms_with_metric_count_by_region metric =\n  fetch gce_instance\n  | metric $metric\n  # Shift points forward from the past 2 minutes so a VM that misses a point\n  # won't temporarily shift down the number of VMs.\n  | align next_older(2m)\n  | group_by [resource.project_id, resource.zone, resource.instance_id], 1m, .pick_any\n  | group_by [resource.project_id, resource.zone], 1m, .count\n  | map\n      add[\n        region: re_extract(resource.zone, '([^-]+-[^-]+)-[^-]+', '\\\\1')]\n  | group_by [region], .sum\n  | every 1m;\n\n@vms_with_metric_count_by_region 'workload.googleapis.com/redis.cpu.time'",
+                  "prometheusQuery": "count by (region) (\n  label_replace(\n    sum by (project_id, zone, instance_id) (\n      count_over_time(workload_googleapis_com:redis_cpu_time{monitored_resource=\"gce_instance\"}[2m])\n    ),\n    \"region\",\n    \"$1\",\n    \"zone\",\n    \"([^-]+-[^-]+)-.*\"\n  )\n)",
                   "unitOverride": ""
                 }
               }
