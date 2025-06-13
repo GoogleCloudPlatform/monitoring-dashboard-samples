@@ -146,32 +146,24 @@
         "width": 4,
         "widget": {
           "title": "Namespace Memory Free",
-          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "fetch gce_instance::workload.googleapis.com/aerospike.namespace.memory.free | group_by [metric.node_name, metric.namespace_name] | bottom 5, val(0)\n",
-                  "unitOverride": ""
+                  "prometheusQuery": "avg by (node_name, namespace_name) (workload_googleapis_com:aerospike_namespace_memory_free{monitored_resource=\"gce_instance\"})",
+                  "unitOverride": "%"
                 }
               }
             ],
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -184,32 +176,24 @@
         "width": 4,
         "widget": {
           "title": "Namespace Disk Free",
-          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "fetch gce_instance::workload.googleapis.com/aerospike.namespace.disk.available | group_by [metric.node_name, metric.namespace_name] | bottom 5, val(0)\n",
-                  "unitOverride": ""
+                  "prometheusQuery": "avg by (node_name, namespace_name) (workload_googleapis_com:aerospike_namespace_disk_available{monitored_resource=\"gce_instance\"})",
+                  "unitOverride": "%"
                 }
               }
             ],
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -220,33 +204,25 @@
         "height": 4,
         "width": 4,
         "widget": {
-          "title": "CPU % Top 5 VMs",
-          "id": "",
+          "title": "VMs CPU %",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "${labels.metric\\.instance_name} (${labels.resource\\.zone})",
-                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "def top_5_cpu_filtered_by_metric filter_metric =\n  fetch gce_instance\n  | { t_cpu: metric 'compute.googleapis.com/instance/cpu/utilization'; \n  t_filter_metric: metric $filter_metric }\n  | join\n  | value t_cpu.value.utilization\n  | group_by [resource.project_id, resource.zone, metric.instance_name], 1m,\n      [value_utilization_mean: mean(t_cpu.value.utilization)]\n  | top 5\n  | every 1m;\n\n@top_5_cpu_filtered_by_metric 'workload.googleapis.com/aerospike.node.memory.free'\n",
-                  "unitOverride": ""
+                  "prometheusQuery": "100 *\n  (avg by (project_id, zone, instance_name) (\n    avg_over_time(\n      compute_googleapis_com:instance_cpu_utilization{monitored_resource=\"gce_instance\"}[1m]\n    )\n    and\n    on(instance_id, project_id, zone)\n    (workload_googleapis_com:aerospike_node_memory_free{monitored_resource=\"gce_instance\"})\n  )\n)",
+                  "unitOverride": "%"
                 }
               }
             ],
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -258,33 +234,25 @@
         "height": 4,
         "width": 4,
         "widget": {
-          "title": "Memory % Top 5 VMs",
-          "id": "",
+          "title": "VMs Memory %",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "${labels.metadata\\.system\\.name} (${labels.resource\\.zone})",
-                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "def top_5_memory_filtered_by_metric filter_metric =\n  fetch gce_instance\n  | { t_memory:\n        metric 'agent.googleapis.com/memory/percent_used'\n        | filter metric.state = 'used'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value val(0)\n  | group_by [metadata.system.name, resource.project_id, resource.zone], 1m,\n      .mean()\n  | top 5\n  | every 1m;\n\n  @top_5_memory_filtered_by_metric 'workload.googleapis.com/aerospike.node.memory.free'",
-                  "unitOverride": ""
+                  "prometheusQuery": "avg by (project_id, zone, instance_id) (\n  avg_over_time(\n    agent_googleapis_com:memory_percent_used{monitored_resource=\"gce_instance\", state=\"used\"}[1m]\n  )\n  and on(project_id, zone, instance_id) (\n    workload_googleapis_com:aerospike_node_memory_free{monitored_resource=\"gce_instance\"}\n  )\n)",
+                  "unitOverride": "%"
                 }
               }
             ],
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -308,19 +276,18 @@
               {
                 "breakdowns": [],
                 "dimensions": [],
-                "legendTemplate": "${labels.region}",
+                "legendTemplate": "",
                 "measures": [],
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "def vms_with_metric_count_by_region metric =\n  fetch gce_instance\n  | metric $metric\n  # Shift points forward from the past 2 minutes so a VM that misses a point\n  # won't temporarily shift down the number of VMs.\n  | align next_older(2m)\n  | group_by [resource.project_id, resource.zone, resource.instance_id], 1m, .pick_any\n  | group_by [resource.project_id, resource.zone], 1m, .count\n  | map\n      add[\n        region: re_extract(resource.zone, '([^-]+-[^-]+)-[^-]+', '\\\\1')]\n  | group_by [region], .sum\n  | every 1m;\n\n@vms_with_metric_count_by_region 'workload.googleapis.com/aerospike.node.memory.free'",
+                  "prometheusQuery": "count by (region) (\n  label_replace(\n    sum by (project_id, zone, instance_id) (\n      count_over_time(workload_googleapis_com:aerospike_node_memory_free{monitored_resource=\"gce_instance\"}[2m])\n    ),\n    \"region\",\n    \"$1\",\n    \"zone\",\n    \"([^-]+-[^-]+)-.*\"\n  )\n)",
                   "unitOverride": ""
                 }
               }
             ],
             "thresholds": [],
-            "timeshiftDuration": "0s",
             "yAxis": {
               "label": "",
               "scale": "LINEAR"
