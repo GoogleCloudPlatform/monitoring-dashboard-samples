@@ -67,10 +67,11 @@ class GrafanaDashboardConverter {
     // converts panels to tiles by looping through panels and subpanels
     convertPanel(panel) {
         const targets = panel.targets || [];
-        if (panel.type === 'row') {
-            this.warnings.push(`Panel '${panel.title}': Collapsible groups currently are not yet fully supported. Charts will be unnested`);
-        }
         if (panel.panels && panel.panels.length > 0) {
+            if (panel.type === 'row') {
+                this.warnings.push(`Panel '${panel
+                    .title}': Collapsible groups currently are not yet fully supported. Charts will be unnested`);
+            }
             const panels = panel.panels || [];
             for (const subpanel of panels) {
                 this.convertPanel(subpanel);
@@ -78,7 +79,7 @@ class GrafanaDashboardConverter {
         }
         else {
             const tile = this.constructTile(panel, targets);
-            // Monitoring dashboard API has a hard cap of 40 tiles per dashboard
+            // Monitoring dashboard API has a hard cap of 100 tiles per dashboard
             if (this.tiles.length === constants_1.MAX_TILE_COUNT) {
                 this.warnings.push(`Panel '${panel.title}' was skipped as the maximum number of tiles: ${constants_1.MAX_TILE_COUNT} has been reached`);
             }
