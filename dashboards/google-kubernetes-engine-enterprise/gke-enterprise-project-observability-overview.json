@@ -1,35 +1,31 @@
 {
-  "category": "CUSTOM",
   "displayName": "GKE Enterprise Project Observability Overview",
   "dashboardFilters": [],
+  "labels": {},
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
       {
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "CPU Request % Used",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m)\n  ; { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/request_cores }\n    | union\n    | align next_older(2m) }\n| group_by [resource.project_id], .sum()\n| outer_join 0\n| div\n| scale \"%\"",
-                  "unitOverride": ""
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m)\n  ; { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/request_cores }\n    | union\n    | align next_older(2m) }\n| group_by [resource.project_id], .sum()\n| outer_join 0\n| div\n| scale \"%\""
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -37,30 +33,26 @@
       },
       {
         "xPos": 24,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Memory Request % Used",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/memory/used_bytes\n    ; metric kubernetes.io/anthos/container/memory/used_bytes }\n    | union\n  ; { metric kubernetes.io/container/memory/request_bytes\n    ; metric kubernetes.io/anthos/container/memory/request_bytes }\n    | union }\n| align next_older(2m)\n| group_by [resource.project_id], .sum()\n| outer_join 0\n| div\n| scale \"%\"",
-                  "unitOverride": ""
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/memory/used_bytes\n    ; metric kubernetes.io/anthos/container/memory/used_bytes }\n    | union\n  ; { metric kubernetes.io/container/memory/request_bytes\n    ; metric kubernetes.io/anthos/container/memory/request_bytes }\n    | union }\n| align next_older(2m)\n| group_by [resource.project_id], .sum()\n| outer_join 0\n| div\n| scale \"%\""
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -68,68 +60,59 @@
       },
       {
         "yPos": 16,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Container Restarts/Min.",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/restart_count\n  ; metric kubernetes.io/anthos/container/restart_count }\n| union\n| align delta(1m)\n| every 1m\n| group_by [resource.project_id], .sum()",
-                  "unitOverride": ""
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/restart_count\n  ; metric kubernetes.io/anthos/container/restart_count }\n| union\n| align delta(1m)\n| every 1m\n| group_by [resource.project_id], .sum()"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 24,
         "yPos": 16,
-        "width": 24,
+        "xPos": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Container Error Logs/Sec.",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric logging.googleapis.com/log_entry_count\n| filter metric.severity =~ \"ERROR|CRITICAL|ALERT|EMERGENCY\"\n| align rate(1m)\n| every 1m\n| group_by [resource.project_id], .sum()",
-                  "unitOverride": ""
+                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric logging.googleapis.com/log_entry_count\n| filter metric.severity =~ \"ERROR|CRITICAL|ALERT|EMERGENCY\"\n| align rate(1m)\n| every 1m\n| group_by [resource.project_id], .sum()"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       }
     ]
-  },
-  "labels": {}
+  }
 }
