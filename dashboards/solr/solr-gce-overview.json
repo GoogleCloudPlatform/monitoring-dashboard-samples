@@ -1,14 +1,18 @@
 {
   "displayName": "Solr GCE Overview",
+  "dashboardFilters": [],
+  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 4,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Documents",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -31,20 +35,22 @@
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Index Size",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -63,26 +69,26 @@
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
                     "filter": "metric.type=\"workload.googleapis.com/solr.index.size\" resource.type=\"gce_instance\""
-                  },
-                  "unitOverride": "By"
+                  }
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6
+        }
       },
       {
-        "height": 4,
+        "yPos": 16,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cache Hit Ratio",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -94,21 +100,24 @@
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "yPos": 4
+        }
       },
       {
-        "height": 4,
+        "yPos": 16,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cache Size",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -128,27 +137,26 @@
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
                     "filter": "metric.type=\"workload.googleapis.com/solr.cache.size\" resource.type=\"gce_instance\""
-                  },
-                  "unitOverride": "By"
+                  }
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 4
+        }
       },
       {
-        "height": 4,
+        "yPos": 32,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Queries",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -160,11 +168,11 @@
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"workload.googleapis.com/solr.request.count\" resource.type=\"gce_instance\" metric.label.\"type\"=\"QUERY\"",
                     "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_MEAN",
                       "groupByFields": [
                         "metric.label.\"core\"",
@@ -176,21 +184,23 @@
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "yPos": 8
+        }
       },
       {
-        "height": 4,
+        "yPos": 32,
+        "xPos": 16,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Query Errors",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -202,11 +212,11 @@
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"workload.googleapis.com/solr.request.error.count\" resource.type=\"gce_instance\" metric.label.\"type\"=\"QUERY\"",
                     "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_MEAN",
                       "groupByFields": [
                         "metric.label.\"core\"",
@@ -218,22 +228,23 @@
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 8
+        }
       },
       {
-        "height": 4,
+        "yPos": 32,
+        "xPos": 32,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Average Query Time",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -253,31 +264,28 @@
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/solr.request.time.average\" resource.type=\"gce_instance\" metric.label.\"type\"=\"QUERY\"",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s"
-                    }
-                  },
-                  "unitOverride": "ms"
+                    "filter": "metric.type=\"workload.googleapis.com/solr.request.time.average\" resource.type=\"gce_instance\" metric.label.\"type\"=\"QUERY\""
+                  }
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 8
+        }
       },
       {
-        "height": 4,
+        "yPos": 48,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Updates",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -289,11 +297,11 @@
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"workload.googleapis.com/solr.request.count\" resource.type=\"gce_instance\" metric.label.\"type\"=\"UPDATE\"",
                     "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_MEAN",
                       "groupByFields": [
                         "metric.label.\"core\"",
@@ -305,21 +313,23 @@
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "yPos": 12
+        }
       },
       {
-        "height": 4,
+        "yPos": 48,
+        "xPos": 16,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Update Errors",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -331,11 +341,11 @@
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"workload.googleapis.com/solr.request.error.count\" resource.type=\"gce_instance\" metric.label.\"type\"=\"UPDATE\"",
                     "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_MEAN",
                       "groupByFields": [
                         "metric.label.\"core\"",
@@ -347,22 +357,23 @@
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 12
+        }
       },
       {
-        "height": 4,
+        "yPos": 48,
+        "xPos": 32,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Average Update Time",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -382,43 +393,28 @@
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"workload.googleapis.com/solr.request.time.average\" resource.type=\"gce_instance\" metric.label.\"type\"=\"UPDATE\"",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s"
-                    }
-                  },
-                  "unitOverride": "ms"
+                    "filter": "metric.type=\"workload.googleapis.com/solr.request.time.average\" resource.type=\"gce_instance\" metric.label.\"type\"=\"UPDATE\""
+                  }
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 12
+        }
       },
       {
-        "height": 4,
-        "widget": {
-          "text": {
-            "content": "[How to configure Solr Monitoring](https://cloud.google.com/monitoring/agent/ops-agent/third-party/solr)\n\n[View Solr System Logs](https://console.cloud.google.com/logs/query?query=logName:%22solr_system%22%0Aresource.type%3D%22gce_instance%22)",
-            "format": "MARKDOWN"
-          },
-          "title": "Solr Monitoring Links"
-        },
-        "width": 6,
-        "yPos": 20
-      },
-      {
-        "height": 4,
+        "yPos": 64,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "CPU % Top 5 VMs",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -430,21 +426,24 @@
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "yPos": 16
+        }
       },
       {
-        "height": 4,
+        "yPos": 64,
+        "xPos": 16,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Memory % Top 5 VMs",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -456,22 +455,24 @@
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 16
+        }
       },
       {
-        "height": 4,
+        "yPos": 64,
+        "xPos": 32,
+        "height": 16,
+        "width": 16,
         "widget": {
           "title": "Hosts By Region",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -483,15 +484,33 @@
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 16
+        }
+      },
+      {
+        "yPos": 80,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Solr Monitoring Links",
+          "text": {
+            "content": "[How to configure Solr Monitoring](https://cloud.google.com/monitoring/agent/ops-agent/third-party/solr)\n\n[View Solr System Logs](https://console.cloud.google.com/logs/query?query=logName:%22solr_system%22%0Aresource.type%3D%22gce_instance%22)",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
       }
     ]
   }
