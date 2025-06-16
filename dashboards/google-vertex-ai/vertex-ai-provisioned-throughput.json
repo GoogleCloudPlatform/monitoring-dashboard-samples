@@ -1,0 +1,337 @@
+{
+  "displayName": "Provisioned Throughput Usage and Limit",
+  "dashboardFilters": [],
+  "labels": {},
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "height": 4,
+        "width": 48,
+        "widget": {
+          "title": "Provisioned Throughput Monitoring",
+          "text": {
+            "content": "",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 4,
+        "height": 4,
+        "width": 48,
+        "widget": {
+          "title": "",
+          "id": "",
+          "text": {
+            "content": "The Utilization chart shows Provisioned Throughput utilization as a percentage across models, regardless of whether that model's usage is denominated in tokens or characters.",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_EXTRA_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "height": 21,
+        "width": 48,
+        "widget": {
+          "title": "Utilization by Model and Location",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "${resource.labels.model_user_id} ${resource.labels.location} ${resource.labels.monitored_resource_container}",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y2",
+                "timeSeriesQuery": {
+                  "timeSeriesFilterRatio": {
+                    "numerator": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_MAX",
+                        "groupByFields": [
+                          "resource.label.\"model_user_id\"",
+                          "resource.label.\"location\"",
+                          "resource.label.\"monitored_resource_container\"",
+                          "metric.label.\"request_type\"",
+                          "metric.label.\"accounting_resource\"",
+                          "resource.label.\"resource_container\"",
+                          "resource.label.\"publisher\"",
+                          "resource.label.\"model_version_id\""
+                        ],
+                        "perSeriesAligner": "ALIGN_RATE"
+                      },
+                      "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\" metric.label.\"request_type\"=\"dedicated\""
+                    },
+                    "denominator": {
+                      "aggregation": {
+                        "crossSeriesReducer": "REDUCE_MEAN",
+                        "groupByFields": [
+                          "resource.label.\"model_user_id\"",
+                          "resource.label.\"location\"",
+                          "resource.label.\"monitored_resource_container\"",
+                          "resource.label.\"resource_container\"",
+                          "resource.label.\"publisher\"",
+                          "resource.label.\"model_version_id\""
+                        ],
+                        "perSeriesAligner": "ALIGN_MEAN"
+                      },
+                      "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/dedicated_character_limit\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                    }
+                  }
+                }
+              },
+              {
+                "legendTemplate": "${resource.labels.model_user_id} ${resource.labels.location} ${resource.labels.monitored_resource_container}",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y2",
+                "timeSeriesQuery": {
+                  "timeSeriesFilterRatio": {
+                    "numerator": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_MAX",
+                        "groupByFields": [
+                          "resource.label.\"model_user_id\"",
+                          "resource.label.\"location\"",
+                          "resource.label.\"monitored_resource_container\"",
+                          "metric.label.\"request_type\"",
+                          "metric.label.\"accounting_resource\"",
+                          "resource.label.\"resource_container\"",
+                          "resource.label.\"publisher\"",
+                          "resource.label.\"model_version_id\""
+                        ],
+                        "perSeriesAligner": "ALIGN_RATE"
+                      },
+                      "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_token_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\" metric.label.\"request_type\"=\"dedicated\""
+                    },
+                    "denominator": {
+                      "aggregation": {
+                        "crossSeriesReducer": "REDUCE_MEAN",
+                        "groupByFields": [
+                          "resource.label.\"model_user_id\"",
+                          "resource.label.\"location\"",
+                          "resource.label.\"monitored_resource_container\"",
+                          "resource.label.\"resource_container\"",
+                          "resource.label.\"publisher\"",
+                          "resource.label.\"model_version_id\""
+                        ],
+                        "perSeriesAligner": "ALIGN_MEAN"
+                      },
+                      "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/dedicated_token_limit\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                    }
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "y2Axis": {
+              "label": "Throughput",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 29,
+        "height": 6,
+        "width": 48,
+        "widget": {
+          "title": "",
+          "id": "",
+          "text": {
+            "content": "The Usage by Request Type vs Limit chart shows usage denominated in characters and/or tokens per second broken down by request type. When the traffic is in the \"dedicated\" time series, the traffic was under the limit indicated by GSUs purchased. When it's in the \"shared\" time series, the traffic was classified as pay-as-you-go traffic. When \"spillover\" traffic exists, it indicates that traffic exceeded the limit indicated by the GSU limit and was charged as pay-as-you-go traffic.\n\nTip: Add a filter for a specific model_user_id and location to see usage for a specific Provisioned Throughput allocation.",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_EXTRA_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 35,
+        "height": 24,
+        "width": 48,
+        "widget": {
+          "title": "Usage by Request Type vs Limit",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "${metric.labels.request_type}",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y2",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [
+                        "metric.label.\"request_type\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_token_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                  },
+                  "unitOverride": ""
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "limit (tokens per second)",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y2",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/dedicated_token_limit\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                  },
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "y2Axis": {
+              "label": "Throughput",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 59,
+        "height": 14,
+        "width": 48,
+        "widget": {
+          "title": "Errors",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "4xx",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y2",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilterRatio": {
+                    "numerator": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [],
+                        "perSeriesAligner": "ALIGN_RATE"
+                      },
+                      "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\" metric.label.\"response_code\"=monitoring.regex.full_match(\"4[0-9][0-9]\")"
+                    },
+                    "denominator": {
+                      "aggregation": {
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [],
+                        "perSeriesAligner": "ALIGN_RATE"
+                      },
+                      "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                    }
+                  },
+                  "unitOverride": ""
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "5xx",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y2",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilterRatio": {
+                    "numerator": {
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [],
+                        "perSeriesAligner": "ALIGN_RATE"
+                      },
+                      "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\" metric.label.\"response_code\"=monitoring.regex.full_match(\"5[0-9][0-9]\")"
+                    },
+                    "denominator": {
+                      "aggregation": {
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": [],
+                        "perSeriesAligner": "ALIGN_RATE"
+                      },
+                      "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                    }
+                  },
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "y2Axis": {
+              "label": "% Errors",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
