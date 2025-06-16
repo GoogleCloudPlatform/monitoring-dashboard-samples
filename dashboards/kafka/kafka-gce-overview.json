@@ -424,8 +424,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "100 *\n(\n  avg by (project_id, zone, instance_name) (\n    avg_over_time(\n      compute_googleapis_com:instance_cpu_utilization{monitored_resource=\"gce_instance\"}[1m]\n    )\n    and\n    on(instance_id, project_id, zone)\n    (workload_googleapis_com:kafka_message_count{monitored_resource=\"gce_instance\"})\n  )\n)",
-                  "unitOverride": "%"
+                  "prometheusQuery": "(\n  avg by (project_id, zone, instance_name) (\n    avg_over_time(\n      compute_googleapis_com:instance_cpu_utilization{monitored_resource=\"gce_instance\"}[1m]\n    )\n    and\n    on(instance_id, project_id, zone)\n    (workload_googleapis_com:kafka_message_count{monitored_resource=\"gce_instance\"})\n  )\n)",
+                  "unitOverride": "10^2.%"
                 }
               }
             ],
