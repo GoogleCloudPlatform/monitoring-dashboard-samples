@@ -409,32 +409,24 @@
         "width": 4,
         "widget": {
           "title": "VMs CPU %",
-          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "topk(5, 100 *\n  avg by (project_id, zone, instance_name) (\n    avg_over_time(\n      compute_googleapis_com:instance_cpu_utilization{monitored_resource=\"gce_instance\"}[1m]\n    )\n    and\n    on(instance_id, project_id, zone)\n    (workload_googleapis_com:zookeeper_connection_active{monitored_resource=\"gce_instance\"})\n  )\n)",
-                  "unitOverride": "%"
+                  "prometheusQuery": "(avg by (project_id, zone, instance_name) (\n    avg_over_time(\n      compute_googleapis_com:instance_cpu_utilization{monitored_resource=\"gce_instance\"}[1m]\n    )\n    and\n    on(instance_id, project_id, zone)\n    (workload_googleapis_com:zookeeper_connection_active{monitored_resource=\"gce_instance\"})\n  )\n)",
+                  "unitOverride": "10^2.%"
                 }
               }
             ],
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -446,25 +438,18 @@
         "height": 4,
         "width": 4,
         "widget": {
-          "title": "VMs Memory % Top 5 ",
-          "id": "",
+          "title": "VMs Memory %",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "topk(5,\n  avg by (project_id, zone, instance_id) (\n    avg_over_time(\n      agent_googleapis_com:memory_percent_used{monitored_resource=\"gce_instance\", state=\"used\"}[1m]\n    )\n    and on(project_id, zone, instance_id) (\n      workload_googleapis_com:zookeeper_connection_active{monitored_resource=\"gce_instance\"}\n    )\n  )\n)",
+                  "prometheusQuery": "avg by (project_id, zone, instance_id) (\n  avg_over_time(\n    agent_googleapis_com:memory_percent_used{monitored_resource=\"gce_instance\", state=\"used\"}[1m]\n  )\n  and on(project_id, zone, instance_id) (\n    workload_googleapis_com:zookeeper_connection_active{monitored_resource=\"gce_instance\"}\n  )\n)",
                   "unitOverride": "%"
                 }
               }
@@ -472,7 +457,6 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
