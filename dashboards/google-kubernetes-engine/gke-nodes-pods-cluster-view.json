@@ -297,7 +297,7 @@
                 "plotType": "STACKED_BAR",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_cluster\n| metric 'logging.googleapis.com/log_entry_count'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| filter (metric.log == 'container.googleapis.com/cluster-autoscaler-visibility')\n| align rate(1m)\n| every 1m"
+                  "prometheusQuery": "rate(logging_googleapis_com:log_entry_count{\n  monitored_resource=\"k8s_cluster\",\n  ${project_id},\n  ${location},\n  ${cluster_name},\n  log=\"container.googleapis.com/cluster-autoscaler-visibility\"\n}[1m])\n"
                 }
               }
             ],
@@ -337,7 +337,7 @@
                 "plotType": "STACKED_BAR",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric 'kubernetes.io/container/uptime'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n    | filter val() <= cast_units(60, 's')\n    | group_by [], .count()\n    | map add[type: 'Container Starts'], [containers: cast_double(val())]\n  ; metric 'kubernetes.io/container/restart_count'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n    | align delta(1m)\n    | group_by [], .sum()\n    | map add[type: 'Containers Restarted'], [containers: cast_double(cast_gauge(val()))] }\n| union"
+                  "prometheusQuery": "label_replace(\n    count(kubernetes_io:container_uptime{monitored_resource=\"k8s_container\", ${project_id},${location}, ${cluster_name}} <= 60),\n    \"category\", \"Container Starts\", \"\", \"\"\n)\nor\nlabel_replace(\n  sum (\n    increase(kubernetes_io:container_restart_count{monitored_resource=\"k8s_container\", ${project_id}, ${location}, ${cluster_name}}[1m])\n  ),\n  \"category\", \"Container Restarts\", \"\", \"\"\n)\n"
                 }
               }
             ],
