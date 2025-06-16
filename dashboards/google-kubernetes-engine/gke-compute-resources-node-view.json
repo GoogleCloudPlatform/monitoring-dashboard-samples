@@ -272,7 +272,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_node\n  | metric 'kubernetes.io/node/cpu/allocatable_utilization'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n  | group_by 1m,\n      [value_allocatable_utilization_mean: mean(value.allocatable_utilization)]\n  | every 1m\n; fetch k8s_node\n  | metric 'kubernetes.io/node/cpu/allocatable_cores'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n  | group_by 1m, [value_allocatable_core_mean: mean(value.allocatable_cores)]\n  | every 1m }\n| join\n| value [scaled_util: val(0) * val(1)]\n| top 50"
+                  "prometheusQuery": "avg_over_time(kubernetes_io:node_cpu_allocatable_utilization{monitored_resource=\"k8s_node\", ${project_id}, ${cluster_name}, ${location}}[1m])\n*\navg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\", ${project_id}, ${cluster_name}, ${location}}[1m])"
                 }
               }
             ],
@@ -300,7 +300,8 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "       fetch k8s_node\n| metric 'kubernetes.io/node/memory/used_bytes'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| group_by 1m,\n    [value_used_bytes_mean: mean(value.used_bytes)]\n| every 1m\n| group_by [resource.node_name],\n    [value_used_bytes_mean_aggregate:\n       aggregate(value_used_bytes_mean)]\n| top 50 "
+                  "prometheusQuery": "sum by (node_name) (\n  avg_over_time(kubernetes_io:node_memory_used_bytes{\n    monitored_resource=\"k8s_node\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }[1m])\n)\n",
+                  "unitOverride": "By"
                 }
               }
             ],
@@ -545,7 +546,7 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Receive bandwidth per node - Top 50",
+          "title": "Receive bandwidth per node",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -556,7 +557,8 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'kubernetes.io/node/network/received_bytes_count'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| align rate(1m)\n| every 1m\n| top 50"
+                  "prometheusQuery": "rate(kubernetes_io:node_network_received_bytes_count{\n  monitored_resource=\"k8s_node\",\n  ${project_id},\n  ${location},\n  ${cluster_name}\n}[1m])\n",
+                  "unitOverride": "By/s"
                 }
               }
             ],
@@ -596,7 +598,8 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'kubernetes.io/node/network/sent_bytes_count'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| align rate(1m)\n| every 1m\n| top 50"
+                  "prometheusQuery": "rate(kubernetes_io:node_network_sent_bytes_count{\n  monitored_resource=\"k8s_node\",\n  ${project_id},\n  ${location},\n  ${cluster_name}\n}[1m])\n",
+                  "unitOverride": "By/s"
                 }
               }
             ],
@@ -623,7 +626,8 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'networking.googleapis.com/node_flow/ingress_packets_count'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| align rate(1m)\n| every 1m\n| group_by [resource.node_name],\n    [value_ingress_packets_count_aggregate:\n       aggregate(value.ingress_packets_count)]"
+                  "prometheusQuery": "sum by (node_name) (\n  rate(networking_googleapis_com:node_flow_ingress_packets_count{\n    monitored_resource=\"k8s_node\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }[1m])\n)\n",
+                  "unitOverride": "1/s"
                 }
               }
             ],
@@ -663,7 +667,8 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'networking.googleapis.com/node_flow/egress_packets_count'\n| ${project_id}\n| ${location}\n| ${cluster_name}\n| align rate(1m)\n| every 1m\n| group_by [resource.node_name],\n    [value_egress_packets_count_aggregate:\n       aggregate(value.egress_packets_count)]"
+                  "prometheusQuery": "sum by (node_name) (\n  rate(networking_googleapis_com:node_flow_egress_packets_count{\n    monitored_resource=\"k8s_node\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }[1m])\n)\n",
+                  "unitOverride": "1/s"
                 }
               }
             ],
