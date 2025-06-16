@@ -695,7 +695,6 @@
                     },
                     "filter": "metric.type=\"workload.googleapis.com/redis.cpu.time\" resource.type=\"gce_instance\"",
                     "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
                       "groupByFields": [],
                       "perSeriesAligner": "ALIGN_MEAN"
                     }
@@ -1049,8 +1048,44 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "def vms_with_metric_count_by_region metric =\n  fetch gce_instance\n  | metric $metric\n  # Shift points forward from the past 2 minutes so a VM that misses a point\n  # won't temporarily shift down the number of VMs.\n  | align next_older(2m)\n  | group_by [resource.project_id, resource.zone, resource.instance_id], 1m, .pick_any\n  | group_by [resource.project_id, resource.zone], 1m, .count\n  | map\n      add[\n        region: re_extract(resource.zone, '([^-]+-[^-]+)-[^-]+', '\\\\1')]\n  | group_by [region], .sum\n  | every 1m;\n\n@vms_with_metric_count_by_region 'workload.googleapis.com/redis.cpu.time'",
+                  "prometheusQuery": "count by (region) (\n  label_replace(\n    sum by (project_id, zone, instance_id) (\n      count_over_time(workload_googleapis_com:redis_cpu_time{monitored_resource=\"gce_instance\"}[2m])\n    ),\n    \"region\",\n    \"$1\",\n    \"zone\",\n    \"([^-]+-[^-]+)-.*\"\n  )\n)",
                   "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 88,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "CPU Utilization by VM",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "avg_over_time(compute_googleapis_com:instance_cpu_utilization{monitored_resource=\"gce_instance\"}[${__interval}])\nand on(project_id,instance_id,zone)\ngroup by(project_id,instance_id,zone) (\n  workload_googleapis_com:redis_cpu_time{monitored_resource=\"gce_instance\"}\n)",
+                  "unitOverride": "10^2.%"
                 }
               }
             ],
@@ -1065,52 +1100,28 @@
       },
       {
         "yPos": 88,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "CPU Utilization by VM",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "legendTemplate": "${labels.instance_name} (${labels.zone})",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(compute_googleapis_com:instance_cpu_utilization{monitored_resource=\"gce_instance\"}[${__interval}])\nand on(project_id,instance_id,zone)\ngroup by(project_id,instance_id,zone) (\n  workload_googleapis_com:redis_cpu_time{monitored_resource=\"gce_instance\"}\n)",
-                  "unitOverride": "10^2.%"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 88,
         "xPos": 24,
         "height": 16,
         "width": 24,
         "widget": {
           "title": "Memory Utilization by VM",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR"
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
-                "legendTemplate": "${labels.metadata_system_name} (${labels.zone})",
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "outputFullDuration": false,
                   "prometheusQuery": "sum by (metadata_system_name,project_id,instance_id,zone) (\n  avg_over_time(agent_googleapis_com:memory_percent_used{monitored_resource=\"gce_instance\", state=\"used\"}[${__interval}])\n)\nand on(project_id,instance_id,zone)\ngroup by(project_id,instance_id,zone) (\n  workload_googleapis_com:redis_memory_used{monitored_resource=\"gce_instance\"}\n)",
                   "unitOverride": "%"
                 }
@@ -1119,6 +1130,7 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
