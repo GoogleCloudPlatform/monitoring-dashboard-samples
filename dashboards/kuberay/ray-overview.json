@@ -199,7 +199,7 @@
                   "plotType": "LINE",
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
-                    "prometheusQuery": "(sum(autoscaler_cluster_resources{resource=\"CPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)) + (sum(autoscaler_pending_resources{resource=\"CPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0))",
+                    "prometheusQuery": "sum(ray_resources{Name=\"CPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) + (sum(ray_cluster_pending_nodes{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)) * avg(ray_node_cpu_count{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
                     "unitOverride": ""
                   }
                 }
@@ -286,7 +286,7 @@
                   "plotType": "LINE",
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
-                    "prometheusQuery": "(sum(autoscaler_cluster_resources{resource=\"GPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)) + (sum(autoscaler_pending_resources{resource=\"GPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0))",
+                    "prometheusQuery": "sum(ray_resources{Name=\"GPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) + (sum(ray_cluster_pending_nodes{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)) * avg(ray_node_gpus_available{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
                     "unitOverride": ""
                   }
                 }
@@ -431,12 +431,10 @@
               ],
               "thresholds": [
                 {
-                  "value": 80,
-                  "direction": "ABOVE"
+                  "value": 80
                 },
                 {
-                  "value": 90,
-                  "direction": "ABOVE"
+                  "value": 90
                 }
               ]
             }
@@ -460,7 +458,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "ray_node_disk_io_write_speed{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
-                    "unitOverride": "Bps"
+                    "unitOverride": "By/s"
                   }
                 },
                 {
@@ -472,7 +470,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "ray_node_disk_io_read_speed{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
-                    "unitOverride": "Bps"
+                    "unitOverride": "By/s"
                   }
                 }
               ],
@@ -515,12 +513,10 @@
               ],
               "thresholds": [
                 {
-                  "value": 85,
-                  "direction": "ABOVE"
+                  "value": 85
                 },
                 {
-                  "value": 95,
-                  "direction": "ABOVE"
+                  "value": 95
                 }
               ]
             }
@@ -694,7 +690,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "ray_node_network_receive_speed{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
-                    "unitOverride": "Bps"
+                    "unitOverride": "By/s"
                   }
                 },
                 {
@@ -706,7 +702,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "ray_node_network_send_speed{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
-                    "unitOverride": "Bps"
+                    "unitOverride": "By/s"
                   }
                 }
               ],
@@ -784,7 +780,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "avg(ray_node_cpu_utilization{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
-                    "unitOverride": "percent"
+                    "unitOverride": "%"
                   }
                 },
                 {
@@ -795,8 +791,8 @@
                   "plotType": "LINE",
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
-                    "prometheusQuery": "sum(ray_node_gpus_utilization{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / (sum(autoscaler_cluster_resources{resource='GPU',cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(1))",
-                    "unitOverride": "percent"
+                    "prometheusQuery": "sum(ray_node_gpus_utilization{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / (sum(ray_resources{Name=\"GPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(1))",
+                    "unitOverride": "%"
                   }
                 },
                 {
@@ -808,7 +804,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "sum(ray_node_mem_used{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / sum(ray_node_mem_total{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) * 100",
-                    "unitOverride": "percent"
+                    "unitOverride": "%"
                   }
                 },
                 {
@@ -820,7 +816,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "sum(ray_node_gram_used{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / (sum(ray_node_gram_available{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) + sum(ray_node_gram_used{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})) * 100",
-                    "unitOverride": "percent"
+                    "unitOverride": "%"
                   }
                 },
                 {
@@ -832,7 +828,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "sum(ray_object_store_memory{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / sum(ray_resources{Name=\"object_store_memory\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) * 100",
-                    "unitOverride": "percent"
+                    "unitOverride": "%"
                   }
                 },
                 {
@@ -844,18 +840,16 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "sum(ray_node_disk_usage{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / (sum(ray_node_disk_free{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) + sum(ray_node_disk_usage{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})) * 100",
-                    "unitOverride": "percent"
+                    "unitOverride": "%"
                   }
                 }
               ],
               "thresholds": [
                 {
-                  "value": 80,
-                  "direction": "ABOVE"
+                  "value": 80
                 },
                 {
-                  "value": 95,
-                  "direction": "ABOVE"
+                  "value": 95
                 }
               ],
               "yAxis": {
