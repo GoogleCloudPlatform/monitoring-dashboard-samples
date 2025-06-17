@@ -9,10 +9,8 @@
         "height": 4,
         "width": 48,
         "widget": {
-          "title": "",
-          "id": "",
           "text": {
-            "content": "The Utilization chart shows Provisioned Throughput utilization as a percentage across models, regardless of whether that model's usage is denominated in tokens or characters.",
+            "content": "The Utilization chart shows Provisioned Throughput utilization as a percentage across models, regardless of whether that model's usage is denominated in tokens or characters. [Learn more about Provisioned Throughput](https://cloud.google.com/vertex-ai/generative-ai/docs/provisioned-throughput/overview).",
             "format": "MARKDOWN",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -32,18 +30,24 @@
         "width": 48,
         "widget": {
           "title": "Utilization by Model and Location",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR"
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
                 "legendTemplate": "${resource.labels.model_user_id} ${resource.labels.location} ${resource.labels.monitored_resource_container}",
+                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y2",
                 "timeSeriesQuery": {
+                  "outputFullDuration": false,
                   "timeSeriesFilterRatio": {
                     "numerator": {
                       "aggregation": {
@@ -78,15 +82,20 @@
                       },
                       "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/dedicated_character_limit\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
                     }
-                  }
+                  },
+                  "unitOverride": ""
                 }
               },
               {
+                "breakdowns": [],
+                "dimensions": [],
                 "legendTemplate": "${resource.labels.model_user_id} ${resource.labels.location} ${resource.labels.monitored_resource_container}",
+                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y2",
                 "timeSeriesQuery": {
+                  "outputFullDuration": false,
                   "timeSeriesFilterRatio": {
                     "numerator": {
                       "aggregation": {
@@ -121,7 +130,8 @@
                       },
                       "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/dedicated_token_limit\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
                     }
-                  }
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
@@ -138,6 +148,8 @@
         "height": 9,
         "width": 48,
         "widget": {
+          "title": "",
+          "id": "",
           "text": {
             "content": "The Usage by Request Type vs Limit chart shows usage denominated in characters and/or tokens per second broken down by request type:\n- `dedicated` reflects traffic which is under the limit indicated by GSUs purchased.\n- `shared` reflects traffic was classified as \"pay-as-you-go.\" \n- `spillover` corresponds to traffic that exceeded the GSU limit and was charged via \"pay-as-you-go\" pricing.\n\n**Tip**: Add a filter for a specific `model_user_id` and `location` to see usage for a specific Provisioned Throughput allocation.",
             "format": "MARKDOWN",
