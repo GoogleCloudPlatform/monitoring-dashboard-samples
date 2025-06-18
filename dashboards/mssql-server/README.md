@@ -16,8 +16,3 @@
 |:------------------|
 |Filename: [sqlserver-transaction-logs.json](sqlserver-transaction-logs.json)|
 |This dashboard has charts for viewing SQL Server Transaction Log data when monitored by Google's Ops Agent including `Log Flush Waits`, `Log Flushes`, `Log Flush Data`, `Log Usage`, `Log Growths`, and `Log Shrinks`. |
-
-|Microsoft SQL Server Overview|
-|:---------------------|
-|Filename: [microsoft-sql-server-overview.json](microsoft-sql-server-overview.json)|
-|This dashboard has a variety of widgets split into 3 sections of metrics: Instances, Databases and Queries. The widgets in the dashboard include useful metrics like `Active Connections`, `Disk Usage`, `Disk Space`, `Buffer Cache Hit Ratio`, `Top 10 queries by Exectuion Count` etc.|
