@@ -36,7 +36,8 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": false,
-              "timeSeriesQueryLanguage": "fetch dataflow_job\n| metric 'logging.googleapis.com/byte_count'\n| group_by [], sum(value.byte_count)\n| every 30d"
+              "prometheusQuery": "sum(\n  increase(\n    logging_googleapis_com:byte_count{\n      monitored_resource=\"dataflow_job\"\n    }[30d]\n  )\n)\n",
+              "unitOverride": "By"
             }
           }
         }
@@ -78,7 +79,8 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch dataflow_job\n| metric 'logging.googleapis.com/byte_count'\n| group_by [project_id],sum(value.byte_count)\n| every 1d"
+                  "prometheusQuery": "sum by (project_id) (\n  increase(\n    logging_googleapis_com:byte_count{\n      monitored_resource=\"dataflow_job\"\n    }[1d]\n  )\n)\n",
+                  "unitOverride": "By"
                 }
               }
             ],
