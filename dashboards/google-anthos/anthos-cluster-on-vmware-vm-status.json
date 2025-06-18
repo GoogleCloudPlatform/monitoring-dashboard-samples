@@ -1,104 +1,116 @@
 {
   "displayName": "Anthos Cluster on VMware VM Status",
+  "dashboardFilters": [],
   "gridLayout": {
     "columns": "2",
     "widgets": [
       {
         "title": "CPU Readiness Per vCPU (Percentage)",
         "xyChart": {
+          "chartOptions": {
+            "displayHorizontal": false,
+            "mode": "COLOR"
+          },
           "dataSets": [
             {
+              "plotType": "LINE",
+              "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "{ fetch k8s_pod::kubernetes.io/anthos/vm_cpu_ready_seconds\n  | align rate(1m)\n  | add\n      [cluster_name:\n         if(re_full_match(resource.namespace_name, 'kube-system'),\n           resource.cluster_name, resource.namespace_name), node: metric.node]\n  | every 1m\n  | group_by [resource.project_id, cluster_name, resource.location, node],\n      [value_vm_cpu_ready_seconds_aggregate:\n         aggregate(value.vm_cpu_ready_seconds)]\n; fetch k8s_node::kubernetes.io/anthos/node/cpu/total_cores\n  | every 1m\n  | add [cluster_name: resource.cluster_name, node: resource.node_name]\n  | group_by [resource.project_id, resource.location, cluster_name, node],\n      [value_total_cores_aggregate: aggregate(value.total_cores)] }\n| join\n| div\n| mul (100)"
-              },
-              "plotType": "LINE"
+                "prometheusQuery": "100 *\n(\n  sum by (project_id, cluster_name, location, node) (\n    # Case 1: kube-system — use cluster_name as-is\n    label_replace(\n      rate(kubernetes_io:anthos_vm_cpu_ready_seconds_sum{monitored_resource=\"k8s_pod\", namespace_name=\"kube-system\"}[1m]),\n      \"cluster_name\", \"$1\", \"cluster_name\", \"(.*)\"\n    )\n    or\n    # Case 2: all other namespaces — set cluster_name = namespace_name\n    label_replace(\n      rate(kubernetes_io:anthos_vm_cpu_ready_seconds_sum{monitored_resource=\"k8s_pod\", namespace_name!~\"kube-system\"}[1m]),\n      \"cluster_name\", \"$1\", \"namespace_name\", \"(.*)\"\n    )\n  )\n)\n/\n(\n  sum by (project_id, cluster_name, location, node) (\n    label_replace(\n      kubernetes_io:anthos_node_cpu_total_cores{monitored_resource=\"k8s_node\"},\n      \"node\", \"$1\", \"node_name\", \"(.*)\"\n    )\n  )\n)\n"
+              }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
             "scale": "LINEAR"
-          },
-          "chartOptions": {
-            "mode": "COLOR"
           }
         }
       },
       {
         "title": "Memory Page Fault Latency (Percentage)",
         "xyChart": {
+          "chartOptions": {
+            "displayHorizontal": false,
+            "mode": "COLOR"
+          },
           "dataSets": [
             {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "targetAxis": "Y1",
               "timeSeriesQuery": {
                 "timeSeriesFilter": {
-                  "filter": "metric.type=\"kubernetes.io/anthos/vm_memory_access_latency\" resource.type=\"k8s_pod\"",
                   "aggregation": {
-                    "perSeriesAligner": "ALIGN_MEAN",
+                    "alignmentPeriod": "60s",
                     "crossSeriesReducer": "REDUCE_SUM",
                     "groupByFields": [
                       "resource.label.\"project_id\"",
                       "resource.label.\"location\"",
                       "resource.label.\"cluster_name\"",
                       "metric.label.\"node\""
-                    ]
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
                   },
-                  "secondaryAggregation": {}
-                },
-                "unitOverride": "1"
-              },
-              "plotType": "LINE",
-              "minAlignmentPeriod": "60s"
+                  "filter": "metric.type=\"kubernetes.io/anthos/vm_memory_access_latency\" resource.type=\"k8s_pod\""
+                }
+              }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
             "scale": "LINEAR"
-          },
-          "chartOptions": {
-            "mode": "COLOR"
           }
         }
       },
       {
         "title": "Average Virtual Disk Read Latency (Seconds)",
         "xyChart": {
+          "chartOptions": {
+            "displayHorizontal": false,
+            "mode": "COLOR"
+          },
           "dataSets": [
             {
+              "plotType": "LINE",
+              "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "{ fetch k8s_pod::kubernetes.io/anthos/vm_virtualdisk_read_latency_seconds\n  | align rate(1m)\n  | every 1m\n  | group_by\n      [resource.project_id, resource.cluster_name, resource.location,\n       metric.node],\n      [value_vm_virtualdisk_read_latency_seconds_sum:\n         sum(value.vm_virtualdisk_read_latency_seconds)]\n; fetch k8s_pod::kubernetes.io/anthos/vm_number_virtualdisk\n  | every 1m\n  | group_by\n      [resource.project_id, resource.cluster_name, resource.location,\n       metric.node],\n      [value_vm_number_virtualdisk_sum: sum(value.vm_number_virtualdisk)] }\n| join\n| div"
-              },
-              "plotType": "LINE"
+                "prometheusQuery": "(\n  sum by (project_id, cluster_name, location, node) (\n    rate(kubernetes_io:anthos_vm_virtualdisk_read_latency_seconds_sum{monitored_resource=\"k8s_pod\"}[1m])\n  )\n)\n/\n(\n  sum by (project_id, cluster_name, location, node) (\n    kubernetes_io:anthos_vm_number_virtualdisk{monitored_resource=\"k8s_pod\"}\n  )\n)"
+              }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
             "scale": "LINEAR"
-          },
-          "chartOptions": {
-            "mode": "COLOR"
           }
         }
       },
       {
         "title": "Average Virtual Disk Write Latency (Seconds)",
         "xyChart": {
+          "chartOptions": {
+            "displayHorizontal": false,
+            "mode": "COLOR"
+          },
           "dataSets": [
             {
+              "plotType": "LINE",
+              "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "{ fetch k8s_pod::kubernetes.io/anthos/vm_virtualdisk_write_latency_seconds\n  | align rate(1m)\n  | every 1m\n  | group_by\n      [resource.project_id, resource.cluster_name, resource.location,\n       metric.node],\n      [value_vm_virtualdisk_write_latency_seconds_sum:\n         sum(value.vm_virtualdisk_write_latency_seconds)]\n; fetch k8s_pod::kubernetes.io/anthos/vm_number_virtualdisk\n  | every 1m\n  | group_by\n      [resource.project_id, resource.cluster_name, resource.location,\n       metric.node],\n      [value_vm_number_virtualdisk_sum: sum(value.vm_number_virtualdisk)] }\n| join\n| div"
-              },
-              "plotType": "LINE"
+                "prometheusQuery": "(\n  sum by (project_id, cluster_name, location, node) (\n    rate(kubernetes_io:anthos_vm_virtualdisk_write_latency_seconds_sum{monitored_resource=\"k8s_pod\"}[1m])\n  )\n)\n/\n(\n  sum by (project_id, cluster_name, location, node) (\n    kubernetes_io:anthos_vm_number_virtualdisk{monitored_resource=\"k8s_pod\"}\n  )\n)"
+              }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
             "scale": "LINEAR"
-          },
-          "chartOptions": {
-            "mode": "COLOR"
           }
         }
       }
