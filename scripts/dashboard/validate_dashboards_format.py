@@ -82,7 +82,7 @@ def map_json_files(directory, path_map):
 
     # Check if 'category' field exists at the top level
     if 'category' in dash_dict:
-      raise JsonFormattingError("JsonFormattingError: category field is not allowed at the top level of sample dashboard JSON files. Found in {}".format(json_file))
+      raise JsonFormattingError("Category field is not allowed at the top level of sample dashboard JSON files. Found in {}".format(json_file))
 
     file_name_parts = json_file.split('.')
     check_json_file_name(json_file, file_name_parts)
