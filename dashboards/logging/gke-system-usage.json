@@ -35,7 +35,8 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": false,
-              "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'logging.googleapis.com/byte_count'\n| filter\n    (metric.log == 'container-runtime') || (metric.log = 'docker')\n    || (metric.log == 'kube-container-runtime-monitor')\n    || (metric.log == 'kube-logrotate')\n    || (metric.log == 'kube-node-configuration')\n    || (metric.log == 'kube-node-installation') || (metric.log == 'kubelet')\n    || (metric.log == 'kubelet-monitor') || (metric.log == 'node-journal')\n    || (metric.log == 'node-problem-detector')\n| group_by [], sum(value.byte_count)\n| every 30d"
+              "prometheusQuery": "sum(\n  increase(\n    logging_googleapis_com:byte_count{\n      monitored_resource=\"k8s_node\",\n      log=~\"^(container-runtime|docker|kube-container-runtime-monitor|kube-logrotate|kube-node-configuration|kube-node-installation|kubelet|kubelet-monitor|node-journal|node-problem-detector)$\"\n    }[30d]\n  )\n)\n",
+              "unitOverride": "By"
             }
           }
         }
@@ -51,7 +52,8 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": false,
-              "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'logging.googleapis.com/byte_count'\n| filter\n   (resource.namespace_name == 'cnrm-system')\n   || (resource.namespace_name == 'docker')\n   || (resource.namespace_name == 'config-management-system')\n   || (resource.namespace_name == 'gatekeeper-system')\n   || (resource.namespace_name == 'gke-connect')\n   || (resource.namespace_name == 'gke-system')\n   || (resource.namespace_name == 'istio-system')\n   || (resource.namespace_name == 'knative-serving')\n   || (resource.namespace_name == 'monitoring-system')\n   || (resource.namespace_name == 'kube-system')\n| group_by [], sum(value.byte_count)\n| every 30d\n"
+              "prometheusQuery": "sum(\n  increase (\n    logging_googleapis_com:byte_count{\n      monitored_resource=\"k8s_container\",\n      namespace_name=~\"^(cnrm-system|docker|config-management-system|gatekeeper-system|gke-connect|gke-system|istio-system|knative-serving|monitoring-system|kube-system)$\"\n    }[30d]\n  )\n)",
+              "unitOverride": "By"
             }
           }
         }
@@ -67,7 +69,8 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": false,
-              "timeSeriesQueryLanguage": "fetch k8s_pod\n| metric 'logging.googleapis.com/byte_count'\n| filter\n    (resource.namespace_name == 'cnrm-system')\n    || (resource.namespace_name == 'docker')\n    || (resource.namespace_name == 'config-management-system')\n    || (resource.namespace_name == 'gatekeeper-system')\n    || (resource.namespace_name == 'gke-connect')\n    || (resource.namespace_name == 'gke-system')\n    || (resource.namespace_name == 'istio-system')\n    || (resource.namespace_name == 'knative-serving')\n    || (resource.namespace_name == 'monitoring-system')\n    || (resource.namespace_name == 'kube-system')\n| group_by [], [value_byte_count_aggregate_aggregate: sum(value.byte_count)]\n| every 30d"
+              "prometheusQuery": "sum(\n  increase (\n    logging_googleapis_com:byte_count{\n      monitored_resource=\"k8s_pod\",\n      namespace_name=~\"^(cnrm-system|docker|config-management-system|gatekeeper-system|gke-connect|gke-system|istio-system|knative-serving|monitoring-system|kube-system)$\"\n    }[30d]\n  )\n)",
+              "unitOverride": "By"
             }
           }
         }
@@ -109,7 +112,8 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| metric 'logging.googleapis.com/byte_count'\n| filter\n    (metric.log == 'container-runtime') \n    || (metric.log = 'docker')\n    || (metric.log == 'kube-container-runtime-monitor')\n    || (metric.log == 'kube-logrotate')\n    || (metric.log == 'kube-node-configuration')\n    || (metric.log == 'kube-node-installation') || (metric.log == 'kubelet')\n    || (metric.log == 'kubelet-monitor') \n    || (metric.log == 'node-journal')\n    || (metric.log == 'node-problem-detector')\n| group_by [project_id], sum(value.byte_count)\n| every 1d"
+                  "prometheusQuery": "sum by (project_id) (\n  increase(\n    logging_googleapis_com:byte_count{\n      monitored_resource=\"k8s_node\",\n      log=~\"^(container-runtime|docker|kube-container-runtime-monitor|kube-logrotate|kube-node-configuration|kube-node-installation|kubelet|kubelet-monitor|node-journal|node-problem-detector)$\"\n    }\n  [1d])\n)\n",
+                  "unitOverride": "By"
                 }
               }
             ],
@@ -137,7 +141,8 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'logging.googleapis.com/byte_count'\n| filter\n    (resource.namespace_name == 'cnrm-system')\n    || (resource.namespace_name == 'docker')\n    || (resource.namespace_name == 'config-management-system')\n    || (resource.namespace_name == 'gatekeeper-system')\n    || (resource.namespace_name == 'gke-connect')\n    || (resource.namespace_name == 'gke-system')\n    || (resource.namespace_name == 'istio-system')\n    || (resource.namespace_name == 'knative-serving')\n    || (resource.namespace_name == 'monitoring-system')\n    || (resource.namespace_name == 'kube-system')\n| group_by [project_id], sum(value.byte_count)\n| every 1d"
+                  "prometheusQuery": "sum by (project_id) (\n  increase(\n    logging_googleapis_com:byte_count{\n      monitored_resource=\"k8s_container\",\n      namespace_name=~\"^(cnrm-system|docker|config-management-system|gatekeeper-system|gke-connect|gke-system|istio-system|knative-serving|monitoring-system|kube-system)$\"\n    }[1d]\n  )\n)\n",
+                  "unitOverride": "By"
                 }
               }
             ],
@@ -165,7 +170,8 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_pod\n| metric 'logging.googleapis.com/byte_count'\n| filter\n    (resource.namespace_name == 'cnrm-system')\n    || (resource.namespace_name == 'docker')\n    || (resource.namespace_name == 'config-management-system')\n    || (resource.namespace_name == 'gatekeeper-system')\n    || (resource.namespace_name == 'gke-connect')\n    || (resource.namespace_name == 'gke-system')\n    || (resource.namespace_name == 'istio-system')\n    || (resource.namespace_name == 'knative-serving')\n    || (resource.namespace_name == 'monitoring-system')\n    || (resource.namespace_name == 'kube-system')\n| group_by [project_id], sum(value.byte_count)\n| every 1d"
+                  "prometheusQuery": "sum by (project_id) (\n  increase(\n    logging_googleapis_com:byte_count{\n      monitored_resource=\"k8s_pod\",\n      namespace_name=~\"^(cnrm-system|docker|config-management-system|gatekeeper-system|gke-connect|gke-system|istio-system|knative-serving|monitoring-system|kube-system)$\"\n    }[1d]\n  )\n)\n",
+                  "unitOverride": "By"
                 }
               }
             ],
