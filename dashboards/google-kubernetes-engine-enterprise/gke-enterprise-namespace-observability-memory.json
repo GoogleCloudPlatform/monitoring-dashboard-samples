@@ -1,69 +1,18 @@
 {
   "displayName": "GKE Enterprise Namespace Observability Memory",
   "dashboardFilters": [],
+  "labels": {},
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
       {
-        "widget": {
-          "title": "Memory Request % Used (Top 5 Namespaces)",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/memory/used_bytes\n    ; metric kubernetes.io/anthos/container/memory/used_bytes }\n    | union\n  ; { metric kubernetes.io/container/memory/request_bytes\n    ; metric kubernetes.io/anthos/container/memory/request_bytes }\n    | union }\n| align next_older(2m)\n| group_by [resource.namespace_name], .sum()\n| outer_join 0\n| div\n| top 5\n| scale \"%\"",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "height": 16,
-        "width": 24
-      },
-      {
-        "widget": {
-          "title": "Memory Used (Top 5 Namespaces)",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/memory/used_bytes\n  ; metric kubernetes.io/anthos/container/memory/used_bytes }\n| union\n| align next_older(1m)\n| every 1m\n| group_by [resource.namespace_name], .sum()\n| top 5",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        },
         "height": 16,
         "width": 24,
-        "xPos": 24
-      },
-      {
         "widget": {
-          "title": "Requested Memory (Top 5 Namespaces)",
+          "title": "Memory Request % Used",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -71,52 +20,103 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/memory/request_bytes\n  ; metric kubernetes.io/anthos/container/memory/request_bytes }\n| union\n| align next_older(1m)\n| every 1m\n| group_by [resource.namespace_name], .sum()\n| top 5",
-                  "unitOverride": ""
+                  "prometheusQuery": "100 *\n(\n  sum by (namespace_name) (\n    kubernetes_io:container_memory_used_bytes{monitored_resource=\"k8s_container\"}\n    or\n    kubernetes_io:anthos_container_memory_used_bytes{monitored_resource=\"k8s_container\"}\n  )\n  /\n  (\n    sum by (namespace_name) (\n      kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n      or\n      kubernetes_io:anthos_container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n    )\n    and\n    (\n      sum by (namespace_name) (\n        kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n        or\n        kubernetes_io:anthos_container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n      ) > 0\n    )\n  )\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "height": 16,
-        "width": 24,
-        "yPos": 16
+        }
       },
       {
-        "widget": {
-          "title": "Requested Memory Unused (Top 5 Namespaces)",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/memory/request_bytes\n    ; metric kubernetes.io/anthos/container/memory/request_bytes }\n    | union\n  ; { metric kubernetes.io/container/memory/used_bytes\n    ; metric kubernetes.io/anthos/container/memory/used_bytes }\n    | union }\n| align next_older(2m)\n| group_by [resource.namespace_name], .sum()\n| join\n| sub\n| top 5",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "height": 16,
-        "width": 24,
         "xPos": 24,
-        "yPos": 16
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Memory Used",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (namespace_name) (\n    kubernetes_io:container_memory_used_bytes{monitored_resource=\"k8s_container\"}\n    or \n    kubernetes_io:anthos_container_memory_used_bytes{monitored_resource=\"k8s_container\"}\n)",
+                  "unitOverride": "By"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Requested Memory",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (namespace_name) (\n    kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n    or \n    kubernetes_io:anthos_container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n)",
+                  "unitOverride": "By"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Requested Memory Unused",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (namespace_name) (\n    kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n    or \n    kubernetes_io:anthos_container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n)\n-\nsum by (namespace_name) (\n    kubernetes_io:container_memory_used_bytes{monitored_resource=\"k8s_container\"}\n    or \n    kubernetes_io:anthos_container_memory_used_bytes{monitored_resource=\"k8s_container\"}\n)",
+                  "unitOverride": "By"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
       }
     ]
-  },
-  "labels": {}
+  }
 }
