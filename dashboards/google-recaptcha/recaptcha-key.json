@@ -186,8 +186,34 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "fetch recaptchaenterprise.googleapis.com/Key\n| metric 'recaptchaenterprise.googleapis.com/executes'\n| { t_0:\n      group_by window(),\n        [x:\n           cast_units(sum(count_from(value.executes)), '10^2.%')\n           * fraction_less_than(value.executes, 0.2)]\n      | map add[risk: 'high']\n  ; t_1:\n      group_by window(),\n        [x:\n           cast_units(sum(count_from(value.executes)), '10^2.%')\n           *\n           (fraction_less_than(value.executes, 0.8)\n            - fraction_less_than(value.executes, 0.2))]\n      | map add[risk: 'medium']\n  ; t_2:\n      group_by window(),\n        [x:\n           cast_units(sum(count_from(value.executes)), '10^2.%')\n           *\n           (cast_units(1, '10^2.%') - fraction_less_than(value.executes, 0.8))]\n      | map add[risk: 'low'] }\n| union\n| group_by [risk], [x_aggregate: aggregate(x)]",
-                  "unitOverride": ""
+                  "prometheusQuery": "label_replace(\n  sum(rate(recaptchaenterprise_googleapis_com:executes_bucket{le=\"0.2\"}[${__interval}])),\n  \"risk\", \"high\", \"\", \"\"\n)",
+                  "unitOverride": "10^2.%"
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "label_replace(\n  (sum(rate(recaptchaenterprise_googleapis_com:executes_bucket{le=\"0.8\"}[${__interval}])) - \n    sum(rate(recaptchaenterprise_googleapis_com:executes_bucket{le=\"0.2\"}[${__interval}]))),\n  \"risk\", \"medium\", \"\", \"\"\n)",
+                  "unitOverride": "10^2.%"
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "label_replace(\n  (sum(rate(recaptchaenterprise_googleapis_com:executes_bucket{le=\"+Inf\"}[${__interval}])) - \n    sum(rate(recaptchaenterprise_googleapis_com:executes_bucket{le=\"0.8\"}[${__interval}]))),  \n  \"risk\", \"low\", \"\", \"\"\n)",
+                  "unitOverride": "10^2.%"
                 }
               }
             ],
@@ -222,8 +248,34 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "fetch recaptchaenterprise.googleapis.com/Key\n| metric 'recaptchaenterprise.googleapis.com/assessments'\n| { t_0:\n      group_by window(),\n        [x:\n           cast_units(sum(count_from(value.assessments)), '10^2.%')\n           * fraction_less_than(value.assessments, 0.2)]\n      | map add[risk: 'high']\n  ; t_1:\n      group_by window(),\n        [x:\n           cast_units(sum(count_from(value.assessments)), '10^2.%')\n           *\n           (fraction_less_than(value.assessments, 0.8)\n            - fraction_less_than(value.assessments, 0.2))]\n      | map add[risk: 'medium']\n  ; t_2:\n      group_by window(),\n        [x:\n           cast_units(sum(count_from(value.assessments)), '10^2.%')\n           *\n           (cast_units(1, '10^2.%')\n            - fraction_less_than(value.assessments, 0.8))]\n      | map add[risk: 'low'] }\n| union\n| group_by [risk], [x_aggregate: aggregate(x)]",
-                  "unitOverride": ""
+                  "prometheusQuery": "label_replace(\n  sum(rate(recaptchaenterprise_googleapis_com:assessments_bucket{le=\"0.2\"}[${__interval}])),\n  \"risk\", \"high\", \"\", \"\"\n)",
+                  "unitOverride": "10^2.%"
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "label_replace(\n  (sum(rate(recaptchaenterprise_googleapis_com:assessments_bucket{le=\"0.8\"}[${__interval}])) - \n    sum(rate(recaptchaenterprise_googleapis_com:assessments_bucket{le=\"0.2\"}[${__interval}]))),\n  \"risk\", \"medium\", \"\", \"\"\n)",
+                  "unitOverride": "10^2.%"
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "label_replace(\n  (sum(rate(recaptchaenterprise_googleapis_com:assessments_bucket{le=\"+Inf\"}[${__interval}])) - \n    sum(rate(recaptchaenterprise_googleapis_com:assessments_bucket{le=\"0.8\"}[${__interval}]))),  \n  \"risk\", \"low\", \"\", \"\"\n)",
+                  "unitOverride": "10^2.%"
                 }
               }
             ],
