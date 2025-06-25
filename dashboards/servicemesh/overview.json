@@ -546,32 +546,23 @@
         "width": 6,
         "widget": {
           "title": "Server Response Bytes [MEAN]",
-          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'istio.io/service/server/response_bytes'\n| group_by 1m,\n    [value_response_bytes_percentile: percentile(value.response_bytes, 95)]\n| every 1m",
-                  "unitOverride": ""
+                  "prometheusQuery": "histogram_quantile(0.95, \n  rate(istio_io:service_server_response_bytes{container=\"k8s_container\"}[1m])\n)"
                 }
               }
             ],
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
