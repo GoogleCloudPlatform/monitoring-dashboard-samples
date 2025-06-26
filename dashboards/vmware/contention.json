@@ -308,7 +308,8 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": false,
-              "timeSeriesQueryLanguage": "fetch generic_node\n| metric\n    'external.googleapis.com/vmware/vcenter.host_system.memory.utilization'\n| group_by 1m, [value_utilization_max: max(value.utilization)]\n| every 1m\n| group_by [resource.node_id],\n    [value_utilization_max_max: max(value_utilization_max)]\n| top 1"
+              "prometheusQuery": "topk(\n  1,\n  max by(node_id) (\n    max_over_time(\n      external_googleapis_com:vmware_vcenter_host_system_memory_utilization{monitored_resource=\"generic_node\"}[1m]\n    )\n  )\n)\n",
+              "unitOverride": "%"
             }
           }
         }
