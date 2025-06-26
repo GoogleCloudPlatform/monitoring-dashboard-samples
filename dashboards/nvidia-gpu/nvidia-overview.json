@@ -41,7 +41,7 @@
                 "plotType": "STACKED_BAR",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n\nfetch gce_instance\n | metric 'agent.googleapis.com/gpu/utilization'\n | group_by [], [row_count: row_count()]\n | add [Platform: 'GCE']\n\n;\n\nfetch k8s_node\n | metric 'kubernetes.io/node/accelerator/duty_cycle'\n | group_by [], [row_count: row_count()]\n | add [Platform: 'GKE']\n\n} \n | union\n | group_by [Platform]\n"
+                  "prometheusQuery": "# GCE GPU utilization row count\nlabel_replace(\n  count(\n    agent_googleapis_com:gpu_utilization{monitored_resource=\"gce_instance\"}\n  ),\n  \"Platform\", \"GCE\", \"\", \"\"\n)\nor\n# GKE GPU duty_cycle row count\nlabel_replace(\n  count(\n    kubernetes_io:node_accelerator_duty_cycle{monitored_resource=\"k8s_node\"}\n  ),\n  \"Platform\", \"GKE\", \"\", \"\"\n)\n"
                 }
               }
             ],
@@ -81,7 +81,7 @@
                 "plotType": "STACKED_BAR",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n\nfetch gce_instance\n | metric 'agent.googleapis.com/gpu/utilization'\n | group_by [metric.model], [row_count: row_count()]\n | add [Platform: 'GCE']\n\n;\n\nfetch k8s_node\n | metric 'kubernetes.io/node/accelerator/duty_cycle'\n | group_by [metric.model], [row_count: row_count()]\n | add [Platform: 'GKE']\n\n} \n | union\n | group_by [metric.model]\n | map rename [Model: metric.model]"
+                  "prometheusQuery": "count by(model) (\n  agent_googleapis_com:gpu_utilization{monitored_resource=\"gce_instance\"}\n)\nor\ncount by(model) (\n  kubernetes_io:node_accelerator_duty_cycle{monitored_resource=\"k8s_node\"}\n)\n\n"
                 }
               }
             ],
@@ -99,13 +99,30 @@
         "widget": {
           "title": "Current Number of GPUs by Model and Runtime Platform (GCE/GKE)",
           "timeSeriesTable": {
-            "columnSettings": [],
+            "columnSettings": [
+              {
+                "column": "Platform",
+                "visible": true
+              },
+              {
+                "column": "Model",
+                "visible": true
+              },
+              {
+                "column": "model",
+                "visible": false
+              },
+              {
+                "column": "value",
+                "visible": true
+              }
+            ],
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "{\n\nfetch gce_instance\n | metric 'agent.googleapis.com/gpu/utilization'\n | group_by [metric.model], [row_count: row_count()]\n | add [Platform: 'GCE']\n | window(5m)\n;\n\nfetch k8s_node\n | metric 'kubernetes.io/node/accelerator/duty_cycle'\n | group_by [metric.model], [row_count: row_count()]\n | add [Platform: 'GKE']\n | window(5m)\n\n} \n | union\n | group_by [metric.model, Platform]\n | map rename [Model: metric.model]\n\n"
+                  "prometheusQuery": "label_replace(\n    # GCE\n    label_replace(\n        count by(model) (\n            agent_googleapis_com:gpu_utilization{monitored_resource=\"gce_instance\"}\n        ),\n        \"Platform\", \"GCE\", \"\", \"\"\n    )\n    or\n    # GKE\n    label_replace(\n        count by(model) (\n            kubernetes_io:node_accelerator_duty_cycle{monitored_resource=\"k8s_node\"}\n        ),\n        \"Platform\", \"GKE\", \"\", \"\"\n    ),\n    \"Model\", \"$1\", \"model\", \"(.*)\"\n)\n\n"
                 }
               }
             ],
@@ -129,7 +146,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n\nfetch gce_instance\n | metric 'agent.googleapis.com/gpu/utilization'\n | value [utilization: val()]\n | group_by [metric.model, metric.uuid]\n | map rename [gpu_id: metric.uuid]\n | add [Platform: 'GCE']\n\n\n;\n\nfetch k8s_node\n | metric 'kubernetes.io/node/accelerator/duty_cycle'\n | value [utilization: val()]\n | group_by [metric.model, metric.accelerator_id]\n | map rename [gpu_id: metric.accelerator_id]\n | add [Platform: 'GKE']\n\n}\n | union\n | group_by [], mean(val())"
+                  "prometheusQuery": "avg(\n  avg(agent_googleapis_com:gpu_utilization{monitored_resource=\"gce_instance\"}) by (model, uuid)\n  or\n  avg(kubernetes_io:node_accelerator_duty_cycle{monitored_resource=\"k8s_node\"}) by (model, accelerator_id)\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
@@ -159,7 +177,7 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Distribution (Heatmap) of GPU Utilization",
+          "title": "GPU Utilization",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -167,14 +185,16 @@
             },
             "dataSets": [
               {
-                "plotType": "HEATMAP",
+                "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n\nfetch gce_instance\n | metric 'agent.googleapis.com/gpu/utilization'\n | value [utilization: val()]\n | group_by [metric.model, metric.uuid]\n | map rename [gpu_id: metric.uuid]\n | add [Platform: 'GCE']\n\n\n;\n\nfetch k8s_node\n | metric 'kubernetes.io/node/accelerator/duty_cycle'\n | value [utilization: val()]\n | group_by [metric.model, metric.accelerator_id]\n | map rename [gpu_id: metric.accelerator_id]\n | add [Platform: 'GKE']\n\n}\n | union\n | distribution fixed_width(2).num_buckets(50)"
+                  "prometheusQuery": "label_replace(\n  sum by(model, uuid) (\n    agent_googleapis_com:gpu_utilization{monitored_resource=\"gce_instance\"}\n  ),\n  \"Platform\", \"GCE\", \"\", \"\"\n)\nor\nlabel_replace(\n  sum by(model, accelerator_id) (\n    kubernetes_io:node_accelerator_duty_cycle{monitored_resource=\"k8s_node\"}\n  ),\n  \"Platform\", \"GKE\", \"\", \"\"\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
             "thresholds": [],
+            "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
@@ -197,7 +217,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n\nfetch gce_instance\n | metric 'agent.googleapis.com/gpu/utilization'\n | value [utilization: val()]\n | group_by [metric.model, metric.uuid]\n | map rename [gpu_id: metric.uuid]\n | add [Platform: 'GCE']\n\n\n;\n\nfetch k8s_node\n | metric 'kubernetes.io/node/accelerator/duty_cycle'\n | value [utilization: val()]\n | group_by [metric.model, metric.accelerator_id]\n | map rename [gpu_id: metric.accelerator_id]\n | add [Platform: 'GKE']\n\n}\n | union\n | group_by [Platform], mean(val())\n"
+                  "prometheusQuery": "avg by(Platform) (\n    label_replace(\n        avg by(model, uuid) (\n            agent_googleapis_com:gpu_utilization{monitored_resource=\"gce_instance\"}\n        ),\n        \"Platform\", \"GCE\", \"\", \"\"\n    )\n    or\n    label_replace(\n        avg by(model, accelerator_id) (\n            kubernetes_io:node_accelerator_duty_cycle{monitored_resource=\"k8s_node\"}\n        ),\n        \"Platform\", \"GKE\", \"\", \"\"\n    )\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
@@ -226,7 +247,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n\nfetch gce_instance\n | metric 'agent.googleapis.com/gpu/utilization'\n | value [utilization: val()]\n | group_by [metric.model, metric.uuid]\n | map rename [gpu_id: metric.uuid]\n | add [Platform: 'GCE']\n\n\n;\n\nfetch k8s_node\n | metric 'kubernetes.io/node/accelerator/duty_cycle'\n | value [utilization: val()]\n | group_by [metric.model, metric.accelerator_id]\n | map rename [gpu_id: metric.accelerator_id]\n | add [Platform: 'GKE']\n\n}\n | union\n | map rename [Model: metric.model]\n | group_by [Model], mean(val())\n"
+                  "prometheusQuery": "avg by(model) (\n    avg by(model, uuid) (\n      agent_googleapis_com:gpu_utilization{monitored_resource=\"gce_instance\"}\n    )\n    or\n    avg by(model, accelerator_id) (\n      kubernetes_io:node_accelerator_duty_cycle{monitored_resource=\"k8s_node\"}\n    )\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
@@ -254,7 +276,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n\nfetch gce_instance\n | metric 'agent.googleapis.com/gpu/utilization'\n | value [utilization: val()]\n | group_by [metric.model, metric.uuid]\n | map rename [gpu_id: metric.uuid]\n | add [Platform: 'GCE']\n\n\n;\n\nfetch k8s_node\n | metric 'kubernetes.io/node/accelerator/duty_cycle'\n | value [utilization: val()]\n | group_by [metric.model, metric.accelerator_id]\n | map rename [gpu_id: metric.accelerator_id]\n | add [Platform: 'GKE']\n\n}\n | union\n | map rename [Model: metric.model]\n | group_by [Model, Platform], mean(val())\n"
+                  "prometheusQuery": "avg by(model, Platform) (\n  label_replace(\n    avg by(model, uuid) (\n        agent_googleapis_com:gpu_utilization{monitored_resource=\"gce_instance\"}\n    ),\n    \"Platform\", \"GCE\", \"\", \"\"\n  )\n  or\n  label_replace(\n    avg by(model, accelerator_id) (\n        kubernetes_io:node_accelerator_duty_cycle{monitored_resource=\"k8s_node\"}\n    ),\n    \"Platform\", \"GKE\", \"\", \"\"\n  )\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
@@ -283,7 +306,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n\nfetch gce_instance\n | metric 'agent.googleapis.com/gpu/utilization'\n | value [utilization: val()]\n | group_by [metric.model, metric.uuid, resource.instance_id]\n | map rename [GPU_ID: metric.uuid]\n | map rename [Instance_ID_or_Node_Name: resource.instance_id]\n | add [Platform: 'GCE']\n\n\n;\n\nfetch k8s_node\n | metric 'kubernetes.io/node/accelerator/duty_cycle'\n | value [utilization: val()]\n | group_by [metric.model, metric.accelerator_id, resource.node_name]\n | map rename [GPU_ID: metric.accelerator_id]\n | map rename [Instance_ID_or_Node_Name: resource.node_name]\n | add [Platform: 'GKE']\n\n}\n | union\n | map rename [Model: metric.model]\n | group_by [Instance_ID_or_Node_Name, Model, Platform, GPU_ID]\n"
+                  "prometheusQuery": "avg by(Instance_ID_or_Node_Name, model, Platform, GPU_ID) (\n  label_replace(\n    label_replace(\n        label_replace(\n            avg by(model, uuid, instance_id) (\n                agent_googleapis_com:gpu_utilization{monitored_resource=\"gce_instance\"}\n            ),\n            \"GPU_ID\", \"$1\", \"uuid\", \"(.*)\"\n        ),\n        \"Instance_ID_or_Node_Name\", \"$1\", \"instance_id\", \"(.*)\"\n    ),\n    \"Platform\", \"GCE\", \"\", \"\"\n  )\n  or\n  label_replace(\n    label_replace(\n        label_replace(\n            avg by(model, accelerator_id, node_name) (\n                kubernetes_io:node_accelerator_duty_cycle{monitored_resource=\"k8s_node\"}\n            ),\n            \"GPU_ID\", \"$1\", \"accelerator_id\", \"(.*)\"\n        ),\n        \"Instance_ID_or_Node_Name\", \"$1\", \"node_name\", \"(.*)\"\n    ),\n    \"Platform\", \"GKE\", \"\", \"\"\n  )\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
@@ -308,7 +332,8 @@
                 "minAlignmentPeriod": "60s",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "{\n\nfetch gce_instance\n | metric 'agent.googleapis.com/gpu/utilization'\n | value [utilization: val()]\n | group_by [metric.model, metric.uuid, resource.instance_id]\n | map rename [GPU_ID: metric.uuid]\n | map rename [Instance_ID_or_Node_Name: resource.instance_id]\n | add [Platform: 'GCE']\n\n\n;\n\nfetch k8s_node\n | metric 'kubernetes.io/node/accelerator/duty_cycle'\n | value [utilization: val()]\n | group_by [metric.model, metric.accelerator_id, resource.node_name]\n | map rename [GPU_ID: metric.accelerator_id]\n | map rename [Instance_ID_or_Node_Name: resource.node_name]\n | add [Platform: 'GKE']\n\n}\n | union\n | map rename [Model: metric.model]\n | group_by [Instance_ID_or_Node_Name, Model, Platform, GPU_ID]\n | mean_aligner(24h)"
+                  "prometheusQuery": "avg_over_time(\n    avg by(Instance_ID_or_Node_Name, model, Platform, GPU_ID) (\n        label_replace(\n            label_replace(\n                label_replace(\n                    avg by(model, uuid, instance_id) (\n                        agent_googleapis_com:gpu_utilization{monitored_resource=\"gce_instance\"}\n                    ),\n                    \"GPU_ID\", \"$1\", \"uuid\", \"(.*)\"\n                ),\n                \"Instance_ID_or_Node_Name\", \"$1\", \"instance_id\", \"(.*)\"\n            ),\n            \"Platform\", \"GCE\", \"\", \"\"\n        )\n        or\n        label_replace(\n            label_replace(\n                label_replace(\n                    avg by(model, accelerator_id, node_name) (\n                        kubernetes_io:node_accelerator_duty_cycle{monitored_resource=\"k8s_node\"}\n                    ),\n                    \"GPU_ID\", \"$1\", \"accelerator_id\", \"(.*)\"\n                ),\n                \"Instance_ID_or_Node_Name\", \"$1\", \"node_name\", \"(.*)\"\n            ),\n            \"Platform\", \"GKE\", \"\", \"\"\n        )\n    )[24h:]\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
@@ -332,7 +357,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n    {\n\n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | filter (metric.memory_state == 'used')\n    | group_by []\n    | add [Memory: 'Used']\n\n    ;\n\n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_used'\n    | group_by []\n    | add [Memory: 'Used']\n\n    }\n    | outer_join 0, 0\n    | add\n;\n\n    {\n\n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | group_by []\n    | add [Memory: 'Total']\n\n    ;\n\n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_total'\n    | group_by []\n    | add [Memory: 'Total']\n\n    }\n    | outer_join 0, 0\n    | add\n} | union"
+                  "prometheusQuery": "max by (Memory) (\n    label_replace(\n        label_replace(\n            sum(agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\", memory_state=\"used\"}),\n            \"Category\", \"A\", \"\", \"\"\n        )\n        or\n        label_replace(\n            sum(kubernetes_io:node_accelerator_memory_used{monitored_resource=\"k8s_node\"}),\n            \"Category\", \"B\", \"\", \"\"\n        )\n        or \n        label_replace(\n            sum(agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\", memory_state=\"used\"}) + sum(kubernetes_io:node_accelerator_memory_used{monitored_resource=\"k8s_node\"}),\n            \"Category\", \"A + B\", \"\", \"\"\n        ),\n        \"Memory\", \"Used\", \"\", \"\"\n    )\n    or\n    label_replace(\n        label_replace(\n            sum(agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\"}),\n            \"Category\", \"A\", \"\", \"\"\n        )\n        or\n        label_replace(\n            sum(kubernetes_io:node_accelerator_memory_total{monitored_resource=\"k8s_node\"}),\n            \"Category\", \"B\", \"\", \"\"\n        )\n        or\n        label_replace(\n            sum(agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\"}) + sum(kubernetes_io:node_accelerator_memory_total{monitored_resource=\"k8s_node\"}),\n            \"Category\", \"A + B\", \"\", \"\"\n        ),\n        \"Memory\", \"Total\", \"\", \"\"\n    )\n)",
+                  "unitOverride": "By"
                 }
               }
             ],
@@ -362,7 +388,7 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Distribution (Heatmap) of Memory Usage %",
+          "title": "Memory Usage %",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -370,14 +396,16 @@
             },
             "dataSets": [
               {
-                "plotType": "HEATMAP",
+                "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n    {\n        \n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | filter metric.memory_state == 'used'\n    | group_by [metric.model, metric.uuid, resource.instance_id]\n    | map rename [GPU_ID: metric.uuid]\n    | map rename [Instance_ID_or_Node_Name: resource.instance_id]\n    | add [Platform: 'GCE']\n\n    ;\n\n\n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | group_by [metric.model, metric.uuid, resource.instance_id]\n    | map rename [GPU_ID: metric.uuid]\n    | map rename [Instance_ID_or_Node_Name: resource.instance_id]\n    | add [Platform: 'GCE']\n\n    } | ratio | mul(100) |cast_units(\"%\")\n\n;\n    {\n        \n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_used'\n    | group_by [metric.model, metric.accelerator_id, resource.node_name]\n    | map rename [GPU_ID: metric.accelerator_id]\n    | map rename [Instance_ID_or_Node_Name: resource.node_name]\n    | add [Platform: 'GKE']\n\n    ;\n\n\n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_total'\n    | group_by [metric.model, metric.accelerator_id, resource.node_name]\n    | map rename [GPU_ID: metric.accelerator_id]\n    | map rename [Instance_ID_or_Node_Name: resource.node_name]\n    | add [Platform: 'GKE']\n\n    } | ratio | mul(100) |cast_units(\"%\")\n} \n| union \n| distribution fixed_width(2).num_buckets(50)"
+                  "prometheusQuery": "label_replace(\n    100 *\n    (\n        sum by(model, uuid, instance_id) (\n            agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\", memory_state=\"used\"}\n        )\n        /\n        (\n            sum by(model, uuid, instance_id) (\n                agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\"}\n            )\n            and\n            sum by(model, uuid, instance_id) (\n                agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\"}\n            ) > 0\n        )\n    ),\n    \"Platform\", \"GCE\", \"\", \"\"\n)\nor\nlabel_replace(\n    100 *\n    (\n        sum by(model, accelerator_id, node_name) (\n            kubernetes_io:node_accelerator_memory_used{monitored_resource=\"k8s_node\"}\n        )\n        /\n        (\n            sum by(model, accelerator_id, node_name) (\n                kubernetes_io:node_accelerator_memory_total{monitored_resource=\"k8s_node\"}\n            )\n            and\n            sum by(model, accelerator_id, node_name) (\n                kubernetes_io:node_accelerator_memory_total{monitored_resource=\"k8s_node\"}\n            ) > 0\n        )\n    ),\n    \"Platform\", \"GKE\", \"\", \"\"\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
             "thresholds": [],
+            "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
@@ -400,7 +428,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n    {\n        \n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | filter metric.memory_state == 'used'\n    | group_by []\n    | add [Platform: 'GCE']\n\n    ;\n\n\n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | group_by []\n    | add [Platform: 'GCE']\n\n    } | ratio | mul(100) |cast_units(\"%\")\n\n;\n    {\n        \n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_used'\n    | group_by []\n    | add [Platform: 'GKE']\n\n    ;\n\n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_total'\n    | group_by []\n    | add [Platform: 'GKE']\n\n    } | ratio | mul(100) |cast_units(\"%\")\n} \n| union "
+                  "prometheusQuery": "label_replace(\n  100 *\n  (\n    sum(agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\", memory_state=\"used\"})\n    /\n    (\n        sum(agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\"})\n        and\n        sum(agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\"}) != 0\n    )\n  ),\n  \"Platform\", \"GCE\", \"\", \"\"\n)\nor\nlabel_replace(\n  100 *\n  (\n    sum(kubernetes_io:node_accelerator_memory_used{monitored_resource=\"k8s_node\"})\n    /\n    (\n        sum(kubernetes_io:node_accelerator_memory_total{monitored_resource=\"k8s_node\"})\n        and\n        sum(kubernetes_io:node_accelerator_memory_total{monitored_resource=\"k8s_node\"}) != 0\n    )\n  ),\n  \"Platform\", \"GKE\", \"\", \"\"\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
@@ -429,7 +458,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n    {\n        \n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | filter metric.memory_state == 'used'\n    | group_by [metric.model]\n    | value [val: val()]\n\n    ;\n\n\n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_used'\n    | group_by [metric.model]\n    | value [val: val()]\n\n    } | union\n\n;\n    {\n        \n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | group_by [metric.model]\n    | value [val: val()]\n\n    ;\n\n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_total'\n    | group_by [metric.model]\n    | value [val: val()]\n\n    } | union\n} \n| ratio | mul(100) |cast_units(\"%\")"
+                  "prometheusQuery": "100 *\n(\n    sum by (model) (agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\", memory_state=\"used\"})\n    /\n    (\n        sum by (model) (agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\"})\n        and\n        sum by (model) (agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\"}) != 0\n    )\n)\nor\n100 *\n(\n    sum by (model) (kubernetes_io:node_accelerator_memory_used{monitored_resource=\"k8s_node\"})\n    /\n    (\n        sum by (model) (kubernetes_io:node_accelerator_memory_total{monitored_resource=\"k8s_node\"})\n        and\n        sum by (model) (kubernetes_io:node_accelerator_memory_total{monitored_resource=\"k8s_node\"}) != 0\n    )\n)",
+                  "unitOverride": "%"
                 }
               }
             ],
@@ -457,7 +487,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n        \nfetch gce_instance\n| metric 'agent.googleapis.com/gpu/memory/bytes_used'\n| filter metric.memory_state == 'used'\n| value [bytes_used: val()]\n| group_by [metric.model, metric.uuid, resource.instance_id]\n| map rename [GPU_ID: metric.uuid]\n| map rename [Instance_ID_or_Node_Name: resource.instance_id]\n| add [Platform: 'GCE']\n\n;\n        \nfetch k8s_node\n| metric 'kubernetes.io/node/accelerator/memory_used'\n| value [bytes_used: val()]\n| group_by [metric.model, metric.accelerator_id, resource.node_name]\n| map rename [GPU_ID: metric.accelerator_id]\n| map rename [Instance_ID_or_Node_Name: resource.node_name]\n| add [Platform: 'GKE']\n\n} | union"
+                  "prometheusQuery": "label_replace(\n  sum by(model, uuid, instance_id) (\n    agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\", memory_state=\"used\"}\n  ),\n  \"Platform\", \"GCE\", \"\", \"\"\n)\nor\nlabel_replace(\n  sum by(model, accelerator_id, node_name) (\n    kubernetes_io:node_accelerator_memory_used{monitored_resource=\"k8s_node\"}\n  ),\n  \"Platform\", \"GKE\", \"\", \"\"\n)\n",
+                  "unitOverride": "By"
                 }
               }
             ],
@@ -486,7 +517,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\n    {\n        \n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | filter metric.memory_state == 'used'\n    | group_by [metric.model, metric.uuid, resource.instance_id]\n    | map rename [GPU_ID: metric.uuid]\n    | map rename [Instance_ID_or_Node_Name: resource.instance_id]\n    | add [Platform: 'GCE']\n\n    ;\n\n\n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | group_by [metric.model, metric.uuid, resource.instance_id]\n    | map rename [GPU_ID: metric.uuid]\n    | map rename [Instance_ID_or_Node_Name: resource.instance_id]\n    | add [Platform: 'GCE']\n\n    } | ratio | mul(100) |cast_units(\"%\")\n\n;\n    {\n        \n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_used'\n    | group_by [metric.model, metric.accelerator_id, resource.node_name]\n    | map rename [GPU_ID: metric.accelerator_id]\n    | map rename [Instance_ID_or_Node_Name: resource.node_name]\n    | add [Platform: 'GKE']\n\n    ;\n\n\n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_total'\n    | group_by [metric.model, metric.accelerator_id, resource.node_name]\n    | map rename [GPU_ID: metric.accelerator_id]\n    | map rename [Instance_ID_or_Node_Name: resource.node_name]\n    | add [Platform: 'GKE']\n\n    } | ratio | mul(100) |cast_units(\"%\")\n} | union"
+                  "prometheusQuery": "label_replace(\n    100 *\n    (\n        sum by(model, uuid, instance_id) (\n            agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\", memory_state=\"used\"}\n        )\n        /\n        (\n            sum by(model, uuid, instance_id) (\n                agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\"}\n            )\n            and\n            sum by(model, uuid, instance_id) (\n                agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\"}\n            ) != 0\n        )\n    ),\n  \"Platform\", \"GCE\", \"\", \"\"\n)\nor\nlabel_replace(\n    100 *\n    (\n        sum by(model, accelerator_id, node_name) (\n            kubernetes_io:node_accelerator_memory_used{monitored_resource=\"k8s_node\"}\n        )\n        /\n        (\n            sum by(model, accelerator_id, node_name) (\n                kubernetes_io:node_accelerator_memory_total{monitored_resource=\"k8s_node\"}\n            )\n            and\n            sum by(model, accelerator_id, node_name) (\n                kubernetes_io:node_accelerator_memory_total{monitored_resource=\"k8s_node\"}\n            ) != 0\n        )\n    ),\n  \"Platform\", \"GKE\", \"\", \"\"\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
@@ -505,13 +537,55 @@
         "widget": {
           "title": "24hr Average Memory Usage % by GPU",
           "timeSeriesTable": {
-            "columnSettings": [],
+            "columnSettings": [
+              {
+                "column": "Platform",
+                "visible": true
+              },
+              {
+                "column": "node_name",
+                "visible": false
+              },
+              {
+                "column": "GPU_ID",
+                "visible": true
+              },
+              {
+                "column": "model",
+                "visible": false
+              },
+              {
+                "column": "Instance_ID_or_Node_Name",
+                "visible": true
+              },
+              {
+                "column": "accelerator_id",
+                "visible": false
+              },
+              {
+                "column": "instance_id",
+                "visible": false
+              },
+              {
+                "column": "uuid",
+                "visible": false
+              },
+              {
+                "column": "value",
+                "visible": true
+              },
+              {
+                "column": "Model",
+                "visible": true
+              }
+            ],
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "{\n    {\n        \n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | filter metric.memory_state == 'used'\n    | group_by [metric.model, metric.uuid, resource.instance_id]\n    | map rename [GPU_ID: metric.uuid]\n    | map rename [Instance_ID_or_Node_Name: resource.instance_id]\n    | add [Platform: 'GCE']\n\n    ;\n\n\n    fetch gce_instance\n    | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n    | group_by [metric.model, metric.uuid, resource.instance_id]\n    | map rename [GPU_ID: metric.uuid]\n    | map rename [Instance_ID_or_Node_Name: resource.instance_id]\n    | add [Platform: 'GCE']\n\n    } | ratio | mul(100) |cast_units(\"%\")\n\n;\n    {\n        \n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_used'\n    | group_by [metric.model, metric.accelerator_id, resource.node_name]\n    | map rename [GPU_ID: metric.accelerator_id]\n    | map rename [Instance_ID_or_Node_Name: resource.node_name]\n    | add [Platform: 'GKE']\n\n    ;\n\n\n    fetch k8s_node\n    | metric 'kubernetes.io/node/accelerator/memory_total'\n    | group_by [metric.model, metric.accelerator_id, resource.node_name]\n    | map rename [GPU_ID: metric.accelerator_id]\n    | map rename [Instance_ID_or_Node_Name: resource.node_name]\n    | add [Platform: 'GKE']\n\n    } | ratio | mul(100) |cast_units(\"%\")\n} \n| union \n| map rename [Model: metric.model]\n| mean_aligner(24h)"
+                  "prometheusQuery": "avg_over_time(\n    label_replace(\n        label_replace(\n            label_replace(\n                label_replace(\n                    100 *\n                    (\n                        sum by(model, uuid, instance_id) (\n                            agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\", memory_state=\"used\"}\n                        )\n                        /\n                        (\n                            sum by(model, uuid, instance_id) (\n                                agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\"}\n                            )\n                            and\n                            sum by(model, uuid, instance_id) (\n                                agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\"}\n                            ) > 0\n                        )\n                    ),\n                    \"GPU_ID\", \"$1\", \"uuid\", \"(.*)\"\n                ),\n                \"Instance_ID_or_Node_Name\", \"$1\", \"instance_id\", \"(.*)\"\n            ),\n            \"Platform\", \"GCE\", \"\", \"\"\n        )\n        or\n        label_replace(\n            label_replace(\n                label_replace(\n                    100 *\n                    (\n                        sum by(model, accelerator_id, node_name) (\n                            kubernetes_io:node_accelerator_memory_used{monitored_resource=\"k8s_node\"}\n                        )\n                        /\n                        (\n                        sum by(model, accelerator_id, node_name) (\n                            kubernetes_io:node_accelerator_memory_total{monitored_resource=\"k8s_node\"}\n                        )\n                        and\n                        sum by(model, accelerator_id, node_name) (\n                            kubernetes_io:node_accelerator_memory_total{monitored_resource=\"k8s_node\"}\n                        ) > 0\n                        )\n                    ),\n                    \"GPU_ID\", \"$1\", \"accelerator_id\", \"(.*)\"\n                ),\n                \"Instance_ID_or_Node_Name\", \"$1\", \"node_name\", \"(.*)\"\n            ),\n            \"Platform\", \"GKE\", \"\", \"\"\n        ),\n        \"Model\", \"$1\", \"model\", \"(.*)\"\n    )[24h:]\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
@@ -526,13 +600,87 @@
         "widget": {
           "title": "24hr Average Bytes of Memory Used by GPU",
           "timeSeriesTable": {
-            "columnSettings": [],
+            "columnSettings": [
+              {
+                "column": "cluster_name",
+                "visible": false
+              },
+              {
+                "column": "monitored_resource",
+                "visible": false
+              },
+              {
+                "column": "Platform",
+                "visible": true
+              },
+              {
+                "column": "project_id",
+                "visible": false
+              },
+              {
+                "column": "Model",
+                "visible": true
+              },
+              {
+                "column": "node_name",
+                "visible": false
+              },
+              {
+                "column": "GPU_ID",
+                "visible": true
+              },
+              {
+                "column": "location",
+                "visible": false
+              },
+              {
+                "column": "model",
+                "visible": false
+              },
+              {
+                "column": "Instance_ID_or_Node_Name",
+                "visible": true
+              },
+              {
+                "column": "accelerator_id",
+                "visible": false
+              },
+              {
+                "column": "make",
+                "visible": false
+              },
+              {
+                "column": "gpu_number",
+                "visible": false
+              },
+              {
+                "column": "instance_id",
+                "visible": false
+              },
+              {
+                "column": "zone",
+                "visible": false
+              },
+              {
+                "column": "memory_state",
+                "visible": false
+              },
+              {
+                "column": "uuid",
+                "visible": false
+              },
+              {
+                "column": "value",
+                "visible": true
+              }
+            ],
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "{\n        \nfetch gce_instance\n| metric 'agent.googleapis.com/gpu/memory/bytes_used'\n| filter metric.memory_state == 'used'\n| value [bytes_used: val()]\n| group_by [metric.model, metric.uuid, resource.instance_id]\n| map rename [GPU_ID: metric.uuid]\n| map rename [Instance_ID_or_Node_Name: resource.instance_id]\n| add [Platform: 'GCE']\n\n;\n        \nfetch k8s_node\n| metric 'kubernetes.io/node/accelerator/memory_used'\n| value [bytes_used: val()]\n| group_by [metric.model, metric.accelerator_id, resource.node_name]\n| map rename [GPU_ID: metric.accelerator_id]\n| map rename [Instance_ID_or_Node_Name: resource.node_name]\n| add [Platform: 'GKE']\n\n} \n| union \n| map rename [Model: metric.model]\n| mean_aligner(24h)"
+                  "prometheusQuery": "avg_over_time(\n    label_replace(\n        label_replace(\n            label_replace(\n                label_replace(\n                    kubernetes_io:node_accelerator_memory_used{monitored_resource=\"k8s_node\"},\n                    \"GPU_ID\", \"$1\", \"accelerator_id\", \"(.*)\"\n                ),\n                \"Instance_ID_or_Node_Name\", \"$1\", \"node_name\", \"(.*)\"\n            ),\n            \"Platform\", \"GKE\", \"\", \"\"\n        )\n        or\n        label_replace(\n            label_replace(\n                label_replace(\n                    agent_googleapis_com:gpu_memory_bytes_used{monitored_resource=\"gce_instance\", memory_state=\"used\"},\n                    \"GPU_ID\", \"$1\", \"uuid\", \"(.*)\"\n                ),\n                \"Instance_ID_or_Node_Name\", \"$1\", \"instance_id\", \"(.*)\"\n            ),\n            \"Platform\", \"GCE\", \"\", \"\"\n        ),\n        \"Model\", \"$1\", \"model\", \"(.*)\"\n    )[24h:]\n)\n",
+                  "unitOverride": "By"
                 }
               }
             ],
@@ -547,13 +695,70 @@
         "widget": {
           "title": "GCE GPU Process Utilization",
           "timeSeriesTable": {
-            "columnSettings": [],
+            "columnSettings": [
+              {
+                "column": "owner",
+                "visible": true
+              },
+              {
+                "column": "monitored_resource",
+                "visible": false
+              },
+              {
+                "column": "process",
+                "visible": true
+              },
+              {
+                "column": "pid",
+                "visible": true
+              },
+              {
+                "column": "uuid",
+                "visible": true
+              },
+              {
+                "column": "command",
+                "visible": true
+              },
+              {
+                "column": "gpu_number",
+                "visible": true
+              },
+              {
+                "column": "instance_id",
+                "visible": true
+              },
+              {
+                "column": "__name__",
+                "visible": false
+              },
+              {
+                "column": "project_id",
+                "visible": true
+              },
+              {
+                "column": "zone",
+                "visible": true
+              },
+              {
+                "column": "model",
+                "visible": true
+              },
+              {
+                "column": "command_line",
+                "visible": true
+              },
+              {
+                "column": "value",
+                "visible": true
+              }
+            ],
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/gpu/processes/utilization'"
+                  "prometheusQuery": "agent_googleapis_com:gpu_processes_utilization{monitored_resource=\"gce_instance\"}\n"
                 }
               }
             ],
@@ -580,13 +785,70 @@
         "widget": {
           "title": "GCE GPU Memory Usage",
           "timeSeriesTable": {
-            "columnSettings": [],
+            "columnSettings": [
+              {
+                "column": "owner",
+                "visible": true
+              },
+              {
+                "column": "monitored_resource",
+                "visible": false
+              },
+              {
+                "column": "process",
+                "visible": true
+              },
+              {
+                "column": "pid",
+                "visible": true
+              },
+              {
+                "column": "uuid",
+                "visible": true
+              },
+              {
+                "column": "command",
+                "visible": true
+              },
+              {
+                "column": "gpu_number",
+                "visible": true
+              },
+              {
+                "column": "instance_id",
+                "visible": true
+              },
+              {
+                "column": "__name__",
+                "visible": false
+              },
+              {
+                "column": "project_id",
+                "visible": true
+              },
+              {
+                "column": "zone",
+                "visible": true
+              },
+              {
+                "column": "model",
+                "visible": true
+              },
+              {
+                "column": "command_line",
+                "visible": true
+              },
+              {
+                "column": "value",
+                "visible": true
+              }
+            ],
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric 'agent.googleapis.com/gpu/processes/utilization'"
+                  "prometheusQuery": "agent_googleapis_com:gpu_processes_utilization{monitored_resource=\"gce_instance\"}\n"
                 }
               }
             ],
