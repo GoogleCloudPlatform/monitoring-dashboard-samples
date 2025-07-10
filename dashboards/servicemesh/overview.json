@@ -545,7 +545,7 @@
         "height": 4,
         "width": 6,
         "widget": {
-          "title": "Server Response Bytes [MEAN]",
+          "title": "Server Response Bytes [95TH PERCENTILE]",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -556,7 +556,15 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "histogram_quantile(0.95, \n  rate(istio_io:service_server_response_bytes{monitored_resource=\"k8s_container\"}[1m])\n)"
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"istio.io/service/server/response_bytes\" resource.type=\"k8s_container\"",
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_DELTA",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": [],
+                      "alignmentPeriod": "60s"
+                    }
+                  }
                 }
               }
             ],
