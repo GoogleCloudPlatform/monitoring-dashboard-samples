@@ -1,58 +1,114 @@
 {
   "displayName": "VPC Flow Logs Monitoring",
+  "dashboardFilters": [],
+  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 4,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "Ingested log volume",
+          "text": {
+            "content": "These charts represent the volume of logs ingested for VPC Flow logs. The chart below provides the total volume of logs ingested for reference.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "Log counts",
+          "text": {
+            "content": "These 2 charts represent the count of log entries for VPC Flow logs. The chart below provides the total count of log entries for reference.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Log bytes ingested for gce_subnetwork by label.resource_type [SUM]",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"logging.googleapis.com/billing/bytes_ingested\" resource.type=\"global\" metric.label.\"resource_type\"=\"gce_subnetwork\"",
                     "secondaryAggregation": {
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_MEAN"
                     }
                   }
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "yPos": 2
+        }
       },
       {
-        "height": 4,
+        "yPos": 8,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "gce_subnetwork log entries count [SUM]",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "aggregation": {
+                      "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_SUM"
                     },
                     "filter": "metric.type=\"logging.googleapis.com/log_entry_count\" resource.type=\"gce_subnetwork\""
@@ -60,65 +116,163 @@
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 2
+        }
       },
       {
-        "height": 4,
+        "yPos": 24,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Log bytes ingested by label.resource_type [SUM]",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"logging.googleapis.com/billing/bytes_ingested\" resource.type=\"global\"",
                     "secondaryAggregation": {
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_MEAN"
                     }
                   }
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "yPos": 6
+        }
       },
       {
-        "height": 4,
+        "yPos": 24,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
         "widget": {
-          "title": "Predicted Max VPC Flow Logs Count [SUM]",
+          "title": "Log entries count [SUM]",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_SUM"
+                    },
+                    "filter": "metric.type=\"logging.googleapis.com/log_entry_count\" resource.type=\"global\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 40,
+        "height": 8,
+        "width": 48,
+        "widget": {
+          "title": "VPC Flow logs predicted count",
+          "text": {
+            "content": "The metric predicted_max_vpc_flow_logs_count is used for the two charts below. They can be used to help estimate VPC Flow log counts and volume. For more details see the metric [vpc_flow/predicted_max_vpc_flow_logs_count ](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-networking).",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "VPC Flow Logs Volume",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum(\n    avg_over_time(\n        increase(\n            networking_googleapis_com:vpc_flow_predicted_max_vpc_flow_logs_count{monitored_resource=\"gce_subnetwork\"}[1m]\n        )[1w:]\n    )\n)\n* 1080\n* 60 * 24 * 30\n\n\n",
+                  "unitOverride": "By"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Predicted Max VPC Flow Logs Count [SUM]",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
                         "resource.label.\"project_id\""
@@ -130,108 +284,13 @@
                 }
               }
             ],
+            "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 12
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Log entries count [SUM]",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "perSeriesAligner": "ALIGN_SUM"
-                    },
-                    "filter": "metric.type=\"logging.googleapis.com/log_entry_count\" resource.type=\"global\""
-                  }
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 6
-      },
-      {
-        "height": 2,
-        "widget": {
-          "text": {
-            "content": "These charts represent the volume of logs ingested for VPC Flow logs. The chart below provides the total volume of logs ingested for reference.",
-            "format": "RAW"
-          },
-          "title": "Ingested log volume"
-        },
-        "width": 6
-      },
-      {
-        "height": 2,
-        "widget": {
-          "text": {
-            "content": "These 2 charts represent the count of log entries for VPC Flow logs. The chart below provides the total count of log entries for reference.",
-            "format": "RAW"
-          },
-          "title": "Log counts"
-        },
-        "width": 6,
-        "xPos": 6
-      },
-      {
-        "height": 2,
-        "widget": {
-          "text": {
-            "content": "The metric predicted_max_vpc_flow_logs_count is used for the two charts below. They can be used to help estimate VPC Flow log counts and volume. For more details see the metric [vpc_flow/predicted_max_vpc_flow_logs_count ](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-networking).",
-            "format": "MARKDOWN"
-          },
-          "title": "VPC Flow logs predicted count"
-        },
-        "width": 12,
-        "yPos": 10
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "VPC Flow Logs Volume",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_subnetwork\n| metric 'networking.googleapis.com/vpc_flow/predicted_max_vpc_flow_logs_count'\n| align mean_aligner(1w)\n| every 1w\n| group_by [],\n    [value_predicted_max_vpc_flow_logs_count_aggregate:\n       aggregate(value.predicted_max_vpc_flow_logs_count)]\n| value\n    [value_predicted_max_vpc_flow_logs_count_aggregate_mul:\n       mul(value_predicted_max_vpc_flow_logs_count_aggregate, 1080)]\n| value\n    [value_predicted_max_vpc_flow_logs_count_aggregate_mul_cast_units:\n       cast_units(value_predicted_max_vpc_flow_logs_count_aggregate_mul, 'By')]\n| value\n    [value_predicted_max_vpc_flow_logs_count_aggregate_mul_cast_units_mul:\n       mul(value_predicted_max_vpc_flow_logs_count_aggregate_mul_cast_units,\n         60 * 24 * 30)]\n| value\n    [value_predicted_max_vpc_flow_logs_count_aggregate_mul_cast_units_mul_mul:\n       mul(\n         value_predicted_max_vpc_flow_logs_count_aggregate_mul_cast_units_mul,\n         1.0)]"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 6,
-        "yPos": 12
+        }
       }
     ]
   }
