@@ -1,75 +1,95 @@
 {
   "displayName": "Dataflow logs",
+  "dashboardFilters": [],
+  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 9,
+        "height": 4,
+        "width": 48,
+        "widget": {
+          "title": "Dataflow log volume",
+          "text": {
+            "content": " ",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 4,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "Dataflow Byte Count [30d]",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": false,
+              "prometheusQuery": "sum(\n  increase(\n    logging_googleapis_com:byte_count{\n      monitored_resource=\"dataflow_job\"\n    }[30d]\n  )\n)\n",
+              "unitOverride": "By"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 12,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "Adjustable log volume chart",
+          "text": {
+            "content": "Use this chart to view the Dataflow  log volume over time. Use the time range selector to adjust the time range.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 20,
+        "height": 36,
+        "width": 24,
         "widget": {
           "title": "Dataflow Byte Count",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
                 "plotType": "STACKED_AREA",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch dataflow_job\n| metric 'logging.googleapis.com/byte_count'\n| group_by [project_id],sum(value.byte_count)\n| every 1d"
+                  "prometheusQuery": "sum by (project_id) (\n  increase(\n    logging_googleapis_com:byte_count{\n      monitored_resource=\"dataflow_job\"\n    }[1d]\n  )\n)\n",
+                  "unitOverride": "By"
                 }
               }
             ],
             "thresholds": [],
-            "timeshiftDuration": "0s",
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 5
-      },
-      {
-        "height": 1,
-        "widget": {
-          "text": {
-            "content": " ",
-            "format": "MARKDOWN"
-          },
-          "title": "Dataflow log volume"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 0
-      },
-      {
-        "height": 2,
-        "widget": {
-          "scorecard": {
-            "blankView": {},
-            "timeSeriesQuery": {
-              "timeSeriesQueryLanguage": "fetch dataflow_job\n| metric 'logging.googleapis.com/byte_count'\n| group_by [], sum(value.byte_count)\n| every 30d"
-            }
-          },
-          "title": "Dataflow Byte Count [30d]"
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 1
-      },
-      {
-        "height": 2,
-        "widget": {
-          "text": {
-            "content": "Use this chart to view the Dataflow  log volume over time. Use the time range selector to adjust the time range.",
-            "format": "RAW"
-          },
-          "title": "Adjustable log volume chart"
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 3
+        }
       }
     ]
   }
