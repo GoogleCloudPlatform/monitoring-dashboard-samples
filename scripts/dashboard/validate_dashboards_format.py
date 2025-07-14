@@ -80,6 +80,10 @@ def map_json_files(directory, path_map):
     if not 'displayName' in dash_dict:
       raise JsonFormattingError("{} is missing displayName field".format(json_file))
 
+    # Check if 'category' field exists at the top level
+    if 'category' in dash_dict:
+      raise JsonFormattingError("Category field is not allowed at the top level of sample dashboard JSON files. Found in {}".format(json_file))
+
     file_name_parts = json_file.split('.')
     check_json_file_name(json_file, file_name_parts)
 
