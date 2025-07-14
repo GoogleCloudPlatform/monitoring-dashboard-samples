@@ -261,7 +261,7 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "CPU Usage per Node - Top 50",
+          "title": "CPU Usage per Node",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -272,7 +272,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "avg_over_time(kubernetes_io:node_cpu_allocatable_utilization{monitored_resource=\"k8s_node\", ${project_id}, ${cluster_name}, ${location}}[1m])\n*\navg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\", ${project_id}, ${cluster_name}, ${location}}[1m])"
+                  "prometheusQuery": "avg_over_time(kubernetes_io:node_cpu_allocatable_utilization{monitored_resource=\"k8s_node\", ${project_id}, ${cluster_name}, ${location}}[${__interval}])\n*\navg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\", ${project_id}, ${cluster_name}, ${location}}[${__interval}])"
                 }
               }
             ],
@@ -289,7 +289,7 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Memory Usage per Node - Top 50",
+          "title": "Memory Usage per Node",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -300,7 +300,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (node_name) (\n  avg_over_time(kubernetes_io:node_memory_used_bytes{\n    monitored_resource=\"k8s_node\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }[1m])\n)\n",
+                  "prometheusQuery": "sum by (node_name) (\n  avg_over_time(kubernetes_io:node_memory_used_bytes{\n    monitored_resource=\"k8s_node\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }[${__interval}])\n)\n",
                   "unitOverride": "By"
                 }
               }
@@ -557,7 +557,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(kubernetes_io:node_network_received_bytes_count{\n  monitored_resource=\"k8s_node\",\n  ${project_id},\n  ${location},\n  ${cluster_name}\n}[1m])\n",
+                  "prometheusQuery": "rate(kubernetes_io:node_network_received_bytes_count{\n  monitored_resource=\"k8s_node\",\n  ${project_id},\n  ${location},\n  ${cluster_name}\n}[${__interval}])\n",
                   "unitOverride": "By/s"
                 }
               }
@@ -587,7 +587,7 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Transmit bandwidth per node - Top 50",
+          "title": "Transmit bandwidth per node",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -598,7 +598,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(kubernetes_io:node_network_sent_bytes_count{\n  monitored_resource=\"k8s_node\",\n  ${project_id},\n  ${location},\n  ${cluster_name}\n}[1m])\n",
+                  "prometheusQuery": "rate(kubernetes_io:node_network_sent_bytes_count{\n  monitored_resource=\"k8s_node\",\n  ${project_id},\n  ${location},\n  ${cluster_name}\n}[${__interval}])\n",
                   "unitOverride": "By/s"
                 }
               }
@@ -615,7 +615,7 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Received packet count per node - Top 50",
+          "title": "Received packet count per node",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -626,7 +626,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (node_name) (\n  rate(networking_googleapis_com:node_flow_ingress_packets_count{\n    monitored_resource=\"k8s_node\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }[1m])\n)\n",
+                  "prometheusQuery": "sum by (node_name) (\n  rate(networking_googleapis_com:node_flow_ingress_packets_count{\n    monitored_resource=\"k8s_node\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }[${__interval}])\n)\n",
                   "unitOverride": "1/s"
                 }
               }
@@ -656,7 +656,7 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Transmitted packet count per node - Top 50",
+          "title": "Transmitted packet count per node",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -667,7 +667,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (node_name) (\n  rate(networking_googleapis_com:node_flow_egress_packets_count{\n    monitored_resource=\"k8s_node\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }[1m])\n)\n",
+                  "prometheusQuery": "sum by (node_name) (\n  rate(networking_googleapis_com:node_flow_egress_packets_count{\n    monitored_resource=\"k8s_node\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }[${__interval}])\n)\n",
                   "unitOverride": "1/s"
                 }
               }
