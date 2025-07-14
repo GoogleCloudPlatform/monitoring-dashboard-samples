@@ -23,7 +23,7 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "prometheusQuery": "sum by (project_id, location, cluster, condition, status) (\n  avg_over_time(kubernetes_io:anthos_kube_node_status_condition_gauge{monitored_resource=\"prometheus_target\"}[1m])\n)"
+                "prometheusQuery": "sum by (project_id, location, cluster, condition, status) (\n  avg_over_time(kubernetes_io:anthos_kube_node_status_condition_gauge[1m])\n)"
               }
             }
           ],
@@ -47,7 +47,7 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "prometheusQuery": "rate(kubernetes_io:node_cpu_core_usage_time{monitored_resource=\"k8s_node\"}[1m])\n"
+                "prometheusQuery": "rate(kubernetes_io:anthos_node_cpu_core_usage_time{monitored_resource=\"k8s_node\"}[1m])\n"
               }
             }
           ],
@@ -127,7 +127,7 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "prometheusQuery": "avg_over_time(kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\"}[1m])\n"
+                "prometheusQuery": "avg_over_time(kubernetes_io:anthos_node_memory_allocatable_bytes{monitored_resource=\"k8s_node\"}[1m])\n"
               }
             }
           ],
@@ -151,14 +151,14 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "prometheusQuery": "sum by (project_id, location, cluster_name, node_name, device) (\n  avg_over_time(kubernetes_io:node_filesystem_free_bytes{monitored_resource=\"k8s_node\"}[1m])\n)"
+                "prometheusQuery": "sum by (project_id, location, cluster_name, node_name, device) (\n  avg_over_time(kubernetes_io:anthos_node_filesystem_free_bytes{monitored_resource=\"k8s_node\"}[1m])\n)"
               }
             },
             {
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "prometheusQuery": "sum by (project_id, location, cluster, instance, device) (\n  avg_over_time(kubernetes_io:node_filesystem_free_bytes_gauge{monitored_resource=\"prometheus_target\"}[1m])\n)"
+                "prometheusQuery": "sum by (project_id, location, cluster, instance, device) (\n  avg_over_time(kubernetes_io:anthos_node_filesystem_free_bytes_gauge[1m])\n)"
               }
             }
           ],
@@ -189,7 +189,7 @@
                     "groupByFields": [],
                     "perSeriesAligner": "ALIGN_MEAN"
                   },
-                  "filter": "metric.type=\"kubernetes.io/node/memory/allocatable_utilization\" resource.type=\"k8s_node\""
+                  "filter": "metric.type=\"kubernetes.io/anthos/node/memory/allocatable_utilization\" resource.type=\"k8s_node\""
                 }
               }
             }
@@ -221,7 +221,7 @@
                     "groupByFields": [],
                     "perSeriesAligner": "ALIGN_MEAN"
                   },
-                  "filter": "metric.type=\"kubernetes.io/node/cpu/allocatable_utilization\" resource.type=\"k8s_node\""
+                  "filter": "metric.type=\"kubernetes.io/anthos/node/cpu/allocatable_utilization\" resource.type=\"k8s_node\""
                 }
               }
             }
