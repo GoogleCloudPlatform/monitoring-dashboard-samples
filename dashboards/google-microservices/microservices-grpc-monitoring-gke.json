@@ -60,7 +60,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(\n    sum by (opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n        increase(custom_googleapis_com:opencensus_grpc_io_client_started_rpcs{\n            monitored_resource=\"k8s_container\"\n        }[1m])\n    )\n    -\n    sum by (opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n        increase(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{\n            monitored_resource=\"k8s_container\"\n        }[1m])\n    )\n)\nand\n(\n    sum by (opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n        increase(custom_googleapis_com:opencensus_grpc_io_client_started_rpcs{\n            monitored_resource=\"k8s_container\"\n        }[1m])\n    )\n    -\n    sum by (opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n        increase(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{\n            monitored_resource=\"k8s_container\"\n        }[1m])\n    )\n) >= 0\n\n"
+                  "prometheusQuery": "(\n    sum by (opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n        increase(custom_googleapis_com:opencensus_grpc_io_client_started_rpcs{\n            monitored_resource=\"k8s_container\"\n        }[1m])\n    )\n    -\n    sum by (opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n        increase(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{\n            monitored_resource=\"k8s_container\"\n        }[1m])\n    )\n) >= 0\n\n"
                 }
               }
             ],
@@ -696,7 +696,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(\n  sum by(grpc_server_method, opencensus_task, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_server_started_rpcs{\n      monitored_resource=\"k8s_container\"\n    }[1m])\n  )\n  -\n  sum by(grpc_server_method, opencensus_task, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{\n      monitored_resource=\"k8s_container\"\n    }[1m])\n  )\n)\nand\n(\n  sum by(grpc_server_method, opencensus_task, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_server_started_rpcs{\n      monitored_resource=\"k8s_container\"\n    }[1m])\n  )\n  -\n  sum by(grpc_server_method, opencensus_task, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{\n      monitored_resource=\"k8s_container\"\n    }[1m])\n  ) >= 0\n)\n"
+                  "prometheusQuery": "(\n  sum by(grpc_server_method, opencensus_task, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_server_started_rpcs{\n      monitored_resource=\"k8s_container\"\n    }[1m])\n  )\n  -\n  sum by(grpc_server_method, opencensus_task, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{\n      monitored_resource=\"k8s_container\"\n    }[1m])\n  )\n) >= 0\n"
                 }
               }
             ],
@@ -1033,6 +1033,7 @@
             },
             "dataSets": [
               {
+                "legendTemplate": "99 percentile",
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
@@ -1049,6 +1050,7 @@
                 }
               },
               {
+                "legendTemplate": "95 percentile",
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
@@ -1065,6 +1067,7 @@
                 }
               },
               {
+                "legendTemplate": "50 percentile",
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
@@ -1081,6 +1084,7 @@
                 }
               },
               {
+                "legendTemplate": "mean",
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
