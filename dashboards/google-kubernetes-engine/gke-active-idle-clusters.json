@@ -38,7 +38,8 @@
                 "minAlignmentPeriod": "60s",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "label_replace(\n  (\n    sum by (cluster_name, location, project_id) (\n      increase(kubernetes_io:container_cpu_core_usage_time{\n        monitored_resource=\"k8s_container\",\n        namespace_name!~\"^(kube-system|istio-system|gatekeeper-system|gke-system)$\"\n      }[7d])\n    )\n    /\n    (\n      604800 *\n      sum by (cluster_name, location, project_id) (\n        avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\"}[7d])\n      )\n    )\n  ) * 100,\n  \"cluster_status\", \"running\", \"\", \"\"\n)\nand on (cluster_name, location, project_id)\n(\n  count by (cluster_name, location, project_id) (\n    avg_over_time(kubernetes_io:container_uptime{\n      monitored_resource=\"k8s_container\",\n      namespace_name=\"kube-system\"\n    }[7d])\n  ) > 0\n)\n"
+                  "prometheusQuery": "label_replace(\n  (\n    sum by (cluster_name, location, project_id) (\n      increase(kubernetes_io:container_cpu_core_usage_time{\n        monitored_resource=\"k8s_container\",\n        namespace_name!~\"^(kube-system|istio-system|gatekeeper-system|gke-system)$\"\n      }[7d])\n    )\n    /\n    (\n      604800 *\n      sum by (cluster_name, location, project_id) (\n        avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\"}[7d])\n      )\n    )\n  ) * 100,\n  \"cluster_status\", \"running\", \"\", \"\"\n)\nand on (cluster_name, location, project_id)\n(\n  count by (cluster_name, location, project_id) (\n    avg_over_time(kubernetes_io:container_uptime{\n      monitored_resource=\"k8s_container\",\n      namespace_name=\"kube-system\"\n    }[7d])\n  ) > 0\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
