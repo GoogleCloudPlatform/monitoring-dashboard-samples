@@ -1,5 +1,6 @@
 {
   "displayName": "Anthos Cluster Pod Status",
+  "dashboardFilters": [],
   "gridLayout": {
     "columns": "2",
     "widgets": [
@@ -7,6 +8,7 @@
         "title": "Number of Restarts per Container",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -14,10 +16,11 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/anthos/container/restart_count'\n| align delta(2m)\n| every 2m\n| group_by\n    [resource.project_id, resource.location, resource.cluster_name,\n     resource.container_name],\n    [value_restart_count_aggregate: aggregate(value.restart_count)]"
+                "prometheusQuery": "sum by (project_id, location, cluster_name, container_name) (\n  rate(kubernetes_io:anthos_container_restart_count_sum{monitored_resource=\"k8s_container\"}[2m])\n)\n"
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -29,6 +32,7 @@
         "title": "Container Memory Usage Per Container",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -36,10 +40,11 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/anthos/container/memory/used_bytes'\n| filter (metric.memory_type == 'non-evictable')\n| group_by 1m, [value_used_bytes_mean: mean(value.used_bytes)]\n| every 1m\n"
+                "prometheusQuery": "avg_over_time(\n  kubernetes_io:anthos_container_memory_used_bytes{monitored_resource=\"k8s_container\", memory_type=\"non-evictable\"}[1m]\n)"
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -51,6 +56,7 @@
         "title": "Container CPU Usage Per Container",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -58,10 +64,11 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/anthos/container/cpu/core_usage_time'\n| align rate(1m)\n| every 1m"
+                "prometheusQuery": "rate(kubernetes_io:anthos_container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[1m])\n"
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -73,6 +80,7 @@
         "title": "Network ingress Per Pod (Bytes)",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -80,10 +88,11 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch k8s_pod\n| metric 'kubernetes.io/anthos/pod/network/received_bytes_count'\n| align rate(1m)\n| every 1m\n"
+                "prometheusQuery": "rate(kubernetes_io:anthos_pod_network_received_bytes_count{monitored_resource=\"k8s_pod\"}[1m])\n"
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -95,6 +104,7 @@
         "title": "Network Egress Per Pod (Bytes)",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -102,10 +112,11 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch k8s_pod\n| metric 'kubernetes.io/anthos/pod/network/sent_bytes_count'\n| align rate(1m)\n| every 1m\n"
+                "prometheusQuery": "rate(kubernetes_io:anthos_pod_network_sent_bytes_count{monitored_resource=\"k8s_pod\"}[1m])\n"
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -117,6 +128,7 @@
         "title": "Pod Count by Phase",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -124,10 +136,18 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | metric 'kubernetes.io/anthos/kube_pod_status_phase'\n  | add [cluster: resource.cluster_name]\n  | group_by 1m, [value_phase_mean: mean(value.kube_pod_status_phase)]\n  | every 1m\n  | group_by [metric.phase, resource.project_id, resource.location, cluster],\n      [value_phase_mean_aggregate: aggregate(value_phase_mean)]\n; fetch prometheus_target\n  | metric 'kubernetes.io/anthos/kube_pod_status_phase/gauge'\n  | add [cluster: resource.cluster]\n  | group_by 1m, [value_phase_mean: mean(value.gauge)]\n  | every 1m\n  | group_by [metric.phase, resource.project_id, resource.location, cluster],\n      [value_phase_mean_aggregate: aggregate(value_phase_mean)] }\n| union"
+                "prometheusQuery": "sum by (phase, project_id, location, cluster_name) (\n  avg_over_time(kubernetes_io:anthos_kube_pod_status_phase{monitored_resource=\"k8s_container\"}[1m])\n)\n\n"
+              }
+            },
+            {
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "prometheusQuery": "sum by (phase, project_id, location, cluster) (\n  avg_over_time(kubernetes_io:anthos_kube_pod_status_phase_gauge[1m])\n)"
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -139,6 +159,7 @@
         "title": "Kubernetes Container - Memory Request Utilization",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -146,10 +167,12 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/anthos/container/memory/request_utilization'\n| group_by 1m, [value_request_utilization_mean: mean(value.request_utilization)]\n| every 1m\n| scale '%'"
+                "prometheusQuery": "100 * avg_over_time(kubernetes_io:anthos_container_memory_request_utilization{monitored_resource=\"k8s_container\"}[1m])\n",
+                "unitOverride": "%"
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -161,6 +184,7 @@
         "title": "Kubernetes Container - Memory Limit Utilization",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -168,10 +192,12 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/anthos/container/memory/limit_utilization'\n| group_by 1m, [value_limit_utilization_mean: mean(value.limit_utilization)]\n| every 1m\n| scale '%'"
+                "prometheusQuery": "avg_over_time(kubernetes_io:anthos_container_memory_limit_utilization{monitored_resource=\"k8s_container\"}[1m]) * 100\n",
+                "unitOverride": "%"
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -183,6 +209,7 @@
         "title": "Kubernetes Container - CPU Request Utilization",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -190,10 +217,12 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/anthos/container/cpu/request_utilization'\n| group_by 1m, [value_request_utilization_mean: mean(value.request_utilization)]\n| every 1m\n| scale '%'"
+                "prometheusQuery": "avg_over_time(kubernetes_io:anthos_container_cpu_request_utilization{monitored_resource=\"k8s_container\"}[1m]) * 100\n",
+                "unitOverride": "%"
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -205,6 +234,7 @@
         "title": "Kubernetes Container - CPU Limit Utilization",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -212,10 +242,12 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch k8s_container\n| metric 'kubernetes.io/anthos/container/cpu/limit_utilization'\n| group_by 1m, [value_limit_utilization_mean: mean(value.limit_utilization)]\n| every 1m\n| scale '%'"
+                "prometheusQuery": "avg_over_time(kubernetes_io:anthos_container_cpu_limit_utilization{monitored_resource=\"k8s_container\"}[1m]) * 100\n",
+                "unitOverride": "%"
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
@@ -227,6 +259,7 @@
         "title": "Kubernetes Pod - Volume Utilization",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
@@ -234,10 +267,12 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch k8s_pod\n| metric 'kubernetes.io/anthos/pod/volume/utilization'\n| group_by 1m, [value_utilization_mean: mean(value.utilization)]\n| every 1m\n| scale '%'"
+                "prometheusQuery": "avg_over_time(kubernetes_io:anthos_pod_volume_utilization{monitored_resource=\"k8s_pod\"}[1m]) * 100\n",
+                "unitOverride": "%"
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
