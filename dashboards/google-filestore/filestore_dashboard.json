@@ -1,56 +1,18 @@
 {
   "displayName": "Filestore Monitoring Dashboard",
   "dashboardFilters": [],
+  "labels": {},
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
       {
-        "xPos": 0,
-        "yPos": 16,
-        "width": 12,
         "height": 16,
-        "widget": {
-          "title": "Free bytes [MEAN]",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"file.googleapis.com/nfs/server/free_bytes\" resource.type=\"filestore_instance\""
-                  }
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "xPos": 0,
-        "yPos": 0,
         "width": 12,
-        "height": 16,
         "widget": {
           "title": "Used bytes [MEAN]",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -59,11 +21,10 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
                     "filter": "metric.type=\"file.googleapis.com/nfs/server/used_bytes\" resource.type=\"filestore_instance\""
@@ -74,83 +35,6 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "xPos": 0,
-        "yPos": 48,
-        "width": 12,
-        "height": 16,
-        "widget": {
-          "title": "Free disk space percent [MEAN]",
-          "timeSeriesTable": {
-            "columnSettings": [
-              {
-                "column": "value",
-                "visible": false
-              }
-            ],
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"file.googleapis.com/nfs/server/free_bytes_percent\" resource.type=\"filestore_instance\""
-                  }
-                }
-              }
-            ],
-            "metricVisualization": "NUMBER"
-          }
-        }
-      },
-      {
-        "xPos": 24,
-        "yPos": 0,
-        "width": 12,
-        "height": 16,
-        "widget": {
-          "title": "Bytes read [MEAN]",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"file.googleapis.com/nfs/server/read_bytes_count\" resource.type=\"filestore_instance\"",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -158,13 +42,13 @@
       },
       {
         "xPos": 12,
-        "yPos": 0,
-        "width": 12,
         "height": 16,
+        "width": 12,
         "widget": {
           "title": "Bytes written [MEAN]",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -173,17 +57,15 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"file.googleapis.com/nfs/server/write_bytes_count\" resource.type=\"filestore_instance\"",
                     "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_MEAN"
                     }
                   }
@@ -193,7 +75,6 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -201,13 +82,13 @@
       },
       {
         "xPos": 24,
-        "yPos": 16,
-        "width": 12,
         "height": 16,
+        "width": 12,
         "widget": {
-          "title": "Average read latency [MEAN]",
+          "title": "Bytes read [MEAN]",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -216,14 +97,17 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_MEAN"
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_RATE"
                     },
-                    "filter": "metric.type=\"file.googleapis.com/nfs/server/average_read_latency\" resource.type=\"filestore_instance\""
+                    "filter": "metric.type=\"file.googleapis.com/nfs/server/read_bytes_count\" resource.type=\"filestore_instance\"",
+                    "secondaryAggregation": {
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
                   }
                 }
               }
@@ -231,21 +115,20 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 12,
         "yPos": 16,
-        "width": 12,
         "height": 16,
+        "width": 12,
         "widget": {
-          "title": "Average write latency [MEAN]",
+          "title": "Free bytes [MEAN]",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -254,11 +137,47 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"file.googleapis.com/nfs/server/free_bytes\" resource.type=\"filestore_instance\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "xPos": 12,
+        "height": 16,
+        "width": 12,
+        "widget": {
+          "title": "Average write latency [MEAN]",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
                     "filter": "metric.type=\"file.googleapis.com/nfs/server/average_write_latency\" resource.type=\"filestore_instance\""
@@ -269,21 +188,21 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
+        "yPos": 16,
         "xPos": 24,
-        "yPos": 32,
-        "width": 12,
         "height": 16,
+        "width": 12,
         "widget": {
-          "title": "Disk read operation count [MEAN]",
+          "title": "Average read latency [MEAN]",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -292,19 +211,13 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"file.googleapis.com/nfs/server/read_ops_count\" resource.type=\"filestore_instance\"",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_MEAN"
-                    }
+                    },
+                    "filter": "metric.type=\"file.googleapis.com/nfs/server/average_read_latency\" resource.type=\"filestore_instance\""
                   }
                 }
               }
@@ -312,117 +225,28 @@
             "thresholds": [],
             "timeshiftDuration": "0s",
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 12,
         "yPos": 32,
+        "height": 16,
         "width": 12,
-        "height": 16,
-        "widget": {
-          "title": "Disk write operation count [MEAN]",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"file.googleapis.com/nfs/server/write_ops_count\" resource.type=\"filestore_instance\"",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "xPos": 12,
-        "yPos": 48,
-        "width": 24,
-        "height": 16,
-        "widget": {
-          "title": "Filestore Instance - Metadata operations count [MEAN]",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "measures": [],
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "apiSource": "DEFAULT_CLOUD",
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"file.googleapis.com/nfs/server/metadata_ops_count\" resource.type=\"filestore_instance\"",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "xPos": 0,
-        "yPos": 32,
-        "width": 12,
-        "height": 16,
         "widget": {
           "title": "Used space percent [MEAN]",
           "timeSeriesTable": {
+            "columnSettings": [],
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
                 "timeSeriesQuery": {
+                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
                     "filter": "metric.type=\"file.googleapis.com/nfs/server/used_bytes_percent\" resource.type=\"filestore_instance\"",
@@ -440,14 +264,170 @@
         }
       },
       {
-        "xPos": 0,
-        "yPos": 64,
-        "width": 36,
+        "yPos": 32,
+        "xPos": 12,
         "height": 16,
+        "width": 12,
+        "widget": {
+          "title": "Disk write operation count [MEAN]",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"file.googleapis.com/nfs/server/write_ops_count\" resource.type=\"filestore_instance\"",
+                    "secondaryAggregation": {
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 32,
+        "xPos": 24,
+        "height": 16,
+        "width": 12,
+        "widget": {
+          "title": "Disk read operation count [MEAN]",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"file.googleapis.com/nfs/server/read_ops_count\" resource.type=\"filestore_instance\"",
+                    "secondaryAggregation": {
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "height": 16,
+        "width": 12,
+        "widget": {
+          "title": "Free disk space percent [MEAN]",
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "column": "value",
+                "visible": true
+              }
+            ],
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"file.googleapis.com/nfs/server/free_bytes_percent\" resource.type=\"filestore_instance\""
+                  }
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "xPos": 12,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Filestore Instance - Metadata operations count [MEAN]",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"file.googleapis.com/nfs/server/metadata_ops_count\" resource.type=\"filestore_instance\"",
+                    "secondaryAggregation": {
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 64,
+        "height": 16,
+        "width": 36,
         "widget": {
           "title": "Total used bytes (data + snapshots)",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -455,38 +435,44 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{\nfetch filestore_instance\n| metric 'file.googleapis.com/nfs/server/used_bytes'\n| group_by 1m, [value_used_bytes_mean: mean(value.used_bytes)]\n| every 1m\n| group_by [resource.instance_name],\n    [value_used_bytes_mean_aggregate: aggregate(value_used_bytes_mean)]\n;\nfetch filestore_instance\n| metric 'file.googleapis.com/nfs/server/snapshots_used_bytes'\n| group_by 1m,\n    [value_snapshots_used_bytes_mean: mean(value.snapshots_used_bytes)]\n| every 1m\n| group_by [resource.instance_name],\n    [value_snapshots_used_bytes_mean_aggregate:\n       aggregate(value_snapshots_used_bytes_mean)]\n} \n| outer_join 0\n| add",
-                  "unitOverride": ""
+                  "prometheusQuery": "sum by (instance_name) (\n  avg_over_time(file_googleapis_com:nfs_server_used_bytes{monitored_resource=\"filestore_instance\"}[1m])\n)\n+\nsum by (instance_name) (\n  avg_over_time(file_googleapis_com:nfs_server_snapshots_used_bytes{monitored_resource=\"filestore_instance\"}[1m])\n)\n",
+                  "unitOverride": "By"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 0,
         "yPos": 80,
-        "width": 36,
         "height": 16,
+        "width": 36,
         "widget": {
           "title": "Total used bytes (data + snapshots)",
           "timeSeriesTable": {
             "columnSettings": [
               {
+                "displayName": "resource.instance_name",
+                "alignment": "LEFT",
+                "column": "instance_name",
+                "visible": true
+              },
+              {
                 "column": "value",
-                "visible": false
+                "visible": true
               }
             ],
             "dataSets": [
               {
+                "minAlignmentPeriod": "60s",
                 "timeSeriesQuery": {
-                  "outputFullDuration": true,
-                  "timeSeriesQueryLanguage": "{\nfetch filestore_instance\n| metric 'file.googleapis.com/nfs/server/used_bytes'\n| group_by 1m, [value_used_bytes_mean: mean(value.used_bytes)]\n| every 1m\n| group_by [resource.instance_name],\n    [value_used_bytes_mean_aggregate: aggregate(value_used_bytes_mean)]\n;\nfetch filestore_instance\n| metric 'file.googleapis.com/nfs/server/snapshots_used_bytes'\n| group_by 1m,\n    [value_snapshots_used_bytes_mean: mean(value.snapshots_used_bytes)]\n| every 1m\n| group_by [resource.instance_name],\n    [value_snapshots_used_bytes_mean_aggregate:\n       aggregate(value_snapshots_used_bytes_mean)]\n} \n| outer_join 0\n| add   "
+                  "outputFullDuration": false,
+                  "prometheusQuery": "sum by (instance_name) (\n  avg_over_time(file_googleapis_com:nfs_server_used_bytes{monitored_resource=\"filestore_instance\"}[1m])\n)\n+\nsum by (instance_name) (\n  avg_over_time(file_googleapis_com:nfs_server_snapshots_used_bytes{monitored_resource=\"filestore_instance\"}[1m])\n)",
+                  "unitOverride": "By"
                 }
               }
             ],
@@ -495,6 +481,5 @@
         }
       }
     ]
-  },
-  "labels": {}
+  }
 }
