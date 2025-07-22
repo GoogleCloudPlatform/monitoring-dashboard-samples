@@ -1,5 +1,6 @@
 {
   "displayName": "HTTP/S LB Backend Services",
+  "dashboardFilters": [],
   "gridLayout": {
     "columns": "2",
     "widgets": [
@@ -7,15 +8,18 @@
         "title": "Backend Request Count by Code Class",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
             {
               "minAlignmentPeriod": "60s",
               "plotType": "LINE",
+              "targetAxis": "Y1",
               "timeSeriesQuery": {
                 "timeSeriesFilter": {
                   "aggregation": {
+                    "alignmentPeriod": "60s",
                     "crossSeriesReducer": "REDUCE_SUM",
                     "groupByFields": [
                       "resource.label.\"url_map_name\"",
@@ -24,12 +28,12 @@
                     ],
                     "perSeriesAligner": "ALIGN_RATE"
                   },
-                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_request_count\" resource.type=\"https_lb_rule\"",
-                  "secondaryAggregation": {}
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_request_count\" resource.type=\"https_lb_rule\""
                 }
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "scale": "LINEAR"
@@ -40,15 +44,18 @@
         "title": "Backend Request Count by Path",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
             {
               "minAlignmentPeriod": "60s",
               "plotType": "LINE",
+              "targetAxis": "Y1",
               "timeSeriesQuery": {
                 "timeSeriesFilter": {
                   "aggregation": {
+                    "alignmentPeriod": "60s",
                     "crossSeriesReducer": "REDUCE_SUM",
                     "groupByFields": [
                       "resource.label.\"url_map_name\"",
@@ -57,13 +64,12 @@
                     ],
                     "perSeriesAligner": "ALIGN_RATE"
                   },
-                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_request_count\" resource.type=\"https_lb_rule\"",
-                  "secondaryAggregation": {}
-                },
-                "unitOverride": "1"
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_request_count\" resource.type=\"https_lb_rule\""
+                }
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "scale": "LINEAR"
@@ -74,16 +80,19 @@
         "title": "Error Rate",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
             {
               "plotType": "LINE",
+              "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch https_lb_rule::loadbalancing.googleapis.com/https/backend_request_count\n| { t_0:\n      filter metric.response_code_class = 500\n      | align delta()\n      | group_by [resource.backend_target_name],\n          [value_backend_request_count_aggregate:\n             aggregate(value.backend_request_count)]\n  ; t_1:\n      ident\n      | align delta()\n      | group_by [resource.backend_target_name],\n          [value_backend_request_count_aggregate:\n             aggregate(value.backend_request_count)] }\n| outer_join [0]\n| value\n    [t_0_value_backend_request_count_aggregate_div:\n       div(t_0.value_backend_request_count_aggregate,\n         t_1.value_backend_request_count_aggregate)]"
+                "prometheusQuery": "(\n  sum by (backend_target_name) (\n    increase(loadbalancing_googleapis_com:https_backend_request_count{response_code_class=\"500\",monitored_resource=\"https_lb_rule\",}[1m])\n  )\n  /\n  sum by (backend_target_name) (\n     increase(loadbalancing_googleapis_com:https_backend_request_count{monitored_resource=\"https_lb_rule\",}[1m])\n  )\n)\n"
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "scale": "LINEAR"
@@ -94,16 +103,20 @@
         "title": "Error Count by Path and Code",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
             {
               "plotType": "LINE",
+              "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch https_lb_rule::loadbalancing.googleapis.com/https/backend_request_count\n| filter metric.response_code_class = 500\n| align delta()\n| group_by\n    [resource.matched_url_path_rule, resource.backend_target_name,\n     metric.response_code],\n    [value_backend_request_count_aggregate:\n       aggregate(value.backend_request_count)]"
+                "prometheusQuery": "sum by (\n  matched_url_path_rule,\n  backend_target_name,\n  response_code\n) (\n  increase(\n    loadbalancing_googleapis_com:https_backend_request_count{response_code_class=\"500\", monitored_resource=\"https_lb_rule\"}[1m]\n  )\n)\n",
+                "unitOverride": "1"
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "scale": "LINEAR"
@@ -114,15 +127,18 @@
         "title": "Backend Latency",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
             {
               "minAlignmentPeriod": "60s",
               "plotType": "LINE",
+              "targetAxis": "Y1",
               "timeSeriesQuery": {
                 "timeSeriesFilter": {
                   "aggregation": {
+                    "alignmentPeriod": "60s",
                     "crossSeriesReducer": "REDUCE_PERCENTILE_95",
                     "groupByFields": [
                       "resource.label.\"url_map_name\"",
@@ -130,43 +146,44 @@
                     ],
                     "perSeriesAligner": "ALIGN_DELTA"
                   },
-                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_latencies\" resource.type=\"https_lb_rule\"",
-                  "secondaryAggregation": {}
-                },
-                "unitOverride": "ms"
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_latencies\" resource.type=\"https_lb_rule\""
+                }
               }
             },
             {
               "minAlignmentPeriod": "60s",
               "plotType": "LINE",
+              "targetAxis": "Y1",
               "timeSeriesQuery": {
                 "timeSeriesFilter": {
                   "aggregation": {
+                    "alignmentPeriod": "60s",
                     "crossSeriesReducer": "REDUCE_PERCENTILE_05",
+                    "groupByFields": [],
                     "perSeriesAligner": "ALIGN_DELTA"
                   },
-                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_latencies\" resource.type=\"https_lb_rule\"",
-                  "secondaryAggregation": {}
-                },
-                "unitOverride": "ms"
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_latencies\" resource.type=\"https_lb_rule\""
+                }
               }
             },
             {
               "minAlignmentPeriod": "60s",
               "plotType": "LINE",
+              "targetAxis": "Y1",
               "timeSeriesQuery": {
                 "timeSeriesFilter": {
                   "aggregation": {
+                    "alignmentPeriod": "60s",
                     "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                    "groupByFields": [],
                     "perSeriesAligner": "ALIGN_DELTA"
                   },
-                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_latencies\" resource.type=\"https_lb_rule\"",
-                  "secondaryAggregation": {}
-                },
-                "unitOverride": "ms"
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_latencies\" resource.type=\"https_lb_rule\""
+                }
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "scale": "LINEAR"
@@ -177,15 +194,18 @@
         "title": "Backend P50 Latency by Path",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
             {
               "minAlignmentPeriod": "60s",
               "plotType": "LINE",
+              "targetAxis": "Y1",
               "timeSeriesQuery": {
                 "timeSeriesFilter": {
                   "aggregation": {
+                    "alignmentPeriod": "60s",
                     "crossSeriesReducer": "REDUCE_PERCENTILE_50",
                     "groupByFields": [
                       "resource.label.\"url_map_name\"",
@@ -194,12 +214,12 @@
                     ],
                     "perSeriesAligner": "ALIGN_DELTA"
                   },
-                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_latencies\" resource.type=\"https_lb_rule\"",
-                  "secondaryAggregation": {}
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_latencies\" resource.type=\"https_lb_rule\""
                 }
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "scale": "LINEAR"
@@ -210,15 +230,18 @@
         "title": "Backend Request Bytes",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
             {
               "minAlignmentPeriod": "60s",
               "plotType": "LINE",
+              "targetAxis": "Y1",
               "timeSeriesQuery": {
                 "timeSeriesFilter": {
                   "aggregation": {
+                    "alignmentPeriod": "60s",
                     "crossSeriesReducer": "REDUCE_SUM",
                     "groupByFields": [
                       "resource.label.\"url_map_name\"",
@@ -226,13 +249,12 @@
                     ],
                     "perSeriesAligner": "ALIGN_RATE"
                   },
-                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_request_bytes_count\" resource.type=\"https_lb_rule\"",
-                  "secondaryAggregation": {}
-                },
-                "unitOverride": "By"
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_request_bytes_count\" resource.type=\"https_lb_rule\""
+                }
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "scale": "LINEAR"
@@ -243,15 +265,18 @@
         "title": "Backend Request Bytes by Path",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
             {
               "minAlignmentPeriod": "60s",
               "plotType": "LINE",
+              "targetAxis": "Y1",
               "timeSeriesQuery": {
                 "timeSeriesFilter": {
                   "aggregation": {
+                    "alignmentPeriod": "60s",
                     "crossSeriesReducer": "REDUCE_SUM",
                     "groupByFields": [
                       "resource.label.\"url_map_name\"",
@@ -260,12 +285,12 @@
                     ],
                     "perSeriesAligner": "ALIGN_RATE"
                   },
-                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_request_bytes_count\" resource.type=\"https_lb_rule\"",
-                  "secondaryAggregation": {}
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_request_bytes_count\" resource.type=\"https_lb_rule\""
                 }
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "scale": "LINEAR"
@@ -276,15 +301,18 @@
         "title": "Backend Response Bytes",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
             {
               "minAlignmentPeriod": "60s",
               "plotType": "LINE",
+              "targetAxis": "Y1",
               "timeSeriesQuery": {
                 "timeSeriesFilter": {
                   "aggregation": {
+                    "alignmentPeriod": "60s",
                     "crossSeriesReducer": "REDUCE_SUM",
                     "groupByFields": [
                       "resource.label.\"url_map_name\"",
@@ -292,13 +320,12 @@
                     ],
                     "perSeriesAligner": "ALIGN_RATE"
                   },
-                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_response_bytes_count\" resource.type=\"https_lb_rule\"",
-                  "secondaryAggregation": {}
-                },
-                "unitOverride": "By"
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_response_bytes_count\" resource.type=\"https_lb_rule\""
+                }
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "scale": "LINEAR"
@@ -309,15 +336,18 @@
         "title": "Backend Response Bytes by Path",
         "xyChart": {
           "chartOptions": {
+            "displayHorizontal": false,
             "mode": "COLOR"
           },
           "dataSets": [
             {
               "minAlignmentPeriod": "60s",
               "plotType": "LINE",
+              "targetAxis": "Y1",
               "timeSeriesQuery": {
                 "timeSeriesFilter": {
                   "aggregation": {
+                    "alignmentPeriod": "60s",
                     "crossSeriesReducer": "REDUCE_SUM",
                     "groupByFields": [
                       "resource.label.\"url_map_name\"",
@@ -326,12 +356,12 @@
                     ],
                     "perSeriesAligner": "ALIGN_RATE"
                   },
-                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_response_bytes_count\" resource.type=\"https_lb_rule\"",
-                  "secondaryAggregation": {}
+                  "filter": "metric.type=\"loadbalancing.googleapis.com/https/backend_response_bytes_count\" resource.type=\"https_lb_rule\""
                 }
               }
             }
           ],
+          "thresholds": [],
           "timeshiftDuration": "0s",
           "yAxis": {
             "scale": "LINEAR"
