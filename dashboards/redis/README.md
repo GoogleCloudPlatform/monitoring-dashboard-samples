@@ -7,7 +7,7 @@
 |Redis Usage|
 |:-----------------------|
 |Filename: [redis-usage.json](redis-usage.json)|
-|This dashboard has 6 charts that are built for Redis running in GCP Memorystore built around the [Memorystore for Redis metrics](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-redis), including `Memory Usage`, `Keys`, `Connected Clients`, `Average TTL`, and `Calls`.|
+|This dashboard has 6 charts that are built for Redis running in GCP Memorystore built around the [Memorystore for Redis metrics](https://cloud.google.com/monitoring/api/metrics_gcp_p_z#gcp-redis), including `Memory Usage`, `Keys`, `Connected Clients`, `Average TTL`, and `Calls`.|
 
 &nbsp;
 
