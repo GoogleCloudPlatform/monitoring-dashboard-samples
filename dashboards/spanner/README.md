@@ -2,7 +2,7 @@
 
 #### Notes
 
-- The full list of Cloud Spanner Job metrics can be found [here](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-spanner).
+- The full list of Cloud Spanner Job metrics can be found [here](https://cloud.google.com/monitoring/api/metrics_gcp_p_z#gcp-spanner).
 
 | Cloud Spanner |
 |:------------------|
