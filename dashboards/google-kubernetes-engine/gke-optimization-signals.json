@@ -51,7 +51,7 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": false,
-              "prometheusQuery": "100 * (\n  sum (\n    kubernetes_io:container_cpu_request_cores{\n      monitored_resource=\"k8s_container\",\n      ${project_id},\n      ${location},\n      ${cluster_name},\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\"\n    }\n  )\n  /\n  sum (\n    kubernetes_io:node_cpu_allocatable_cores{\n      monitored_resource=\"k8s_node\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  )\n)",
+              "prometheusQuery": "100 * (\n  sum (\n    kubernetes_io:container_cpu_request_cores{\n      monitored_resource=\"k8s_container\",\n      ${project_id},\n      ${location},\n      ${cluster_name},\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\"\n    }\n  )\n  /\n  sum (\n    kubernetes_io:node_cpu_allocatable_cores{\n      monitored_resource=\"k8s_node\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  ) > 0\n)",
               "unitOverride": "%"
             }
           }
@@ -68,7 +68,7 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": false,
-              "prometheusQuery": "sum (\n  kubernetes_io:container_memory_request_bytes{\n    monitored_resource=\"k8s_container\",\n    ${project_id},\n    ${location},\n    ${cluster_name},\n    namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\"\n  }\n)\n/\nsum (\n  kubernetes_io:node_memory_allocatable_bytes{\n    monitored_resource=\"k8s_node\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }\n)\n* 100\n",
+              "prometheusQuery": "100 * sum (\n  kubernetes_io:container_memory_request_bytes{\n    monitored_resource=\"k8s_container\",\n    ${project_id},\n    ${location},\n    ${cluster_name},\n    namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\"\n  }\n)\n/\nsum (\n  kubernetes_io:node_memory_allocatable_bytes{\n    monitored_resource=\"k8s_node\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }\n) > 0\n",
               "unitOverride": "%"
             }
           }
@@ -109,7 +109,7 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": false,
-              "prometheusQuery": "(\n  sum  (\n    kubernetes_io:autoscaler_container_cpu_per_replica_recommended_request_cores{\n      monitored_resource=\"k8s_scale\",\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  )\n)\n/\n(\n  sum (\n    kubernetes_io:container_cpu_request_cores{\n      monitored_resource=\"k8s_container\",\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  )\n)\n* 100\n",
+              "prometheusQuery": "(\n  sum  (\n    kubernetes_io:autoscaler_container_cpu_per_replica_recommended_request_cores{\n      monitored_resource=\"k8s_scale\",\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  )\n)\n/\n(\n  sum (\n    kubernetes_io:container_cpu_request_cores{\n      monitored_resource=\"k8s_container\",\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  ) > 0\n)\n* 100\n",
               "unitOverride": "%"
             }
           }
@@ -126,7 +126,7 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": false,
-              "prometheusQuery": "(\n  sum(\n    kubernetes_io:autoscaler_container_memory_per_replica_recommended_request_bytes{\n      monitored_resource=\"k8s_scale\",\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  )\n)\n/\n(\n  sum(\n    kubernetes_io:container_memory_request_bytes{\n      monitored_resource=\"k8s_container\",\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  )\n)\n* 100\n",
+              "prometheusQuery": "(\n  sum(\n    kubernetes_io:autoscaler_container_memory_per_replica_recommended_request_bytes{\n      monitored_resource=\"k8s_scale\",\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  )\n)\n/\n(\n  sum(\n    kubernetes_io:container_memory_request_bytes{\n      monitored_resource=\"k8s_container\",\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  ) > 0\n)\n* 100\n",
               "unitOverride": "%"
             }
           }
@@ -173,7 +173,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (project_id, location, cluster_name) (\n  kubernetes_io:container_cpu_request_cores{\n    monitored_resource=\"k8s_container\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }\n)\n/\n(\n  sum by (project_id, location, cluster_name) (\n    kubernetes_io:node_cpu_allocatable_cores{\n      monitored_resource=\"k8s_node\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  ) and\n  sum by (project_id, location, cluster_name) (\n    kubernetes_io:node_cpu_allocatable_cores{\n      monitored_resource=\"k8s_node\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  ) > 0\n)\n"
+                  "prometheusQuery": "sum by (project_id, location, cluster_name) (\n  kubernetes_io:container_cpu_request_cores{\n    monitored_resource=\"k8s_container\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }\n)\n/\n(\n  sum by (project_id, location, cluster_name) (\n    kubernetes_io:node_cpu_allocatable_cores{\n      monitored_resource=\"k8s_node\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  ) > 0\n)\n"
                 }
               }
             ],
@@ -202,7 +202,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (project_id, location, cluster_name) (\n  kubernetes_io:container_memory_request_bytes{\n    monitored_resource=\"k8s_container\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }\n)\n/ \n(\n  sum by (project_id, location, cluster_name) (\n    kubernetes_io:node_memory_allocatable_bytes{\n      monitored_resource=\"k8s_node\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  ) and\n  sum by (project_id, location, cluster_name) (\n    kubernetes_io:node_memory_allocatable_bytes{\n      monitored_resource=\"k8s_node\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  ) > 0\n)\n"
+                  "prometheusQuery": "sum by (project_id, location, cluster_name) (\n  kubernetes_io:container_memory_request_bytes{\n    monitored_resource=\"k8s_container\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }\n)\n/ \n(\n  sum by (project_id, location, cluster_name) (\n    kubernetes_io:node_memory_allocatable_bytes{\n      monitored_resource=\"k8s_node\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  ) > 0\n)\n"
                 }
               }
             ],
@@ -231,7 +231,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (cluster_name) (\n  kubernetes_io:autoscaler_container_cpu_per_replica_recommended_request_cores{\n    monitored_resource=\"k8s_scale\",\n    namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }\n)\n/\n(\n  sum by (cluster_name) (\n    kubernetes_io:container_cpu_request_cores{\n      monitored_resource=\"k8s_container\",\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  ) and \n  sum by (cluster_name) (\n    kubernetes_io:container_cpu_request_cores{\n      monitored_resource=\"k8s_container\",\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  ) > 0\n)\n"
+                  "prometheusQuery": "sum by (cluster_name) (\n  kubernetes_io:autoscaler_container_cpu_per_replica_recommended_request_cores{\n    monitored_resource=\"k8s_scale\",\n    namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }\n)\n/\n(\n  sum by (cluster_name) (\n    kubernetes_io:container_cpu_request_cores{\n      monitored_resource=\"k8s_container\",\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  ) > 0\n)\n"
                 }
               }
             ],
@@ -260,7 +260,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (cluster_name) (\n  kubernetes_io:autoscaler_container_memory_per_replica_recommended_request_bytes{\n    monitored_resource=\"k8s_scale\",\n    namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }\n)\n/\n(\n  sum by (cluster_name) (\n    kubernetes_io:container_memory_request_bytes{\n      monitored_resource=\"k8s_container\",\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  )\n  and\n  sum by (cluster_name) (\n    kubernetes_io:container_memory_request_bytes{\n      monitored_resource=\"k8s_container\",\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  ) > 0\n)\n"
+                  "prometheusQuery": "sum by (cluster_name) (\n  kubernetes_io:autoscaler_container_memory_per_replica_recommended_request_bytes{\n    monitored_resource=\"k8s_scale\",\n    namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n    ${project_id},\n    ${location},\n    ${cluster_name}\n  }\n)\n/\n(\n  sum by (cluster_name) (\n    kubernetes_io:container_memory_request_bytes{\n      monitored_resource=\"k8s_container\",\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\",\n      ${project_id},\n      ${location},\n      ${cluster_name}\n    }\n  ) > 0\n)\n"
                 }
               }
             ],
