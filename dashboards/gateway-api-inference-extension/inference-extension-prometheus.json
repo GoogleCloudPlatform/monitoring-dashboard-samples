@@ -38,6 +38,8 @@
         "height": 20,
         "width": 48,
         "widget": {
+          "title": "",
+          "id": "",
           "text": {
             "content": "### Charts\n#### Application Load Balancer Metrics\n\n* Tracks the request and latency of external and internal application load balancers.\n* Please refer to the [public page](https://cloud.google.com/load-balancing/docs/metrics) for complete list of Application Load Balancer metrics.\n\n#### Inferece Gateway Metrics\n* Tracks the performance of inference model and inference pool. \n* Please refer to the [official documentation](https://github.com/kubernetes-sigs/gateway-api-inference-extension/blob/main/site-src/guides/metrics.md) for more details of underlying metrics used in the dashboard.\n\n#### Model Server Metrics\n* Tracks the performance of model servers, including token throughput, request latency, time per output token latency and time to first token latency. \n* Charts are only populated if the model server is exporting metrics.\n* You can navigate to the detail dashboard for model servers under the integration tab (e.g. [vLLM](https://console.cloud.google.com/monitoring/dashboards/integration/vllm.vllm-prometheus)). \n\n### How to use:\n\n#### Inference Pool has high queue length and kv-cache utilization\n\n* **Filter**: Use the filter dropdowns above to drill down to a single cluster / location / namespace / Load Balancer.\n* **Identify issues**: Review the *Inference Pool* section for overview of high-level metrics like queue length and kv-cache utilization.\n* **Investigate**: Review *Request / s* charts.\n* **Analyze**: Examine the chart to see if the issue is caused by increasing number of requests and cause saturation of resources.\n* **Decision**: Follow the [Configure autoscaling](https://cloud.google.com/kubernetes-engine/docs/how-to/customize-gke-inference-gateway-configurations#autoscaling) to autoscales your workloads.\n\n",
             "format": "MARKDOWN",
@@ -694,11 +696,13 @@
         "width": 48,
         "widget": {
           "title": "Build Info",
+          "id": "",
           "timeSeriesTable": {
             "columnSettings": [],
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
                 "timeSeriesQuery": {
                   "outputFullDuration": true,
                   "timeSeriesFilter": {
@@ -715,10 +719,12 @@
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
                     "filter": "metric.type=\"prometheus.googleapis.com/inference_extension_info/gauge\" resource.type=\"prometheus_target\""
-                  }
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
+            "displayColumnType": false,
             "metricVisualization": "NUMBER"
           }
         }
@@ -866,16 +872,23 @@
         "width": 16,
         "widget": {
           "title": "Request Error / s",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR"
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "outputFullDuration": false,
                   "prometheusQuery": "sum by (error_code, model_name, target_model_name) (rate(inference_model_request_error_total[${__interval}])) or on() vector(0)\n",
                   "unitOverride": "1/s"
                 }
@@ -883,6 +896,7 @@
             ],
             "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -1278,16 +1292,23 @@
         "width": 16,
         "widget": {
           "title": "Output Tokens / s",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR"
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "outputFullDuration": false,
                   "prometheusQuery": "sum by (pod, model_name)(rate(inference_model_output_tokens_sum{}[${__interval}]))",
                   "unitOverride": "1/s"
                 }
@@ -1295,6 +1316,7 @@
             ],
             "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -1307,16 +1329,23 @@
         "width": 16,
         "widget": {
           "title": "Input Tokens / s",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR"
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "outputFullDuration": false,
                   "prometheusQuery": "sum by (pod, model_name)(rate(inference_model_input_tokens_sum{}[${__interval}]))",
                   "unitOverride": "1/s"
                 }
@@ -1324,6 +1353,7 @@
             ],
             "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -1599,7 +1629,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.99,rate(inference_extension_prefix_indexer_hit_bytes_bucket[${__interval}]))",
+                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(inference_extension_prefix_indexer_hit_bytes_bucket[${__interval}])))",
                   "unitOverride": "By"
                 }
               },
@@ -1612,7 +1642,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.95,rate(inference_extension_prefix_indexer_hit_bytes_bucket[${__interval}]))",
+                  "prometheusQuery": "histogram_quantile(0.95, sum by(le) (rate(inference_extension_prefix_indexer_hit_bytes_bucket[${__interval}])))",
                   "unitOverride": "By"
                 }
               },
@@ -1625,7 +1655,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.90,rate(inference_extension_prefix_indexer_hit_bytes_bucket[${__interval}]))",
+                  "prometheusQuery": "histogram_quantile(0.90, sum by(le) (rate(inference_extension_prefix_indexer_hit_bytes_bucket[${__interval}])))",
                   "unitOverride": "By"
                 }
               },
@@ -1638,7 +1668,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.50,rate(inference_extension_prefix_indexer_hit_bytes_bucket[${__interval}]))",
+                  "prometheusQuery": "histogram_quantile(0.50, sum by(le) (rate(inference_extension_prefix_indexer_hit_bytes_bucket[${__interval}])))",
                   "unitOverride": "By"
                 }
               }
@@ -1653,6 +1683,62 @@
       },
       {
         "yPos": 215,
+        "height": 15,
+        "width": 24,
+        "widget": {
+          "title": "Scheduler E2E Latency",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "p99",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(inference_extension_scheduler_e2e_duration_seconds_bucket[${__interval}])))\n",
+                  "unitOverride": "s"
+                }
+              },
+              {
+                "legendTemplate": "p95",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.95, sum by(le) (rate(inference_extension_scheduler_e2e_duration_seconds_bucket[${__interval}])))\n",
+                  "unitOverride": "s"
+                }
+              },
+              {
+                "legendTemplate": "p90",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.90, sum by(le) (rate(inference_extension_scheduler_e2e_duration_seconds_bucket[${__interval}])))\n",
+                  "unitOverride": "s"
+                }
+              },
+              {
+                "legendTemplate": "p50",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "histogram_quantile(0.50, sum by(le) (rate(inference_extension_scheduler_e2e_duration_seconds_bucket[${__interval}])))\n",
+                  "unitOverride": "s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 230,
         "height": 4,
         "width": 48,
         "widget": {
@@ -1665,7 +1751,7 @@
         }
       },
       {
-        "yPos": 219,
+        "yPos": 234,
         "height": 15,
         "width": 16,
         "widget": {
@@ -1710,7 +1796,7 @@
         }
       },
       {
-        "yPos": 219,
+        "yPos": 234,
         "height": 30,
         "width": 48,
         "widget": {
@@ -1722,7 +1808,7 @@
         }
       },
       {
-        "yPos": 219,
+        "yPos": 234,
         "xPos": 16,
         "height": 15,
         "width": 16,
@@ -1798,7 +1884,7 @@
         }
       },
       {
-        "yPos": 219,
+        "yPos": 234,
         "xPos": 32,
         "height": 15,
         "width": 16,
@@ -1874,7 +1960,7 @@
         }
       },
       {
-        "yPos": 234,
+        "yPos": 249,
         "height": 15,
         "width": 16,
         "widget": {
@@ -1949,7 +2035,7 @@
         }
       },
       {
-        "yPos": 234,
+        "yPos": 249,
         "xPos": 16,
         "height": 15,
         "width": 16,
@@ -1986,7 +2072,7 @@
         }
       },
       {
-        "yPos": 234,
+        "yPos": 249,
         "xPos": 32,
         "height": 15,
         "width": 16,
