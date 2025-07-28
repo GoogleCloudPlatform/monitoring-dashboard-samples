@@ -1,71 +1,79 @@
 {
+  "displayName": "Cloud SQL - General",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
-      "labelKey": "region"
+      "labelKey": "region",
+      "templateVariable": "",
+      "valueType": "STRING"
     },
     {
       "filterType": "RESOURCE_LABEL",
-      "labelKey": "project_id"
+      "labelKey": "project_id",
+      "templateVariable": "",
+      "valueType": "STRING"
     },
     {
       "filterType": "RESOURCE_LABEL",
-      "labelKey": "database_id"
+      "labelKey": "database_id",
+      "templateVariable": "",
+      "valueType": "STRING"
     }
   ],
-  "displayName": "Cloud SQL - General",
+  "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 4,
+        "height": 8,
+        "width": 24,
         "widget": {
-          "title": "Replication States",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_AREA",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
-                      "perSeriesAligner": "ALIGN_COUNT_TRUE"
-                    },
-                    "filter": "metric.type=\"cloudsql.googleapis.com/database/replication/state\" resource.type=\"cloudsql_database\"",
-                    "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "metric.label.\"state\""
-                      ],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    }
-                  }
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
+          "title": "Instance States",
+          "text": {
+            "content": "The below chart gives a count of how many Cloud SQL instances are in each state. ",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
             }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 2
+        }
       },
       {
-        "height": 4,
+        "xPos": 24,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "Replication States",
+          "text": {
+            "content": "The below chart gives a count of how many replications are in each state.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Instance States",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -77,12 +85,11 @@
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_NONE",
+                      "groupByFields": [],
                       "perSeriesAligner": "ALIGN_COUNT_TRUE"
                     },
                     "filter": "metric.type=\"cloudsql.googleapis.com/database/instance_state\" resource.type=\"cloudsql_database\"",
                     "secondaryAggregation": {
-                      "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
                         "metric.label.\"state\""
@@ -93,199 +100,268 @@
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 2
+        }
       },
       {
-        "height": 4,
+        "yPos": 8,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
         "widget": {
-          "logsPanel": {
-            "filter": "resource.type=\"cloudsql_database\"",
-            "resourceNames": []
-          },
-          "title": "All - Cloud SQL Logs"
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 8
-      },
-      {
-        "height": 4,
-        "widget": {
-          "logsPanel": {
-            "filter": "resource.type=\"cloudsql_database\"\nlogName=~\".*cloudsql.googleapis.com.*\"\nseverity>=ERROR",
-            "resourceNames": []
-          },
-          "title": "All - Cloud SQL Database Error Logs"
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 8
-      },
-      {
-        "height": 4,
-        "widget": {
-          "logsPanel": {
-            "filter": "logName=~\"projects/.*/logs/cloudaudit.googleapis.com%2Factivity\"\nprotoPayload.methodName=\"cloudsql.backupRuns.create\"\nseverity=ERROR",
-            "resourceNames": []
-          },
-          "title": "Back Up Failure Logs "
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 8
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Top 5 Highest Network Received Bytes",
+          "title": "Replication States",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
-                "plotType": "LINE",
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/network/received_bytes_count'\n| align rate(1m)\n| top 5\n| every 1m\n"
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_COUNT_TRUE"
+                    },
+                    "filter": "metric.type=\"cloudsql.googleapis.com/database/replication/state\" resource.type=\"cloudsql_database\"",
+                    "secondaryAggregation": {
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"state\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  }
                 }
               }
             ],
-            "timeshiftDuration": "0s",
+            "thresholds": [],
             "yAxis": {
               "scale": "LINEAR"
             }
           }
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 14
+        }
       },
       {
-        "height": 4,
+        "yPos": 24,
+        "height": 8,
+        "width": 16,
         "widget": {
-          "title": "Top 5 Highest Network Sent Bytes",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/network/sent_bytes_count'\n| align rate(1m)\n| top 5\n| every 1m\n"
-                }
-              }
-            ],
-            "timeshiftDuration": "0s",
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 14
-      },
-      {
-        "height": 2,
-        "widget": {
-          "text": {
-            "content": "The below chart gives a count of how many Cloud SQL instances are in each state. ",
-            "format": "RAW"
-          },
-          "title": "Instance States"
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 0
-      },
-      {
-        "height": 2,
-        "widget": {
-          "text": {
-            "content": "The below chart gives a count of how many replications are in each state.",
-            "format": "RAW"
-          },
-          "title": "Replication States"
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 0
-      },
-      {
-        "height": 2,
-        "widget": {
+          "title": "Back Up Failure Logs ",
           "text": {
             "content": "This logs widget shows the logs from when a backup has an error and can't back up.",
-            "format": "RAW"
-          },
-          "title": "Back Up Failure Logs "
-        },
-        "width": 4,
-        "xPos": 0,
-        "yPos": 6
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
       },
       {
-        "height": 2,
+        "yPos": 24,
+        "xPos": 16,
+        "height": 8,
+        "width": 16,
         "widget": {
+          "title": "All - Cloud SQL Logs",
           "text": {
             "content": "This logs widget shows all the logs relating to Cloud SQL database instances.",
-            "format": "RAW"
-          },
-          "title": "All - Cloud SQL Logs"
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 6
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
       },
       {
-        "height": 2,
+        "yPos": 24,
+        "xPos": 32,
+        "height": 8,
+        "width": 16,
         "widget": {
+          "title": "All - Cloud SQL Database Error Logs",
           "text": {
             "content": "This logs widget shows all the logs relating to Cloud SQL database instances at the error severity level.",
-            "format": "RAW"
-          },
-          "title": "All - Cloud SQL Database Error Logs"
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 6
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
       },
       {
-        "height": 2,
+        "yPos": 32,
+        "height": 16,
+        "width": 16,
         "widget": {
-          "text": {
-            "content": "This chart shows Cloud SQL instances with the top 5 highest throughput received bytes.",
-            "format": "RAW"
-          },
-          "title": "Top 5 Highest Network Received Bytes"
-        },
-        "width": 4,
-        "xPos": 4,
-        "yPos": 12
+          "title": "Back Up Failure Logs ",
+          "logsPanel": {
+            "filter": "logName=~\"projects/.*/logs/cloudaudit.googleapis.com%2Factivity\"\nprotoPayload.methodName=\"cloudsql.backupRuns.create\"\nseverity=ERROR",
+            "resourceNames": [
+              "projects/upheld-momentum-328313/locations/global/logScopes/_Default"
+            ]
+          }
+        }
       },
       {
-        "height": 2,
+        "yPos": 32,
+        "xPos": 16,
+        "height": 16,
+        "width": 16,
         "widget": {
+          "title": "All - Cloud SQL Logs",
+          "logsPanel": {
+            "filter": "resource.type=\"cloudsql_database\"",
+            "resourceNames": [
+              "projects/upheld-momentum-328313/locations/global/logScopes/_Default"
+            ]
+          }
+        }
+      },
+      {
+        "yPos": 32,
+        "xPos": 32,
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "title": "All - Cloud SQL Database Error Logs",
+          "logsPanel": {
+            "filter": "resource.type=\"cloudsql_database\"\nlogName=~\".*cloudsql.googleapis.com.*\"\nseverity>=ERROR",
+            "resourceNames": [
+              "projects/upheld-momentum-328313/locations/global/logScopes/_Default"
+            ]
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "xPos": 16,
+        "height": 8,
+        "width": 16,
+        "widget": {
+          "title": "Network Received Bytes",
           "text": {
-            "content": "This chart shows Cloud SQL instances with the top 5 highest throughput received bytes.",
-            "format": "RAW"
-          },
-          "title": "Top 5 Highest Network Sent Bytes"
-        },
-        "width": 4,
-        "xPos": 8,
-        "yPos": 12
+            "content": "This chart shows Cloud SQL instance throughput received bytes.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "xPos": 32,
+        "height": 8,
+        "width": 16,
+        "widget": {
+          "title": "Network Sent Bytes",
+          "text": {
+            "content": "This chart shows Cloud SQL instance throughput received bytes.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 56,
+        "xPos": 16,
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "title": "Network Received Bytes",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(cloudsql_googleapis_com:database_network_received_bytes_count{monitored_resource=\"cloudsql_database\"}[1m])",
+                  "unitOverride": "By/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 56,
+        "xPos": 32,
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "title": "Network Sent Bytes",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(cloudsql_googleapis_com:database_network_sent_bytes_count{monitored_resource=\"cloudsql_database\"}[1m])\n",
+                  "unitOverride": "By/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
       }
     ]
   }

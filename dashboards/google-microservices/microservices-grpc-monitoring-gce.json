@@ -1,90 +1,18 @@
 {
-  "dashboardFilters": [],
   "displayName": "Microservices (gRPC) Monitoring - GCE",
+  "dashboardFilters": [],
   "labels": {},
   "mosaicLayout": {
-    "columns": 12,
+    "columns": 48,
     "tiles": [
       {
-        "height": 24,
-        "widget": {
-          "collapsibleGroup": {
-            "collapsed": false
-          },
-          "title": "Client Side Metrics"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 0
-      },
-      {
-        "height": 20,
-        "widget": {
-          "collapsibleGroup": {
-            "collapsed": false
-          },
-          "title": "Server Side Metrics"
-        },
-        "width": 12,
-        "xPos": 0,
-        "yPos": 24
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Client Error Percentages",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric custom.googleapis.com/opencensus/grpc.io/client/completed_rpcs\n| align delta(1m)\n| every 1m\n| { t_0:\n      filter (metric.grpc_client_status != 'OK')\n      | group_by drop[metric.grpc_client_status],\n          [error_rpcs_aggregate: aggregate(value.completed_rpcs)]\n  ; t_1:\n      group_by drop[metric.grpc_client_status],\n        [completed_rpcs_aggregate: aggregate(value.completed_rpcs)] }\n| ratio"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s"
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 4
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Client Concurrency",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | { t_0:\n      metric 'custom.googleapis.com/opencensus/grpc.io/client/started_rpcs'\n        | align delta(1m)\n        | every 1m\n      ; t_1:\n      metric 'custom.googleapis.com/opencensus/grpc.io/client/completed_rpcs'\n        | align delta(1m)\n        | every 1m\n        | group_by drop [metric.grpc_client_status],\n            [completed_rpcs_aggregate: aggregate(value.completed_rpcs)] }\n  | outer_join [0]\n  | value [concurrent_rpcs: sub(t_0.started_rpcs, t_1.completed_rpcs_aggregate)]\n  | filter (val() >= 0)\n"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s"
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 0
-      },
-      {
-        "height": 4,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Client Requests",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -92,24 +20,67 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | metric 'custom.googleapis.com/opencensus/grpc.io/client/completed_rpcs'\n  | filter (metric.grpc_client_status == 'OK')\n  | align rate(1m)\n  | every 1m\n"
+                  "prometheusQuery": "rate(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{monitored_resource=\"gce_instance\", grpc_client_status=\"OK\"}[1m])",
+                  "unitOverride": "1/s"
                 }
               }
             ],
             "thresholds": [],
-            "timeshiftDuration": "0s"
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 0
+        }
       },
       {
-        "height": 4,
+        "height": 96,
+        "width": 48,
+        "widget": {
+          "title": "Client Side Metrics",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Client Concurrency",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "(\n    sum by (opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n        increase(custom_googleapis_com:opencensus_grpc_io_client_started_rpcs{\n            monitored_resource=\"gce_instance\"\n        }[1m])\n    )\n    -\n    sum by (opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n        increase(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{\n            monitored_resource=\"gce_instance\"\n        }[1m])\n    )\n) >= 0\n\n"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Client Errors",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -117,24 +88,29 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | metric 'custom.googleapis.com/opencensus/grpc.io/client/completed_rpcs'\n  | filter (metric.grpc_client_status != 'OK')\n  | align rate(1m)\n  | every 1m\n"
+                  "prometheusQuery": "rate(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{monitored_resource=\"gce_instance\", grpc_client_status!=\"OK\"}[1m])\n",
+                  "unitOverride": "1/s"
                 }
               }
             ],
             "thresholds": [],
-            "timeshiftDuration": "0s"
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 4
+        }
       },
       {
-        "height": 4,
+        "yPos": 16,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
         "widget": {
-          "title": "Server Error Percentages",
+          "title": "Client Error Percentages",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -142,49 +118,535 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n| metric custom.googleapis.com/opencensus/grpc.io/server/completed_rpcs\n| align delta(1m)\n| every 1m\n| { t_0:\n      filter (metric.grpc_server_status != 'OK')\n      | group_by drop[metric.grpc_server_status],\n          [error_rpcs_aggregate: aggregate(value.completed_rpcs)]\n  ; t_1:\n      group_by drop[metric.grpc_server_status],\n        [completed_rpcs_aggregate: aggregate(value.completed_rpcs)] }\n| ratio"
+                  "prometheusQuery": "sum by(opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n  increase(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{\n    monitored_resource=\"gce_instance\",\n    grpc_client_status!=\"OK\"\n  }[1m])\n)\n/\n(\n  sum by(opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{\n      monitored_resource=\"gce_instance\"\n    }[1m])\n  )\n)\n"
                 }
               }
             ],
             "thresholds": [],
-            "timeshiftDuration": "0s"
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 28
+        }
       },
       {
-        "height": 4,
+        "yPos": 32,
+        "height": 16,
+        "width": 24,
         "widget": {
-          "title": "Server Concurrency",
+          "title": "Client RTT Latency",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "legendTemplate": "99 percentile",
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | { t_0:\n      metric 'custom.googleapis.com/opencensus/grpc.io/server/started_rpcs'\n        | align delta(1m)\n        | every 1m\n      ; t_1:\n      metric 'custom.googleapis.com/opencensus/grpc.io/server/completed_rpcs'\n        | align delta(1m)\n        | every 1m\n        | group_by drop [metric.grpc_server_status],\n            [completed_rpcs_aggregate: aggregate(value.completed_rpcs)] }\n  | outer_join [0]\n  | value [concurrent_rpcs: sub(t_0.started_rpcs, t_1.completed_rpcs_aggregate)]\n  | filter (val() >= 0)\n"
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/roundtrip_latency\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "95 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/roundtrip_latency\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "50 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/roundtrip_latency\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "mean",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/roundtrip_latency\" resource.type=\"gce_instance\""
+                  }
                 }
               }
             ],
             "thresholds": [],
-            "timeshiftDuration": "0s"
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 24
+        }
       },
       {
-        "height": 4,
+        "yPos": 32,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Client RTT Latency",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "Client RTT Latency",
+                "minAlignmentPeriod": "60s",
+                "plotType": "HEATMAP",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/roundtrip_latency\" resource.type=\"gce_instance\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Client API Latency",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "99 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/api_latency\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "95 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/api_latency\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "50 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/api_latency\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "mean",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/api_latency\" resource.type=\"gce_instance\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Client API Latency",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "Client API Latency",
+                "minAlignmentPeriod": "60s",
+                "plotType": "HEATMAP",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/api_latency\" resource.type=\"gce_instance\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 64,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Client Sent Compressed Message Bytes per RPC",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "99 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/sent_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "95 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/sent_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "50 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/sent_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "mean",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/sent_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 64,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Client Sent Compressed Message Bytes per RPC",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "Client Sent Compressed Message Bytes per RPC",
+                "minAlignmentPeriod": "60s",
+                "plotType": "HEATMAP",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/sent_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 80,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Client Received Compressed Message Bytes per RPC",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "99 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/received_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "95 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/received_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "50 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/received_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "mean",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/received_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 80,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Client Received Compressed Message Bytes per RPC",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "Client Received Compressed Message Bytes per RPC",
+                "minAlignmentPeriod": "60s",
+                "plotType": "HEATMAP",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/client/received_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 96,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Server Requests",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -192,24 +654,69 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | metric 'custom.googleapis.com/opencensus/grpc.io/server/completed_rpcs'\n  | filter (metric.grpc_server_status == 'OK')\n  | align rate(1m)\n  | every 1m\n"
+                  "prometheusQuery": "rate(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{monitored_resource=\"gce_instance\", grpc_server_status=\"OK\"}[1m])",
+                  "unitOverride": "1/s"
                 }
               }
             ],
             "thresholds": [],
-            "timeshiftDuration": "0s"
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 24
+        }
       },
       {
-        "height": 4,
+        "yPos": 96,
+        "height": 80,
+        "width": 48,
+        "widget": {
+          "title": "Server Side Metrics",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 96,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Server Concurrency",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "(\n  sum by(grpc_server_method, opencensus_task, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_server_started_rpcs{\n      monitored_resource=\"gce_instance\"\n    }[1m])\n  )\n  -\n  sum by(grpc_server_method, opencensus_task, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{\n      monitored_resource=\"gce_instance\"\n    }[1m])\n  )\n) >= 0\n"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 112,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Server Errors",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -217,24 +724,29 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | metric 'custom.googleapis.com/opencensus/grpc.io/server/completed_rpcs'\n  | filter (metric.grpc_server_status != 'OK')\n  | align rate(1m)\n  | every 1m\n"
+                  "prometheusQuery": "rate(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{monitored_resource=\"gce_instance\", grpc_server_status!=\"OK\"}[1m])",
+                  "unitOverride": "1/s"
                 }
               }
             ],
             "thresholds": [],
-            "timeshiftDuration": "0s"
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 28
+        }
       },
       {
-        "height": 4,
+        "yPos": 112,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
         "widget": {
-          "title": "Client RTT Latency",
+          "title": "Server Error Percentages",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -242,342 +754,398 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n    | metric custom.googleapis.com/opencensus/grpc.io/client/roundtrip_latency\n    | group_by 1m, [roundtrip_latency_aligned: aggregate(value.roundtrip_latency)]\n    | every 1m\n    | group_by [], [roundtrip_latency_aggregated: aggregate(roundtrip_latency_aligned)]\n    | { t_0:\n          group_by [], [roundtrip_latency_stats_value: percentile(roundtrip_latency_aggregated, 50)]\n            | map add[roundtrip_latency_stats_tag: '50 percentile']\n      ; t_1:\n          group_by [], [roundtrip_latency_stats_value: percentile(roundtrip_latency_aggregated, 95)]\n            | map add[roundtrip_latency_stats_tag: '95 percentile']\n      ; t_2:\n          group_by [], [roundtrip_latency_stats_value: percentile(roundtrip_latency_aggregated, 99)]\n            | map add[roundtrip_latency_stats_tag: '99 percentile']\n      ; t_3:\n          group_by [], [roundtrip_latency_stats_value: mean(roundtrip_latency_aggregated)]\n            | map add[roundtrip_latency_stats_tag: 'mean']}\n    | union\n"
+                  "prometheusQuery": "sum by(opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n  increase(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{\n    monitored_resource=\"gce_instance\",\n    grpc_server_status!=\"OK\"\n  }[1m])\n)\n/\n(\n  sum by(opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{\n      monitored_resource=\"gce_instance\"\n    }[1m])\n  )\n)"
                 }
               }
             ],
             "thresholds": [],
-            "timeshiftDuration": "0s"
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 8
+        }
       },
       {
-        "height": 4,
-        "widget": {
-          "title": "Client RTT Latency",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "HEATMAP",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | metric custom.googleapis.com/opencensus/grpc.io/client/roundtrip_latency\n  | align delta(1m)\n  | every 1m\n  | group_by [], [roundtrip_latency_aggregate: aggregate(value.roundtrip_latency)]\n  | map add[legend_tag: 'Client RTT Latency']"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s"
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 8
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Client Sent Compressed Message Bytes per RPC",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | metric custom.googleapis.com/opencensus/grpc.io/client/sent_compressed_message_bytes_per_rpc\n  | group_by 1m, [sent_compressed_message_bytes_per_rpc_aligned: aggregate(value.sent_compressed_message_bytes_per_rpc)]\n  | every 1m\n  | group_by [], [sent_compressed_message_bytes_per_rpc_aggregated: aggregate(sent_compressed_message_bytes_per_rpc_aligned)]\n  | { t_0:\n        group_by [], [sent_compressed_message_bytes_per_rpc_stats_value: percentile(sent_compressed_message_bytes_per_rpc_aggregated, 50)]\n          | map add[sent_compressed_message_bytes_per_rpc_stats_tag: '50 percentile']\n    ; t_1:\n        group_by [], [sent_compressed_message_bytes_per_rpc_stats_value: percentile(sent_compressed_message_bytes_per_rpc_aggregated, 95)]\n          | map add[sent_compressed_message_bytes_per_rpc_stats_tag: '95 percentile']\n    ; t_2:\n        group_by [], [sent_compressed_message_bytes_per_rpc_stats_value: percentile(sent_compressed_message_bytes_per_rpc_aggregated, 99)]\n          | map add[sent_compressed_message_bytes_per_rpc_stats_tag: '99 percentile']\n    ; t_3:\n        group_by [], [sent_compressed_message_bytes_per_rpc_stats_value: mean(sent_compressed_message_bytes_per_rpc_aggregated)]\n          | map add[sent_compressed_message_bytes_per_rpc_stats_tag: 'mean']}\n  | union\n"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s"
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 16
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Client Sent Compressed Message Bytes per RPC",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "HEATMAP",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | metric custom.googleapis.com/opencensus/grpc.io/client/sent_compressed_message_bytes_per_rpc\n  | align delta(1m)\n  | every 1m\n  | group_by [], [sent_compressed_message_bytes_per_rpc_aggregate: aggregate(value.sent_compressed_message_bytes_per_rpc)]\n  | map add[legend_tag: 'Client Sent Compressed Message Bytes per RPC']\n"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s"
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 16
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Client Received Compressed Message Bytes per RPC",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "HEATMAP",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | metric custom.googleapis.com/opencensus/grpc.io/client/received_compressed_message_bytes_per_rpc\n  | align delta(1m)\n  | every 1m\n  | group_by [], [received_compressed_message_bytes_per_rpc_aggregate: aggregate(value.received_compressed_message_bytes_per_rpc)]\n  | map add[legend_tag: 'Client Received Compressed Message Bytes per RPC']\n"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s"
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 20
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Client Received Compressed Message Bytes per RPC",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | metric custom.googleapis.com/opencensus/grpc.io/client/received_compressed_message_bytes_per_rpc\n  | group_by 1m, [received_compressed_message_bytes_per_rpc_aligned: aggregate(value.received_compressed_message_bytes_per_rpc)]\n  | every 1m\n  | group_by [], [received_compressed_message_bytes_per_rpc_aggregated: aggregate(received_compressed_message_bytes_per_rpc_aligned)]\n  | { t_0:\n        group_by [], [received_compressed_message_bytes_per_rpc_stats_value: percentile(received_compressed_message_bytes_per_rpc_aggregated, 50)]\n          | map add[received_compressed_message_bytes_per_rpc_stats_tag: '50 percentile']\n    ; t_1:\n        group_by [], [received_compressed_message_bytes_per_rpc_stats_value: percentile(received_compressed_message_bytes_per_rpc_aggregated, 95)]\n          | map add[received_compressed_message_bytes_per_rpc_stats_tag: '95 percentile']\n    ; t_2:\n        group_by [], [received_compressed_message_bytes_per_rpc_stats_value: percentile(received_compressed_message_bytes_per_rpc_aggregated, 99)]\n          | map add[received_compressed_message_bytes_per_rpc_stats_tag: '99 percentile']\n    ; t_3:\n        group_by [], [received_compressed_message_bytes_per_rpc_stats_value: mean(received_compressed_message_bytes_per_rpc_aggregated)]\n          | map add[received_compressed_message_bytes_per_rpc_stats_tag: 'mean']}\n  | union\n"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s"
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 20
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Server Sent Compressed Message Bytes per RPC",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | metric custom.googleapis.com/opencensus/grpc.io/server/sent_compressed_message_bytes_per_rpc\n  | group_by 1m, [sent_compressed_message_bytes_per_rpc_aligned: aggregate(value.sent_compressed_message_bytes_per_rpc)]\n  | every 1m\n  | group_by [], [sent_compressed_message_bytes_per_rpc_aggregated: aggregate(sent_compressed_message_bytes_per_rpc_aligned)]\n  | { t_0:\n        group_by [], [sent_compressed_message_bytes_per_rpc_stats_value: percentile(sent_compressed_message_bytes_per_rpc_aggregated, 50)]\n          | map add[sent_compressed_message_bytes_per_rpc_stats_tag: '50 percentile']\n    ; t_1:\n        group_by [], [sent_compressed_message_bytes_per_rpc_stats_value: percentile(sent_compressed_message_bytes_per_rpc_aggregated, 95)]\n          | map add[sent_compressed_message_bytes_per_rpc_stats_tag: '95 percentile']\n    ; t_2:\n        group_by [], [sent_compressed_message_bytes_per_rpc_stats_value: percentile(sent_compressed_message_bytes_per_rpc_aggregated, 99)]\n          | map add[sent_compressed_message_bytes_per_rpc_stats_tag: '99 percentile']\n    ; t_3:\n        group_by [], [sent_compressed_message_bytes_per_rpc_stats_value: mean(sent_compressed_message_bytes_per_rpc_aggregated)]\n          | map add[sent_compressed_message_bytes_per_rpc_stats_tag: 'mean']}\n  | union\n"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s"
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 36
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Server Received Compressed Message Bytes per RPC",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "HEATMAP",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | metric custom.googleapis.com/opencensus/grpc.io/server/received_compressed_message_bytes_per_rpc\n  | align delta(1m)\n  | every 1m\n  | group_by [], [received_compressed_message_bytes_per_rpc_aggregate: aggregate(value.received_compressed_message_bytes_per_rpc)]\n  | map add[legend_tag: 'Server Received Compressed Message Bytes per RPC']\n"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s"
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 40
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Server Received Compressed Message Bytes per RPC",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | metric custom.googleapis.com/opencensus/grpc.io/server/received_compressed_message_bytes_per_rpc\n  | group_by 1m, [received_compressed_message_bytes_per_rpc_aligned: aggregate(value.received_compressed_message_bytes_per_rpc)]\n  | every 1m\n  | group_by [], [received_compressed_message_bytes_per_rpc_aggregated: aggregate(received_compressed_message_bytes_per_rpc_aligned)]\n  | { t_0:\n        group_by [], [received_compressed_message_bytes_per_rpc_stats_value: percentile(received_compressed_message_bytes_per_rpc_aggregated, 50)]\n          | map add[received_compressed_message_bytes_per_rpc_stats_tag: '50 percentile']\n    ; t_1:\n        group_by [], [received_compressed_message_bytes_per_rpc_stats_value: percentile(received_compressed_message_bytes_per_rpc_aggregated, 95)]\n          | map add[received_compressed_message_bytes_per_rpc_stats_tag: '95 percentile']\n    ; t_2:\n        group_by [], [received_compressed_message_bytes_per_rpc_stats_value: percentile(received_compressed_message_bytes_per_rpc_aggregated, 99)]\n          | map add[received_compressed_message_bytes_per_rpc_stats_tag: '99 percentile']\n    ; t_3:\n        group_by [], [received_compressed_message_bytes_per_rpc_stats_value: mean(received_compressed_message_bytes_per_rpc_aggregated)]\n          | map add[received_compressed_message_bytes_per_rpc_stats_tag: 'mean']}\n  | union\n"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s"
-          }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 40
-      },
-      {
-        "height": 4,
-        "widget": {
-          "title": "Server Sent Compressed Message Bytes per RPC",
-          "xyChart": {
-            "chartOptions": {
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "HEATMAP",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | metric custom.googleapis.com/opencensus/grpc.io/server/sent_compressed_message_bytes_per_rpc\n  | align delta(1m)\n  | every 1m\n  | group_by [], [sent_compressed_message_bytes_per_rpc_aggregate: aggregate(value.sent_compressed_message_bytes_per_rpc)]\n  | map add[legend_tag: 'Server Sent Compressed Message Bytes per RPC']\n"
-                }
-              }
-            ],
-            "thresholds": [],
-            "timeshiftDuration": "0s"
-          }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 36
-      },
-      {
-        "height": 4,
+        "yPos": 128,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Server Latency",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "legendTemplate": "99 percentile",
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n    | metric custom.googleapis.com/opencensus/grpc.io/server/server_latency\n    | group_by 1m, [server_latency_aligned: aggregate(value.server_latency)]\n    | every 1m\n    | group_by [], [server_latency_aggregated: aggregate(server_latency_aligned)]\n    | { t_0:\n          group_by [], [server_latency_stats_value: percentile(server_latency_aggregated, 50)]\n            | map add[server_latency_stats_tag: '50 percentile']\n      ; t_1:\n          group_by [], [server_latency_stats_value: percentile(server_latency_aggregated, 95)]\n            | map add[server_latency_stats_tag: '95 percentile']\n      ; t_2:\n          group_by [], [server_latency_stats_value: percentile(server_latency_aggregated, 99)]\n            | map add[server_latency_stats_tag: '99 percentile']\n      ; t_3:\n          group_by [], [server_latency_stats_value: mean(server_latency_aggregated)]\n            | map add[server_latency_stats_tag: 'mean']}\n    | union\n"
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/server/server_latency\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "95 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/server/server_latency\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "50 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/server/server_latency\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "mean",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/server/server_latency\" resource.type=\"gce_instance\""
+                  }
                 }
               }
             ],
             "thresholds": [],
-            "timeshiftDuration": "0s"
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 32
+        }
       },
       {
-        "height": 4,
+        "yPos": 128,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
         "widget": {
           "title": "Server Latency",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "legendTemplate": "Server Latency",
+                "minAlignmentPeriod": "60s",
                 "plotType": "HEATMAP",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | metric custom.googleapis.com/opencensus/grpc.io/server/server_latency\n  | align delta(1m)\n  | every 1m\n  | group_by [], [server_latency_aggregate: aggregate(value.server_latency)]\n  | map add[legend_tag: 'Server Latency']\n"
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/server/server_latency\" resource.type=\"gce_instance\""
+                  }
                 }
               }
             ],
             "thresholds": [],
-            "timeshiftDuration": "0s"
+            "yAxis": {
+              "scale": "LINEAR"
+            }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 32
+        }
       },
       {
-        "height": 4,
+        "yPos": 144,
+        "height": 16,
+        "width": 24,
         "widget": {
-          "title": "Client API Latency",
+          "title": "Server Sent Compressed Message Bytes per RPC",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "legendTemplate": "99 percentile",
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n    | metric custom.googleapis.com/opencensus/grpc.io/client/api_latency\n    | group_by 1m, [api_latency_aligned: aggregate(value.api_latency)]\n    | every 1m\n    | group_by [], [api_latency_aggregated: aggregate(api_latency_aligned)]\n    | { t_0:\n          group_by [], [api_latency_stats_value: percentile(api_latency_aggregated, 50)]\n            | map add[api_latency_stats_tag: '50 percentile']\n      ; t_1:\n          group_by [], [api_latency_stats_value: percentile(api_latency_aggregated, 95)]\n            | map add[api_latency_stats_tag: '95 percentile']\n      ; t_2:\n          group_by [], [api_latency_stats_value: percentile(api_latency_aggregated, 99)]\n            | map add[api_latency_stats_tag: '99 percentile']\n      ; t_3:\n          group_by [], [api_latency_stats_value: mean(api_latency_aggregated)]\n            | map add[api_latency_stats_tag: 'mean']}\n    | union\n"
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/server/sent_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "95 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/server/sent_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "50 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/server/sent_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "mean",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/server/sent_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
                 }
               }
             ],
             "thresholds": [],
-            "timeshiftDuration": "0s"
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
           }
-        },
-        "width": 6,
-        "xPos": 0,
-        "yPos": 12
+        }
       },
       {
-        "height": 4,
+        "yPos": 144,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
         "widget": {
-          "title": "Client API Latency",
+          "title": "Server Sent Compressed Message Bytes per RPC",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
               {
+                "legendTemplate": "Server Sent Compressed Message Bytes per RPC",
+                "minAlignmentPeriod": "60s",
                 "plotType": "HEATMAP",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch gce_instance\n  | metric custom.googleapis.com/opencensus/grpc.io/client/api_latency\n  | align delta(1m)\n  | every 1m\n  | group_by [], [api_latency_aggregate: aggregate(value.api_latency)]\n  | map add[legend_tag: 'Client API Latency']"
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/server/sent_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
                 }
               }
             ],
             "thresholds": [],
-            "timeshiftDuration": "0s"
+            "yAxis": {
+              "scale": "LINEAR"
+            }
           }
-        },
-        "width": 6,
-        "xPos": 6,
-        "yPos": 12
+        }
+      },
+      {
+        "yPos": 160,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Server Received Compressed Message Bytes per RPC",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "99 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/server/received_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "95 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/server/received_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "50 percentile",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/server/received_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              },
+              {
+                "legendTemplate": "mean",
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/server/received_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 160,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Server Received Compressed Message Bytes per RPC",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "legendTemplate": "Server Received Compressed Message Bytes per RPC",
+                "minAlignmentPeriod": "60s",
+                "plotType": "HEATMAP",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/opencensus/grpc.io/server/received_compressed_message_bytes_per_rpc\" resource.type=\"gce_instance\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
       }
     ]
   }
