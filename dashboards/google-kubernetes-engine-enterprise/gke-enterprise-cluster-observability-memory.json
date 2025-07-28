@@ -236,63 +236,6 @@
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Cluster Total Memory (Top 5 Clusters)",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "label_replace(\n    sum by (location, cluster_name) (\n        kubernetes_io:node_memory_total_bytes{monitored_resource=\"k8s_node\"}\n        or \n        kubernetes_io:anthos_node_memory_total_bytes{monitored_resource=\"k8s_node\"}\n    ),\n    \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n)",
-                  "unitOverride": "By"
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 64,
-        "xPos": 24,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "Cluster Unrequested Memory",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "label_replace(\n    (\n        sum by (location, cluster_name) (\n            kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\"}\n        )\n        -\n        sum by (location, cluster_name) (\n            kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n        )\n    )\n    or\n    (\n        sum by (location, cluster_name) (\n            kubernetes_io:anthos_node_memory_allocatable_bytes{monitored_resource=\"k8s_node\"}\n        )\n        -\n        sum by (location, cluster_name) (\n            kubernetes_io:anthos_container_memory_request_bytes{monitored_resource=\"k8s_container\"}\n        )\n    ),\n    \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n)",
-                  "unitOverride": "By"
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 80,
-        "height": 16,
-        "width": 24,
-        "widget": {
           "title": "Cluster Total Memory",
           "xyChart": {
             "chartOptions": {
@@ -317,7 +260,7 @@
         }
       },
       {
-        "yPos": 80,
+        "yPos": 64,
         "xPos": 24,
         "height": 16,
         "width": 24,
