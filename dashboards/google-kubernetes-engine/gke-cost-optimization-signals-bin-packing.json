@@ -103,7 +103,7 @@
             ],
             "timeSeriesQuery": {
               "outputFullDuration": true,
-              "prometheusQuery": "round(\n    sum(avg_over_time(kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\", ${project_id}}[${__interval}]))\n    /\n    sum(avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\",  ${project_id}}[${__interval}]))\n    * 100,\n    0.1\n)\n",
+              "prometheusQuery": "round(\n    sum(avg_over_time(kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n    /\n    sum(avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n    * 100,\n    0.1\n)\n",
               "unitOverride": "%"
             }
           }
@@ -169,7 +169,7 @@
             ],
             "timeSeriesQuery": {
               "outputFullDuration": true,
-              "prometheusQuery": "round(\n    sum(avg_over_time(kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\", ${project_id}}[${__interval}])) \n    /\n    sum(avg_over_time(kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\", ${project_id}}[${__interval}]))\n    * 100, \n    0.1\n)",
+              "prometheusQuery": "round(\n    sum(avg_over_time(kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}])) \n    /\n    sum(avg_over_time(kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n    * 100, \n    0.1\n)",
               "unitOverride": "%"
             }
           }
@@ -199,7 +199,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "label_replace(\n    sum(avg_over_time(kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\", ${project_id}}[${__interval}])) \n    /\n    sum(avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\",  ${project_id}}[${__interval}]))\n    * \n    100, \n    \"bin_packing_type\", \"CPU\", \"\", \"\"\n)",
+                  "prometheusQuery": "label_replace(\n    sum(avg_over_time(kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}])) \n    /\n    sum(avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n    * \n    100, \n    \"bin_packing_type\", \"CPU\", \"\", \"\"\n)",
                   "unitOverride": "%"
                 }
               },
@@ -212,7 +212,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "label_replace(\n    sum(avg_over_time(kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\", ${project_id}}[${__interval}]))\n    /\n    sum(avg_over_time(kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\", ${project_id}}[${__interval}]))\n    * \n    100,\n    \"bin_packing_type\", \"Memory\", \"\", \"\"\n)",
+                  "prometheusQuery": "label_replace(\n    sum(avg_over_time(kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n    /\n    sum(avg_over_time(kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n    * \n    100,\n    \"bin_packing_type\", \"Memory\", \"\", \"\"\n)",
                   "unitOverride": "%"
                 }
               }
@@ -240,7 +240,7 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": true,
-              "prometheusQuery": "round(\n    sum(avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\",  ${project_id}}[${__interval}]))\n    - \n    sum(avg_over_time(kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\", ${project_id}}[${__interval}])),\n    0.1\n)",
+              "prometheusQuery": "round(\n    sum(avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n    - \n    sum(avg_over_time(kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}])),\n    0.1\n)",
               "unitOverride": "Cores"
             }
           }
@@ -262,7 +262,7 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": true,
-              "prometheusQuery": "round(\n    (sum(avg_over_time(kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\", ${project_id}}[${__interval}]))\n    - \n    sum(avg_over_time(kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\", ${project_id}}[${__interval}]))) \n    /\n    1073741824,\n    0.1\n)",
+              "prometheusQuery": "round(\n    (sum(avg_over_time(kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n    - \n    sum(avg_over_time(kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))) \n    /\n    1073741824,\n    0.1\n)",
               "unitOverride": "GiB"
             }
           }
@@ -368,7 +368,7 @@
                 "tableTemplate": "",
                 "timeSeriesQuery": {
                   "outputFullDuration": true,
-                  "prometheusQuery": "sum by (cluster_name) (avg_over_time(kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\", ${project_id}}[${__interval}]))\n/\nsum by (cluster_name) (avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\",  ${project_id}}[${__interval}]))\n* \n100",
+                  "prometheusQuery": "sum by (cluster_name) (avg_over_time(kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n/\nsum by (cluster_name) (avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n* \n100",
                   "unitOverride": "%"
                 }
               },
@@ -377,7 +377,7 @@
                 "tableTemplate": "",
                 "timeSeriesQuery": {
                   "outputFullDuration": true,
-                  "prometheusQuery": "sum by (cluster_name) (avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\",  ${project_id}}[${__interval}])) \n- \nsum by (cluster_name) (avg_over_time(kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\", ${project_id}}[${__interval}]))",
+                  "prometheusQuery": "sum by (cluster_name) (avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}])) \n- \nsum by (cluster_name) (avg_over_time(kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))",
                   "unitOverride": "Cores"
                 }
               },
@@ -386,7 +386,7 @@
                 "tableTemplate": "",
                 "timeSeriesQuery": {
                   "outputFullDuration": true,
-                  "prometheusQuery": "sum by (cluster_name) (avg_over_time(kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\", ${project_id}}[${__interval}]))\n/\nsum by (cluster_name) (avg_over_time(kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\", ${project_id}}[${__interval}]))\n* \n100\n",
+                  "prometheusQuery": "sum by (cluster_name) (avg_over_time(kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n/\nsum by (cluster_name) (avg_over_time(kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n* \n100\n",
                   "unitOverride": "%"
                 }
               },
@@ -395,7 +395,7 @@
                 "tableTemplate": "",
                 "timeSeriesQuery": {
                   "outputFullDuration": true,
-                  "prometheusQuery": "(sum by (cluster_name) (avg_over_time(kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\", ${project_id}}[${__interval}]))\n- \nsum by (cluster_name) (avg_over_time(kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\", ${project_id}}[${__interval}])))\n/\n1073741824",
+                  "prometheusQuery": "(sum by (cluster_name) (avg_over_time(kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n- \nsum by (cluster_name) (avg_over_time(kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}])))\n/\n1073741824",
                   "unitOverride": "GiB"
                 }
               }
