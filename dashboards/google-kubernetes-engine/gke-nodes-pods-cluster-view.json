@@ -41,7 +41,7 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": true,
-              "prometheusQuery": "sum( count by (\"project_id\",\"location\",\"cluster_name\",\"node_name\")(rate(kubernetes_io:node_cpu_core_usage_time{\"monitored_resource\"=\"k8s_node\",${cluster_name},${location},${project_id}}[${__interval}])))\n",
+              "prometheusQuery": "count(count by (\"project_id\",\"location\",\"cluster_name\",\"node_name\")(rate(kubernetes_io:node_cpu_core_usage_time{\"monitored_resource\"=\"k8s_node\",${cluster_name},${location},${project_id}}[${__interval}])))\n",
               "unitOverride": ""
             }
           }
@@ -96,7 +96,7 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": false,
-              "prometheusQuery": "sum(count by (\"project_id\",\"location\",\"cluster_name\",\"namespace_name\",\"pod_name\")(avg_over_time(kubernetes_io:pod_volume_utilization{\"monitored_resource\"=\"k8s_pod\",${cluster_name},${location},${project_id}}[${__interval}])))\n",
+              "prometheusQuery": "count(count by (\"project_id\",\"location\",\"cluster_name\",\"namespace_name\",\"pod_name\")(avg_over_time(kubernetes_io:pod_volume_utilization{\"monitored_resource\"=\"k8s_pod\",${cluster_name},${location},${project_id}}[${__interval}])))\n",
               "unitOverride": ""
             }
           }
@@ -119,7 +119,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum( count by (\"project_id\",\"location\",\"cluster_name\",\"node_name\")(rate(kubernetes_io:node_cpu_core_usage_time{\"monitored_resource\"=\"k8s_node\",${cluster_name},${location},${project_id}}[${__interval}])))\n"
+                  "prometheusQuery": "count(count by (\"project_id\",\"location\",\"cluster_name\",\"node_name\")(rate(kubernetes_io:node_cpu_core_usage_time{\"monitored_resource\"=\"k8s_node\",${cluster_name},${location},${project_id}}[${__interval}])))\n"
                 }
               },
               {
@@ -127,7 +127,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum(count by (\"project_id\",\"location\",\"cluster_name\",\"namespace_name\",\"pod_name\")(avg_over_time(kubernetes_io:pod_volume_utilization{\"monitored_resource\"=\"k8s_pod\",${cluster_name},${location},${project_id}}[${__interval}])))\n"
+                  "prometheusQuery": "count(count by (\"project_id\",\"location\",\"cluster_name\",\"namespace_name\",\"pod_name\")(avg_over_time(kubernetes_io:pod_volume_utilization{\"monitored_resource\"=\"k8s_pod\",${cluster_name},${location},${project_id}}[${__interval}])))\n"
                 }
               },
               {
