@@ -4,19 +4,22 @@
   "conditions": [
     {
       "displayName": "VM Instance - Log entries",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "query": "fetch gce_instance\n| metric 'logging.googleapis.com/log_entry_count'\n| group_by 5m, [value_log_entry_count_mean: mean(value.log_entry_count)]\n| every 30s\n| condition val() > 500 '1'",
-        "trigger": {
-          "count": 1
-        }
+        "evaluationInterval": "30s",
+        "query": "avg_over_time(\n  {\"logging.googleapis.com/log_entry_count\", monitored_resource=\"gce_instance\"}[5m]\n) > 500"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": []
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
