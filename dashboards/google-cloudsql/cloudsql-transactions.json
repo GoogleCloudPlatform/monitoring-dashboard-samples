@@ -1,302 +1,383 @@
 {
-    "dashboardFilters": [
-      {
-        "filterType": "RESOURCE_LABEL",
-        "labelKey": "region"
-      },
-      {
-        "filterType": "RESOURCE_LABEL",
-        "labelKey": "project_id"
-      },
-      {
-        "filterType": "RESOURCE_LABEL",
-        "labelKey": "database_id"
-      }
-    ],
-    "displayName": "Cloud SQL - Transactions",
-    "mosaicLayout": {
-      "columns": 12,
-      "tiles": [
-        {
-          "height": 4,
-          "widget": {
-            "title": "Top 5 Highest Network Received Bytes",
-            "xyChart": {
-              "chartOptions": {
-                "mode": "COLOR"
-              },
-              "dataSets": [
-                {
-                  "plotType": "LINE",
-                  "targetAxis": "Y1",
-                  "timeSeriesQuery": {
-                    "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/network/received_bytes_count'\n| align rate(1m)\n| top 5\n| every 1m\n"
-                  }
-                }
-              ],
-              "timeshiftDuration": "0s",
-              "yAxis": {
-                "scale": "LINEAR"
-              }
-            }
-          },
-          "width": 6,
-          "xPos": 0,
-          "yPos": 8
-        },
-        {
-          "height": 4,
-          "widget": {
-            "title": "Top 5 Highest Network Sent Bytes",
-            "xyChart": {
-              "chartOptions": {
-                "mode": "COLOR"
-              },
-              "dataSets": [
-                {
-                  "plotType": "LINE",
-                  "targetAxis": "Y1",
-                  "timeSeriesQuery": {
-                    "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/network/sent_bytes_count'\n| align rate(1m)\n| top 5\n| every 1m\n"
-                  }
-                }
-              ],
-              "timeshiftDuration": "0s",
-              "yAxis": {
-                "scale": "LINEAR"
-              }
-            }
-          },
-          "width": 6,
-          "xPos": 6,
-          "yPos": 8
-        },
-        {
-          "height": 4,
-          "widget": {
-            "title": "PostgreSQL - Top 5 Highest DB Rows Affected",
-            "xyChart": {
-              "chartOptions": {
-                "mode": "COLOR"
-              },
-              "dataSets": [
-                {
-                  "plotType": "LINE",
-                  "targetAxis": "Y1",
-                  "timeSeriesQuery": {
-                    "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/postgresql/tuples_processed_count'\n| align rate(1m)\n| group_by[resource.database_id, metric.operation_type]\n| top 5\n| every 1m"
-                  }
-                }
-              ],
-              "timeshiftDuration": "0s",
-              "yAxis": {
-                "scale": "LINEAR"
-              }
-            }
-          },
-          "width": 4,
-          "xPos": 8,
-          "yPos": 14
-        },
-        {
-          "height": 4,
-          "widget": {
-            "title": "MySQL/SQL Server - Top 5 Highest Connections",
-            "xyChart": {
-              "chartOptions": {
-                "mode": "COLOR"
-              },
-              "dataSets": [
-                {
-                  "plotType": "LINE",
-                  "targetAxis": "Y1",
-                  "timeSeriesQuery": {
-                    "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/network/connections'\n| top 5\n| every 1m\n"
-                  }
-                }
-              ],
-              "timeshiftDuration": "0s",
-              "yAxis": {
-                "scale": "LINEAR"
-              }
-            }
-          },
-          "width": 6,
-          "xPos": 6,
-          "yPos": 2
-        },
-        {
-          "height": 4,
-          "widget": {
-            "title": "PostgreSQL - Top 5 Highest Connections",
-            "xyChart": {
-              "chartOptions": {
-                "mode": "COLOR"
-              },
-              "dataSets": [
-                {
-                  "plotType": "LINE",
-                  "targetAxis": "Y1",
-                  "timeSeriesQuery": {
-                    "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/postgresql/num_backends'\n| top 5\n| every 1m\n"
-                  }
-                }
-              ],
-              "timeshiftDuration": "0s",
-              "yAxis": {
-                "scale": "LINEAR"
-              }
-            }
-          },
-          "width": 6,
-          "xPos": 0,
-          "yPos": 2
-        },
-        {
-          "height": 4,
-          "widget": {
-            "title": "PostgreSQL - Top 5 Highest Transactions",
-            "xyChart": {
-              "chartOptions": {
-                "mode": "COLOR"
-              },
-              "dataSets": [
-                {
-                  "plotType": "LINE",
-                  "targetAxis": "Y1",
-                  "timeSeriesQuery": {
-                    "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/postgresql/transaction_count'\n| align rate(1m)\n| group_by [resource.database_id]\n| top 5\n| every 1m\n"
-                  }
-                }
-              ],
-              "timeshiftDuration": "0s",
-              "yAxis": {
-                "scale": "LINEAR"
-              }
-            }
-          },
-          "width": 4,
-          "xPos": 4,
-          "yPos": 14
-        },
-        {
-          "height": 4,
-          "widget": {
-            "title": "MySQL - Top 5 Highest Queries",
-            "xyChart": {
-              "chartOptions": {
-                "mode": "COLOR"
-              },
-              "dataSets": [
-                {
-                  "plotType": "LINE",
-                  "targetAxis": "Y1",
-                  "timeSeriesQuery": {
-                    "timeSeriesQueryLanguage": "fetch cloudsql_database\n| metric 'cloudsql.googleapis.com/database/mysql/queries'\n| align rate(1m)\n| top 5\n| every 1m\n"
-                  }
-                }
-              ],
-              "timeshiftDuration": "0s",
-              "yAxis": {
-                "scale": "LINEAR"
-              }
-            }
-          },
-          "width": 4,
-          "xPos": 0,
-          "yPos": 14
-        },
-        {
-          "height": 2,
-          "widget": {
-            "text": {
-              "content": "The top 5 highest connections on PostgreSQL instances",
-              "format": "RAW"
-            },
-            "title": "PostgreSQL - Top 5 Highest Connections"
-          },
-          "width": 6,
-          "xPos": 0,
-          "yPos": 0
-        },
-        {
-          "height": 2,
-          "widget": {
-            "text": {
-              "content": "The top 5 highest connections on MySQL/SQL Server instances",
-              "format": "RAW"
-            },
-            "title": "MySQL/SQL Server - Top 5 Highest Connections"
-          },
-          "width": 6,
-          "xPos": 6,
-          "yPos": 0
-        },
-        {
-          "height": 2,
-          "widget": {
-            "text": {
-              "content": "The top 5 instances with the highest received bytes.",
-              "format": "RAW"
-            },
-            "title": "Top 5 Highest Network Received Bytes"
-          },
-          "width": 6,
-          "xPos": 0,
-          "yPos": 6
-        },
-        {
-          "height": 2,
-          "widget": {
-            "text": {
-              "content": "The top 5 instances with the highest sent bytes",
-              "format": "RAW"
-            },
-            "title": "Top 5 Highest Network Sent Bytes"
-          },
-          "width": 6,
-          "xPos": 6,
-          "yPos": 6
-        },
-        {
-          "height": 2,
-          "widget": {
-            "text": {
-              "content": "The top 5 PostgreSQL instances with highest number of rows being altered.",
-              "format": "RAW"
-            },
-            "title": "PostgreSQL - Top 5 Highest DB Rows Affected"
-          },
-          "width": 4,
-          "xPos": 8,
-          "yPos": 12
-        },
-        {
-          "height": 2,
-          "widget": {
-            "text": {
-              "content": "The top 5 PostgreSQL instances with the highest transaction count to see which instance has the most activity",
-              "format": "RAW"
-            },
-            "title": "PostgreSQL - Top 5 Highest Transactions"
-          },
-          "width": 4,
-          "xPos": 4,
-          "yPos": 12
-        },
-        {
-          "height": 2,
-          "widget": {
-            "text": {
-              "content": "Top 5 instances that have the highest number of queries executed against the db.",
-              "format": "RAW"
-            },
-            "title": "MySQL - Top 5 Highest Queries"
-          },
-          "width": 4,
-          "xPos": 0,
-          "yPos": 12
-        }
-      ]
+  "displayName": "Cloud SQL - Transactions",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "region",
+      "templateVariable": "",
+      "valueType": "STRING"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "project_id",
+      "templateVariable": "",
+      "valueType": "STRING"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "database_id",
+      "templateVariable": "",
+      "valueType": "STRING"
     }
+  ],
+  "labels": {},
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "PostgreSQL - Connections",
+          "text": {
+            "content": "Number of connections on PostgreSQL instances",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "MySQL/SQL Server - Connections",
+          "text": {
+            "content": "The number of connections on MySQL/SQL Server instances",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "PostgreSQL - Connections",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "cloudsql_googleapis_com:database_postgresql_num_backends{monitored_resource=\"cloudsql_database\"}\n"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "MySQL/SQL Server - Connections",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "cloudsql_googleapis_com:database_network_connections{monitored_resource=\"cloudsql_database\"}\n"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "Network Received Bytes",
+          "text": {
+            "content": "Received bytes per instance.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "xPos": 24,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "Network Sent Bytes",
+          "text": {
+            "content": "Sent bytes per instance",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 32,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Network Received Bytes",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(cloudsql_googleapis_com:database_network_received_bytes_count{monitored_resource=\"cloudsql_database\"}[1m])\n",
+                  "unitOverride": "By/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 32,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Network Sent Bytes",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(cloudsql_googleapis_com:database_network_sent_bytes_count{monitored_resource=\"cloudsql_database\"}[1m])\n",
+                  "unitOverride": "By/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "height": 8,
+        "width": 16,
+        "widget": {
+          "title": "MySQL - Queries",
+          "text": {
+            "content": "Number of queries executed against the db.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "xPos": 16,
+        "height": 8,
+        "width": 16,
+        "widget": {
+          "title": "PostgreSQL - Transactions",
+          "text": {
+            "content": "PostgreSQL instance transaction count",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "xPos": 32,
+        "height": 8,
+        "width": 16,
+        "widget": {
+          "title": "PostgreSQL - DB Rows Affected",
+          "text": {
+            "content": "PostgreSQL instance number of rows being altered.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 56,
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "title": "MySQL - Queries",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "rate(cloudsql_googleapis_com:database_mysql_queries{monitored_resource=\"cloudsql_database\"}[1m])\n",
+                  "unitOverride": "1/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 56,
+        "xPos": 16,
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "title": "PostgreSQL - Transactions",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (database_id) (\n  rate(cloudsql_googleapis_com:database_postgresql_transaction_count{monitored_resource=\"cloudsql_database\"}[1m])\n)\n",
+                  "unitOverride": "1/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 56,
+        "xPos": 32,
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "title": "PostgreSQL - DB Rows Affected",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (database_id, operation_type) (\n  rate(cloudsql_googleapis_com:database_postgresql_tuples_processed_count{monitored_resource=\"cloudsql_database\"}[1m])\n)\n",
+                  "unitOverride": "1/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      }
+    ]
   }
+}
