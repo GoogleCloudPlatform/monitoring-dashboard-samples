@@ -10,17 +10,22 @@
       "displayName": "New condition",
       "conditionMonitoringQueryLanguage": {
         "duration": "60s",
-        "query": "{ \n    t_0: fetch gce_instance::workload.googleapis.com/nginx.connections_accepted\n    ;\n    t_1: fetch gce_instance::workload.googleapis.com/nginx.connections_handled\n}\n| outer_join 0\n| value val(0) - val(1)\n| align rate(5m)\n| condition val() > 0\n",
         "trigger": {
           "count": 1
-        }
+        },
+        "query": "{ \n    t_0: fetch gce_instance::workload.googleapis.com/nginx.connections_accepted\n    ;\n    t_1: fetch gce_instance::workload.googleapis.com/nginx.connections_handled\n}\n| outer_join 0\n| value val(0) - val(1)\n| align rate(5m)\n| condition val() > 0\n"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": []
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
