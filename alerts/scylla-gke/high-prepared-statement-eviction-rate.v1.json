@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "Prometheus Target - prometheus/scylla_cql_prepared_cache_evictions/counter",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch prometheus_target\n| { t_0: metric 'prometheus.googleapis.com/scylla_cql_prepared_cache_evictions/counter';\n    t_1: metric 'prometheus.googleapis.com/scylla_cql_authorized_prepared_statements_cache_evictions/counter'\n}\n| outer_join 0, 0\n| add\n| align rate(5m)\n| every 5m\n| condition val() > 100\n"
+        "evaluationInterval": "300s",
+        "query": "(\n  rate(scylla_cql_prepared_cache_evictions[5m])\n  +\n  rate(scylla_cql_authorized_prepared_statements_cache_evictions[5m])\n) > 100"
       }
     }
   ],
