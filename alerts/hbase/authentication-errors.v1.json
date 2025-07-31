@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "HBase Authentication Errors",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch gce_instance\n| metric 'workload.googleapis.com/hbase.region_server.authentication.count'\n| filter (metric.state == \"failures\")\n| group_by 1m, [value_count_mean: mean(value.count)]\n| every 1m\n| condition val() > 5"
+        "evaluationInterval": "60s",
+        "query": "avg_over_time({\"workload.googleapis.com/hbase.region_server.authentication.count\", monitored_resource=\"gce_instance\", state=\"failures\"}[1m]) > 5"
       }
     }
   ],
