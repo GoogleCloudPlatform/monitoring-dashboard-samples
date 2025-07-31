@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "JVM - Heap Memory Near Max",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "60s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "{ \n    t_0: fetch gce_instance::workload.googleapis.com/jvm.memory.heap.used\n    ;\n    t_1: fetch gce_instance::workload.googleapis.com/jvm.memory.heap.max\n}\n| outer_join 0\n| value val(0) / val(1)\n| window 1m \n| condition val() > .9\n\n"
+        "evaluationInterval": "30s",
+        "query": "(\n  {\"workload.googleapis.com/jvm.memory.heap.used\", monitored_resource=\"gce_instance\"}\n  /\n  {\"workload.googleapis.com/jvm.memory.heap.max\", monitored_resource=\"gce_instance\"}\n) > 0.9"
       }
     }
   ],
