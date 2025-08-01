@@ -4,12 +4,10 @@
   "conditions": [
     {
       "displayName": "High Reservation Utilization",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch compute.googleapis.com/Reservation\n|\n{ metric 'compute.googleapis.com/reservation/used'\n| align next_older(5m) | every 5m ;\nmetric 'compute.googleapis.com/reservation/reserved'\n| align next_older(5m) | every 5m\n}\n| ratio\n| condition val() >= 0.9"
+        "evaluationInterval": "300s",
+        "query": "(\n  {\"compute.googleapis.com/reservation/used\", monitored_resource=\"compute.googleapis.com/Reservation\"}\n    / on (reservation_id)\n  {\"compute.googleapis.com/reservation/reserved\", monitored_resource=\"compute.googleapis.com/Reservation\"}\n) >= 0.9"
       }
     }
   ],

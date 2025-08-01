@@ -4,12 +4,10 @@
   "conditions": [
     {
       "displayName": "Low Usage for 20 hours out of 23 hours",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch compute.googleapis.com/Reservation\n|\n{ metric 'compute.googleapis.com/reservation/used'\n| align next_older(5m) | every 5m ;\nmetric 'compute.googleapis.com/reservation/reserved'\n| align next_older(5m) | every 5m\n}\n| ratio\n| value val() <= 0.1\n| count_true_aligner(23h)\n| condition val() > 20 * 12 # 20 hours * (12 5 min intervals in hour)"
+        "evaluationInterval": "300s",
+        "query": "count_over_time(\n  (\n    ({\"compute.googleapis.com/reservation/used\", monitored_resource=\"compute.googleapis.com/Reservation\"}\n     / on (reservation_id)\n     {\"compute.googleapis.com/reservation/reserved\", monitored_resource=\"compute.googleapis.com/Reservation\"}\n    ) <= 0.1\n  )[23h:5m]\n) > (20 * 12) # 20 hours * (12 5 min intervals in hour)"
       }
     }
   ],
