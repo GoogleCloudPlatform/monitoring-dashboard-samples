@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "VLAN attachment egress usage",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch interconnect_attachment\n| {\n   metric 'interconnect.googleapis.com/network/attachment/sent_bytes_count'\n   | align rate(30s)\n ; metric 'interconnect.googleapis.com/network/attachment/capacity'\n   | group_by 30s, [value_capacity_mean: mean(value.capacity)]\n }\n| ratio\n| condition gt(val(), 0.70 '1')"
+        "evaluationInterval": "30s",
+        "query": "(\n  rate(\n    {\"interconnect.googleapis.com/network/attachment/sent_bytes_count\", monitored_resource=\"interconnect_attachment\"}[30s]\n  )\n  /\n  avg_over_time(\n    {\"interconnect.googleapis.com/network/attachment/capacity\", monitored_resource=\"interconnect_attachment\"}[30s]\n  ) \n) > 0.7"
       }
     }
   ],
