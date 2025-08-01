@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "Allowed Pod Disruptions Remaining",
-      "conditionMonitoringQueryLanguage": {
-        "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch prometheus_target\n| { metric\n      prometheus.googleapis.com/kube_poddisruptionbudget_status_current_healthy/gauge\n  ; metric\n      prometheus.googleapis.com/kube_poddisruptionbudget_status_desired_healthy/gauge }\n| outer_join 0\n| sub\n| every 5m\n| window 5m\n| condition val() < 0"
+      "conditionPrometheusQueryLanguage": {
+        "duration": "300s",
+        "evaluationInterval": "300s",
+        "query": "(\n  {\"kube_poddisruptionbudget_status_current_healthy\"}\n  -\n {\"kube_poddisruptionbudget_status_desired_healthy\"}\n) < 0"
       }
     }
   ],

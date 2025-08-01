@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "Volume Usage Ratio",
-      "conditionMonitoringQueryLanguage": {
-        "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch prometheus_target\n| {\n    t_0: metric prometheus.googleapis.com/kubelet_volume_stats_used_bytes/gauge;\n    t_1: metric prometheus.googleapis.com/kubelet_volume_stats_capacity_bytes/gauge\n}\n| ratio\n| condition val() > 0.9\n| every 5m\n| window 5m"
+      "conditionPrometheusQueryLanguage": {
+        "duration": "300s",
+        "evaluationInterval": "300s",
+        "query": "(\n  {\"kubelet_volume_stats_used_bytes\"}\n  /\n  {\"kubelet_volume_stats_capacity_bytes\"}\n) > 0.9"
       }
     }
   ],
