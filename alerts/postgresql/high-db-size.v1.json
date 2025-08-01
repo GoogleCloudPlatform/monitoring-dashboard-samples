@@ -1,26 +1,31 @@
 {
-    "displayName": "Postgresql - High Database Size",
-    "documentation": {
-        "content": "Alert fires when the database size is growing greater than expected (this value will be subject to instance size and utilization); defaulted to 93 GB but will be subject to instance size as well as connected storage.",
-        "mimeType": "text/markdown"
-    },
-    "userLabels": {},
-    "conditions": [
-        {
-            "displayName": "Database Size Large for Environment",
-            "conditionMonitoringQueryLanguage": {
-                "duration": "0s",
-                "trigger": {
-                    "count": 1
-                },
-                "query": "fetch gce_instance\n| metric 'workload.googleapis.com/postgresql.db_size'\n| group_by 1m, [value_db_size_mean: mean(value.db_size)]\n| every 1m\n| cast_units \"By\"\n| condition val() > 1e+11 \"By\""
-            }
-        }
-    ],
-    "alertStrategy": {
-        "autoClose": "604800s"
-    },
-    "combiner": "OR",
-    "enabled": true,
-    "notificationChannels": []
+  "displayName": "Postgresql - High Database Size",
+  "documentation": {
+    "content": "Alert fires when the database size is growing greater than expected (this value will be subject to instance size and utilization); defaulted to 93 GB but will be subject to instance size as well as connected storage.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Database Size Large for Environment",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        },
+        "query": "fetch gce_instance\n| metric 'workload.googleapis.com/postgresql.db_size'\n| group_by 1m, [value_db_size_mean: mean(value.db_size)]\n| every 1m\n| cast_units \"By\"\n| condition val() > 1e+11 \"By\""
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
