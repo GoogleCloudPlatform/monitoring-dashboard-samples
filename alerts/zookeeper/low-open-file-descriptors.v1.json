@@ -8,22 +8,19 @@
   "conditions": [
     {
       "displayName": "New condition",
-      "conditionPrometheusQueryLanguage": {
+      "conditionMonitoringQueryLanguage": {
         "duration": "0s",
-        "evaluationInterval": "30s",
-        "query": "(\n  {\"workload.googleapis.com/zookeeper.file_descriptor.limit\", monitored_resource=\"gce_instance\"}\n  -\n  {\"workload.googleapis.com/zookeeper.file_descriptor.open\", monitored_resource=\"gce_instance\"}\n) < 1000"
+        "query": " fetch gce_instance\n| { metric 'workload.googleapis.com/zookeeper.file_descriptor.limit'\n; metric 'workload.googleapis.com/zookeeper.file_descriptor.open' }\n| outer_join 0\n| group_by 1m\n| sub\n| condition val() < 1000",
+        "trigger": {
+          "count": 1
+        }
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s",
-    "notificationPrompts": [
-      "OPENED",
-      "CLOSED"
-    ]
+    "autoClose": "604800s"
   },
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": [],
-  "severity": "SEVERITY_UNSPECIFIED"
+  "notificationChannels": []
 }
