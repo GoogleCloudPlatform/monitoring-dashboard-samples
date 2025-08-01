@@ -4,12 +4,10 @@
   "conditions": [
     {
       "displayName": "Dataproc Long Running Job - Job in RUNNING state",
-      "conditionMonitoringQueryLanguage": {
-        "duration": "3600s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch cloud_dataproc_job\n| metric 'dataproc.googleapis.com/job/state'\n| filter metric.state == 'RUNNING'\n| group_by [resource.job_id, metric.state], 1m\n| condition val() == true()"
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "30s",
+        "query": "sum by (job_id, state) (\n  {\"dataproc.googleapis.com/job/state\", monitored_resource=\"cloud_dataproc_job\", state=\"RUNNING\"}\n) == 1"
       }
     }
   ],
