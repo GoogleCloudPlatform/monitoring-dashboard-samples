@@ -4,12 +4,10 @@
   "conditions": [
     {
       "displayName": "Quota Limit Approaching",
-      "conditionMonitoringQueryLanguage": {
-        "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "{ \nfetch chronicle.googleapis.com/Collector \n| metric 'chronicle.googleapis.com/ingestion/log/bytes_count' \n| group_by [], sum(val()) \n| every 1s \n| window 10m \n; \nfetch chronicle.googleapis.com/Collector \n| metric 'chronicle.googleapis.com/ingestion/quota_limit' \n| filter (metric.quota_type == 'SHORT_TERM_DATA_RATE') \n| group_by [], [value_quota_limit_min: min(value.quota_limit)] \n| every 1s \n| window 10m \n} \n| join \n| div \n| condition val() > 0.5 "
+      "conditionPrometheusQueryLanguage": {
+        "duration": "600s",
+        "evaluationInterval": "30s",
+        "query": "(\n  sum_over_time({\"chronicle.googleapis.com/ingestion/log/bytes_count\", monitored_resource=\"chronicle.googleapis.com/Collector\"}[10m])\n  /\n  min_over_time({\"chronicle.googleapis.com/ingestion/quota_limit\", monitored_resource=\"chronicle.googleapis.com/Collector\", quota_type=\"SHORT_TERM_DATA_RATE\"}[10m])\n) > 0.5"
       }
     }
   ],
