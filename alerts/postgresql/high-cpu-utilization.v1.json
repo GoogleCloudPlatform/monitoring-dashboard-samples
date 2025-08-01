@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "Postgres CPU > 90%",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "def top_cpu_filtered_by_metric filter_metric =\n  fetch gce_instance\n  | { t_cpu: metric 'compute.googleapis.com/instance/cpu/utilization'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value t_cpu.value.utilization\n  | group_by [resource.project_id, resource.zone, metric.instance_name], 1m,\n      [value_utilization_mean: mean(t_cpu.value.utilization)]\n  | every 1m;\n\n@top_cpu_filtered_by_metric 'workload.googleapis.com/postgresql.operations'\n| condition val() > .9"
+        "evaluationInterval": "60s",
+        "query": "(avg by (project_id, zone, instance_name) (\n  avg_over_time(\n    {\"compute.googleapis.com/instance/cpu/utilization\", monitored_resource=\"gce_instance\"}[1m]\n  )\n  and\n  on(instance_id, project_id, zone)\n    ({\"workload.googleapis.com/postgresql.operations\", monitored_resource=\"gce_instance\"})\n  )\n) > 0.9"
       }
     }
   ],

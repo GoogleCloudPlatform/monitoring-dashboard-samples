@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "Database Size Large for Environment",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch gce_instance\n| metric 'workload.googleapis.com/postgresql.db_size'\n| group_by 1m, [value_db_size_mean: mean(value.db_size)]\n| every 1m\n| cast_units \"By\"\n| condition val() > 1e+11 \"By\""
+        "evaluationInterval": "60s",
+        "query": "avg_over_time({\"workload.googleapis.com/postgresql.db_size\", monitored_resource=\"gce_instance\"}[1m]) > 1e+11"
       }
     }
   ],

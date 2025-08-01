@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "Connections near system max",
-      "conditionMonitoringQueryLanguage": {
-        "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "{\n     t_0: fetch gce_instance::workload.googleapis.com/postgresql.connection.max ;\n     t_1: fetch gce_instance::workload.googleapis.com/postgresql.backends\n}\n| group_by [resource.instance_id]\n| outer_join 0\n| window 1m\n| condition val(0) * .9 < val(1)\n"
+      "conditionPrometheusQueryLanguage": {
+        "duration": "60s",
+        "evaluationInterval": "30s",
+        "query": "(\n  sum by (instance_id) (\n    {\"workload.googleapis.com/postgresql.backends\", monitored_resource=\"gce_instance\"}\n  )\n  /\n  sum by (instance_id) (  \n    {\"workload.googleapis.com/postgresql.connection.max\", monitored_resource=\"gce_instance\"}\n  )\n) > 0.9"
       }
     }
   ],
