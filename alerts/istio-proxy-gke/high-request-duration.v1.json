@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "Prometheus Target - prometheus/istio_request_duration_milliseconds/histogram - 95th percentile",
-      "conditionMonitoringQueryLanguage": {
-        "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch prometheus_target\n| metric\n    'prometheus.googleapis.com/istio_request_duration_milliseconds/histogram'\n| percentile_from(95)\n| cast_units('ms')\n| every 5m\n| window 5m\n| condition val() > 500 'ms'"
+      "conditionPrometheusQueryLanguage": {
+        "duration": "300s",
+        "evaluationInterval": "300s",
+        "query": "histogram_quantile(\n  0.95, \n  sum by (le) (\n    rate({\"istio_request_duration_milliseconds_bucket\"}[5m])\n  )\n) > 500"
       }
     }
   ],
