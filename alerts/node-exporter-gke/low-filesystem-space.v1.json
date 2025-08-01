@@ -1,26 +1,31 @@
 {
-    "displayName": "Node Exporter - Prometheus - Low Filesystem Space",
-    "documentation": {
-        "content": "This alert triggers when the amount of space for the affected filesystem is low. When filesystem space is low, GKE may be unable to assign any more pods to the node.",
-        "mimeType": "text/markdown"
-    },
-    "userLabels": {},
-    "conditions": [
-        {
-            "displayName": "Filesystem Space Available < 10%",
-            "conditionMonitoringQueryLanguage": {
-                "duration": "0s",
-                "query": "fetch prometheus_target\n| { t_0: metric prometheus.googleapis.com/node_filesystem_avail_bytes/gauge\n  ; t_1: metric prometheus.googleapis.com/node_filesystem_size_bytes/gauge }\n| ratio\n| every 5m\n| window 5m\n| condition val() < 0.1",
-                "trigger": {
-                    "count": 1
-                }
-            }
-        }
-    ],
-    "alertStrategy": {
-        "autoClose": "604800s"
-    },
-    "combiner": "OR",
-    "enabled": true,
-    "notificationChannels": []
+  "displayName": "Node Exporter - Prometheus - Low Filesystem Space",
+  "documentation": {
+    "content": "This alert triggers when the amount of space for the affected filesystem is low. When filesystem space is low, GKE may be unable to assign any more pods to the node.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Filesystem Space Available < 10%",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        },
+        "query": "fetch prometheus_target\n| { t_0: metric prometheus.googleapis.com/node_filesystem_avail_bytes/gauge\n  ; t_1: metric prometheus.googleapis.com/node_filesystem_size_bytes/gauge }\n| ratio\n| every 5m\n| window 5m\n| condition val() < 0.1"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
