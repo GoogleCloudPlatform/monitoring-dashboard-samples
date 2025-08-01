@@ -1,7 +1,7 @@
 {
-  "displayName": "Vault - Token Renew/Revoke Alert",
+  "displayName": "Vault - Audit Failure Alert",
   "documentation": {
-    "content": "This alert will be triggered when it is taking longer than one second to renew or revoke tokens. This alert will help notify users when there is a potential problem with backend token storage.\n\n",
+    "content": "This alert will be triggered whenever an audit request or audit response failure is greater than 0. This alert will help notify users when their audit device is potentially blocked. If it is blocked, Vault will become unresponsive.\n",
     "mimeType": "text/markdown"
   },
   "userLabels": {},
@@ -10,17 +10,22 @@
       "displayName": "New condition",
       "conditionMonitoringQueryLanguage": {
         "duration": "0s",
-        "query": "fetch gce_instance\n| { metric 'workload.googleapis.com/vault.token.renew.time'\n; metric 'workload.googleapis.com/vault.token.revoke.time' }\n| outer_join 0\n| group_by 1m\n| condition val(0) > 1000 || val(1) > 1000",
         "trigger": {
           "count": 1
-        }
+        },
+        "query": "fetch gce_instance\n| { metric 'workload.googleapis.com/vault.token.renew.time'\n; metric 'workload.googleapis.com/vault.token.revoke.time' }\n| outer_join 0\n| group_by 1m\n| condition val(0) > 1000 || val(1) > 1000"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": []
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
