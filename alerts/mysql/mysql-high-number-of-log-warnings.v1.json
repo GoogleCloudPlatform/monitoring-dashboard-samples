@@ -3,24 +3,29 @@
   "documentation": {
     "content": "Log warnings are a count of logs collected from mysql_error logs with a warning level per 5 minute window. The default condition of warnings per 5 minute window is 20.",
     "mimeType": "text/markdown"
-},
+  },
   "userLabels": {},
   "conditions": [
     {
       "displayName": "logging/user/mysql.warning.count",
       "conditionMonitoringQueryLanguage": {
         "duration": "0s",
-        "query": "fetch gce_instance\n| metric 'logging.googleapis.com/user/mysql.warning.count'\n| window 5m \n| condition val() > 20\n",
         "trigger": {
           "count": 1
-        }
+        },
+        "query": "fetch gce_instance\n| metric 'logging.googleapis.com/user/mysql.warning.count'\n| window 5m \n| condition val() > 20\n"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": []
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
