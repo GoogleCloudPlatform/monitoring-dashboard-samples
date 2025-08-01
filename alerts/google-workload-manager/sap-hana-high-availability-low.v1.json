@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "SAPHanaHighAvailabilityCheck",
-      "conditionMonitoringQueryLanguage": {
-        "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch gce_instance\n| { metric 'workload.googleapis.com/sap/hana/ha/availability'\n  ; metric 'workload.googleapis.com/sap/mntmode' }\n| join\n| window 1m\n| value\n    if(t_0.value.availability < 4 && t_1.value.mntmode == false(), false(),\n      true())\n| condition val()"
+      "conditionPrometheusQueryLanguage": {
+        "duration": "60s",
+        "evaluationInterval": "30s",
+        "query": "({\"workload.googleapis.com/sap/hana/ha/availability\", monitored_resource=\"gce_instance\"} >= 4)\nor \n({\"workload.googleapis.com/sap/mntmode\", monitored_resource=\"gce_instance\"} != 0)"
       }
     }
   ],
