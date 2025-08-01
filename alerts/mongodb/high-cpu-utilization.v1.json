@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "MongoDB - High CPU Utilization",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "def top_5_cpu_filtered_by_metric filter_metric =\n  fetch gce_instance\n  | { t_memory:\n        metric 'agent.googleapis.com/cpu/utilization'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value val(0)\n  | group_by [metadata.system.name, resource.project_id, resource.zone], 1m,\n      .mean()\n  | top 5\n  | every 1m;\n\n@top_5_cpu_filtered_by_metric\n  'workload.googleapis.com/mongodb.memory.usage'\n| condition val() > 90'%'"
+        "evaluationInterval": "60s",
+        "query": "(avg by (project_id, zone, instance_id) (\n  avg_over_time(\n    {\"agent.googleapis.com/cpu/utilization\", monitored_resource=\"gce_instance\"}[1m]\n  )\n  and\n  on(instance_id, project_id, zone)\n    ({\"workload.googleapis.com/mongodb.memory.usage\", monitored_resource=\"gce_instance\"})  \n  )\n) > 90"
       }
     }
   ],

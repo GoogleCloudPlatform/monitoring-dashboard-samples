@@ -8,13 +8,10 @@
   "conditions": [
     {
       "displayName": "New condition",
-      "conditionMonitoringQueryLanguage": {
-        "duration": "60s",
-        "trigger": {
-          "count": 1
-        },
-        "evaluationMissingData": "EVALUATION_MISSING_DATA_NO_OP",
-        "query": "def top_5_disk_filtered_by_metric filter_metric =\n  fetch gce_instance\n  | { t_memory:\n        metric 'agent.googleapis.com/disk/percent_used'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value val(0)\n  | group_by [metadata.system.name, resource.project_id, resource.zone], 1m,\n      .mean()\n  | every 1m;\n\n@top_5_disk_filtered_by_metric\n  'workload.googleapis.com/mongodb.memory.usage'\n| condition val() > 80'%'"
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "60s",
+        "query": "(avg by (project_id, zone, instance_id) (\n  avg_over_time(\n    {\"agent.googleapis.com/disk/percent_used\", monitored_resource=\"gce_instance\"}[1m]\n  )\n  and\n  on(instance_id, project_id, zone)\n    ({\"workload.googleapis.com/mongodb.memory.usage\", monitored_resource=\"gce_instance\"})\n  )\n) > 80"
       }
     }
   ],
