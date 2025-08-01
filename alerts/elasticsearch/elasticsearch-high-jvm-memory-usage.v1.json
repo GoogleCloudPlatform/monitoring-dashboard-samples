@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "VM Instance - workload/jvm.memory.heap.used",
-      "conditionMonitoringQueryLanguage": {
-        "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch gce_instance\n| { \nt_0: metric 'workload.googleapis.com/jvm.memory.heap.used';\nt_1: metric 'workload.googleapis.com/jvm.memory.heap.max'\n}\n| outer_join 0\n| value t_0.value.used / t_1.value.max\n| condition val() > .9\n| every 5m\n| window 5m\n"
+      "conditionPrometheusQueryLanguage": {
+        "duration": "300s",
+        "evaluationInterval": "300s",
+        "query": "(\n  {\"workload.googleapis.com/jvm.memory.heap.used\", monitored_resource=\"gce_instance\"}\n  /\n  {\"workload.googleapis.com/jvm.memory.heap.max\", monitored_resource=\"gce_instance\"}\n) > 0.9"
       }
     }
   ],
