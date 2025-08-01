@@ -1,27 +1,32 @@
 {
-    "displayName": "MongoDB - High Disk Utilization",
-    "documentation": {
-      "content": "If Disk Utilization is above 80%, then it is time to look deeper into adding more storage or cleaning up old docs.",
-      "mimeType": "text/markdown"
-    },
-    "userLabels": {},
-    "conditions": [
-      {
-        "displayName": "New condition",
-        "conditionMonitoringQueryLanguage": {
-          "duration": "60s",
-          "evaluationMissingData": "EVALUATION_MISSING_DATA_NO_OP",
-          "trigger": {
-            "count": 1
-          },
-          "query": "def top_5_disk_filtered_by_metric filter_metric =\n  fetch gce_instance\n  | { t_memory:\n        metric 'agent.googleapis.com/disk/percent_used'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value val(0)\n  | group_by [metadata.system.name, resource.project_id, resource.zone], 1m,\n      .mean()\n  | every 1m;\n\n@top_5_disk_filtered_by_metric\n  'workload.googleapis.com/mongodb.memory.usage'\n| condition val() > 80'%'"
-        }
+  "displayName": "MongoDB - High Disk Utilization",
+  "documentation": {
+    "content": "If Disk Utilization is above 80%, then it is time to look deeper into adding more storage or cleaning up old docs.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "New condition",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "60s",
+        "trigger": {
+          "count": 1
+        },
+        "evaluationMissingData": "EVALUATION_MISSING_DATA_NO_OP",
+        "query": "def top_5_disk_filtered_by_metric filter_metric =\n  fetch gce_instance\n  | { t_memory:\n        metric 'agent.googleapis.com/disk/percent_used'\n    ; t_filter_metric: metric $filter_metric }\n  | join\n  | value val(0)\n  | group_by [metadata.system.name, resource.project_id, resource.zone], 1m,\n      .mean()\n  | every 1m;\n\n@top_5_disk_filtered_by_metric\n  'workload.googleapis.com/mongodb.memory.usage'\n| condition val() > 80'%'"
       }
-    ],
-    "alertStrategy": {
-      "autoClose": "3600s"
-    },
-    "combiner": "OR",
-    "enabled": true,
-    "notificationChannels": []
-  }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "3600s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
+}
