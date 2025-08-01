@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "logging/user/mysql.warning.count",
-      "conditionMonitoringQueryLanguage": {
-        "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch gce_instance\n| metric 'logging.googleapis.com/user/mysql.warning.count'\n| window 5m \n| condition val() > 20\n"
+      "conditionPrometheusQueryLanguage": {
+        "duration": "300s",
+        "evaluationInterval": "30s",
+        "query": "{\"logging.googleapis.com/user/mysql.warning.count\", monitored_resource=\"gce_instance\"} > 20"
       }
     }
   ],

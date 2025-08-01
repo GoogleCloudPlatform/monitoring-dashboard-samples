@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "logging/user/mysql.error.count",
-      "conditionMonitoringQueryLanguage": {
-        "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch gce_instance\n| metric 'logging.googleapis.com/user/mysql.error.count'\n| window 5m \n| condition val() > 5\n"
+      "conditionPrometheusQueryLanguage": {
+        "duration": "300s",
+        "evaluationInterval": "30s",
+        "query": "{\"logging.googleapis.com/user/mysql.error.count\", monitored_resource=\"gce_instance\"} > 5"
       }
     }
   ],
