@@ -1,26 +1,31 @@
 {
-    "displayName": "Istio Proxy - Prometheus - High Request Duration",
-    "documentation": {
-      "content": "When the request duration is high, it indicates performance issues with deployed Envoy proxies, network issues, or slow application response times.",
-      "mimeType": "text/markdown"
-    },
-    "userLabels": {},
-    "conditions": [
-      {
-        "displayName": "Prometheus Target - prometheus/istio_request_duration_milliseconds/histogram - 95th percentile",
-        "conditionMonitoringQueryLanguage": {
-          "duration": "0s",
-          "query": "fetch prometheus_target\n| metric\n    'prometheus.googleapis.com/istio_request_duration_milliseconds/histogram'\n| percentile_from(95)\n| cast_units('ms')\n| every 5m\n| window 5m\n| condition val() > 500 'ms'",
-          "trigger": {
-            "count": 1
-          }
-        }
+  "displayName": "Istio Proxy - Prometheus - High Request Duration",
+  "documentation": {
+    "content": "When the request duration is high, it indicates performance issues with deployed Envoy proxies, network issues, or slow application response times.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Prometheus Target - prometheus/istio_request_duration_milliseconds/histogram - 95th percentile",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        },
+        "query": "fetch prometheus_target\n| metric\n    'prometheus.googleapis.com/istio_request_duration_milliseconds/histogram'\n| percentile_from(95)\n| cast_units('ms')\n| every 5m\n| window 5m\n| condition val() > 500 'ms'"
       }
-    ],
-    "alertStrategy": {
-      "autoClose": "604800s"
-    },
-    "combiner": "OR",
-    "enabled": false,
-    "notificationChannels": []
-  }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
+}
