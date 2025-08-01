@@ -1,26 +1,31 @@
 {
-  "name": "projects/cn-fe-playground/alertPolicies/13319234805719485687",
   "displayName": "High VPN tunnel pps",
   "documentation": {
     "content": "Alerts when the sum of ingress and egress network packets exceeds 50% of the maximum recommended packet rate of 250,000 pps for a given VPN tunnel.",
     "mimeType": "text/markdown"
   },
+  "userLabels": {},
   "conditions": [
     {
-      "name": "projects/cn-fe-playground/alertPolicies/13319234805719485687/conditions/7232902205055063304",
       "displayName": "Tunnel traffic",
       "conditionMonitoringQueryLanguage": {
         "duration": "0s",
-        "query": "fetch vpn_gateway\n| { metric vpn.googleapis.com/network/sent_packets_count\n; metric vpn.googleapis.com/network/received_packets_count }\n| align rate (1m)\n| group_by [metric.tunnel_name]\n| outer_join 0,0\n| value val(0) + val(1)\n| condition val() > 125000 \"{packets}/s\"",
         "trigger": {
           "count": 1
-        }
+        },
+        "query": "fetch vpn_gateway\n| { metric vpn.googleapis.com/network/sent_packets_count\n; metric vpn.googleapis.com/network/received_packets_count }\n| align rate (1m)\n| group_by [metric.tunnel_name]\n| outer_join 0,0\n| value val(0) + val(1)\n| condition val() > 125000 \"{packets}/s\""
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
-  "enabled": true
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }

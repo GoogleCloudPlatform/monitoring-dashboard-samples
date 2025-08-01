@@ -1,26 +1,31 @@
 {
-  "name": "projects/cn-fe-playground/alertPolicies/5801954640443836615",
   "displayName": "High VPN tunnel bps",
   "documentation": {
     "content": "Alerts when the sum of ingress and egress bytes exceeds 50% of the 3-Gbps (375 MBps) limit for a given VPN tunnel.",
     "mimeType": "text/markdown"
   },
+  "userLabels": {},
   "conditions": [
     {
-      "name": "projects/cn-fe-playground/alertPolicies/5801954640443836615/conditions/5801954640443837206",
       "displayName": "Tunnel traffic",
       "conditionMonitoringQueryLanguage": {
         "duration": "0s",
-        "query": "fetch vpn_gateway\n| { metric vpn.googleapis.com/network/sent_bytes_count\n; metric vpn.googleapis.com/network/received_bytes_count }\n| align rate (1m)\n| group_by [metric.tunnel_name]\n| outer_join 0,0\n| value val(0) + val(1)\n| condition val() > 187.5 \"MBy/s\"",
         "trigger": {
           "count": 1
-        }
+        },
+        "query": "fetch vpn_gateway\n| { metric vpn.googleapis.com/network/sent_bytes_count\n; metric vpn.googleapis.com/network/received_bytes_count }\n| align rate (1m)\n| group_by [metric.tunnel_name]\n| outer_join 0,0\n| value val(0) + val(1)\n| condition val() > 187.5 \"MBy/s\""
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
-  "enabled": true
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
