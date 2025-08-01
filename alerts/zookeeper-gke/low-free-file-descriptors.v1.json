@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "New condition",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch prometheus_target\n| { metric 'prometheus.googleapis.com/max_file_descriptor_count/gauge'\n  ; metric 'prometheus.googleapis.com/open_file_descriptor_count/gauge' }\n| outer_join 0\n| group_by 1m\n| sub\n| condition val() < 1000"
+        "evaluationInterval": "60s",
+        "query": "(\n  {\"max_file_descriptor_count\"}\n  -\n  {\"open_file_descriptor_count\"}\n) < 1000"
       }
     }
   ],
