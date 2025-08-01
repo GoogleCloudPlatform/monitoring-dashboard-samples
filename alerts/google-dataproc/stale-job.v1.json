@@ -6,17 +6,22 @@
       "displayName": "Dataproc Stale Job - Job in PENDING state",
       "conditionMonitoringQueryLanguage": {
         "duration": "600s",
-        "query": "fetch cloud_dataproc_job\n| metric 'dataproc.googleapis.com/job/state'\n| filter metric.state == 'PENDING'\n| group_by [resource.job_id, metric.state], 1m\n| condition val() == true()",
         "trigger": {
           "count": 1
-        }
+        },
+        "query": "fetch cloud_dataproc_job\n| metric 'dataproc.googleapis.com/job/state'\n| filter metric.state == 'PENDING'\n| group_by [resource.job_id, metric.state], 1m\n| condition val() == true()"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": []
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }

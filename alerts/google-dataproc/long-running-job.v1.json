@@ -6,17 +6,22 @@
       "displayName": "Dataproc Long Running Job - Job in RUNNING state",
       "conditionMonitoringQueryLanguage": {
         "duration": "3600s",
-        "query": "fetch cloud_dataproc_job\n| metric 'dataproc.googleapis.com/job/state'\n| filter metric.state == 'RUNNING'\n| group_by [resource.job_id, metric.state], 1m\n| condition val() == true()",
         "trigger": {
           "count": 1
-        }
+        },
+        "query": "fetch cloud_dataproc_job\n| metric 'dataproc.googleapis.com/job/state'\n| filter metric.state == 'RUNNING'\n| group_by [resource.job_id, metric.state], 1m\n| condition val() == true()"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": []
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
