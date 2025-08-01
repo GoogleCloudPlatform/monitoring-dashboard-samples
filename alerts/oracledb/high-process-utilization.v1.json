@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "Processes near system max",
-      "conditionMonitoringQueryLanguage": {
-        "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "{\n     t_0: fetch gce_instance::workload.googleapis.com/oracle.process.limit ;\n     t_1: fetch gce_instance::workload.googleapis.com/oracle.process.count\n}\n| group_by [resource.instance_id]\n| outer_join 0\n| window 1m\n| condition val(0) * .9 < val(1)\n"
+      "conditionPrometheusQueryLanguage": {
+        "duration": "60s",
+        "evaluationInterval": "60s",
+        "query": "sum by (instance_id) (\n  {\"workload.googleapis.com/oracle.process.count\", monitored_resource=\"gce_instance\"}\n  /\n  {\"workload.googleapis.com/oracle.process.limit\", monitored_resource=\"gce_instance\"}\n) > 0.9"
       }
     }
   ],

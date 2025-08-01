@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "Tablespace used space near total",
-      "conditionMonitoringQueryLanguage": {
-        "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "{\n     t_0: fetch gce_instance::workload.googleapis.com/oracle.tablespace.size\n| filter (metric.state == 'used') ;\n     t_1: fetch gce_instance::workload.googleapis.com/oracle.tablespace.size\n| filter (metric.state == 'free')\n}\n| group_by [resource.instance_id, metric.tablespace_name]\n| outer_join 0\n| window 1m\n| condition (val(0) + val(1)) * .85 < val(0)\n"
+      "conditionPrometheusQueryLanguage": {
+        "duration": "60s",
+        "evaluationInterval": "30s",
+        "query": "(\n  sum by (instance_id, tablespace_name) (\n    {\"workload.googleapis.com/oracle.tablespace.size\", monitored_resource=\"gce_instance\", state=\"used\"})\n  /\n  (\n    sum by (instance_id, tablespace_name) (\n      {\"workload.googleapis.com/oracle.tablespace.size\", monitored_resource=\"gce_instance\", state=\"used\"})\n    + \n    sum by (instance_id, tablespace_name) (\n      {\"workload.googleapis.com/oracle.tablespace.size\", monitored_resource=\"gce_instance\", state=\"free\"})\n  )\n) > 0.85"
       }
     }
   ],
