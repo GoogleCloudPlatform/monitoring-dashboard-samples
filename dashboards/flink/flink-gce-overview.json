@@ -965,7 +965,7 @@
         "height": 16,
         "width": 16,
         "widget": {
-          "title": "CPU % Top 5 VMs",
+          "title": "VMs CPU %",
           "id": "",
           "xyChart": {
             "chartOptions": {
@@ -983,8 +983,8 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "topk(5, 100 *\n  avg by (project_id, zone, instance_name) (\n    avg_over_time(\n      compute_googleapis_com:instance_cpu_utilization{monitored_resource=\"gce_instance\"}[1m]\n    )\n    and\n    on(instance_id, project_id, zone)\n    (workload_googleapis_com:flink_jvm_cpu_load{monitored_resource=\"gce_instance\"})\n  )\n)",
-                  "unitOverride": "%"
+                  "prometheusQuery": "(avg by (project_id, zone, instance_name) (\n    avg_over_time(\n      compute_googleapis_com:instance_cpu_utilization{monitored_resource=\"gce_instance\"}[1m]\n    )\n    and\n    on(instance_id, project_id, zone)\n    (workload_googleapis_com:flink_jvm_cpu_load{monitored_resource=\"gce_instance\"})\n  )\n)",
+                  "unitOverride": "10^2.%"
                 }
               }
             ],
@@ -1003,7 +1003,7 @@
         "height": 16,
         "width": 16,
         "widget": {
-          "title": "Memory % Top 5 VMs",
+          "title": "VMs Memory %",
           "id": "",
           "xyChart": {
             "chartOptions": {
@@ -1021,7 +1021,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "topk(5,\n  avg by (project_id, zone, instance_id) (\n    avg_over_time(\n      agent_googleapis_com:memory_percent_used{monitored_resource=\"gce_instance\", state=\"used\"}[1m]\n    )\n  )\n  and on(instance_id, project_id, zone) (\n    workload_googleapis_com:flink_jvm_cpu_load{monitored_resource=\"gce_instance\"}\n  )\n)",
+                  "prometheusQuery": "sum by (project_id, zone, instance_id, metadata_system_name) (\n  avg_over_time(\n    agent_googleapis_com:memory_percent_used{monitored_resource=\"gce_instance\", state=\"used\"}[1m]\n  )\n)\nand on(project_id, zone, instance_id) (\n  workload_googleapis_com:flink_jvm_cpu_load{monitored_resource=\"gce_instance\"}\n)",
                   "unitOverride": "%"
                 }
               }
