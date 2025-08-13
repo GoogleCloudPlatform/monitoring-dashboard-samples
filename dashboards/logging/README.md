@@ -2,7 +2,7 @@
 
 #### Notes
 
-- These metrics are populated via [Google system logging metrics](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-logging).
+- These metrics are populated via [Google system logging metrics](https://cloud.google.com/monitoring/api/metrics_gcp_i_o#gcp-logging).
 - There are some specialty dashboards built around other GCP products like GKE that may require additional setup.
 
 |Logging Management|
