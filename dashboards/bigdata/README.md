@@ -4,14 +4,14 @@
 |BigQuery Query Monitoring|
 |:------------------------|
 |Filename: [bigquery-monitoring.json](bigquery-monitoring.json)|
-|This dashboard has 12 charts for the related [BigQuery metrics](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-bigquery), including `uploaded bytes`, `scanned bytes`, `uploaded rows`, `query count`, and `query execution time` etc.|
+|This dashboard has 12 charts for the related [BigQuery metrics](https://cloud.google.com/monitoring/api/metrics_gcp_a_b#gcp-bigquery), including `uploaded bytes`, `scanned bytes`, `uploaded rows`, `query count`, and `query execution time` etc.|
 
 &nbsp;
 
 |Dataproc Job Monitoring|
 |:-------------------------|
 |Filename: [dataproc-job-monitoring.json](dataproc-job-monitoring.json)|
-|This dashboard demonstrates 4 different charts in a single dashboard that provides a single view for the Dataproc job [metrics](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-dataproc). Base on your requirements, you can adjust the sliding window and time for the `Slow job` chart.|
+|This dashboard demonstrates 4 different charts in a single dashboard that provides a single view for the Dataproc job [metrics](https://cloud.google.com/monitoring/api/metrics_gcp_d_h#gcp-dataproc). Base on your requirements, you can adjust the sliding window and time for the `Slow job` chart.|
 
 &nbsp;
 
