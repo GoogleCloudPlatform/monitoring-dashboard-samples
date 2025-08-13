@@ -1,0 +1,422 @@
+{
+  "displayName": "GKE Cost Optimization Signals - Bin Packing",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "project_id",
+      "stringValue": "",
+      "templateVariable": "project_id",
+      "valueType": "STRING"
+    }
+  ],
+  "labels": {},
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "GKE Cluster Bin Packing",
+          "id": "",
+          "text": {
+            "content": "Cluster bin packing measures the capacity of developers and platform admins to fully allocate the CPU and memory of each node through Pod placement. It’s calculated by dividing requested resources (all workload requests) by allocatable resources (resources available on all nodes). [Learn more about Enhanced Cost Optimization](https://cloud.google.com/solutions/best-practices-for-running-cost-effective-kubernetes-applications-on-gke)",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "Recommendations",
+          "id": "",
+          "text": {
+            "content": "[View recommendations](https://cloud.google.com/blog/products/containers-kubernetes/gke-best-practices-to-lessen-over-provisioning) on how to improve Cluster Bin Packing.",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "height": 8,
+        "width": 10,
+        "widget": {
+          "title": "CPU Bin Packing Score",
+          "id": "",
+          "scorecard": {
+            "breakdowns": [],
+            "dimensions": [],
+            "gaugeView": {
+              "lowerBound": 0,
+              "upperBound": 100
+            },
+            "measures": [],
+            "thresholds": [
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                "value": 80
+              },
+              {
+                "color": "YELLOW",
+                "direction": "BELOW",
+                "label": "",
+                "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                "value": 50
+              },
+              {
+                "color": "RED",
+                "direction": "ABOVE",
+                "label": "",
+                "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                "value": 90
+              },
+              {
+                "color": "RED",
+                "direction": "BELOW",
+                "label": "",
+                "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                "value": 40
+              }
+            ],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "round(\n    sum(avg_over_time(kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n    /\n    sum(avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n    * 100,\n    0.1\n)\n",
+              "unitOverride": "%"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "height": 16,
+        "width": 48,
+        "widget": {
+          "title": "Overview",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 8,
+        "xPos": 10,
+        "height": 8,
+        "width": 10,
+        "widget": {
+          "title": "Memory Bin Packing Score",
+          "id": "",
+          "scorecard": {
+            "breakdowns": [],
+            "dimensions": [],
+            "gaugeView": {
+              "lowerBound": 0,
+              "upperBound": 100
+            },
+            "measures": [],
+            "thresholds": [
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                "value": 85
+              },
+              {
+                "color": "YELLOW",
+                "direction": "BELOW",
+                "label": "",
+                "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                "value": 60
+              },
+              {
+                "color": "RED",
+                "direction": "ABOVE",
+                "label": "",
+                "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                "value": 95
+              },
+              {
+                "color": "RED",
+                "direction": "BELOW",
+                "label": "",
+                "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                "value": 30
+              }
+            ],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "round(\n    sum(avg_over_time(kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}])) \n    /\n    sum(avg_over_time(kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n    * 100, \n    0.1\n)",
+              "unitOverride": "%"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "xPos": 20,
+        "height": 16,
+        "width": 27,
+        "widget": {
+          "title": "Bin Packing in Time",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "label_replace(\n    sum(avg_over_time(kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}])) \n    /\n    sum(avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n    * \n    100, \n    \"bin_packing_type\", \"CPU\", \"\", \"\"\n)",
+                  "unitOverride": "%"
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "label_replace(\n    sum(avg_over_time(kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n    /\n    sum(avg_over_time(kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n    * \n    100,\n    \"bin_packing_type\", \"Memory\", \"\", \"\"\n)",
+                  "unitOverride": "%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "height": 8,
+        "width": 10,
+        "widget": {
+          "title": "Unrequested CPU",
+          "id": "",
+          "scorecard": {
+            "blankView": {},
+            "breakdowns": [],
+            "dimensions": [],
+            "measures": [],
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "round(\n    sum(avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n    - \n    sum(avg_over_time(kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}])),\n    0.1\n)",
+              "unitOverride": "Cores"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "xPos": 10,
+        "height": 8,
+        "width": 10,
+        "widget": {
+          "title": "Unrequested Memory",
+          "id": "",
+          "scorecard": {
+            "blankView": {},
+            "breakdowns": [],
+            "dimensions": [],
+            "measures": [],
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "prometheusQuery": "round(\n    (sum(avg_over_time(kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n    - \n    sum(avg_over_time(kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))) \n    /\n    1073741824,\n    0.1\n)",
+              "unitOverride": "GiB"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "height": 20,
+        "width": 48,
+        "widget": {
+          "title": "Bin Packing by Cluster",
+          "id": "",
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "column": "cluster_name",
+                "visible": true
+              },
+              {
+                "displayName": "CPU Bin Packing",
+                "column": "value",
+                "thresholds": [
+                  {
+                    "color": "YELLOW",
+                    "direction": "ABOVE",
+                    "label": "",
+                    "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                    "value": 80
+                  },
+                  {
+                    "color": "YELLOW",
+                    "direction": "BELOW",
+                    "label": "",
+                    "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                    "value": 50
+                  },
+                  {
+                    "color": "RED",
+                    "direction": "ABOVE",
+                    "label": "",
+                    "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                    "value": 90
+                  },
+                  {
+                    "color": "RED",
+                    "direction": "BELOW",
+                    "label": "",
+                    "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                    "value": 40
+                  }
+                ],
+                "visible": true
+              },
+              {
+                "displayName": "Unrequested CPU",
+                "column": "value-1",
+                "visible": true
+              },
+              {
+                "displayName": "Memory Bin Packing",
+                "column": "value-2",
+                "thresholds": [
+                  {
+                    "color": "YELLOW",
+                    "direction": "ABOVE",
+                    "label": "",
+                    "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                    "value": 85
+                  },
+                  {
+                    "color": "YELLOW",
+                    "direction": "BELOW",
+                    "label": "",
+                    "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                    "value": 60
+                  },
+                  {
+                    "color": "RED",
+                    "direction": "ABOVE",
+                    "label": "",
+                    "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                    "value": 95
+                  },
+                  {
+                    "color": "RED",
+                    "direction": "BELOW",
+                    "label": "",
+                    "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                    "value": 30
+                  }
+                ],
+                "visible": true
+              },
+              {
+                "displayName": "Unrequested memory",
+                "column": "value-3",
+                "visible": true
+              }
+            ],
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "sum by (cluster_name) (avg_over_time(kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n/\nsum by (cluster_name) (avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n* \n100",
+                  "unitOverride": "%"
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "sum by (cluster_name) (avg_over_time(kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}])) \n- \nsum by (cluster_name) (avg_over_time(kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))",
+                  "unitOverride": "Cores"
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "sum by (cluster_name) (avg_over_time(kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n/\nsum by (cluster_name) (avg_over_time(kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n* \n100\n",
+                  "unitOverride": "%"
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "(sum by (cluster_name) (avg_over_time(kubernetes_io:node_memory_allocatable_bytes{monitored_resource=\"k8s_node\", node_name!~\"gk3-.*\", ${project_id}}[${__interval}]))\n- \nsum by (cluster_name) (avg_over_time(kubernetes_io:container_memory_request_bytes{monitored_resource=\"k8s_container\", metadata_system_node_name!~\"gk3-.*\", ${project_id}}[${__interval}])))\n/\n1073741824",
+                  "unitOverride": "GiB"
+                }
+              }
+            ],
+            "displayColumnType": false,
+            "metricVisualization": "NUMBER"
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "height": 20,
+        "width": 48,
+        "widget": {
+          "title": "Cluster Optimization Opportunities",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": ""
+        }
+      }
+    ]
+  }
+}
