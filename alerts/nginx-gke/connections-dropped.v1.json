@@ -8,19 +8,22 @@
   "conditions": [
     {
       "displayName": "New condition",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "query": "{ t_0:\n    fetch\n      prometheus_target ::\n      prometheus.googleapis.com/nginx_connections_accepted/counter\n; t_1:\n    fetch\n      prometheus_target ::\n      prometheus.googleapis.com/nginx_connections_handled/counter }\n| outer_join 0\n| value val(0) - val(1)\n| align rate(5m)\n| condition val() > 0",
-        "trigger": {
-          "count": 1
-        }
+        "evaluationInterval": "30s",
+        "query": "(\n  rate({\"nginx_connections_accepted\"}[5m])\n  -\n  rate({\"nginx_connections_handled\"}[5m])\n) > 0"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": []
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
