@@ -2,7 +2,7 @@
 
 #### Notes
 
-- The full list of Dataflow Job metrics can be found [here](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-dataflow).
+- The full list of Dataflow Job metrics can be found [here](https://cloud.google.com/monitoring/api/metrics_gcp_d_h#gcp-dataflow).
 
 |Dataflow Job|
 |:------------------|
