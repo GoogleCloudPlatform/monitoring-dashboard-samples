@@ -1,26 +1,29 @@
 {
-    "displayName": "Kube State - Prometheus - Pod Disruption Budget Exceeded",
-    "documentation": {
-      "content": "When the pod disruption budget is exceeded, the configured minimum availability is not being respected, typically due to an application failure.",
-      "mimeType": "text/markdown"
-    },
-    "userLabels": {},
-    "conditions": [
-      {
-        "displayName": "Allowed Pod Disruptions Remaining",
-        "conditionMonitoringQueryLanguage": {
-          "duration": "0s",
-          "query": "fetch prometheus_target\n| { metric\n      prometheus.googleapis.com/kube_poddisruptionbudget_status_current_healthy/gauge\n  ; metric\n      prometheus.googleapis.com/kube_poddisruptionbudget_status_desired_healthy/gauge }\n| outer_join 0\n| sub\n| every 5m\n| window 5m\n| condition val() < 0",
-          "trigger": {
-            "count": 1
-          }
-        }
+  "displayName": "Kube State - Prometheus - Pod Disruption Budget Exceeded",
+  "documentation": {
+    "content": "When the pod disruption budget is exceeded, the configured minimum availability is not being respected, typically due to an application failure.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Allowed Pod Disruptions Remaining",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "300s",
+        "evaluationInterval": "300s",
+        "query": "(\n  {\"kube_poddisruptionbudget_status_current_healthy\"}\n  -\n {\"kube_poddisruptionbudget_status_desired_healthy\"}\n) < 0"
       }
-    ],
-    "alertStrategy": {
-      "autoClose": "604800s"
-    },
-    "combiner": "OR",
-    "enabled": false,
-    "notificationChannels": []
-  }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
+}
