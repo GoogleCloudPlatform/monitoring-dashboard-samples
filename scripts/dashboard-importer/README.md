@@ -21,6 +21,11 @@ Clone the `monitoring-dashboard-samples` repo and CD into the `scripts/dashboard
 git clone https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples.git && cd monitoring-dashboard-samples/scripts/dashboard-importer
 ```
 
+Install the dependencies and build the files via:
+```
+npm install && npm run build
+```
+
 ## Quick Start
 ### Converting and Uploading Dashboards
 To convert Grafana dashboard definitions into the Cloud Monitoring format and
@@ -122,7 +127,7 @@ We recommend the following steps for debugging tiles with no data:
     If the metric doesn't exist, you will need to find an alternative metric.
 1.  Confirm your Prometheus metrics are ingested using one of the approved collection
     options for [Google Cloud Managed Service for Prometheus](https://cloud.google.com/stackdriver/docs/managed-prometheus).
-    When using the Query Builder in Cloud Monitoring's [Metrics Explorer](https://console.cloud.google.com/monitoring/metrics-explorer), 
+    When using the Query Builder in Cloud Monitoring's [Metrics Explorer](https://console.cloud.google.com/monitoring/metrics-explorer),
     you can find properly ingested Prometheus metrics under the [prometheus.googleapis.com](http://prometheus.googleapis.com/) domain.
     Metrics in this domain will be correctly referenced by converted dashboards.
 1.  Confirm all templating variables referenced in the queries exist in the Cloud Monitoring
