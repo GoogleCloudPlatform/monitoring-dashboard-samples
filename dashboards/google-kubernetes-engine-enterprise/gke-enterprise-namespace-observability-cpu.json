@@ -20,7 +20,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "100 *\n(\n    sum by (namespace_name) (\n        rate(kubernetes_io:container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[1m])\n        or\n        rate(kubernetes_io:anthos_container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[1m])\n    )\n    /\n    (\n        sum by (namespace_name) (\n            kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n            or\n            kubernetes_io:anthos_container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n        )\n        and \n        (\n            sum by (namespace_name) (\n                kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n                or\n                kubernetes_io:anthos_container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n            ) > 0\n        )\n    )\n)",
+                  "prometheusQuery": "100 *\n(\n    sum by (namespace_name) (\n        rate(kubernetes_io:container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[${__interval}])\n        or\n        rate(kubernetes_io:anthos_container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[${__interval}])\n    )\n    /\n    (\n        sum by (namespace_name) (\n            kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n            or\n            kubernetes_io:anthos_container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n        )\n        and \n        (\n            sum by (namespace_name) (\n                kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n                or\n                kubernetes_io:anthos_container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n            ) > 0\n        )\n    )\n)",
                   "unitOverride": "%"
                 }
               }
@@ -48,7 +48,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (namespace_name) (\n    rate(kubernetes_io:container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[1m])\n    or \n    rate(kubernetes_io:anthos_container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[1m])\n)"
+                  "prometheusQuery": "sum by (namespace_name) (\n    rate(kubernetes_io:container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[${__interval}])\n    or \n    rate(kubernetes_io:anthos_container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[${__interval}])\n)"
                 }
               }
             ],
@@ -103,7 +103,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (namespace_name) (\n    kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n    or \n    kubernetes_io:anthos_container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n)\n-\nsum by (namespace_name) (\n    rate(kubernetes_io:container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[1m])\n    or \n    rate(kubernetes_io:anthos_container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[1m])\n)"
+                  "prometheusQuery": "sum by (namespace_name) (\n    kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n    or \n    kubernetes_io:anthos_container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n)\n-\nsum by (namespace_name) (\n    rate(kubernetes_io:container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[${__interval}])\n    or \n    rate(kubernetes_io:anthos_container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[${__interval}])\n)"
                 }
               }
             ],

@@ -29,7 +29,7 @@
             "blankView": {},
             "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "round(sum(irate(nginx_ingress_controller_requests{${Cluster},${Location},${Namespace}}[2m])), 0.001)",
+              "prometheusQuery": "round(sum(irate(nginx_ingress_controller_requests{${Cluster},${Location},${Namespace}}[${__interval}])), 0.001)",
               "unitOverride": ""
             }
           }
@@ -47,7 +47,7 @@
             },
             "thresholds": [],
             "timeSeriesQuery": {
-              "prometheusQuery": "sum(avg_over_time(nginx_ingress_controller_nginx_process_connections{${Cluster},${Location},${Namespace}}[2m]))\n",
+              "prometheusQuery": "sum(avg_over_time(nginx_ingress_controller_nginx_process_connections{${Cluster},${Location},${Namespace}}[${__interval}]))\n",
               "unitOverride": ""
             }
           }
@@ -89,7 +89,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "round(sum(irate(nginx_ingress_controller_requests{ingress=~\".*\",${Cluster},${Location},${Namespace}}[2m])) by (ingress), 0.001)",
+                  "prometheusQuery": "round(sum(irate(nginx_ingress_controller_requests{ingress=~\".*\",${Cluster},${Location},${Namespace}}[${__interval}])) by (ingress), 0.001)",
                   "unitOverride": ""
                 }
               }
@@ -121,7 +121,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(nginx_ingress_controller_requests{${Cluster},${Location},${Namespace}}[2m])",
+                  "prometheusQuery": "rate(nginx_ingress_controller_requests{${Cluster},${Location},${Namespace}}[${__interval}])",
                   "unitOverride": ""
                 }
               }
@@ -153,7 +153,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(irate (nginx_ingress_controller_request_size_sum{${Cluster},${Location},${Namespace}}[2m]))",
+                  "prometheusQuery": "(irate (nginx_ingress_controller_request_size_sum{${Cluster},${Location},${Namespace}}[${__interval}]))",
                   "unitOverride": ""
                 }
               }
@@ -219,7 +219,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate (nginx_ingress_controller_nginx_process_cpu_seconds_total{${Cluster},${Location},${Namespace}}[2m])",
+                  "prometheusQuery": "rate (nginx_ingress_controller_nginx_process_cpu_seconds_total{${Cluster},${Location},${Namespace}}[${__interval}])",
                   "unitOverride": ""
                 }
               }

@@ -136,7 +136,7 @@
             "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": false,
-              "prometheusQuery": "count (\n  max by (project_id, location, cluster_name, namespace_name, top_level_controller_name, top_level_controller_type, container_name) (\n    rate(\n        kubernetes_io:container_cpu_core_usage_time{\n            monitored_resource=\"k8s_container\",\n            ${project_id},\n            ${location},\n            ${cluster_name},\n            namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\"\n        }[5m]\n    )\n  ) > 0\n)\n"
+              "prometheusQuery": "count (\n  max by (project_id, location, cluster_name, namespace_name, top_level_controller_name, top_level_controller_type, container_name) (\n    rate(\n        kubernetes_io:container_cpu_core_usage_time{\n            monitored_resource=\"k8s_container\",\n            ${project_id},\n            ${location},\n            ${cluster_name},\n            namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\"\n        }[${__interval}]\n    )\n  ) > 0\n)\n"
             }
           }
         }
@@ -289,7 +289,7 @@
                 "minAlignmentPeriod": "60s",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "1000 * sum by (project_id, location, cluster_name, namespace_name, metadata_system_top_level_controller_name, metadata_system_top_level_controller_type) (\n  rate(\n    kubernetes_io:container_cpu_core_usage_time{\n      monitored_resource=\"k8s_container\",\n      ${project_id},\n      ${location},\n      ${cluster_name},\n      ${namespace_name},\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\"\n    }[5m]\n  )\n)\nand\n(\n  avg by (project_id, location, cluster_name, namespace_name, metadata_system_top_level_controller_name, metadata_system_top_level_controller_type) (\n    kubernetes_io:container_cpu_request_cores{\n      monitored_resource=\"k8s_container\",\n      ${project_id},\n      ${location},\n      ${cluster_name},\n      ${namespace_name},\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\"\n    }\n  ) == 0\n)\n"
+                  "prometheusQuery": "1000 * sum by (project_id, location, cluster_name, namespace_name, metadata_system_top_level_controller_name, metadata_system_top_level_controller_type) (\n  rate(\n    kubernetes_io:container_cpu_core_usage_time{\n      monitored_resource=\"k8s_container\",\n      ${project_id},\n      ${location},\n      ${cluster_name},\n      ${namespace_name},\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\"\n    }[${__interval}]\n  )\n)\nand\n(\n  avg by (project_id, location, cluster_name, namespace_name, metadata_system_top_level_controller_name, metadata_system_top_level_controller_type) (\n    kubernetes_io:container_cpu_request_cores{\n      monitored_resource=\"k8s_container\",\n      ${project_id},\n      ${location},\n      ${cluster_name},\n      ${namespace_name},\n      namespace_name!~\"(kube|istio|gatekeeper|gke|gmp|gke-gmp)-system|gke-managed-filestorecsi|gke-mcs\"\n    }\n  ) == 0\n)\n"
                 }
               }
             ],

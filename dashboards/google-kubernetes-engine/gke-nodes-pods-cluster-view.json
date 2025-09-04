@@ -261,7 +261,7 @@
                 "plotType": "STACKED_BAR",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(logging_googleapis_com:log_entry_count{\n  monitored_resource=\"k8s_cluster\",\n  ${project_id},\n  ${location},\n  ${cluster_name},\n  log=\"container.googleapis.com/cluster-autoscaler-visibility\"\n}[1m])\n"
+                  "prometheusQuery": "rate(logging_googleapis_com:log_entry_count{\n  monitored_resource=\"k8s_cluster\",\n  ${project_id},\n  ${location},\n  ${cluster_name},\n  log=\"container.googleapis.com/cluster-autoscaler-visibility\"\n}[${__interval}])\n"
                 }
               }
             ],
@@ -308,7 +308,7 @@
                 "plotType": "STACKED_BAR",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "label_replace(\n    count(kubernetes_io:container_uptime{monitored_resource=\"k8s_container\", ${project_id},${location}, ${cluster_name}} <= 60),\n    \"category\", \"Container Starts\", \"\", \"\"\n)\nor\nlabel_replace(\n  sum (\n    increase(kubernetes_io:container_restart_count{monitored_resource=\"k8s_container\", ${project_id}, ${location}, ${cluster_name}}[1m])\n  ),\n  \"category\", \"Container Restarts\", \"\", \"\"\n)\n"
+                  "prometheusQuery": "label_replace(\n    count(kubernetes_io:container_uptime{monitored_resource=\"k8s_container\", ${project_id},${location}, ${cluster_name}} <= 60),\n    \"category\", \"Container Starts\", \"\", \"\"\n)\nor\nlabel_replace(\n  sum (\n    increase(kubernetes_io:container_restart_count{monitored_resource=\"k8s_container\", ${project_id}, ${location}, ${cluster_name}}[${__interval}])\n  ),\n  \"category\", \"Container Restarts\", \"\", \"\"\n)\n"
                 }
               }
             ],
