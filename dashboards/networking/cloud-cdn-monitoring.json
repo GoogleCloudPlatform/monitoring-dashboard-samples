@@ -66,7 +66,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (cache_result) (\n  rate(\n    loadbalancing_googleapis_com:https_response_bytes_count{monitored_resource=\"https_lb_rule\"}[1m]\n  )\n)\n",
+                  "prometheusQuery": "sum by (cache_result) (\n  rate(\n    loadbalancing_googleapis_com:https_response_bytes_count{monitored_resource=\"https_lb_rule\"}[${__interval}]\n  )\n)\n",
                   "unitOverride": "By/s"
                 }
               }
@@ -141,7 +141,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "count by (cache_result) (\n  increase(loadbalancing_googleapis_com:https_request_count{monitored_resource=\"https_lb_rule\"}[1m])\n)\n\n"
+                  "prometheusQuery": "count by (cache_result) (\n  increase(loadbalancing_googleapis_com:https_request_count{monitored_resource=\"https_lb_rule\"}[${__interval}])\n)\n\n"
                 }
               }
             ],
@@ -198,7 +198,7 @@
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "count by (proxy_continent) (\n  increase(\n    loadbalancing_googleapis_com:https_request_count{\n      monitored_resource=\"https_lb_rule\"\n    }\n    [1m]\n  )\n)\n"
+                  "prometheusQuery": "count by (proxy_continent) (\n  increase(\n    loadbalancing_googleapis_com:https_request_count{\n      monitored_resource=\"https_lb_rule\"\n    }\n    [${__interval}]\n  )\n)\n"
                 }
               }
             ],
@@ -253,7 +253,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "histogram_quantile(0.95,\n    sum by (le, proxy_continent) (\n        increase(\n            loadbalancing_googleapis_com:https_frontend_tcp_rtt_bucket{monitored_resource=\"https_lb_rule\"}[1m]\n        )\n    )\n)\n",
+                  "prometheusQuery": "histogram_quantile(0.95,\n    sum by (le, proxy_continent) (\n        increase(\n            loadbalancing_googleapis_com:https_frontend_tcp_rtt_bucket{monitored_resource=\"https_lb_rule\"}[${__interval}]\n        )\n    )\n)\n",
                   "unitOverride": "ms"
                 }
               }

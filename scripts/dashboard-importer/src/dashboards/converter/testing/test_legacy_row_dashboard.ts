@@ -49,7 +49,7 @@ export const TEST_LEGACY_ROW_DASHBOARD: GrafanaDashboard = {
           span: 5,
           targets: [
             {
-              expr: 'rate (container_cpu_usage_seconds_total{}[1m])',
+              expr: 'rate (container_cpu_usage_seconds_total{}[${__interval}])',
               interval: '10s',
               intervalFactor: 1,
               refId: 'A',
@@ -66,7 +66,7 @@ export const TEST_LEGACY_ROW_DASHBOARD: GrafanaDashboard = {
           span: 7,
           targets: [
             {
-              expr: 'rate (container_cpu_usage_seconds_total{}[1m])',
+              expr: 'rate (container_cpu_usage_seconds_total{}[${__interval}])',
               interval: '10s',
               intervalFactor: 1,
               refId: 'A',
@@ -83,7 +83,7 @@ export const TEST_LEGACY_ROW_DASHBOARD: GrafanaDashboard = {
           span: 4,
           targets: [
             {
-              expr: 'rate (container_cpu_usage_seconds_total{}[1m])',
+              expr: 'rate (container_cpu_usage_seconds_total{}[${__interval}])',
               interval: '10s',
               intervalFactor: 1,
               refId: 'A',
@@ -100,7 +100,7 @@ export const TEST_LEGACY_ROW_DASHBOARD: GrafanaDashboard = {
           span: 4,
           targets: [
             {
-              expr: 'rate (container_cpu_usage_seconds_total{}[1m])',
+              expr: 'rate (container_cpu_usage_seconds_total{}[${__interval}])',
               interval: '10s',
               intervalFactor: 1,
               refId: 'A',
@@ -117,7 +117,7 @@ export const TEST_LEGACY_ROW_DASHBOARD: GrafanaDashboard = {
           span: 4,
           targets: [
             {
-              expr: 'rate (container_cpu_usage_seconds_total{}[1m])',
+              expr: 'rate (container_cpu_usage_seconds_total{}[${__interval}])',
               interval: '10s',
               intervalFactor: 1,
               refId: 'A',
@@ -134,7 +134,7 @@ export const TEST_LEGACY_ROW_DASHBOARD: GrafanaDashboard = {
           span: 12,
           targets: [
             {
-              expr: 'rate (container_cpu_usage_seconds_total{}[1m])',
+              expr: 'rate (container_cpu_usage_seconds_total{}[${__interval}])',
               interval: '10s',
               intervalFactor: 1,
               refId: 'A',
