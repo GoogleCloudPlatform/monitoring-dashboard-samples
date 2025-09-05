@@ -4,19 +4,22 @@
   "conditions": [
     {
       "displayName": "Ingestion Quota Rejection",
-      "conditionMonitoringQueryLanguage": {
-        "duration": "0s",
-        "query": "fetch chronicle.googleapis.com/Collector \n| metric 'chronicle.googleapis.com/ingestion/log/quota_rejected_bytes_count' \n| group_by [], sum(val()) \n| every 5m \n | window 5m \n| condition val() > 0 ",
-        "trigger": {
-          "count": 1
-        }
+      "conditionPrometheusQueryLanguage": {
+        "duration": "300s",
+        "evaluationInterval": "60s",
+        "query": "sum_over_time(\n  {\"chronicle.googleapis.com/ingestion/log/quota_rejected_bytes_count\", monitored_resource=\"chronicle.googleapis.com/Collector\"}[5m]\n) > 0"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": []
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
