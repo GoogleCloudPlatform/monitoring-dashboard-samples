@@ -8,18 +8,22 @@
   "conditions": [
     {
       "displayName": "Packet Loss higher than 5%",
-      "conditionMonitoringQueryLanguage": {
-        "query": "fetch gce_zone_network_health :: networking.googleapis.com/cloud_netslo/active_probing/probe_count\n | {\n   filter metric.result = 'failure'\n   | group_by [resource.region, metric.remote_region], 60s, .sum\n ;\n   group_by [\n     resource.region,\n     metric.remote_region\n   ], 60s, .sum\n   | filter val() >= 1 '1'\n }\n | ratio | condition val() > 0.05",
-        "duration": "300s",
-        "trigger": {
-          "count": 1
-        }
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "60s",
+        "query": "(\n  (sum by (region, remote_region) (\n    {\"networking.googleapis.com/cloud_netslo/active_probing/probe_count\", monitored_resource=\"gce_zone_network_health\", result=\"failure\"}\n  ))\n  /\n  clamp_min(\n    sum by (region, remote_region)(\n      {\"networking.googleapis.com/cloud_netslo/active_probing/probe_count\", monitored_resource=\"gce_zone_network_health\"}\n    ), 1\n  ) \n) > 0.05"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
-  "enabled": true
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
