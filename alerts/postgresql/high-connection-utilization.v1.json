@@ -1,26 +1,29 @@
 {
-    "displayName": "Postgresql - High Connection Utilization",
-    "documentation": {
-        "content": "Alert fires when active connections are near a threshold of 90. Around this point is where the instance may run into connection issues and may start refusing connections.",
-        "mimeType": "text/markdown"
-    },
-    "userLabels": {},
-    "conditions": [
-        {
-            "displayName": "Connections near system max",
-            "conditionMonitoringQueryLanguage": {
-                "duration": "0s",
-                "trigger": {
-                    "count": 1
-                },
-                "query": "{\n     t_0: fetch gce_instance::workload.googleapis.com/postgresql.connection.max ;\n     t_1: fetch gce_instance::workload.googleapis.com/postgresql.backends\n}\n| group_by [resource.instance_id]\n| outer_join 0\n| window 1m\n| condition val(0) * .9 < val(1)\n"
-            }
-        }
-    ],
-    "alertStrategy": {
-        "autoClose": "604800s"
-    },
-    "combiner": "OR",
-    "enabled": true,
-    "notificationChannels": []
+  "displayName": "Postgresql - High Connection Utilization",
+  "documentation": {
+    "content": "Alert fires when active connections are near a threshold of 90. Around this point is where the instance may run into connection issues and may start refusing connections.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Connections near system max",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "60s",
+        "evaluationInterval": "30s",
+        "query": "(\n  sum by (instance_id) (\n    {\"workload.googleapis.com/postgresql.backends\", monitored_resource=\"gce_instance\"}\n  )\n  /\n  sum by (instance_id) (  \n    {\"workload.googleapis.com/postgresql.connection.max\", monitored_resource=\"gce_instance\"}\n  )\n) > 0.9"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
