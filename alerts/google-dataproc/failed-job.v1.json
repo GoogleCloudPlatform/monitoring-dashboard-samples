@@ -4,19 +4,22 @@
   "conditions": [
     {
       "displayName": "Dataproc Failed Job - Job in ERROR state",
-      "conditionMonitoringQueryLanguage": {
-        "duration": "60s",
-        "query": "fetch cloud_dataproc_job\n| metric 'dataproc.googleapis.com/job/state'\n| filter metric.state == 'ERROR'\n| group_by [resource.job_id, metric.state], 1m\n| condition val() == true()",
-        "trigger": {
-          "count": 1
-        }
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "30s",
+        "query": "sum by (job_id, state) (\n  {\"dataproc.googleapis.com/job/state\", monitored_resource=\"cloud_dataproc_job\", state=\"ERROR\"}\n) == 1"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": []
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
