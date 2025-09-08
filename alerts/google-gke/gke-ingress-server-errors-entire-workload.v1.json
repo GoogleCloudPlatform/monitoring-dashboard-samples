@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "Server Error (5xx) is high for a URL path",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch https_lb_rule\n| metric 'loadbalancing.googleapis.com/https/request_count'\n| filter\n    resource.project_id == '${PROJECT_ID}' &&\n    resource.backend_name =~ '${NETWORK_ENDPOINT_GROUPS_REGEX}' &&\n    resource.backend_type == 'NETWORK_ENDPOINT_GROUP'\n|\n{\n    filter metric.response_code_class == 500\n    | align rate(5m)\n    | every 1m\n    | group_by [resource.matched_url_path_rule], [value_request_count_aggregate: aggregate(value.request_count)]\n    ;\n    align rate(5m)\n    | every 1m\n    | group_by [resource.matched_url_path_rule], [value_request_count_aggregate: aggregate(value.request_count)]\n}\n| join\n| div\n| scale('%')\n| condition val() > 5'%'"
+        "evaluationInterval": "30s",
+        "query": "(\n  sum by (matched_url_path_rule) (\n    rate({\n      \"loadbalancing.googleapis.com/https/request_count\",\n      monitored_resource=\"https_lb_rule\",\n      project_id=\"${PROJECT_ID}\",\n      backend_name=~\"${NETWORK_ENDPOINT_GROUPS_REGEX}\",\n      backend_type=\"NETWORK_ENDPOINT_GROUP\",\n      response_code_class=\"500\"\n    }[5m])\n  )\n  /\n  sum by (matched_url_path_rule) (\n    rate({\n      \"loadbalancing.googleapis.com/https/request_count\",\n      monitored_resource=\"https_lb_rule\",\n      project_id=\"${PROJECT_ID}\",\n      backend_name=~\"${NETWORK_ENDPOINT_GROUPS_REGEX}\",\n      backend_type=\"NETWORK_ENDPOINT_GROUP\"\n    }[5m])\n  )\n) > 0.05"
       }
     }
   ],

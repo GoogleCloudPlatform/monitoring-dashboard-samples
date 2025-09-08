@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "Memory Limit Utilization is high for a GKE container in ${WORKLOAD_NAME} workload",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "\nfetch k8s_container\n|\n{\n    metric 'kubernetes.io/container/memory/used_bytes'\n    | filter\n        resource.project_id == '${PROJECT_ID}'\n        &&\n        (metadata.system_labels.top_level_controller_name == '${WORKLOAD_NAME}'\n        && metadata.system_labels.top_level_controller_type == '${TOP_LEVEL_CONTROLLER_TYPE}')\n        &&\n        (resource.cluster_name == '${CLUSTER_NAME}'\n        && resource.location == '${CLUSTER_LOCATION}'\n        && resource.namespace_name == '${NAMESPACE}')\n    | group_by 1m, [value_used_bytes_mean: mean(value.used_bytes)]\n    | every 1m\n;\n    metric 'kubernetes.io/container/memory/limit_bytes'\n    | filter\n        resource.project_id == '${PROJECT_ID}'\n        &&\n        (metadata.system_labels.top_level_controller_name == '${WORKLOAD_NAME}'\n        && metadata.system_labels.top_level_controller_type == '${TOP_LEVEL_CONTROLLER_TYPE}')\n        &&\n        (resource.cluster_name == '${CLUSTER_NAME}'\n        && resource.location == '${CLUSTER_LOCATION}'\n        && resource.namespace_name == '${NAMESPACE}')\n    | group_by 1m, [value_limit_bytes_mean: mean(value.limit_bytes)]\n    | every 1m\n}\n| join\n| div\n| map add[p: 'Memory Limit Utilization']\n| scale('%')\n| condition val() > 90'%'"
+        "evaluationInterval": "30s",
+        "query": "(\n  avg_over_time({\n    \"kubernetes.io/container/memory/used_bytes\",\n    monitored_resource=\"k8s_container\",\n    project_id=\"${PROJECT_ID}\",\n    top_level_controller_name=\"${WORKLOAD_NAME}\",\n    top_level_controller_type=\"${TOP_LEVEL_CONTROLLER_TYPE}\",\n    cluster_name=\"${CLUSTER_NAME}\",\n    cluster_location=\"${CLUSTER_LOCATION}\",\n    namespace_name=\"${NAMESPACE}\"\n  }[1m])\n  / ignoring (memory_type) group_left()\n  avg_over_time({\n    \"kubernetes.io/container/memory/limit_bytes\",\n    monitored_resource=\"k8s_container\",\n    project_id=\"${PROJECT_ID}\",\n    top_level_controller_name=\"${WORKLOAD_NAME}\",\n    top_level_controller_type=\"${TOP_LEVEL_CONTROLLER_TYPE}\",\n    cluster_name=\"${CLUSTER_NAME}\",\n    cluster_location=\"${CLUSTER_LOCATION}\",\n    namespace_name=\"${NAMESPACE}\"\n  }[1m])\n)\n* on() group_left(p) label_replace(vector(1), \"p\", \"Memory Limit Utilization\", \"\", \"\")\n> 0.9"
       }
     }
   ],

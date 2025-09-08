@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "Server Error is high for a method",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch prometheus_target\n| metric 'prometheus.googleapis.com/grpc_server_handled_total/counter'\n| filter\n    resource.project_id == '${PROJECT_ID}' &&\n    resource.cluster == '${CLUSTER_NAME}' &&\n    resource.location == '${CLUSTER_LOCATION}' &&\n    resource.namespace == '${NAMESPACE}' &&\n    metric.pod =~ '${WORKLOAD_NAME}-[a-f0-9]{7,10}-[a-z0-9]{5}'\n|\n{\n    filter metric.grpc_code =~ '(Internal|Unknown|Unavailable|Unimplemented)'\n    | align rate(5m)\n    | every 1m\n    | group_by [metric.grpc_method], [value_grpc_server_handled_total_aggregate: aggregate(value.grpc_server_handled_total)]\n    ;\n    align rate(5m)\n    | every 1m\n    | group_by [metric.grpc_method], [value_grpc_server_handled_total_aggregate: aggregate(value.grpc_server_handled_total)]\n}\n| join\n| div\n| cast_units('1')\n| scale('%')\n| condition val() > 5'%'"
+        "evaluationInterval": "30s",
+        "query": "(\n  sum by (grpc_method) (\n    rate({\n      \"grpc_server_handled_total\",\n      project_id=\"${PROJECT_ID}\",\n      cluster=\"${CLUSTER_NAME}\",\n      location=\"${CLUSTER_LOCATION}\",\n      namespace=\"${NAMESPACE}\",\n      pod=~\"${WORKLOAD_NAME}-[a-f0-9]{7,10}-[a-z0-9]{5}\",\n      grpc_code=~\"(Internal|Unknown|Unavailable|Unimplemented)\"\n    }[5m])\n  )\n  /\n  sum by (grpc_method) (\n    rate({\n      \"grpc_server_handled_total\",\n      project_id=\"${PROJECT_ID}\",\n      cluster=\"${CLUSTER_NAME}\",\n      location=\"${CLUSTER_LOCATION}\",\n      namespace=\"${NAMESPACE}\",\n      pod=~\"${WORKLOAD_NAME}-[a-f0-9]{7,10}-[a-z0-9]{5}\"\n    }[5m])\n  )\n) > 0.05"
       }
     }
   ],

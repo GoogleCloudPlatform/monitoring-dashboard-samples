@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "Server Error (5xx) is high",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch prometheus_target\n| metric 'prometheus.googleapis.com/istio_requests_total/counter'\n| filter\n    resource.project_id == '${PROJECT_ID}' &&\n    resource.cluster == '${CLUSTER_NAME}' &&\n    resource.location == '${CLUSTER_LOCATION}' &&\n    resource.namespace == '${NAMESPACE}' &&\n    metric.destination_workload == '${WORKLOAD_NAME}'\n|\n{\n    filter metric.response_code =~ '5[0-9][0-9]'\n    | align rate(5m)\n    | every 1m\n    | group_by [],\n        [value_istio_requests_total_aggregate:\n        aggregate(value.istio_requests_total)]\n    ;\n    align rate(5m)\n    | every 1m\n    | group_by [],\n        [value_istio_requests_total_aggregate:\n        aggregate(value.istio_requests_total)]\n}\n| join\n| div\n| cast_units('1')\n| scale('%')\n| condition val() > 5'%'"
+        "evaluationInterval": "30s",
+        "query": "(\n  sum (\n    rate({\n      \"istio_requests_total\",\n      project_id=\"${PROJECT_ID}\",\n      cluster=\"${CLUSTER_NAME}\",\n      location=\"${CLUSTER_LOCATION}\",\n      namespace=\"${NAMESPACE}\",\n      destination_workload=~\"${WORKLOAD_NAME}\",\n      response_code=~\"5[0-9][0-9]\"\n    }[5m])\n  )\n  /\n  sum (\n    rate({\n      \"istio_requests_total\",\n      project_id=\"${PROJECT_ID}\",\n      cluster=\"${CLUSTER_NAME}\",\n      location=\"${CLUSTER_LOCATION}\",\n      namespace=\"${NAMESPACE}\",\n      destination_workload=~\"${WORKLOAD_NAME}\",\n    }[5m])\n  )\n) > 0.05"
       }
     }
   ],
