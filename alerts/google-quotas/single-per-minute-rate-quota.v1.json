@@ -8,12 +8,10 @@
   "conditions": [
     {
       "displayName": "Usage nearing per-minute rate quota limit",
-      "conditionMonitoringQueryLanguage": {
-        "query": "fetch ${MONITORED_RESOURCE}| filter ${OUTER_FILTER}| {metric ${METRIC_USAGE_TYPE}| filter ${QUOTA_USAGE_FILTER}${OPTIONAL_USAGE_QUERY}| align delta_gauge(1m)| group_by [${GROUPING}], sum(value.net_usage); metric ${METRIC_LIMIT_TYPE}| filter ${QUOTA_LIMIT_FILTER} | group_by [${GROUPING}],sliding(1m), .min}| ratio| every 1m| condition gt(val(), 0.8 '1')",
-        "duration": "60s",
-        "trigger": {
-          "count": 1
-        }
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "30s",
+        "query": "(\n  sum by ('${GROUPING}') (increase{\n    '${METRIC_USAGE_TYPE}',\n    monitored_resource='${MONITORED_RESOURCE}',\n    '${OUTER_FILTER}',\n    '${QUOTA_USAGE_FILTER}',\n    '${OPTIONAL_USAGE_QUERY}'\n  }[1m])\n  /\n  min by ('${GROUPING}') ({\n    '${METRIC_LIMIT_TYPE}',\n    monitored_resource='${MONITORED_RESOURCE}',\n    '${OUTER_FILTER}',\n    '${QUOTA_LIMIT_FILTER}'\n  })\n) > 0.8"
       }
     }
   ],
