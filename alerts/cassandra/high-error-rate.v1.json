@@ -1,26 +1,26 @@
 {
     "displayName": "Cassandra - High Error Rate",
     "documentation": {
-        "content": "This alert policy looks at the amount of requests made and the amount of errors received. An alert is triggered alerts if the number of exceptions exceeds 10% of the total amount of requests. Things captured in this alert could include timeouts, write exceptions, unavailable exceptions, etc. These generally require further investigation and indicate an issue with the Cassandra node.",
-        "mimeType": "text/markdown"
+      "content": "This alert policy looks at the amount of requests made and the amount of errors received. An alert is triggered alerts if the number of exceptions exceeds 10% of the total amount of requests. Things captured in this alert could include timeouts, write exceptions, unavailable exceptions, etc. These generally require further investigation and indicate an issue with the Cassandra node.",
+      "mimeType": "text/markdown"
     },
     "userLabels": {},
     "conditions": [
-        {
-            "displayName": "Error Rate higher than 10%",
-            "conditionMonitoringQueryLanguage": {
-                "duration": "0s",
-                "trigger": {
-                    "count": 1
-                },
-                "query": "{\n    t_0: fetch gce_instance::workload.googleapis.com/cassandra.client.request.count\n    ; \n    t_1: fetch gce_instance::workload.googleapis.com/cassandra.client.request.error.count\n}\n| outer_join 1\n| group_by [metric.status, metric.operation]\n| value val(1) / if(has_value(val(0)), 1.0, val(0))\n| window 1m\n| condition val() > .1"
-            }
+      {
+        "displayName": "Error Rate higher than 10%",
+        "conditionMonitoringQueryLanguage": {
+          "duration": "0s",
+          "query": "{\n    t_0: fetch gce_instance::workload.googleapis.com/cassandra.client.request.count\n    ; \n    t_1: fetch gce_instance::workload.googleapis.com/cassandra.client.request.error.count\n}\n| outer_join 1\n| group_by [metric.status, metric.operation]\n| value val(1) / if(has_value(val(0)), 1, val(0))\n| window 1m\n| condition val() > .1",
+          "trigger": {
+            "count": 1
+          }
         }
+      }
     ],
     "alertStrategy": {
-        "autoClose": "3600s"
+      "autoClose": "3600s"
     },
     "combiner": "OR",
     "enabled": true,
     "notificationChannels": []
-}
+  }
