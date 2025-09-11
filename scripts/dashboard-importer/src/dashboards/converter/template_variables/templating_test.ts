@@ -109,12 +109,12 @@ function TestInterpolateExpression() {
   }).result;
   assert(tvMap !== null);
   const nodeExpression = interpolateExpression(
-    'node_disk_io_time_seconds_total{kubernetes_io_hostname="$Node"}[${__interval}]',
+    'node_disk_io_time_seconds_total{kubernetes_io_hostname="$Node"}[2m]',
     tvMap,
   ).result;
   assert.strictEqual(
     nodeExpression,
-    'node_disk_io_time_seconds_total{node="${Node.value}"}[${__interval}]',
+    'node_disk_io_time_seconds_total{node="${Node.value}"}[2m]',
   );
 }
 

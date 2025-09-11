@@ -77,35 +77,35 @@ function testDashboardConversion() {
   assertTitle(tiles[0], 'Test Time Series');
   assertChartPrometheusExpression(
     tiles[0],
-    'rate(node_cpu_seconds_total{mode="idle"}[${__interval}])',
+    'rate(node_cpu_seconds_total{mode="idle"}[5m])',
   );
   assertPlotType(tiles[0], 'LINE');
 
   assertTitle(tiles[1], 'Test Stacked Area Chart');
   assertChartPrometheusExpression(
     tiles[1],
-    'rate(node_cpu_seconds_total{mode="idle"}[${__interval}])',
+    'rate(node_cpu_seconds_total{mode="idle"}[5m])',
   );
   assertPlotType(tiles[1], 'STACKED_AREA');
 
   assertTitle(tiles[2], 'Test Graph Old');
   assertChartPrometheusExpression(
     tiles[2],
-    'rate(node_cpu_seconds_total{mode="idle"}[${__interval}])',
+    'rate(node_cpu_seconds_total{mode="idle"}[5m])',
   );
   assertPlotType(tiles[2], 'LINE');
 
   assertTitle(tiles[3], 'Test Bar Gauge');
   assertChartPrometheusExpression(
     tiles[3],
-    'rate(node_cpu_seconds_total{mode="idle"}[${__interval}])',
+    'rate(node_cpu_seconds_total{mode="idle"}[5m])',
   );
   assertPlotType(tiles[3], 'STACKED_BAR');
 
   assertTitle(tiles[4], 'Test Table');
   assertTablePrometheusExpression(
     tiles[4],
-    'rate(node_cpu_seconds_total{mode="idle"}[${__interval}])',
+    'rate(node_cpu_seconds_total{mode="idle"}[5m])',
   );
 
   assertTitle(tiles[5], 'Test Gauge Chart');
