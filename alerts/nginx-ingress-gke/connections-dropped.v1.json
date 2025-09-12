@@ -1,26 +1,29 @@
 {
-    "displayName": "NGINX Ingress Controller - Prometheus - Connections Dropped",
-    "documentation": {
-      "content": "The connections dropped value is derived from the connections accepted minus the connections handled. This value should be near 0. When this value is rising, it means you may have a resource saturation problem.",
-      "mimeType": "text/markdown"
-    },
-    "userLabels": {},
-    "conditions": [
-      {
-        "displayName": "Dropped Connections",
-        "conditionMonitoringQueryLanguage": {
-          "duration": "0s",
-          "query": "fetch prometheus_target\n| { t_0:\n      metric\n        'prometheus.googleapis.com/nginx_ingress_controller_nginx_process_connections_total/counter'\n      | filter state = \"accepted\"\n      | map drop[metric.state]\n  ; t_1:\n      metric\n        'prometheus.googleapis.com/nginx_ingress_controller_nginx_process_connections_total/counter'\n      | filter state = \"handled\"\n      | map drop[metric.state] }\n| outer_join 0\n| sub\n| align rate(5m)\n| every 5m\n| condition val() > 0",
-          "trigger": {
-            "count": 1
-          }
-        }
+  "displayName": "NGINX Ingress Controller - Prometheus - Connections Dropped",
+  "documentation": {
+    "content": "The connections dropped value is derived from the connections accepted minus the connections handled. This value should be near 0. When this value is rising, it means you may have a resource saturation problem.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Dropped Connections",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "30s",
+        "query": "(\n  sum without(state) (\n    rate({\"nginx_ingress_controller_nginx_process_connections_total\", state=\"accepted\"}[5m])\n  )\n  -\n  sum without(state) (\n    rate({\"nginx_ingress_controller_nginx_process_connections_total\", state=\"handled\"}[5m])\n  )\n) > 0"
       }
-    ],
-    "alertStrategy": {
-      "autoClose": "604800s"
-    },
-    "combiner": "OR",
-    "enabled": true,
-    "notificationChannels": []
-  }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
+}
