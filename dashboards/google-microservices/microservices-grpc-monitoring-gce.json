@@ -20,7 +20,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{monitored_resource=\"gce_instance\", grpc_client_status=\"OK\"}[1m])",
+                  "prometheusQuery": "rate(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{monitored_resource=\"gce_instance\", grpc_client_status=\"OK\"}[${__interval}])",
                   "unitOverride": "1/s"
                 }
               }
@@ -60,7 +60,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(\n    sum by (opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n        increase(custom_googleapis_com:opencensus_grpc_io_client_started_rpcs{\n            monitored_resource=\"gce_instance\"\n        }[1m])\n    )\n    -\n    sum by (opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n        increase(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{\n            monitored_resource=\"gce_instance\"\n        }[1m])\n    )\n) >= 0\n\n"
+                  "prometheusQuery": "(\n    sum by (opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n        increase(custom_googleapis_com:opencensus_grpc_io_client_started_rpcs{\n            monitored_resource=\"gce_instance\"\n        }[${__interval}])\n    )\n    -\n    sum by (opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n        increase(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{\n            monitored_resource=\"gce_instance\"\n        }[${__interval}])\n    )\n) >= 0\n\n"
                 }
               }
             ],
@@ -88,7 +88,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{monitored_resource=\"gce_instance\", grpc_client_status!=\"OK\"}[1m])\n",
+                  "prometheusQuery": "rate(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{monitored_resource=\"gce_instance\", grpc_client_status!=\"OK\"}[${__interval}])\n",
                   "unitOverride": "1/s"
                 }
               }
@@ -118,7 +118,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by(opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n  increase(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{\n    monitored_resource=\"gce_instance\",\n    grpc_client_status!=\"OK\"\n  }[1m])\n)\n/\n(\n  sum by(opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{\n      monitored_resource=\"gce_instance\"\n    }[1m])\n  )\n)\n"
+                  "prometheusQuery": "sum by(opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n  increase(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{\n    monitored_resource=\"gce_instance\",\n    grpc_client_status!=\"OK\"\n  }[${__interval}])\n)\n/\n(\n  sum by(opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_client_completed_rpcs{\n      monitored_resource=\"gce_instance\"\n    }[${__interval}])\n  )\n)\n"
                 }
               }
             ],
@@ -654,7 +654,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{monitored_resource=\"gce_instance\", grpc_server_status=\"OK\"}[1m])",
+                  "prometheusQuery": "rate(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{monitored_resource=\"gce_instance\", grpc_server_status=\"OK\"}[${__interval}])",
                   "unitOverride": "1/s"
                 }
               }
@@ -696,7 +696,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(\n  sum by(grpc_server_method, opencensus_task, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_server_started_rpcs{\n      monitored_resource=\"gce_instance\"\n    }[1m])\n  )\n  -\n  sum by(grpc_server_method, opencensus_task, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{\n      monitored_resource=\"gce_instance\"\n    }[1m])\n  )\n) >= 0\n"
+                  "prometheusQuery": "(\n  sum by(grpc_server_method, opencensus_task, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_server_started_rpcs{\n      monitored_resource=\"gce_instance\"\n    }[${__interval}])\n  )\n  -\n  sum by(grpc_server_method, opencensus_task, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{\n      monitored_resource=\"gce_instance\"\n    }[${__interval}])\n  )\n) >= 0\n"
                 }
               }
             ],
@@ -724,7 +724,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "rate(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{monitored_resource=\"gce_instance\", grpc_server_status!=\"OK\"}[1m])",
+                  "prometheusQuery": "rate(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{monitored_resource=\"gce_instance\", grpc_server_status!=\"OK\"}[${__interval}])",
                   "unitOverride": "1/s"
                 }
               }
@@ -754,7 +754,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by(opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n  increase(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{\n    monitored_resource=\"gce_instance\",\n    grpc_server_status!=\"OK\"\n  }[1m])\n)\n/\n(\n  sum by(opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{\n      monitored_resource=\"gce_instance\"\n    }[1m])\n  )\n)"
+                  "prometheusQuery": "sum by(opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n  increase(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{\n    monitored_resource=\"gce_instance\",\n    grpc_server_status!=\"OK\"\n  }[${__interval}])\n)\n/\n(\n  sum by(opencensus_task, grpc_client_method, project_id, instance_id, zone) (\n    increase(custom_googleapis_com:opencensus_grpc_io_server_completed_rpcs{\n      monitored_resource=\"gce_instance\"\n    }[${__interval}])\n  )\n)"
                 }
               }
             ],
