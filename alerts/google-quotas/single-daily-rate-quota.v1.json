@@ -11,7 +11,7 @@
       "conditionPrometheusQueryLanguage": {
         "duration": "0s",
         "evaluationInterval": "30s",
-        "query": "(\n  sum by ('${GROUPING}') (\n    sum_over_time({\n        '${METRIC_USAGE_TYPE}',\n        monitored_resource='${MONITORED_RESOURCE}',\n        '${OUTER_FILTER}',\n        '${QUOTA_USAGE_FILTER}',\n        '${OPTIONAL_USAGE_QUERY}'\n    }[1d])\n  )\n  /\n  min by ('${GROUPING}') ({\n    '${METRIC_LIMIT_TYPE}',\n    monitored_resource='${MONITORED_RESOURCE}',\n    '${OUTER_FILTER}',\n    '${QUOTA_LIMIT_FILTER}'\n  })\n) > 0.8"
+        "query": "(\n  sum by ('${GROUPING}') (\n    sum_over_time(\n        (\n            {\n                '${METRIC_USAGE_TYPE}',\n                monitored_resource='${MONITORED_RESOURCE}',\n                '${OUTER_FILTER}',\n                '${QUOTA_USAGE_FILTER}',\n                '${OPTIONAL_USAGE_QUERY}'\n            }\n            *\n            # only the last 24 hours since midnight Los Angeles time (UTC-8)\n            clamp_max(day_of_year(max(timestamp({'${METRIC_USAGE_TYPE}',monitored_resource='${MONITORED_RESOURCE}','${OUTER_FILTER}','${QUOTA_USAGE_FILTER}','${OPTIONAL_USAGE_QUERY}'} @ end()))) == day_of_year(max(timestamp({'${METRIC_USAGE_TYPE}',monitored_resource='${MONITORED_RESOURCE}','${OUTER_FILTER}','${QUOTA_USAGE_FILTER}','${OPTIONAL_USAGE_QUERY}'} @ end())) - (8*3600)), 1) \n        )[1d]\n    )\n  )\n  /\n  min by ('${GROUPING}') ({\n    '${METRIC_LIMIT_TYPE}',\n    monitored_resource='${MONITORED_RESOURCE}',\n    '${OUTER_FILTER}',\n    '${QUOTA_LIMIT_FILTER}'\n  })\n) > 0.8"
       }
     }
   ],
