@@ -5,9 +5,9 @@
     {
       "displayName": "Quota Limit Approaching",
       "conditionPrometheusQueryLanguage": {
-        "duration": "3600s",
+        "duration": "0s",
         "evaluationInterval": "30s",
-        "query": "sum({\"chronicle.googleapis.com/ingestion/log/bytes_count\", monitored_resource=\"chronicle.googleapis.com/Collector\"})\n/\nmin({\"chronicle.googleapis.com/ingestion/quota_limit\", monitored_resource=\"chronicle.googleapis.com/Collector\", quota_type=\"SHORT_TERM_DATA_RATE\"})\n> 0.5"
+        "query": "sum(sum_over_time({\"chronicle.googleapis.com/ingestion/log/bytes_count\", monitored_resource=\"chronicle.googleapis.com/Collector\"}[1m]))\n/\nmin(min_over_time({\"chronicle.googleapis.com/ingestion/quota_limit\", monitored_resource=\"chronicle.googleapis.com/Collector\", quota_type=\"SHORT_TERM_DATA_RATE\"}[1m])) > 0.5"
       }
     }
   ],
