@@ -11,7 +11,7 @@
       "conditionPrometheusQueryLanguage": {
         "duration": "60s",
         "evaluationInterval": "30s",
-        "query": "(\n  sum by (instance_id, tablespace_name) (\n    {\"workload.googleapis.com/oracle.tablespace.size\", monitored_resource=\"gce_instance\", state=\"used\"})\n  /\n  (\n    sum by (instance_id, tablespace_name) (\n      {\"workload.googleapis.com/oracle.tablespace.size\", monitored_resource=\"gce_instance\", state=\"used\"})\n    + \n    sum by (instance_id, tablespace_name) (\n      {\"workload.googleapis.com/oracle.tablespace.size\", monitored_resource=\"gce_instance\", state=\"free\"})\n  )\n) > 0.85"
+        "query": "(\n  sum by (instance_id, tablespace_name) ({\"workload.googleapis.com/oracle.tablespace.size\", monitored_resource=\"gce_instance\", state=\"used\"})\n  /\n  sum by (instance_id, tablespace_name) ({\"workload.googleapis.com/oracle.tablespace.size\", monitored_resource=\"gce_instance\", state=~\"used|free\"})\n) > 0.85"
       }
     }
   ],
