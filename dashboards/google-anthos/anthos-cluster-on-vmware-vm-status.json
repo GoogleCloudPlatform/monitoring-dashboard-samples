@@ -16,7 +16,7 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "prometheusQuery": "100 *\n(\n  sum by (project_id, cluster_name, location, node) (\n    # Case 1: kube-system — use cluster_name as-is\n    label_replace(\n      rate(kubernetes_io:anthos_vm_cpu_ready_seconds_sum{monitored_resource=\"k8s_pod\", namespace_name=\"kube-system\"}[1m]),\n      \"cluster_name\", \"$1\", \"cluster_name\", \"(.*)\"\n    )\n    or\n    # Case 2: all other namespaces — set cluster_name = namespace_name\n    label_replace(\n      rate(kubernetes_io:anthos_vm_cpu_ready_seconds_sum{monitored_resource=\"k8s_pod\", namespace_name!~\"kube-system\"}[1m]),\n      \"cluster_name\", \"$1\", \"namespace_name\", \"(.*)\"\n    )\n  )\n)\n/\n(\n  sum by (project_id, cluster_name, location, node) (\n    label_replace(\n      kubernetes_io:anthos_node_cpu_total_cores{monitored_resource=\"k8s_node\"},\n      \"node\", \"$1\", \"node_name\", \"(.*)\"\n    )\n  )\n)\n"
+                "prometheusQuery": "100 *\n(\n  sum by (project_id, cluster_name, location, node) (\n    # Case 1: kube-system — use cluster_name as-is\n    label_replace(\n      rate(kubernetes_io:anthos_vm_cpu_ready_seconds_sum{monitored_resource=\"k8s_pod\", namespace_name=\"kube-system\"}[${__interval}]),\n      \"cluster_name\", \"$1\", \"cluster_name\", \"(.*)\"\n    )\n    or\n    # Case 2: all other namespaces — set cluster_name = namespace_name\n    label_replace(\n      rate(kubernetes_io:anthos_vm_cpu_ready_seconds_sum{monitored_resource=\"k8s_pod\", namespace_name!~\"kube-system\"}[${__interval}]),\n      \"cluster_name\", \"$1\", \"namespace_name\", \"(.*)\"\n    )\n  )\n)\n/\n(\n  sum by (project_id, cluster_name, location, node) (\n    label_replace(\n      kubernetes_io:anthos_node_cpu_total_cores{monitored_resource=\"k8s_node\"},\n      \"node\", \"$1\", \"node_name\", \"(.*)\"\n    )\n  )\n)\n"
               }
             }
           ],
@@ -78,7 +78,7 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "prometheusQuery": "(\n  sum by (project_id, cluster_name, location, node) (\n    rate(kubernetes_io:anthos_vm_virtualdisk_read_latency_seconds_sum{monitored_resource=\"k8s_pod\"}[1m])\n  )\n)\n/\n(\n  sum by (project_id, cluster_name, location, node) (\n    kubernetes_io:anthos_vm_number_virtualdisk{monitored_resource=\"k8s_pod\"}\n  )\n)"
+                "prometheusQuery": "(\n  sum by (project_id, cluster_name, location, node) (\n    rate(kubernetes_io:anthos_vm_virtualdisk_read_latency_seconds_sum{monitored_resource=\"k8s_pod\"}[${__interval}])\n  )\n)\n/\n(\n  sum by (project_id, cluster_name, location, node) (\n    kubernetes_io:anthos_vm_number_virtualdisk{monitored_resource=\"k8s_pod\"}\n  )\n)"
               }
             }
           ],
@@ -102,7 +102,7 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "prometheusQuery": "(\n  sum by (project_id, cluster_name, location, node) (\n    rate(kubernetes_io:anthos_vm_virtualdisk_write_latency_seconds_sum{monitored_resource=\"k8s_pod\"}[1m])\n  )\n)\n/\n(\n  sum by (project_id, cluster_name, location, node) (\n    kubernetes_io:anthos_vm_number_virtualdisk{monitored_resource=\"k8s_pod\"}\n  )\n)"
+                "prometheusQuery": "(\n  sum by (project_id, cluster_name, location, node) (\n    rate(kubernetes_io:anthos_vm_virtualdisk_write_latency_seconds_sum{monitored_resource=\"k8s_pod\"}[${__interval}])\n  )\n)\n/\n(\n  sum by (project_id, cluster_name, location, node) (\n    kubernetes_io:anthos_vm_number_virtualdisk{monitored_resource=\"k8s_pod\"}\n  )\n)"
               }
             }
           ],
