@@ -1,6 +1,7 @@
 platforms:
   - type: GKE
     launch_stage: GA
+    version: 1
     detections:
       - characteristic_metric:
           metric_type: prometheus.googleapis.com/vllm:prompt_tokens_total/counter
@@ -8,6 +9,130 @@ platforms:
       name: vLLM Prometheus Exporter
       doc_url: https://docs.vllm.ai/en/v0.6.1/serving/metrics.html
       minimum_supported_version: v0.6.2
+    default_metrics:
+      - name: prometheus.googleapis.com/vllm:avg_generation_throughput_toks_per_s/gauge
+        prometheus_name: avg_generation_throughput_toks_per_s
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:avg_prompt_throughput_toks_per_s/gauge
+        prometheus_name: avg_prompt_throughput_toks_per_s
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:cache_config_info/gauge
+        prometheus_name: cache_config_info
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:cache_config_info/unknown
+        prometheus_name: cache_config_info
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:cache_config_info/unknown:counter
+        prometheus_name: cache_config_info
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:cpu_cache_usage_perc/gauge
+        prometheus_name: cpu_cache_usage_perc
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:cpu_prefix_cache_hit_rate/gauge
+        prometheus_name: cpu_prefix_cache_hit_rate
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:e2e_request_latency_seconds/histogram
+        prometheus_name: e2e_request_latency_seconds
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/vllm:generation_tokens_total/counter
+        prometheus_name: generation_tokens_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:gpu_cache_usage_perc/gauge
+        prometheus_name: gpu_cache_usage_perc
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:gpu_prefix_cache_hit_rate/gauge
+        prometheus_name: gpu_prefix_cache_hit_rate
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:num_preemptions_total/counter
+        prometheus_name: num_preemptions_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:num_requests_running/gauge
+        prometheus_name: num_requests_running
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:num_requests_swapped/gauge
+        prometheus_name: num_requests_swapped
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:num_requests_waiting/gauge
+        prometheus_name: num_requests_waiting
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:prompt_tokens_total/counter
+        prometheus_name: prompt_tokens_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:request_generation_tokens/histogram
+        prometheus_name: request_generation_tokens
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/vllm:request_params_best_of/histogram
+        prometheus_name: request_params_best_of
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/vllm:request_params_n/histogram
+        prometheus_name: request_params_n
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/vllm:request_prompt_tokens/histogram
+        prometheus_name: request_prompt_tokens
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/vllm:request_success_total/counter
+        prometheus_name: request_success_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:spec_decode_draft_acceptance_rate/gauge
+        prometheus_name: spec_decode_draft_acceptance_rate
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:spec_decode_efficiency/gauge
+        prometheus_name: spec_decode_efficiency
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:spec_decode_num_accepted_tokens_total/counter
+        prometheus_name: spec_decode_num_accepted_tokens_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:spec_decode_num_draft_tokens_total/counter
+        prometheus_name: spec_decode_num_draft_tokens_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:spec_decode_num_emitted_tokens_total/counter
+        prometheus_name: spec_decode_num_emitted_tokens_total
+        kind: CUMULATIVE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/vllm:time_per_output_token_seconds/histogram
+        prometheus_name: time_per_output_token_seconds
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/vllm:time_to_first_token_seconds/histogram
+        prometheus_name: time_to_first_token_seconds
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/vllm
+  - type: GKE
+    launch_stage: HIDDEN
+    version: 2
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/vllm:gpu_cache_usage_perc/gauge
+    exporter_metadata:
+      name: vLLM Prometheus Exporter
+      doc_url: https://docs.vllm.ai/en/v0.10.2/design/metrics.html
+      minimum_supported_version: v0.10.2
     default_metrics:
       - name: prometheus.googleapis.com/vllm:avg_generation_throughput_toks_per_s/gauge
         prometheus_name: avg_generation_throughput_toks_per_s
