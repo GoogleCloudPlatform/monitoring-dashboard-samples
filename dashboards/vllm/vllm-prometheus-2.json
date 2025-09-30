@@ -264,7 +264,7 @@
                   "groupByFields": [],
                   "perSeriesAligner": "ALIGN_DELTA"
                 },
-                "filter": "metric.type=\"prometheus.googleapis.com/vllm:time_per_output_token_seconds/histogram\" resource.type=\"prometheus_target\""
+                "filter": "metric.type=\"prometheus.googleapis.com/vllm:inter_token_latency_seconds/histogram\" resource.type=\"prometheus_target\""
               },
               "unitOverride": ""
             }
@@ -307,7 +307,7 @@
                   "groupByFields": [],
                   "perSeriesAligner": "ALIGN_DELTA"
                 },
-                "filter": "metric.type=\"prometheus.googleapis.com/vllm:time_per_output_token_seconds/histogram\" resource.type=\"prometheus_target\""
+                "filter": "metric.type=\"prometheus.googleapis.com/vllm:inter_token_latency_seconds/histogram\" resource.type=\"prometheus_target\""
               },
               "unitOverride": ""
             }
@@ -476,27 +476,20 @@
       {
         "yPos": 27,
         "height": 18,
-        "width": 16,
+        "width": 24,
         "widget": {
           "title": "Schedule State",
-          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_BAR",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -505,42 +498,14 @@
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
                     "filter": "metric.type=\"prometheus.googleapis.com/vllm:num_requests_waiting/gauge\" resource.type=\"prometheus_target\""
-                  },
-                  "unitOverride": ""
+                  }
                 }
               },
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_BAR",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"prometheus.googleapis.com/vllm:num_requests_swapped/gauge\" resource.type=\"prometheus_target\""
-                  },
-                  "unitOverride": ""
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_BAR",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -549,14 +514,12 @@
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
                     "filter": "metric.type=\"prometheus.googleapis.com/vllm:num_requests_running/gauge\" resource.type=\"prometheus_target\""
-                  },
-                  "unitOverride": ""
+                  }
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -564,9 +527,9 @@
       },
       {
         "yPos": 27,
-        "xPos": 16,
+        "xPos": 24,
         "height": 18,
-        "width": 16,
+        "width": 24,
         "widget": {
           "title": "Token throughput",
           "id": "",
@@ -631,10 +594,9 @@
         }
       },
       {
-        "yPos": 27,
-        "xPos": 32,
+        "yPos": 45,
         "height": 18,
-        "width": 16,
+        "width": 24,
         "widget": {
           "title": "Mean tokens per request",
           "id": "",
@@ -700,6 +662,7 @@
       },
       {
         "yPos": 45,
+        "xPos": 24,
         "height": 18,
         "width": 24,
         "widget": {
@@ -774,96 +737,6 @@
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
                     "filter": "metric.type=\"prometheus.googleapis.com/vllm:request_params_n/histogram\" resource.type=\"prometheus_target\""
-                  },
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 45,
-        "xPos": 24,
-        "height": 18,
-        "width": 24,
-        "widget": {
-          "title": "best_of param distribution (# of output sequences generated)",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p50",
-                "measures": [],
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
-                      "groupByFields": [],
-                      "perSeriesAligner": "ALIGN_DELTA"
-                    },
-                    "filter": "metric.type=\"prometheus.googleapis.com/vllm:request_params_best_of/histogram\" resource.type=\"prometheus_target\""
-                  },
-                  "unitOverride": ""
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p95",
-                "measures": [],
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
-                      "groupByFields": [],
-                      "perSeriesAligner": "ALIGN_DELTA"
-                    },
-                    "filter": "metric.type=\"prometheus.googleapis.com/vllm:request_params_best_of/histogram\" resource.type=\"prometheus_target\""
-                  },
-                  "unitOverride": ""
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p99",
-                "measures": [],
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
-                      "groupByFields": [],
-                      "perSeriesAligner": "ALIGN_DELTA"
-                    },
-                    "filter": "metric.type=\"prometheus.googleapis.com/vllm:request_params_best_of/histogram\" resource.type=\"prometheus_target\""
                   },
                   "unitOverride": ""
                 }
@@ -1101,7 +974,7 @@
                       "groupByFields": [],
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
-                    "filter": "metric.type=\"prometheus.googleapis.com/vllm:time_per_output_token_seconds/histogram\" resource.type=\"prometheus_target\""
+                    "filter": "metric.type=\"prometheus.googleapis.com/vllm:inter_token_latency_seconds/histogram\" resource.type=\"prometheus_target\""
                   },
                   "unitOverride": ""
                 }
@@ -1123,7 +996,7 @@
                       "groupByFields": [],
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
-                    "filter": "metric.type=\"prometheus.googleapis.com/vllm:time_per_output_token_seconds/histogram\" resource.type=\"prometheus_target\""
+                    "filter": "metric.type=\"prometheus.googleapis.com/vllm:inter_token_latency_seconds/histogram\" resource.type=\"prometheus_target\""
                   },
                   "unitOverride": ""
                 }
@@ -1145,7 +1018,7 @@
                       "groupByFields": [],
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
-                    "filter": "metric.type=\"prometheus.googleapis.com/vllm:time_per_output_token_seconds/histogram\" resource.type=\"prometheus_target\""
+                    "filter": "metric.type=\"prometheus.googleapis.com/vllm:inter_token_latency_seconds/histogram\" resource.type=\"prometheus_target\""
                   },
                   "unitOverride": ""
                 }
@@ -1175,34 +1048,26 @@
       {
         "yPos": 89,
         "height": 16,
-        "width": 24,
+        "width": 16,
         "widget": {
-          "title": "CPU Cache Usage %",
-          "id": "",
+          "title": "KV cache usage %",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "sum by (model_name,pod)(avg_over_time(vllm:cpu_cache_usage_perc[${__interval}]))",
+                  "prometheusQuery": "avg by (\"model_name\",\"pod\")(avg_over_time({\"__name__\"=\"vllm:kv_cache_usage_perc\"}[${__interval}]))\n",
                   "unitOverride": "10^2.%"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -1210,113 +1075,37 @@
       },
       {
         "yPos": 89,
-        "xPos": 24,
+        "xPos": 16,
         "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "GPU cache usage %",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "sum by (pod,model_name)(avg_over_time(vllm:gpu_cache_usage_perc[${__interval}]))",
-                  "unitOverride": "10^2.%"
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 105,
-        "height": 16,
-        "width": 24,
+        "width": 16,
         "widget": {
           "title": "Prefix cache hit rate",
-          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "CPU",
-                "measures": [],
-                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"prometheus.googleapis.com/vllm:cpu_prefix_cache_hit_rate/gauge\" resource.type=\"prometheus_target\""
-                  },
-                  "unitOverride": ""
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "GPU",
-                "measures": [],
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [],
-                      "perSeriesAligner": "ALIGN_MEAN"
-                    },
-                    "filter": "metric.type=\"prometheus.googleapis.com/vllm:gpu_prefix_cache_hit_rate/gauge\" resource.type=\"prometheus_target\""
-                  },
-                  "unitOverride": ""
+                  "prometheusQuery": "sum by (\"model_name\",\"pod\")(rate({\"__name__\"=\"vllm:prefix_cache_hits_total\"}[${__interval}]))\n/\nsum by (\"model_name\",\"pod\")(rate({\"__name__\"=\"vllm:prefix_cache_queries_total\"}[${__interval}]))\n"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "yPos": 105,
-        "xPos": 24,
+        "yPos": 89,
+        "xPos": 32,
         "height": 16,
-        "width": 24,
+        "width": 16,
         "widget": {
           "title": "Preemptions rate",
           "id": "",
@@ -1359,7 +1148,7 @@
         }
       },
       {
-        "yPos": 121,
+        "yPos": 105,
         "height": 12,
         "width": 48,
         "widget": {
@@ -1457,7 +1246,7 @@
         }
       },
       {
-        "yPos": 133,
+        "yPos": 117,
         "height": 4,
         "width": 48,
         "widget": {
@@ -1470,7 +1259,7 @@
         }
       },
       {
-        "yPos": 137,
+        "yPos": 121,
         "height": 16,
         "width": 24,
         "widget": {
@@ -1517,7 +1306,7 @@
         }
       },
       {
-        "yPos": 153,
+        "yPos": 137,
         "height": 4,
         "width": 48,
         "widget": {
@@ -1530,7 +1319,7 @@
         }
       },
       {
-        "yPos": 157,
+        "yPos": 141,
         "height": 16,
         "width": 16,
         "widget": {
@@ -1575,7 +1364,7 @@
         }
       },
       {
-        "yPos": 157,
+        "yPos": 141,
         "xPos": 16,
         "height": 16,
         "width": 16,
@@ -1665,7 +1454,7 @@
         }
       },
       {
-        "yPos": 157,
+        "yPos": 141,
         "xPos": 32,
         "height": 16,
         "width": 16,
