@@ -1,24 +1,17 @@
 {
-  "displayName": "Server Error (5xx) is high. (GKE Workload: ${metric.label.metadata_system_top_level_controller_name})",
+  "displayName": "Server Error (5xx) is high. (GKE Workload: ${WORKLOAD_NAME})",
   "documentation": {
-    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${metric_or_resource.label.location}/${metric_or_resource.label.cluster_name}/${metric_or_resource.label.namespace_name}/${metric.label.metadata_system_top_level_controller_name}/observability?project=${metric_or_resource.label.project_id}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [PromQL documentation](https://cloud.google.com/monitoring/promql/create-promql-alerts-console)",
+    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${WORKLOAD_NAME}/observability?project=${PROJECT_ID}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [MQL documentation](https://cloud.google.com/monitoring/mql/alerts)",
     "mimeType": "text/markdown"
   },
-  "userLabels": {
-    "workload_name": "${metric.label.metadata_system_top_level_controller_name}",
-    "workload_type": "${metric.label.metadata_system_top_level_controller_type}",
-    "project_id": "${metric_or_resource.label.project_id}",
-    "location": "${metric_or_resource.label.location}",
-    "cluster": "${metric_or_resource.label.cluster_name}",
-    "namespace": "${metric_or_resource.label.namespace_name}"
-  },
+  "userLabels": {},
   "conditions": [
     {
       "displayName": "Server Error (5xx) is high",
       "conditionPrometheusQueryLanguage": {
         "duration": "0s",
         "evaluationInterval": "30s",
-        "query": "(\n  sum (\n    rate({\n      \"istio_requests_total\",\n      project_id=~\"${metric_or_resource.label.project_id}\",\n      cluster=~\"${metric_or_resource.label.cluster_name}\",\n      location=~\"${metric_or_resource.label.location}\",\n      namespace=~\"${metric_or_resource.label.namespace_name}\",\n      destination_workload=~\"${metric.label.metadata_system_top_level_controller_name}\",\n      response_code=~\"5[0-9][0-9]\"\n    }[5m])\n  )\n  /\n  sum (\n    rate({\n      \"istio_requests_total\",\n      project_id=~\"${metric_or_resource.label.project_id}\",\n      cluster=~\"${metric_or_resource.label.cluster_name}\",\n      location=~\"${metric_or_resource.label.location}\",\n      namespace=~\"${metric_or_resource.label.namespace_name}\",\n      destination_workload=~\"${metric.label.metadata_system_top_level_controller_name}\",\n    }[5m])\n  )\n) > 0.05"
+        "query": "(\n  sum (\n    rate({\n      \"istio_requests_total\",\n      project_id=\"${PROJECT_ID}\",\n      cluster=\"${CLUSTER_NAME}\",\n      location=\"${CLUSTER_LOCATION}\",\n      namespace=\"${NAMESPACE}\",\n      destination_workload=~\"${WORKLOAD_NAME}\",\n      response_code=~\"5[0-9][0-9]\"\n    }[5m])\n  )\n  /\n  sum (\n    rate({\n      \"istio_requests_total\",\n      project_id=\"${PROJECT_ID}\",\n      cluster=\"${CLUSTER_NAME}\",\n      location=\"${CLUSTER_LOCATION}\",\n      namespace=\"${NAMESPACE}\",\n      destination_workload=~\"${WORKLOAD_NAME}\",\n    }[5m])\n  )\n) > 0.05"
       }
     }
   ],

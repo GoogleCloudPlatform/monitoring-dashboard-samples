@@ -1,24 +1,17 @@
 {
-  "displayName": "Server Error (5xx) is high. (GKE Workload: ${metric.label.metadata_system_top_level_controller_name})",
+  "displayName": "Server Error (5xx) is high. (GKE Workload: ${WORKLOAD_NAME})",
   "documentation": {
-    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${metric_or_resource.label.location}/${metric_or_resource.label.cluster_name}/${metric_or_resource.label.namespace_name}/${metric.label.metadata_system_top_level_controller_name}/observability?project=${metric_or_resource.label.project_id}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [PromQL documentation](https://cloud.google.com/monitoring/promql/create-promql-alerts-console)",
+    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${WORKLOAD_NAME}/observability?project=${PROJECT_ID}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [MQL documentation](https://cloud.google.com/monitoring/mql/alerts)",
     "mimeType": "text/markdown"
   },
-  "userLabels": {
-    "workload_name": "${metric.label.metadata_system_top_level_controller_name}",
-    "workload_type": "${metric.label.metadata_system_top_level_controller_type}",
-    "project_id": "${metric_or_resource.label.project_id}",
-    "location": "${metric_or_resource.label.location}",
-    "cluster": "${metric_or_resource.label.cluster_name}",
-    "namespace": "${metric_or_resource.label.namespace_name}"
-  },
+  "userLabels": {},
   "conditions": [
     {
       "displayName": "Server Error (5xx) is high for a URL path",
       "conditionPrometheusQueryLanguage": {
         "duration": "0s",
         "evaluationInterval": "30s",
-        "query": "(\n  sum by (matched_url_path_rule) (\n    rate({\n      \"loadbalancing.googleapis.com/https/request_count\",\n      monitored_resource=\"https_lb_rule\",\n      project_id=~\"${metric_or_resource.label.project_id}\",\n      backend_name=~\"${NETWORK_ENDPOINT_GROUPS_REGEX}\",\n      backend_type=\"NETWORK_ENDPOINT_GROUP\",\n      response_code_class=\"500\"\n    }[5m])\n  )\n  /\n  sum by (matched_url_path_rule) (\n    rate({\n      \"loadbalancing.googleapis.com/https/request_count\",\n      monitored_resource=\"https_lb_rule\",\n      project_id=~\"${metric_or_resource.label.project_id}\",\n      backend_name=~\"${NETWORK_ENDPOINT_GROUPS_REGEX}\",\n      backend_type=\"NETWORK_ENDPOINT_GROUP\"\n    }[5m])\n  )\n) > 0.05"
+        "query": "(\n  sum by (matched_url_path_rule) (\n    rate({\n      \"loadbalancing.googleapis.com/https/request_count\",\n      monitored_resource=\"https_lb_rule\",\n      project_id=\"${PROJECT_ID}\",\n      backend_name=~\"${NETWORK_ENDPOINT_GROUPS_REGEX}\",\n      backend_type=\"NETWORK_ENDPOINT_GROUP\",\n      response_code_class=\"500\"\n    }[5m])\n  )\n  /\n  sum by (matched_url_path_rule) (\n    rate({\n      \"loadbalancing.googleapis.com/https/request_count\",\n      monitored_resource=\"https_lb_rule\",\n      project_id=\"${PROJECT_ID}\",\n      backend_name=~\"${NETWORK_ENDPOINT_GROUPS_REGEX}\",\n      backend_type=\"NETWORK_ENDPOINT_GROUP\"\n    }[5m])\n  )\n) > 0.05"
       }
     }
   ],

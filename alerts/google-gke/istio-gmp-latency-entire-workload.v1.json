@@ -1,22 +1,22 @@
 {
-  "displayName": "High Latency (GKE Workload: ${metric.label.metadata_system_top_level_controller_name})",
+  "displayName": "High Latency (GKE Workload: ${WORKLOAD_NAME})",
   "documentation": {
-    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${metric_or_resource.label.location}/${metric_or_resource.label.cluster_name}/${metric_or_resource.label.namespace_name}/${metric.label.metadata_system_top_level_controller_name}/observability?project=${metric_or_resource.label.project_id}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [PromQL documentation](https://cloud.google.com/monitoring/promql/create-promql-alerts-console)",
+    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${WORKLOAD_NAME}/observability?project=${PROJECT_ID}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [MQL documentation](https://cloud.google.com/monitoring/mql/alerts)",
     "mimeType": "text/markdown"
   },
   "userLabels": {
-    "workload_name": "${metric.label.metadata_system_top_level_controller_name}",
-    "workload_type": "${metric.label.metadata_system_top_level_controller_type}",
-    "project_id": "${metric_or_resource.label.project_id}",
-    "location": "${metric_or_resource.label.location}",
-    "cluster": "${metric_or_resource.label.cluster_name}",
-    "namespace": "${metric_or_resource.label.namespace_name}"
+    "workload_name": "${WORKLOAD_NAME}",
+    "workload_type": "${WORKLOAD_TYPE}",
+    "project_id": "${PROJECT_ID}",
+    "location": "${CLUSTER_LOCATION}",
+    "cluster": "${CLUSTER_NAME}",
+    "namespace": "${NAMESPACE}"
   },
   "conditions": [
     {
       "displayName": "High p95 latency",
       "conditionThreshold": {
-        "filter": "resource.type = \"prometheus_target\" AND (resource.labels.cluster = \"${metric_or_resource.label.cluster_name}\" AND resource.labels.location = \"${metric_or_resource.label.location}\" AND resource.labels.namespace = \"${metric_or_resource.label.namespace_name}\" AND resource.labels.project_id = \"${metric_or_resource.label.project_id}\") AND metric.type = \"prometheus.googleapis.com/istio_request_duration_milliseconds/histogram\" AND metric.labels.destination_workload = \"${metric.label.metadata_system_top_level_controller_name}\"",
+        "filter": "resource.type = \"prometheus_target\" AND (resource.labels.cluster = \"${CLUSTER_NAME}\" AND resource.labels.location = \"${CLUSTER_LOCATION}\" AND resource.labels.namespace = \"${NAMESPACE}\" AND resource.labels.project_id = \"${PROJECT_ID}\") AND metric.type = \"prometheus.googleapis.com/istio_request_duration_milliseconds/histogram\" AND metric.labels.destination_workload = \"${WORKLOAD_NAME}\"",
         "aggregations": [
           {
             "alignmentPeriod": "300s",

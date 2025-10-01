@@ -1,24 +1,17 @@
 {
-  "displayName": "GKE Container - High Memory Limit Utilization (Workload: ${metric.label.metadata_system_top_level_controller_name})",
+  "displayName": "GKE Container - High Memory Limit Utilization (Workload: ${WORKLOAD_NAME})",
   "documentation": {
-    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${metric_or_resource.label.location}/${metric_or_resource.label.cluster_name}/${metric_or_resource.label.namespace_name}/${metric.label.metadata_system_top_level_controller_name}/observability?project=${metric_or_resource.label.project_id}).\n- Containers that exceed Memory utilization limit are terminated. To avoid Out of Memory (OOM) failures, keep memory usage below the memory utilization limit [View Documentation](https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits)\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [PromQL documentation](https://cloud.google.com/monitoring/promql/create-promql-alerts-console)",
+    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${WORKLOAD_NAME}/observability?project=${PROJECT_ID}).\n- Containers that exceed Memory utilization limit are terminated. To avoid Out of Memory (OOM) failures, keep memory usage below the memory utilization limit [View Documentation](https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits)\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [MQL documentation](https://cloud.google.com/monitoring/mql/alerts)",
     "mimeType": "text/markdown"
   },
-  "userLabels": {
-    "workload_name": "${metric.label.metadata_system_top_level_controller_name}",
-    "workload_type": "${metric.label.metadata_system_top_level_controller_type}",
-    "project_id": "${metric_or_resource.label.project_id}",
-    "location": "${metric_or_resource.label.location}",
-    "cluster": "${metric_or_resource.label.cluster_name}",
-    "namespace": "${metric_or_resource.label.namespace_name}"
-  },
+  "userLabels": {},
   "conditions": [
     {
-      "displayName": "Memory Limit Utilization is high for a GKE container in ${metric.label.metadata_system_top_level_controller_name} workload",
+      "displayName": "Memory Limit Utilization is high for a GKE container in ${WORKLOAD_NAME} workload",
       "conditionPrometheusQueryLanguage": {
         "duration": "0s",
         "evaluationInterval": "30s",
-        "query": "label_replace(\n  avg_over_time({\n    \"kubernetes.io/container/memory/used_bytes\",\n    monitored_resource=\"k8s_container\",\n    project_id=~\"${metric_or_resource.label.project_id}\",\n    metadata_system_top_level_controller_name=~\"${metric.label.metadata_system_top_level_controller_name}\",\n    metadata_system_top_level_controller_type=~\"${metric.label.metadata_system_top_level_controller_type}\",\n    cluster_name=~\"${metric_or_resource.label.cluster_name}\",\n    cluster_location=~\"${metric_or_resource.label.location}\",\n    namespace_name=~\"${metric_or_resource.label.namespace_name}\"\n  }[1m])\n  / ignoring (memory_type) group_left()\n  avg_over_time({\n    \"kubernetes.io/container/memory/limit_bytes\",\n    monitored_resource=\"k8s_container\",\n    project_id=~\"${metric_or_resource.label.project_id}\",\n    metadata_system_top_level_controller_name=~\"${metric.label.metadata_system_top_level_controller_name}\",\n    metadata_system_top_level_controller_type=~\"${metric.label.metadata_system_top_level_controller_type}\",\n    cluster_name=~\"${metric_or_resource.label.cluster_name}\",\n    cluster_location=~\"${metric_or_resource.label.location}\",\n    namespace_name=~\"${metric_or_resource.label.namespace_name}\"\n  }[1m]),\n  \"p\", \"Memory Limit Utilization\", \"\", \"\"\n)\n> 0.9"
+        "query": "(\n  avg_over_time({\n    \"kubernetes.io/container/memory/used_bytes\",\n    monitored_resource=\"k8s_container\",\n    project_id=\"${PROJECT_ID}\",\n    top_level_controller_name=\"${WORKLOAD_NAME}\",\n    top_level_controller_type=\"${TOP_LEVEL_CONTROLLER_TYPE}\",\n    cluster_name=\"${CLUSTER_NAME}\",\n    cluster_location=\"${CLUSTER_LOCATION}\",\n    namespace_name=\"${NAMESPACE}\"\n  }[1m])\n  / ignoring (memory_type) group_left()\n  avg_over_time({\n    \"kubernetes.io/container/memory/limit_bytes\",\n    monitored_resource=\"k8s_container\",\n    project_id=\"${PROJECT_ID}\",\n    top_level_controller_name=\"${WORKLOAD_NAME}\",\n    top_level_controller_type=\"${TOP_LEVEL_CONTROLLER_TYPE}\",\n    cluster_name=\"${CLUSTER_NAME}\",\n    cluster_location=\"${CLUSTER_LOCATION}\",\n    namespace_name=\"${NAMESPACE}\"\n  }[1m])\n)\n* on() group_left(p) label_replace(vector(1), \"p\", \"Memory Limit Utilization\", \"\", \"\")\n> 0.9"
       }
     }
   ],

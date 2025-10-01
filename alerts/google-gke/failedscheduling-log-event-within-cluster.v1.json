@@ -1,17 +1,17 @@
 {
-  "displayName": "GKE Pod - FailedScheduling Log Event (${metric_or_resource.label.cluster_name})",
+  "displayName": "GKE Pod - FailedScheduling Log Event (${CLUSTER_NAME})",
   "documentation": {
     "content":
-        "- A \"FailedScheduling\" event occurs when a pending pod cannot be scheduled, This alert fires when an event with reason \"FailedSceduling\" occurs in the logs; limited to notifying once per hour.\n- We recommend troubleshooting this incident with the [Unschedulable Pods interactive playbook](https://console.cloud.google.com/monitoring/dashboards/gke-troubleshooting/unschedulable?project=${metric_or_resource.label.project_id}&f.sd_ts_playbook.cluster_name=${metric_or_resource.label.cluster_name}&f.sd_ts_playbook.location=${metric_or_resource.label.location}), which shows detailed instructions, metrics, and logs.",
+        "- A \"FailedScheduling\" event occurs when a pending pod cannot be scheduled, This alert fires when an event with reason \"FailedSceduling\" occurs in the logs; limited to notifying once per hour.\n- We recommend troubleshooting this incident with the [Unschedulable Pods interactive playbook](https://console.cloud.google.com/monitoring/dashboards/gke-troubleshooting/unschedulable?project=${PROJECT_ID}&f.sd_ts_playbook.cluster_name=${CLUSTER_NAME}&f.sd_ts_playbook.location=${CLUSTER_LOCATION}), which shows detailed instructions, metrics, and logs.",
     "mimeType": "text/markdown"
   },
   "userLabels": {},
   "conditions": [{
     "displayName":
-        "${metric_or_resource.label.cluster_name} cluster has a FailedScheduling Log Event",
+        "${CLUSTER_NAME} cluster has a FailedScheduling Log Event",
     "conditionMatchedLog": {
       "filter":
-          "resource.type=\"k8s_pod\" AND resource.labels.cluster_name=\"${metric_or_resource.label.cluster_name}\" AND jsonPayload.reason=\"FailedScheduling\""
+          "resource.type=\"k8s_pod\" AND resource.labels.cluster_name=\"${CLUSTER_NAME}\" AND jsonPayload.reason=\"FailedScheduling\""
     }
   }],
   "alertStrategy":

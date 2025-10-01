@@ -1,13 +1,13 @@
 {
-  "displayName": "GKE Container - High Memory Limit Utilization (${metric_or_resource.label.cluster_name} cluster)",
+  "displayName": "GKE Container - High Memory Limit Utilization (${CLUSTER_NAME} cluster)",
   "documentation": {
-    "content": "- Containers that exceed Memory utilization limit are terminated. To avoid Out of Memory (OOM) failures, keep memory usage below the memory utilization limit [View Documentation](https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [View Documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth)\n- We recommend troubleshooting this incident with the [Memory Utilization interactive playbook](https://console.cloud.google.com/monitoring/dashboards/gke-troubleshooting/memory?project=${metric_or_resource.label.project_id}&f.sd_ts_playbook.cluster_name=${metric_or_resource.label.cluster_name}&f.sd_ts_playbook.location=${metric_or_resource.label.location}), which shows detailed instructions, metrics, and logs.",
+    "content": "- Containers that exceed Memory utilization limit are terminated. To avoid Out of Memory (OOM) failures, keep memory usage below the memory utilization limit [View Documentation](https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [View Documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth)\n- We recommend troubleshooting this incident with the [Memory Utilization interactive playbook](https://console.cloud.google.com/monitoring/dashboards/gke-troubleshooting/memory?project=${PROJECT_ID}&f.sd_ts_playbook.cluster_name=${CLUSTER_NAME}&f.sd_ts_playbook.location=${CLUSTER_LOCATION}), which shows detailed instructions, metrics, and logs.",
     "mimeType": "text/markdown"
   },
   "userLabels": {},
   "conditions": [
     {
-      "displayName": "GKE container in ${metric_or_resource.label.cluster_name} cluster has high memory limit utilization",
+      "displayName": "GKE container in ${CLUSTER_NAME} cluster has high memory limit utilization",
       "conditionThreshold": {
         "aggregations": [
           {
@@ -18,7 +18,7 @@
         ],
         "comparison": "COMPARISON_GT",
         "duration": "0s",
-        "filter": "resource.type = \"k8s_container\" AND metric.type = \"kubernetes.io/container/memory/limit_utilization\" AND resource.labels.cluster_name=\"${metric_or_resource.label.cluster_name}\" AND resource.labels.location=\"${metric_or_resource.label.location}\"",
+        "filter": "resource.type = \"k8s_container\" AND metric.type = \"kubernetes.io/container/memory/limit_utilization\" AND resource.labels.cluster_name=\"${CLUSTER_NAME}\" AND resource.labels.location=\"${CLUSTER_LOCATION}\"",
         "thresholdValue": 0.9,
         "trigger": {
           "count": 1

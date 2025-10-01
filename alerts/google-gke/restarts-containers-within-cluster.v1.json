@@ -1,13 +1,13 @@
 {
-  "displayName": "GKE Container - Restarts (${metric_or_resource.label.cluster_name} cluster)",
+  "displayName": "GKE Container - Restarts (${CLUSTER_NAME} cluster)",
   "documentation": {
-    "content": "- Container restarts are commonly caused by memory/cpu usage issues and application failures.\n- By default, this alert notifies an incident when there is more than 1 container restart in a 5 minute window. If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [View Documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth).\n- We recommend troubleshooting this incident with the [interactive playbook](https://console.cloud.google.com/monitoring/dashboards/gke-troubleshooting/crashloop?project=${metric_or_resource.label.project_id}&f.sd_ts_playbook.cluster_name=${metric_or_resource.label.cluster_name}&f.sd_ts_playbook.location=${metric_or_resource.label.location}) for restarting containers, which shows detailed instructions, metrics, and logs.",
+    "content": "- Container restarts are commonly caused by memory/cpu usage issues and application failures.\n- By default, this alert notifies an incident when there is more than 1 container restart in a 5 minute window. If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [View Documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth).\n- We recommend troubleshooting this incident with the [interactive playbook](https://console.cloud.google.com/monitoring/dashboards/gke-troubleshooting/crashloop?project=${PROJECT_ID}&f.sd_ts_playbook.cluster_name=${CLUSTER_NAME}&f.sd_ts_playbook.location=${CLUSTER_LOCATION}) for restarting containers, which shows detailed instructions, metrics, and logs.",
     "mimeType": "text/markdown"
   },
   "userLabels": {},
   "conditions": [
     {
-      "displayName": "GKE container in ${metric_or_resource.label.cluster_name} cluster has restarted",
+      "displayName": "GKE container in ${CLUSTER_NAME} cluster has restarted",
       "conditionThreshold": {
         "aggregations": [
           {
@@ -18,7 +18,7 @@
         ],
         "comparison": "COMPARISON_GT",
         "duration": "0s",
-        "filter": "resource.type = \"k8s_container\" AND metric.type = \"kubernetes.io/container/restart_count\" AND resource.labels.cluster_name=\"${metric_or_resource.label.cluster_name}\" AND resource.labels.location=\"${metric_or_resource.label.location}\"",
+        "filter": "resource.type = \"k8s_container\" AND metric.type = \"kubernetes.io/container/restart_count\" AND resource.labels.cluster_name=\"${CLUSTER_NAME}\" AND resource.labels.location=\"${CLUSTER_LOCATION}\"",
         "thresholdValue": 1,
         "trigger": {
           "count": 1
