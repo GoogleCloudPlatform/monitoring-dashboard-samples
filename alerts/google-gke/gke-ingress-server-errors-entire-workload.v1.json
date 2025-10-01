@@ -18,7 +18,7 @@
       "conditionPrometheusQueryLanguage": {
         "duration": "0s",
         "evaluationInterval": "30s",
-        "query": "(\n  sum by (matched_url_path_rule) (\n    rate({\n      \"loadbalancing.googleapis.com/https/request_count\",\n      monitored_resource=\"https_lb_rule\",\n      project_id=\"${PROJECT_ID}\",\n      backend_name=~\"${NETWORK_ENDPOINT_GROUPS_REGEX}\",\n      backend_type=\"NETWORK_ENDPOINT_GROUP\",\n      response_code_class=\"500\"\n    }[5m])\n  )\n  /\n  sum by (matched_url_path_rule) (\n    rate({\n      \"loadbalancing.googleapis.com/https/request_count\",\n      monitored_resource=\"https_lb_rule\",\n      project_id=\"${PROJECT_ID}\",\n      backend_name=~\"${NETWORK_ENDPOINT_GROUPS_REGEX}\",\n      backend_type=\"NETWORK_ENDPOINT_GROUP\"\n    }[5m])\n  )\n) > 0.05"
+        "query": "(\n  sum by (matched_url_path_rule) (\n    rate({\n      \"loadbalancing.googleapis.com/https/request_count\",\n      monitored_resource=\"https_lb_rule\",\n      project_id=~\"${PROJECT_ID}\",\n      backend_name=~\"${NETWORK_ENDPOINT_GROUPS_REGEX}\",\n      backend_type=\"NETWORK_ENDPOINT_GROUP\",\n      response_code_class=\"500\"\n    }[5m])\n  )\n  /\n  sum by (matched_url_path_rule) (\n    rate({\n      \"loadbalancing.googleapis.com/https/request_count\",\n      monitored_resource=\"https_lb_rule\",\n      project_id=~\"${PROJECT_ID}\",\n      backend_name=~\"${NETWORK_ENDPOINT_GROUPS_REGEX}\",\n      backend_type=\"NETWORK_ENDPOINT_GROUP\"\n    }[5m])\n  )\n) > 0.05"
       }
     }
   ],

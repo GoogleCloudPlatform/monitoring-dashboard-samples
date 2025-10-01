@@ -18,7 +18,7 @@
       "conditionPrometheusQueryLanguage": {
         "duration": "0s",
         "evaluationInterval": "30s",
-        "query": "(\n  sum by (code, method) (\n    rate({\n      \"http_requests_total\",\n      project_id=\"${PROJECT_ID}\",\n      cluster=\"${CLUSTER_NAME}\",\n      location=\"${CLUSTER_LOCATION}\",\n      namespace=\"${NAMESPACE}\",\n      pod=~\"${WORKLOAD_NAME}-[a-f0-9]{7,10}-[a-z0-9]{5}\",\n      code=~\"5[0-9][0-9]\"\n    }[5m])\n  )\n  /\n  sum by (code, method) (\n    rate({\n      \"http_requests_total\",\n      project_id=\"${PROJECT_ID}\",\n      cluster=\"${CLUSTER_NAME}\",\n      location=\"${CLUSTER_LOCATION}\",\n      namespace=\"${NAMESPACE}\",\n      pod=~\"${WORKLOAD_NAME}-[a-f0-9]{7,10}-[a-z0-9]{5}\"\n    }[5m])\n  )\n) > 0.05"
+        "query": "(\n  sum by (code, method) (\n    rate({\n      \"http_requests_total\",\n      project_id=~\"${PROJECT_ID}\",\n      cluster=~\"${CLUSTER_NAME}\",\n      location=~\"${CLUSTER_LOCATION}\",\n      namespace=~\"${NAMESPACE}\",\n      pod=~\"${WORKLOAD_NAME}-[a-f0-9]{7,10}-[a-z0-9]{5}\",\n      code=~\"5[0-9][0-9]\"\n    }[5m])\n  )\n  /\n  sum by (code, method) (\n    rate({\n      \"http_requests_total\",\n      project_id=~\"${PROJECT_ID}\",\n      cluster=~\"${CLUSTER_NAME}\",\n      location=~\"${CLUSTER_LOCATION}\",\n      namespace=~\"${NAMESPACE}\",\n      pod=~\"${WORKLOAD_NAME}-[a-f0-9]{7,10}-[a-z0-9]{5}\"\n    }[5m])\n  )\n) > 0.05"
       }
     }
   ],

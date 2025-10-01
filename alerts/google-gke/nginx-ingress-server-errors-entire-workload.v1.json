@@ -18,7 +18,7 @@
       "conditionPrometheusQueryLanguage": {
         "duration": "0s",
         "evaluationInterval": "30s",
-        "query": "(\n  sum by (method, path) (\n    rate({\n      \"nginx_ingress_controller_requests\",\n      project_id=\"${PROJECT_ID}\",\n      cluster=\"${CLUSTER_NAME}\",\n      location=\"${CLUSTER_LOCATION}\",\n      namespace_name=\"${NAMESPACE}\",\n      service=\"${SERVICES_REGEX}\",\n      status=~\"5[0-9][0-9]\"\n    }[5m])\n  )\n  /\n  sum by (method, path) (\n    rate({\n      \"nginx_ingress_controller_requests\",\n      project_id=\"${PROJECT_ID}\",\n      cluster=\"${CLUSTER_NAME}\",\n      location=\"${CLUSTER_LOCATION}\",\n      namespace_name=\"${NAMESPACE}\",\n      service=\"${SERVICES_REGEX}\"\n    }[5m])\n  )\n) > 0.05"
+        "query": "(\n  sum by (method, path) (\n    rate({\n      \"nginx_ingress_controller_requests\",\n      project_id=~\"${PROJECT_ID}\",\n      cluster=~\"${CLUSTER_NAME}\",\n      location=~\"${CLUSTER_LOCATION}\",\n      namespace_name=~\"${NAMESPACE}\",\n      service=~\"${SERVICES_REGEX}\",\n      status=~\"5[0-9][0-9]\"\n    }[5m])\n  )\n  /\n  sum by (method, path) (\n    rate({\n      \"nginx_ingress_controller_requests\",\n      project_id=~\"${PROJECT_ID}\",\n      cluster=~\"${CLUSTER_NAME}\",\n      location=~\"${CLUSTER_LOCATION}\",\n      namespace_name=~\"${NAMESPACE}\",\n      service=~\"${SERVICES_REGEX}\"\n    }[5m])\n  )\n) > 0.05"
       }
     }
   ],
