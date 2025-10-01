@@ -1079,7 +1079,7 @@
         "height": 16,
         "width": 16,
         "widget": {
-          "title": "Prefix cache hit rate",
+          "title": "Prefix cache hit rate (%)",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -1090,7 +1090,8 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (\"model_name\",\"pod\")(rate({\"__name__\"=\"vllm:prefix_cache_hits_total\"}[${__interval}]))\n/\nsum by (\"model_name\",\"pod\")(rate({\"__name__\"=\"vllm:prefix_cache_queries_total\"}[${__interval}]))\n"
+                  "prometheusQuery": "sum by (\"model_name\",\"pod\")(rate({\"__name__\"=\"vllm:prefix_cache_hits_total\"}[${__interval}]))\n/\nsum by (\"model_name\",\"pod\")(rate({\"__name__\"=\"vllm:prefix_cache_queries_total\"}[${__interval}]))\n",
+                  "unitOverride": "10^2.%"
                 }
               }
             ],
