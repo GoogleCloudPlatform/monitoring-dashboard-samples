@@ -546,7 +546,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "(avg by (project_id, zone, instance_name) (\n    avg_over_time(\n      compute_googleapis_com:instance_cpu_utilization{monitored_resource=\"gce_instance\"}[1m]\n    )\n    and\n    on(instance_id, project_id, zone)\n    (workload_googleapis_com:memcached_bytes{monitored_resource=\"gce_instance\"})\n  )\n)",
+                  "prometheusQuery": "(avg by (project_id, zone, instance_name) (\n    avg_over_time(\n      compute_googleapis_com:instance_cpu_utilization{monitored_resource=\"gce_instance\"}[${__interval}]\n    )\n    and\n    on(instance_id, project_id, zone)\n    (workload_googleapis_com:memcached_bytes{monitored_resource=\"gce_instance\"})\n  )\n)",
                   "unitOverride": "10^2.%"
                 }
               }
@@ -576,7 +576,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (project_id, zone, instance_id, metadata_system_name) (\n  avg_over_time(\n    agent_googleapis_com:memory_percent_used{monitored_resource=\"gce_instance\", state=\"used\"}[1m]\n  )\n)\nand on(project_id, zone, instance_id) (\n  workload_googleapis_com:memcached_bytes{monitored_resource=\"gce_instance\"}\n)",
+                  "prometheusQuery": "sum by (project_id, zone, instance_id, metadata_system_name) (\n  avg_over_time(\n    agent_googleapis_com:memory_percent_used{monitored_resource=\"gce_instance\", state=\"used\"}[${__interval}]\n  )\n)\nand on(project_id, zone, instance_id) (\n  workload_googleapis_com:memcached_bytes{monitored_resource=\"gce_instance\"}\n)",
                   "unitOverride": "%"
                 }
               }
@@ -613,7 +613,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "count by (region) (\n  label_replace(\n    sum by (project_id, zone, instance_id) (\n      count_over_time(workload_googleapis_com:memcached_bytes{monitored_resource=\"gce_instance\"}[2m])\n    ),\n    \"region\",\n    \"$1\",\n    \"zone\",\n    \"([^-]+-[^-]+)-.*\"\n  )\n)",
+                  "prometheusQuery": "count by (region) (\n  label_replace(\n    sum by (project_id, zone, instance_id) (\n      count_over_time(workload_googleapis_com:memcached_bytes{monitored_resource=\"gce_instance\"}[${__interval}])\n    ),\n    \"region\",\n    \"$1\",\n    \"zone\",\n    \"([^-]+-[^-]+)-.*\"\n  )\n)",
                   "unitOverride": ""
                 }
               }
