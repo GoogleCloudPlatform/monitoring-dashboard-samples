@@ -1,7 +1,7 @@
 {
     "displayName": "Jobs failure (JobSet: ${JOBSET_NAME})",
     "documentation": {
-      "content": "[View JobSet details](https://console.cloud.google.com/kubernetes/aiml/deployments/jobset/${PROJECT_ID}/${CLUSTER_KIND}/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${JOBSET_NAME}/observability?project=${PROJECT_ID}).",
+      "content": "[View JobSet details](https://console.cloud.google.com/kubernetes/aiml/deployments/jobset/${metric_or_resource.label.project_id}/${CLUSTER_KIND}/${metric_or_resource.label.location}/${metric_or_resource.label.cluster_name}/${metric_or_resource.label.namespace_name}/${JOBSET_NAME}/observability?project=${metric_or_resource.label.project_id}).",
       "mimeType": "text/markdown"
     },
     "userLabels": {},
@@ -18,7 +18,7 @@
           ],
           "comparison": "COMPARISON_GT",
           "duration": "0s",
-          "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/kube_jobset_failed_replicas/gauge\" AND resource.labels.project_id=\"${PROJECT_ID}\" AND resource.labels.cluster=\"${CLUSTER_NAME}\" AND resource.labels.location=\"${CLUSTER_LOCATION}\" AND resource.labels.namespace=\"${NAMESPACE_NAME}\" AND metric.labels.jobset_name=\"${JOBSET_NAME}\"",
+          "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/kube_jobset_failed_replicas/gauge\" AND resource.labels.project_id=\"${metric_or_resource.label.project_id}\" AND resource.labels.cluster=\"${metric_or_resource.label.cluster_name}\" AND resource.labels.location=\"${metric_or_resource.label.location}\" AND resource.labels.namespace=\"${metric_or_resource.label.namespace_name}\" AND metric.labels.jobset_name=\"${JOBSET_NAME}\"",
           "thresholdValue": 1,
           "trigger": {
             "count": 1

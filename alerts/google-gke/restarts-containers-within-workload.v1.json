@@ -1,20 +1,20 @@
 {
-  "displayName": "GKE Container - Restarts (Workload: ${WORKLOAD_NAME})",
+  "displayName": "GKE Container - Restarts (Workload: ${metric.label.metadata_system_top_level_controller_name})",
   "documentation": {
-    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${WORKLOAD_NAME}/observability?project=${PROJECT_ID}).\n- Container restarts are commonly caused by memory/cpu usage issues and application failures.\n- By default, this alert notifies an incident when there is a container restart in a 5 minute window. If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [View Documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth).\n- We recommend troubleshooting this incident with the [interactive playbook](https://console.cloud.google.com/monitoring/dashboards/gke-troubleshooting/crashloop?project=${PROJECT_ID}&f.sd_ts_playbook.cluster_name=${CLUSTER_NAME}&f.sd_ts_playbook.location=${CLUSTER_LOCATION}) for restarting containers, which shows detailed instructions, metrics, and logs.",
+    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${metric_or_resource.label.location}/${metric_or_resource.label.cluster_name}/${metric_or_resource.label.namespace_name}/${metric.label.metadata_system_top_level_controller_name}/observability?project=${metric_or_resource.label.project_id}).\n- Container restarts are commonly caused by memory/cpu usage issues and application failures.\n- By default, this alert notifies an incident when there is a container restart in a 5 minute window. If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [View Documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth).\n- We recommend troubleshooting this incident with the [interactive playbook](https://console.cloud.google.com/monitoring/dashboards/gke-troubleshooting/crashloop?project=${metric_or_resource.label.project_id}&f.sd_ts_playbook.cluster_name=${metric_or_resource.label.cluster_name}&f.sd_ts_playbook.location=${metric_or_resource.label.location}) for restarting containers, which shows detailed instructions, metrics, and logs.",
     "mimeType": "text/markdown"
   },
   "userLabels": {
-    "workload_name": "${WORKLOAD_NAME}",
-    "workload_type": "${WORKLOAD_TYPE}",
-    "project_id": "${PROJECT_ID}",
-    "location": "${CLUSTER_LOCATION}",
-    "cluster": "${CLUSTER_NAME}",
-    "namespace": "${NAMESPACE}"
+    "workload_name": "${metric.label.metadata_system_top_level_controller_name}",
+    "workload_type": "${metric.label.metadata_system_top_level_controller_type}",
+    "project_id": "${metric_or_resource.label.project_id}",
+    "location": "${metric_or_resource.label.location}",
+    "cluster": "${metric_or_resource.label.cluster_name}",
+    "namespace": "${metric_or_resource.label.namespace_name}"
   },
   "conditions": [
     {
-      "displayName": "GKE container restarted in ${WORKLOAD_NAME} workload",
+      "displayName": "GKE container restarted in ${metric.label.metadata_system_top_level_controller_name} workload",
       "conditionThreshold": {
         "aggregations": [
           {
@@ -25,7 +25,7 @@
         ],
         "comparison": "COMPARISON_GT",
         "duration": "0s",
-        "filter": "resource.type = \"k8s_container\" AND (resource.labels.cluster_name = \"${CLUSTER_NAME}\" AND resource.labels.location = \"${CLUSTER_LOCATION}\" AND resource.labels.project_id = \"${PROJECT_ID}\" AND resource.labels.namespace_name = \"${NAMESPACE}\") AND metric.type = \"kubernetes.io/container/restart_count\" AND (metadata.system_labels.top_level_controller_name = \"${WORKLOAD_NAME}\" AND metadata.system_labels.top_level_controller_type = \"${TOP_LEVEL_CONTROLLER_TYPE}\")",
+        "filter": "resource.type = \"k8s_container\" AND (resource.labels.cluster_name = \"${metric_or_resource.label.cluster_name}\" AND resource.labels.location = \"${metric_or_resource.label.location}\" AND resource.labels.project_id = \"${metric_or_resource.label.project_id}\" AND resource.labels.namespace_name = \"${metric_or_resource.label.namespace_name}\") AND metric.type = \"kubernetes.io/container/restart_count\" AND (metadata.system_labels.top_level_controller_name = \"${metric.label.metadata_system_top_level_controller_name}\" AND metadata.system_labels.top_level_controller_type = \"${metric.label.metadata_system_top_level_controller_type}\")",
         "thresholdValue": 0,
         "trigger": {
           "count": 1
