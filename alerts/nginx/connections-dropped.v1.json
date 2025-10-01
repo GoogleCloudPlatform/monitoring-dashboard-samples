@@ -8,19 +8,22 @@
   "conditions": [
     {
       "displayName": "New condition",
-      "conditionMonitoringQueryLanguage": {
-        "duration": "60s",
-        "query": "{ \n    t_0: fetch gce_instance::workload.googleapis.com/nginx.connections_accepted\n    ;\n    t_1: fetch gce_instance::workload.googleapis.com/nginx.connections_handled\n}\n| outer_join 0\n| value val(0) - val(1)\n| align rate(5m)\n| condition val() > 0\n",
-        "trigger": {
-          "count": 1
-        }
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "30s",
+        "query": "(\n  rate({\"workload.googleapis.com/nginx.connections_accepted\", monitored_resource=\"gce_instance\"}[5m])\n  -\n  rate({\"workload.googleapis.com/nginx.connections_handled\", monitored_resource=\"gce_instance\"}[5m])\n) > 0"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": []
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }

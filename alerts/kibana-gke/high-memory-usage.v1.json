@@ -1,27 +1,29 @@
 {
-    "displayName": "Kibana - Prometheus - High Memory Usage",
-    "documentation": {
-      "content": "This alert triggers when there is a high amount of memory in use. Memory pressure can cause excessive garbage collection, leading to performance degradation.",
-      "mimeType": "text/markdown"
-    },
-    "userLabels": {},
-    "conditions": [
-      {
-        "displayName": "Prometheus Target - prometheus/kibana_os_mem_bytes_free/gauge",
-        "conditionMonitoringQueryLanguage": {
-          "duration": "300s",
-          "evaluationMissingData": "EVALUATION_MISSING_DATA_ACTIVE",
-          "query": "fetch prometheus_target\n| { t_0: metric 'prometheus.googleapis.com/kibana_os_mem_bytes_used/gauge'\n  ; t_1: metric prometheus.googleapis.com/kibana_os_mem_bytes_total/gauge }\n| ratio\n| group_by sliding(5m), mean(val())\n| condition val() > 0.9",
-          "trigger": {
-            "count": 1
-          }
-        }
+  "displayName": "Kibana - Prometheus - High Memory Usage",
+  "documentation": {
+    "content": "This alert triggers when there is a high amount of memory in use. Memory pressure can cause excessive garbage collection, leading to performance degradation.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Prometheus Target - prometheus/kibana_os_mem_bytes_free/gauge",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "30s",
+        "query": "(\n  avg_over_time({\"kibana_os_mem_bytes_used\"}[5m])\n  /\n  avg_over_time({\"kibana_os_mem_bytes_total\"}[5m])\n) > 0.9"
       }
-    ],
-    "alertStrategy": {
-      "autoClose": "604800s"
-    },
-    "combiner": "OR",
-    "enabled": true,
-    "notificationChannels": []
-  }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
+}
