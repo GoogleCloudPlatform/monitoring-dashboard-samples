@@ -20,7 +20,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "100 *\nlabel_replace(\n    sum by (location, cluster_name) (\n        rate(kubernetes_io:container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[1m])\n        or\n        rate(kubernetes_io:anthos_container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[1m])\n    )\n    /\n    sum by (location, cluster_name) (\n        kubernetes_io:container_cpu_request_cores\n        or\n        kubernetes_io:anthos_container_cpu_request_cores\n    ),\n    \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n)",
+                  "prometheusQuery": "100 *\nlabel_replace(\n    sum by (location, cluster_name) (\n        rate(kubernetes_io:container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[${__interval}])\n        or\n        rate(kubernetes_io:anthos_container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[${__interval}])\n    )\n    /\n    sum by (location, cluster_name) (\n        kubernetes_io:container_cpu_request_cores\n        or\n        kubernetes_io:anthos_container_cpu_request_cores\n    ),\n    \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n)",
                   "unitOverride": "%"
                 }
               }
@@ -76,7 +76,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "label_replace(\n    sum by (location, cluster_name) (\n        increase(kubernetes_io:container_restart_count{monitored_resource=\"k8s_container\"}[1m])\n        or\n        increase(kubernetes_io:anthos_container_restart_count{monitored_resource=\"k8s_container\"}[1m])\n    ),\n    \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n)"
+                  "prometheusQuery": "label_replace(\n    sum by (location, cluster_name) (\n        increase(kubernetes_io:container_restart_count{monitored_resource=\"k8s_container\"}[${__interval}])\n        or\n        increase(kubernetes_io:anthos_container_restart_count{monitored_resource=\"k8s_container\"}[${__interval}])\n    ),\n    \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n)"
                 }
               }
             ],
@@ -104,7 +104,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "label_replace(\n    sum by (location, cluster_name) (\n        rate(logging_googleapis_com:log_entry_count{monitored_resource=\"k8s_container\", severity=~\"ERROR|CRITICAL|ALERT|EMERGENCY\"}[1m])\n    ),\n    \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n)",
+                  "prometheusQuery": "label_replace(\n    sum by (location, cluster_name) (\n        rate(logging_googleapis_com:log_entry_count{monitored_resource=\"k8s_container\", severity=~\"ERROR|CRITICAL|ALERT|EMERGENCY\"}[${__interval}])\n    ),\n    \"cluster_name\", \"$1\", \"cluster_name\", \"(?:.+/|^)(.+)\"\n)",
                   "unitOverride": "1/s"
                 }
               }
