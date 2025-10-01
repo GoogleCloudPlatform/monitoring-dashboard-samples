@@ -125,7 +125,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id, region) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_memory_utilization{monitored_resource=\"cloudsql_database\"}[1m]\n    )\n    and\n    on(project_id, database_id, region)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id, region) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_memory_utilization{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and\n    on(project_id, database_id, region)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
                 }
               }
             ],
@@ -196,7 +196,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "100*\nlabel_replace(\n  avg by (project_id, database_id, region) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_cpu_utilization{monitored_resource=\"cloudsql_database\"}[1m]\n    )\n    and on(project_id, database_id, region)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n",
+                  "prometheusQuery": "100*\nlabel_replace(\n  avg by (project_id, database_id, region) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_cpu_utilization{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id, region)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n",
                   "unitOverride": "%"
                 }
               }
@@ -226,7 +226,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id, region) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_replication_log_archive_failure_count{monitored_resource=\"cloudsql_database\"}[1m]\n    )\n    and on(project_id, database_id, region)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id, region) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_replication_log_archive_failure_count{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id, region)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
                 }
               }
             ],
@@ -275,7 +275,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_replication_replica_lag{monitored_resource=\"cloudsql_database\"}[1m]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_replication_replica_lag{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
                 }
               }
             ],
