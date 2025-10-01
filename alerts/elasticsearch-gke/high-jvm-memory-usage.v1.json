@@ -1,26 +1,29 @@
 {
-    "displayName": "Elasticsearch - Prometheus - High JVM Memory Usage",
-    "documentation": {
-        "content": "When the ratio of heap used to max heap becomes high, then application's performance may start to degrade.",
-        "mimeType": "text/markdown"
-    },
-    "userLabels": {},
-    "conditions": [
-        {
-            "displayName": "Prometheus Target - JVM memory ratio",
-            "conditionMonitoringQueryLanguage": {
-                "duration": "0s",
-                "trigger": {
-                    "count": 1
-                },
-                "query": "fetch prometheus_target\n| { t_0:\n      metric\n        'prometheus.googleapis.com/elasticsearch_jvm_memory_used_bytes/gauge'\n  ; t_1:\n      metric\n        'prometheus.googleapis.com/elasticsearch_jvm_memory_max_bytes/gauge' }\n| outer_join 0\n| value t_0.value / t_1.value\n| condition val() > .9\n| every 5m\n| window 5m"
-            }
-        }
-    ],
-    "alertStrategy": {
-        "autoClose": "604800s"
-    },
-    "combiner": "OR",
-    "enabled": true,
-    "notificationChannels": []
+  "displayName": "Elasticsearch - Prometheus - High JVM Memory Usage",
+  "documentation": {
+    "content": "When the ratio of heap used to max heap becomes high, then application's performance may start to degrade.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Prometheus Target - JVM memory ratio",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "300s",
+        "evaluationInterval": "60s",
+        "query": "(\n  {\"elasticsearch_jvm_memory_used_bytes\"}\n  /\n  {\"elasticsearch_jvm_memory_max_bytes\"}\n) > 0.9"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
