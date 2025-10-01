@@ -8,19 +8,22 @@
   "conditions": [
     {
       "displayName": "New condition",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "query": "fetch gce_instance\n| { metric 'workload.googleapis.com/vault.audit.response.failed'\n; metric 'workload.googleapis.com/vault.audit.request.failed' }\n| outer_join 0\n| group_by 1m\n| condition val(0) > 0 || val(1) > 0",
-        "trigger": {
-          "count": 1
-        }
+        "evaluationInterval": "30s",
+        "query": "rate({\"workload.googleapis.com/vault.audit.response.failed\", monitored_resource=\"gce_instance\"}[1m]) > 0\nor\nrate({\"workload.googleapis.com/vault.audit.request.failed\", monitored_resource=\"gce_instance\"}[1m]) > 0"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": []
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
