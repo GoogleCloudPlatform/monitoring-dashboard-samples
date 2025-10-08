@@ -1,24 +1,29 @@
 {
   "displayName": "High CPU Limit Utilization (GKE Workload: ${WORKLOAD_NAME})",
   "documentation": {
-    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${WORKLOAD_NAME}/observability?project=${PROJECT_ID}).\n- Workloads with high CPU limit utilization likely have containers that are CPU throttled. To avoid application slowdown and unresponsiveness, you can either keep CPU usage below the CPU limit or increase the limit [View Documentation](https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits)\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [MQL documentation](https://cloud.google.com/monitoring/mql/alerts)",
+    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${metric_or_resource.label.location}/${metric_or_resource.label.cluster_name}/${metric_or_resource.label.namespace_name}/${metric.label.metadata_system_top_level_controller_name}/observability?project=${metric_or_resource.label.project_id}).\n- Workloads with high CPU limit utilization likely have containers that are CPU throttled. To avoid application slowdown and unresponsiveness, you can either keep CPU usage below the CPU limit or increase the limit [View Documentation](https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits)\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [PromQL documentation](https://cloud.google.com/monitoring/promql/create-promql-alerts-console)",
     "mimeType": "text/markdown"
   },
+  "userLabels": {},
   "conditions": [
     {
       "displayName": "CPU Limit Utilization is high for: ${WORKLOAD_NAME}",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch k8s_container\n| \n{\n    metric 'kubernetes.io/container/cpu/core_usage_time'\n    | filter\n        resource.project_id == '${PROJECT_ID}'\n        &&\n        (metadata.system_labels.top_level_controller_name == '${WORKLOAD_NAME}'\n        && metadata.system_labels.top_level_controller_type == '${TOP_LEVEL_CONTROLLER_TYPE}')\n        &&\n        (resource.cluster_name == '${CLUSTER_NAME}'\n        && resource.location == '${CLUSTER_LOCATION}'\n        && resource.namespace_name == '${NAMESPACE}')\n    | align rate(5m)\n    | every 1m\n    | group_by [],\n        [value_core_usage_time_aggregate: aggregate(value.core_usage_time)]\n;\n    metric 'kubernetes.io/container/cpu/limit_cores'\n    | filter\n        resource.project_id == '${PROJECT_ID}'\n        &&\n        (metadata.system_labels.top_level_controller_name == '${WORKLOAD_NAME}'\n        && metadata.system_labels.top_level_controller_type == '${TOP_LEVEL_CONTROLLER_TYPE}')\n        &&\n        (resource.cluster_name == '${CLUSTER_NAME}'\n        && resource.location == '${CLUSTER_LOCATION}'\n        && resource.namespace_name == '${NAMESPACE}')\n    | group_by 5m, [value_limit_cores_mean: mean(value.limit_cores)]\n    | every 1m\n    | group_by [],\n        [value_limit_cores_mean_aggregate: aggregate(value_limit_cores_mean)]\n}\n| join\n| div\n| map add[p: 'CPU Limit Utilization']\n| scale('%')\n| condition val() > 90'%'"
+        "evaluationInterval": "30s",
+        "query": "label_replace(\n  sum(rate(\n    {\"kubernetes.io/container/cpu/core_usage_time\",\n    monitored_resource=\"k8s_container\",\n    metadata_system_top_level_controller_name=~\"${WORKLOAD_NAME}\",\n    metadata_system_top_level_controller_type=~\"${TOP_LEVEL_CONTROLLER_TYPE}\",\n    project_id=~\"${PROJECT_ID}\",\n    cluster_name=~\"${CLUSTER_NAME}\",\n    location=~\"${CLUSTER_LOCATION}\",\n    namespace_name=~\"${NAMESPACE}\"}[5m])\n  )\n  /\n  sum(avg_over_time(\n    {\"kubernetes.io/container/cpu/limit_cores\",\n    monitored_resource=\"k8s_container\",\n    metadata_system_top_level_controller_name=~\"${WORKLOAD_NAME}\",\n    metadata_system_top_level_controller_type=~\"${TOP_LEVEL_CONTROLLER_TYPE}\",\n    project_id=~\"${PROJECT_ID}\",\n    cluster_name=~\"${CLUSTER_NAME}\",\n    location=~\"${CLUSTER_LOCATION}\",\n    namespace_name=~\"${NAMESPACE}\"}[5m])\n  ), \"p\", \"CPU Limit Utilization\", \"\", \"\"\n)\n> 0.9"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
-  "enabled": true
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
