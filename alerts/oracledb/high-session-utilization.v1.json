@@ -1,26 +1,29 @@
 {
-    "displayName": "Oracle Database - High Session Utilization",
-    "documentation": {
-        "content": "Alerts whenever the database is nearing the session limit, which could result in connections being refused.",
-        "mimeType": "text/markdown"
-    },
-    "userLabels": {},
-    "conditions": [
-        {
-            "displayName": "Sessions near system max",
-            "conditionMonitoringQueryLanguage": {
-                "duration": "0s",
-                "trigger": {
-                    "count": 1
-                },
-                "query": "{\n     t_0: fetch gce_instance::workload.googleapis.com/oracle.session.limit ;\n     t_1: fetch gce_instance::workload.googleapis.com/oracle.session.count\n}\n| group_by [resource.instance_id]\n| outer_join 0\n| window 1m\n| condition val(0) * .9 < val(1)\n"
-            }
-        }
-    ],
-    "alertStrategy": {
-        "autoClose": "604800s"
-    },
-    "combiner": "OR",
-    "enabled": true,
-    "notificationChannels": []
+  "displayName": "Oracle Database - High Session Utilization",
+  "documentation": {
+    "content": "Alerts whenever the database is nearing the session limit, which could result in connections being refused.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Sessions near system max",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "30s",
+        "query": "sum by (instance_id) (\n  {\"workload.googleapis.com/oracle.session.count\", monitored_resource=\"gce_instance\"}\n  /\n  {\"workload.googleapis.com/oracle.session.limit\", monitored_resource=\"gce_instance\"}\n) > 0.9"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }

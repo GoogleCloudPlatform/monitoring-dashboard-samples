@@ -88,7 +88,7 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "prometheusQuery": "(\n  sum by (backend_target_name) (\n    increase(loadbalancing_googleapis_com:https_backend_request_count{response_code_class=\"500\",monitored_resource=\"https_lb_rule\",}[1m])\n  )\n  /\n  sum by (backend_target_name) (\n     increase(loadbalancing_googleapis_com:https_backend_request_count{monitored_resource=\"https_lb_rule\",}[1m])\n  )\n)\n"
+                "prometheusQuery": "(\n  sum by (backend_target_name) (\n    increase(loadbalancing_googleapis_com:https_backend_request_count{response_code_class=\"500\",monitored_resource=\"https_lb_rule\",}[${__interval}])\n  )\n  /\n  sum by (backend_target_name) (\n     increase(loadbalancing_googleapis_com:https_backend_request_count{monitored_resource=\"https_lb_rule\",}[${__interval}])\n  )\n)\n"
               }
             }
           ],
@@ -111,7 +111,7 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "prometheusQuery": "sum by (\n  matched_url_path_rule,\n  backend_target_name,\n  response_code\n) (\n  increase(\n    loadbalancing_googleapis_com:https_backend_request_count{response_code_class=\"500\", monitored_resource=\"https_lb_rule\"}[1m]\n  )\n)\n",
+                "prometheusQuery": "sum by (\n  matched_url_path_rule,\n  backend_target_name,\n  response_code\n) (\n  increase(\n    loadbalancing_googleapis_com:https_backend_request_count{response_code_class=\"500\", monitored_resource=\"https_lb_rule\"}[${__interval}]\n  )\n)\n",
                 "unitOverride": "1"
               }
             }

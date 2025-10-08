@@ -4,20 +4,26 @@
     "content": "Alerts when the sum of ingress and egress bytes exceeds 50% of the 3-Gbps (375 MBps) limit for a given VPN tunnel. This can help you decide whether to provision additional VPN tunnels.",
     "mimeType": "text/markdown"
   },
+  "userLabels": {},
   "conditions": [
     {
       "displayName": "Tunnel traffic",
-      "conditionMonitoringQueryLanguage": {
-        "query": "fetch vpn_gateway\n| { metric vpn.googleapis.com/network/sent_bytes_count\n; metric vpn.googleapis.com/network/received_bytes_count }\n| align rate (30s)\n| group_by [metric.tunnel_name]\n| outer_join 0,0\n| value val(0) + val(1)\n| condition val() > 187.5 \"MBy/s\"",
-        "trigger": {
-          "count": 1
-        }
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "30s",
+        "query": "sum by (tunnel_name) (\n  rate({\"vpn.googleapis.com/network/sent_bytes_count\", monitored_resource=\"vpn_gateway\"}[30s])\n  +\n  rate({\"vpn.googleapis.com/network/received_bytes_count\", monitored_resource=\"vpn_gateway\"}[30s])\n) > 187500000"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
-  "enabled": true
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }

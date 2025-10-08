@@ -1,9 +1,10 @@
 platforms:
   - type: GKE
     launch_stage: GA
+    version: 1
     detections:
       - characteristic_metric:
-          metric_type: prometheus.googleapis.com/vllm:prompt_tokens_total/counter
+          metric_type: prometheus.googleapis.com/vllm:gpu_cache_usage_perc/gauge
     exporter_metadata:
       name: vLLM Prometheus Exporter
       doc_url: https://docs.vllm.ai/en/v0.6.1/serving/metrics.html
@@ -121,4 +122,220 @@ platforms:
         prometheus_name: time_to_first_token_seconds
         kind: CUMULATIVE
         value_type: DISTRIBUTION
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/vllm
+  - type: GKE
+    launch_stage: GA
+    version: 2
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/vllm:kv_cache_usage_perc/gauge
+    exporter_metadata:
+      name: vLLM Prometheus Exporter
+      doc_url: https://docs.vllm.ai/en/v0.10.2/design/metrics.html
+      minimum_supported_version: v0.10.2
+    default_metrics:
+    - name: prometheus.googleapis.com/vllm:cache_config_info/gauge
+      prometheus_name: vllm:cache_config_info
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:e2e_request_latency_seconds/histogram
+      prometheus_name: vllm:e2e_request_latency_seconds
+      kind: CUMULATIVE
+      value_type: DISTRIBUTION
+    - name: prometheus.googleapis.com/vllm:e2e_request_latency_seconds_created/gauge
+      prometheus_name: vllm:e2e_request_latency_seconds_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:generation_tokens_created/gauge
+      prometheus_name: vllm:generation_tokens_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:generation_tokens_total/counter
+      prometheus_name: vllm:generation_tokens_total
+      kind: CUMULATIVE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:gpu_cache_usage_perc/gauge
+      prometheus_name: vllm:gpu_cache_usage_perc
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:gpu_prefix_cache_hits_created/gauge
+      prometheus_name: vllm:gpu_prefix_cache_hits_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:gpu_prefix_cache_hits_total/counter
+      prometheus_name: vllm:gpu_prefix_cache_hits_total
+      kind: CUMULATIVE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:gpu_prefix_cache_queries_created/gauge
+      prometheus_name: vllm:gpu_prefix_cache_queries_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:gpu_prefix_cache_queries_total/counter
+      prometheus_name: vllm:gpu_prefix_cache_queries_total
+      kind: CUMULATIVE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:inter_token_latency_seconds/histogram
+      prometheus_name: vllm:inter_token_latency_seconds
+      kind: CUMULATIVE
+      value_type: DISTRIBUTION
+    - name: prometheus.googleapis.com/vllm:inter_token_latency_seconds_created/gauge
+      prometheus_name: vllm:inter_token_latency_seconds_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:iteration_tokens_total/histogram
+      prometheus_name: vllm:iteration_tokens_total
+      kind: CUMULATIVE
+      value_type: DISTRIBUTION
+    - name: prometheus.googleapis.com/vllm:iteration_tokens_total_created/gauge
+      prometheus_name: vllm:iteration_tokens_total_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:kv_cache_usage_perc/gauge
+      prometheus_name: vllm:kv_cache_usage_perc
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:num_preemptions_created/gauge
+      prometheus_name: vllm:num_preemptions_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:num_preemptions_total/counter
+      prometheus_name: vllm:num_preemptions_total
+      kind: CUMULATIVE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:num_requests_running/gauge
+      prometheus_name: vllm:num_requests_running
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:num_requests_waiting/gauge
+      prometheus_name: vllm:num_requests_waiting
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:prefix_cache_hits_created/gauge
+      prometheus_name: vllm:prefix_cache_hits_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:prefix_cache_hits_total/counter
+      prometheus_name: vllm:prefix_cache_hits_total
+      kind: CUMULATIVE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:prefix_cache_queries_created/gauge
+      prometheus_name: vllm:prefix_cache_queries_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:prefix_cache_queries_total/counter
+      prometheus_name: vllm:prefix_cache_queries_total
+      kind: CUMULATIVE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:prompt_tokens_created/gauge
+      prometheus_name: vllm:prompt_tokens_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:prompt_tokens_total/counter
+      prometheus_name: vllm:prompt_tokens_total
+      kind: CUMULATIVE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:request_decode_time_seconds/histogram
+      prometheus_name: vllm:request_decode_time_seconds
+      kind: CUMULATIVE
+      value_type: DISTRIBUTION
+    - name: prometheus.googleapis.com/vllm:request_decode_time_seconds_created/gauge
+      prometheus_name: vllm:request_decode_time_seconds_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:request_generation_tokens/histogram
+      prometheus_name: vllm:request_generation_tokens
+      kind: CUMULATIVE
+      value_type: DISTRIBUTION
+    - name: prometheus.googleapis.com/vllm:request_generation_tokens_created/gauge
+      prometheus_name: vllm:request_generation_tokens_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:request_inference_time_seconds/histogram
+      prometheus_name: vllm:request_inference_time_seconds
+      kind: CUMULATIVE
+      value_type: DISTRIBUTION
+    - name: prometheus.googleapis.com/vllm:request_inference_time_seconds_created/gauge
+      prometheus_name: vllm:request_inference_time_seconds_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:request_max_num_generation_tokens/histogram
+      prometheus_name: vllm:request_max_num_generation_tokens
+      kind: CUMULATIVE
+      value_type: DISTRIBUTION
+    - name: prometheus.googleapis.com/vllm:request_max_num_generation_tokens_created/gauge
+      prometheus_name: vllm:request_max_num_generation_tokens_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:request_params_max_tokens/histogram
+      prometheus_name: vllm:request_params_max_tokens
+      kind: CUMULATIVE
+      value_type: DISTRIBUTION
+    - name: prometheus.googleapis.com/vllm:request_params_max_tokens_created/gauge
+      prometheus_name: vllm:request_params_max_tokens_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:request_params_n/histogram
+      prometheus_name: vllm:request_params_n
+      kind: CUMULATIVE
+      value_type: DISTRIBUTION
+    - name: prometheus.googleapis.com/vllm:request_params_n_created/gauge
+      prometheus_name: vllm:request_params_n_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:request_prefill_time_seconds/histogram
+      prometheus_name: vllm:request_prefill_time_seconds
+      kind: CUMULATIVE
+      value_type: DISTRIBUTION
+    - name: prometheus.googleapis.com/vllm:request_prefill_time_seconds_created/gauge
+      prometheus_name: vllm:request_prefill_time_seconds_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:request_prompt_tokens/histogram
+      prometheus_name: vllm:request_prompt_tokens
+      kind: CUMULATIVE
+      value_type: DISTRIBUTION
+    - name: prometheus.googleapis.com/vllm:request_prompt_tokens_created/gauge
+      prometheus_name: vllm:request_prompt_tokens_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:request_queue_time_seconds/histogram
+      prometheus_name: vllm:request_queue_time_seconds
+      kind: CUMULATIVE
+      value_type: DISTRIBUTION
+    - name: prometheus.googleapis.com/vllm:request_queue_time_seconds_created/gauge
+      prometheus_name: vllm:request_queue_time_seconds_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:request_success_created/gauge
+      prometheus_name: vllm:request_success_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:request_success_total/counter
+      prometheus_name: vllm:request_success_total
+      kind: CUMULATIVE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:request_time_per_output_token_seconds/histogram
+      prometheus_name: vllm:request_time_per_output_token_seconds
+      kind: CUMULATIVE
+      value_type: DISTRIBUTION
+    - name: prometheus.googleapis.com/vllm:request_time_per_output_token_seconds_created/gauge
+      prometheus_name: vllm:request_time_per_output_token_seconds_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:time_per_output_token_seconds/histogram
+      prometheus_name: vllm:time_per_output_token_seconds
+      kind: CUMULATIVE
+      value_type: DISTRIBUTION
+    - name: prometheus.googleapis.com/vllm:time_per_output_token_seconds_created/gauge
+      prometheus_name: vllm:time_per_output_token_seconds_created
+      kind: GAUGE
+      value_type: DOUBLE
+    - name: prometheus.googleapis.com/vllm:time_to_first_token_seconds/histogram
+      prometheus_name: vllm:time_to_first_token_seconds
+      kind: CUMULATIVE
+      value_type: DISTRIBUTION
+    - name: prometheus.googleapis.com/vllm:time_to_first_token_seconds_created/gauge
+      prometheus_name: vllm:time_to_first_token_seconds_created
+      kind: GAUGE
+      value_type: DOUBLE
     install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/vllm
