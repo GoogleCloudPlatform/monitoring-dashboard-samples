@@ -1,0 +1,34 @@
+{
+  "displayName": "VM Instance - High GPU Utilization",
+  "documentation": {
+    "content": "This alert fires when the GPU utilization on any VM instance in the project rises above 90% for 5 minutes or more.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - High GPU utilization",
+      "conditionThreshold": {
+        "filter": "resource.type = \"gce_instance\" AND metric.type = \"agent.googleapis.com/gpu/utilization\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "crossSeriesReducer": "REDUCE_NONE",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        },
+        "thresholdValue": 90
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
