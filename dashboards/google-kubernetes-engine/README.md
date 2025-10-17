@@ -74,10 +74,3 @@
 |:---------------------|
 |Filename: [gke-tpu-node-pool-status.json](gke-tpu-node-pool-status.json)|
 |This dashboard has charts for the related [Kubernetes metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes), including metrics for the multi-host TPU node pool status and availability.|
-
-&nbsp;
-
-|GKE Cost Optimization Signals - Bin Packing|
-|:---------------------|
-|Filename: [gke-cost-optimization-signals-bin-packing.json](gke-cost-optimization-signals-bin-packing.json)|
-|This dashboard has charts for the related [Kubernetes metrics](https://cloud.google.com/monitoring/api/metrics_kubernetes), including metrics for the cluster bin packing.|
