@@ -1,7 +1,7 @@
 {
   "displayName": "Server Error is high. (GKE Workload: ${WORKLOAD_NAME})",
   "documentation": {
-    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${WORKLOAD_NAME}/observability?project=${PROJECT_ID}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [MQL documentation](https://cloud.google.com/monitoring/mql/alerts)",
+    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${metric_or_resource.label.location}/${metric_or_resource.label.cluster_name}/${metric_or_resource.label.namespace_name}/${metric.label.metadata_system_top_level_controller_name}/observability?project=${metric_or_resource.label.project_id}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [PromQL documentation](https://cloud.google.com/monitoring/promql/create-promql-alerts-console)",
     "mimeType": "text/markdown"
   },
   "userLabels": {
@@ -15,19 +15,22 @@
   "conditions": [
     {
       "displayName": "Server Error is high for a method",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch prometheus_target\n| metric 'prometheus.googleapis.com/grpc_server_handled_total/counter'\n| filter\n    resource.project_id == '${PROJECT_ID}' &&\n    resource.cluster == '${CLUSTER_NAME}' &&\n    resource.location == '${CLUSTER_LOCATION}' &&\n    resource.namespace == '${NAMESPACE}' &&\n    metric.pod =~ '${WORKLOAD_NAME}-[a-f0-9]{7,10}-[a-z0-9]{5}'\n|\n{\n    filter metric.grpc_code =~ '(Internal|Unknown|Unavailable|Unimplemented)'\n    | align rate(5m)\n    | every 1m\n    | group_by [metric.grpc_method], [value_grpc_server_handled_total_aggregate: aggregate(value.grpc_server_handled_total)]\n    ;\n    align rate(5m)\n    | every 1m\n    | group_by [metric.grpc_method], [value_grpc_server_handled_total_aggregate: aggregate(value.grpc_server_handled_total)]\n}\n| join\n| div\n| cast_units('1')\n| scale('%')\n| condition val() > 5'%'"
+        "evaluationInterval": "30s",
+        "query": "(\n  sum by (grpc_method) (\n    rate({\n      \"grpc_server_handled_total\",\n      project_id=~\"${PROJECT_ID}\",\n      cluster=~\"${CLUSTER_NAME}\",\n      location=~\"${CLUSTER_LOCATION}\",\n      namespace=~\"${NAMESPACE}\",\n      pod=~\"${WORKLOAD_NAME}-[a-f0-9]{7,10}-[a-z0-9]{5}\",\n      grpc_code=~\"(Internal|Unknown|Unavailable|Unimplemented)\"\n    }[5m])\n  )\n  /\n  sum by (grpc_method) (\n    rate({\n      \"grpc_server_handled_total\",\n      project_id=~\"${PROJECT_ID}\",\n      cluster=~\"${CLUSTER_NAME}\",\n      location=~\"${CLUSTER_LOCATION}\",\n      namespace=~\"${NAMESPACE}\",\n      pod=~\"${WORKLOAD_NAME}-[a-f0-9]{7,10}-[a-z0-9]{5}\"\n    }[5m])\n  )\n) > 0.05"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": []
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
