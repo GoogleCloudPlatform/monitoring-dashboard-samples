@@ -1,7 +1,7 @@
 {
   "displayName": "Server Error (5xx) is high. (GKE Workload: ${WORKLOAD_NAME})",
   "documentation": {
-    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${WORKLOAD_NAME}/observability?project=${PROJECT_ID}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [MQL documentation](https://cloud.google.com/monitoring/mql/alerts)",
+    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${metric_or_resource.label.location}/${metric_or_resource.label.cluster_name}/${metric_or_resource.label.namespace_name}/${metric.label.metadata_system_top_level_controller_name}/observability?project=${metric_or_resource.label.project_id}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [PromQL documentation](https://cloud.google.com/monitoring/promql/create-promql-alerts-console)",
     "mimeType": "text/markdown"
   },
   "userLabels": {
@@ -15,19 +15,22 @@
   "conditions": [
     {
       "displayName": "Server Error (5xx) is high for an operation",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch k8s_container\n| metric 'istio.io/service/server/request_count'\n| filter resource.project_id = '${PROJECT_ID}' &&\n    resource.location = '${CLUSTER_LOCATION}' &&\n    resource.cluster_name = '${CLUSTER_NAME}' &&\n    resource.namespace_name = '${NAMESPACE}' &&\n    metadata.system.top_level_controller_name = '${WORKLOAD_NAME}' &&\n    metadata.system_labels.top_level_controller_type == '${TOP_LEVEL_CONTROLLER_TYPE}'\n|\n{\n      filter format(metric.response_code, '%d') =~ '5[0-9][0-9]'\n    | align rate(5m)\n    | every 1m\n    | group_by [metric.request_operation],\n        [value_request_count_aggregate: aggregate(value.request_count)]\n    ;\n      align rate(5m)\n    | every 1m\n    | group_by [metric.request_operation],\n        [value_request_count_aggregate: aggregate(value.request_count)]\n}\n| join\n| div\n| scale('%')\n| condition val() > 5'%'"
+        "evaluationInterval": "30s",
+        "query": "(\n  sum by (request_operation) (\n    rate({\n      \"istio.io/service/server/request_count\",\n      monitored_resource=\"k8s_container\",\n      project_id=~\"${PROJECT_ID}\",\n      location=~\"${CLUSTER_LOCATION}\",\n      cluster_name=~\"${CLUSTER_NAME}\",\n      namespace_name=~\"${NAMESPACE}\",\n      metadata_system_top_level_controller_name=~\"${WORKLOAD_NAME}\",\n      metadata_system_top_level_controller_type=~\"${TOP_LEVEL_CONTROLLER_TYPE}\",\n      response_code=~\"5[0-9][0-9]\"\n    }[5m])\n  )\n  /\n  sum by (request_operation) (\n    rate({\n      \"istio.io/service/server/request_count\",\n      monitored_resource=\"k8s_container\",\n      project_id=~\"${PROJECT_ID}\",\n      location=~\"${CLUSTER_LOCATION}\",\n      cluster_name=~\"${CLUSTER_NAME}\",\n      namespace_name=~\"${NAMESPACE}\",\n      metadata_system_top_level_controller_name=~\"${WORKLOAD_NAME}\",\n      metadata_system_top_level_controller_type=~\"${TOP_LEVEL_CONTROLLER_TYPE}\"\n    }[5m])\n  )\n) > 0.05"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": []
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }

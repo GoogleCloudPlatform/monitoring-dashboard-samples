@@ -1,0 +1,26 @@
+{
+  "displayName": "429 Out of Capacity Error",
+  "documentation": {
+    "content": "At least 1% of requests to ${resource.label.model_user_id} responded with a 429 out-of-capacity error in ${resource.label.location}. These occur when cumulative demand on the model from customers in your [ML processing location](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/locations#ml_processing) exceeds available compute. [View](https://console.cloud.google.com/monitoring/dashboards/integration/vertex_ai.vertex-ai-model-garden) the monitoring dashboard to investigate.\n\nThe model will return successful responses again when capacity becomes available, but there are steps you can take to prevent this from happening in the future:\n\n* Depending on the urgency of the request(s), use [batch predictions](https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/batch-prediction-gemini) which will queue your request(s) to fulfill  them when capacity becomes available\n* Purchase a [Provisioned Throughput](https://cloud.google.com/vertex-ai/generative-ai/docs/provisioned-throughput) subscription for capacity assurance\n* Redirect your request to a different [ML processing location](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/locations#ml_processing)",
+    "mimeType": "text/markdown",
+    "subject": "429 Out of Capacity Error"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "Vertex AI Model Garden Publisher Model - Model invocation count",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "30s",
+        "query": "sum by (model_user_id,location)(rate(aiplatform_googleapis_com:publisher_online_serving_model_invocation_count{monitored_resource=\"aiplatform.googleapis.com/PublisherModel\",response_code=\"429\"}[60s]))/sum by (model_user_id,location)(rate(aiplatform_googleapis_com:publisher_online_serving_model_invocation_count{monitored_resource=\"aiplatform.googleapis.com/PublisherModel\"}[60s])) > .01"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "notificationPrompts": [
+      "OPENED"
+    ]
+  },
+  "combiner": "OR",
+  "enabled": true
+}

@@ -199,7 +199,7 @@
                   "plotType": "LINE",
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
-                    "prometheusQuery": "((sum(autoscaler_cluster_resources{resource=\"CPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)) + (sum(autoscaler_pending_resources{resource=\"CPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)) and (sum(autoscaler_cluster_resources{resource=\"CPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)) + (sum(autoscaler_pending_resources{resource=\"CPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)) > (sum(autoscaler_cluster_resources{resource=\"CPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)))",
+                    "prometheusQuery": "sum(ray_resources{Name=\"CPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) + (sum(ray_cluster_pending_nodes{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)) * avg(ray_node_cpu_count{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
                     "unitOverride": ""
                   }
                 }
@@ -226,7 +226,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "sum(ray_object_store_memory{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) by (Location)",
-                    "unitOverride": ""
+                    "unitOverride": "bytes"
                   }
                 },
                 {
@@ -238,7 +238,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "sum(ray_resources{Name=\"object_store_memory\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
-                    "unitOverride": ""
+                    "unitOverride": "bytes"
                   }
                 }
               ],
@@ -262,7 +262,7 @@
                   "plotType": "LINE",
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
-                    "prometheusQuery": "ray_resources{Name=\"GPU\",State=\"USED\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",instance=~\"${Instance.value}\",SessionName=~\"${SessionName.value}\"}",
+                    "prometheusQuery": "sum(ray_resources{Name=\"GPU\",State=\"USED\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\",instance=~\"${Instance.value}\"}) by (instance)",
                     "unitOverride": ""
                   }
                 },
@@ -286,7 +286,7 @@
                   "plotType": "LINE",
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
-                    "prometheusQuery": "((sum(autoscaler_cluster_resources{resource=\"GPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)) + (sum(autoscaler_pending_resources{resource=\"GPU\",SessionName=~\"${SessionName.value}\"}) or vector(0)) and (sum(autoscaler_cluster_resources{resource=\"GPU\",SessionName=~\"${SessionName.value}\"}) or vector(0)) + (sum(autoscaler_pending_resources{resource=\"GPU\",SessionName=~\"${SessionName.value}\"}) or vector(0)) > (sum(autoscaler_cluster_resources{resource=\"GPU\",SessionName=~\"${SessionName.value}\"}) or vector(0)))",
+                    "prometheusQuery": "sum(ray_resources{Name=\"GPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) + (sum(ray_cluster_pending_nodes{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(0)) * avg(ray_node_gpus_available{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
                     "unitOverride": ""
                   }
                 }
@@ -413,7 +413,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "ray_node_disk_usage{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
-                    "unitOverride": ""
+                    "unitOverride": "bytes"
                   }
                 },
                 {
@@ -425,7 +425,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "sum(ray_node_disk_free{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) + sum(ray_node_disk_usage{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
-                    "unitOverride": ""
+                    "unitOverride": "bytes"
                   }
                 }
               ],
@@ -451,7 +451,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "ray_node_disk_io_write_speed{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
-                    "unitOverride": ""
+                    "unitOverride": "By/s"
                   }
                 },
                 {
@@ -463,7 +463,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "ray_node_disk_io_read_speed{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
-                    "unitOverride": ""
+                    "unitOverride": "By/s"
                   }
                 }
               ],
@@ -488,7 +488,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "ray_node_mem_used{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
-                    "unitOverride": ""
+                    "unitOverride": "bytes"
                   }
                 },
                 {
@@ -500,7 +500,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "sum(ray_node_mem_total{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
-                    "unitOverride": ""
+                    "unitOverride": "bytes"
                   }
                 }
               ],
@@ -514,18 +514,18 @@
           "width": 24,
           "height": 16,
           "widget": {
-            "title": "Node Out of Memory Failures by Name",
+            "title": "Node Out of Memory Failures by Name (Rate)",
             "xyChart": {
               "dataSets": [
                 {
                   "breakdowns": [],
                   "dimensions": [],
-                  "legendTemplate": "OOM Killed: ${labels.Name}, ${labels.instance}",
+                  "legendTemplate": "OOM Rate: ${labels.Name}, ${labels.instance}",
                   "measures": [],
                   "plotType": "LINE",
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
-                    "prometheusQuery": "ray_memory_manager_worker_eviction_total{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
+                    "prometheusQuery": "rate(ray_memory_manager_worker_eviction_total{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}[${__interval}])",
                     "unitOverride": ""
                   }
                 }
@@ -551,7 +551,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "(sum(ray_component_rss_mb{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"} * 1e6) by (Component)) - (sum(ray_component_mem_shared_bytes{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) by (Component))",
-                    "unitOverride": ""
+                    "unitOverride": "bytes"
                   }
                 },
                 {
@@ -563,7 +563,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "sum(ray_node_mem_shared_bytes{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
-                    "unitOverride": ""
+                    "unitOverride": "bytes"
                   }
                 },
                 {
@@ -575,7 +575,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "sum(ray_node_mem_total{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
-                    "unitOverride": ""
+                    "unitOverride": "bytes"
                   }
                 }
               ],
@@ -638,7 +638,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "ray_node_gram_used{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"} * 1024 * 1024",
-                    "unitOverride": ""
+                    "unitOverride": "bytes"
                   }
                 },
                 {
@@ -650,7 +650,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "(sum(ray_node_gram_available{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) + sum(ray_node_gram_used{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})) * 1024 * 1024",
-                    "unitOverride": ""
+                    "unitOverride": "bytes"
                   }
                 }
               ],
@@ -676,7 +676,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "ray_node_network_receive_speed{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
-                    "unitOverride": ""
+                    "unitOverride": "By/s"
                   }
                 },
                 {
@@ -688,7 +688,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "ray_node_network_send_speed{instance=~\"${Instance.value}\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}",
-                    "unitOverride": ""
+                    "unitOverride": "By/s"
                   }
                 }
               ],
@@ -766,7 +766,7 @@
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
                     "prometheusQuery": "avg(ray_node_cpu_utilization{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})",
-                    "unitOverride": ""
+                    "unitOverride": "%"
                   }
                 },
                 {
@@ -777,8 +777,8 @@
                   "plotType": "LINE",
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
-                    "prometheusQuery": "sum(ray_node_gpus_utilization{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / on() (sum(autoscaler_cluster_resources{resource='GPU',cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(1))",
-                    "unitOverride": ""
+                    "prometheusQuery": "sum(ray_node_gpus_utilization{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / (sum(ray_resources{Name=\"GPU\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) or vector(1))",
+                    "unitOverride": "%"
                   }
                 },
                 {
@@ -789,8 +789,8 @@
                   "plotType": "LINE",
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
-                    "prometheusQuery": "sum(ray_node_mem_used{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / on() (sum(ray_node_mem_total{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})) * 100",
-                    "unitOverride": ""
+                    "prometheusQuery": "sum(ray_node_mem_used{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / sum(ray_node_mem_total{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) * 100",
+                    "unitOverride": "%"
                   }
                 },
                 {
@@ -801,8 +801,8 @@
                   "plotType": "LINE",
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
-                    "prometheusQuery": "sum(ray_node_gram_used{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / on() (sum(ray_node_gram_available{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) + sum(ray_node_gram_used{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})) * 100",
-                    "unitOverride": ""
+                    "prometheusQuery": "sum(ray_node_gram_used{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / (sum(ray_node_gram_available{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) + sum(ray_node_gram_used{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})) * 100",
+                    "unitOverride": "%"
                   }
                 },
                 {
@@ -813,8 +813,8 @@
                   "plotType": "LINE",
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
-                    "prometheusQuery": "sum(ray_object_store_memory{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / on() sum(ray_resources{Name=\"object_store_memory\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) * 100",
-                    "unitOverride": ""
+                    "prometheusQuery": "sum(ray_object_store_memory{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / sum(ray_resources{Name=\"object_store_memory\",cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) * 100",
+                    "unitOverride": "%"
                   }
                 },
                 {
@@ -825,12 +825,19 @@
                   "plotType": "LINE",
                   "targetAxis": "Y1",
                   "timeSeriesQuery": {
-                    "prometheusQuery": "sum(ray_node_disk_usage{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / on() (sum(ray_node_disk_free{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) + sum(ray_node_disk_usage{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})) * 100",
-                    "unitOverride": ""
+                    "prometheusQuery": "sum(ray_node_disk_usage{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) / (sum(ray_node_disk_free{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"}) + sum(ray_node_disk_usage{cluster=~\"${Cluster.value}\",namespace=~\"${Namespace.value}\",location=~\"${Location.value}\",SessionName=~\"${SessionName.value}\"})) * 100",
+                    "unitOverride": "%"
                   }
                 }
               ],
-              "thresholds": [],
+              "thresholds": [
+                {
+                  "value": 80
+                },
+                {
+                  "value": 95
+                }
+              ],
               "yAxis": {
                 "label": "",
                 "scale": "LINEAR"

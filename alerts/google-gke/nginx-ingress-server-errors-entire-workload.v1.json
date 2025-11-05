@@ -1,7 +1,7 @@
 {
   "displayName": "Server Error (5xx) is high. (GKE Workload: ${WORKLOAD_NAME})",
   "documentation": {
-    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${CLUSTER_LOCATION}/${CLUSTER_NAME}/${NAMESPACE}/${WORKLOAD_NAME}/observability?project=${PROJECT_ID}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [MQL documentation](https://cloud.google.com/monitoring/mql/alerts)",
+    "content": "[View Workload Details](https://console.cloud.google.com/kubernetes/deployment/${metric_or_resource.label.location}/${metric_or_resource.label.cluster_name}/${metric_or_resource.label.namespace_name}/${metric.label.metadata_system_top_level_controller_name}/observability?project=${metric_or_resource.label.project_id}).\n- If alerts tend to be false positive or noisy, consider visiting the alert policy page and changing the threshold, the rolling (alignment) window, and the retest (duration) window. [Alerting policies documentation](https://cloud.google.com/monitoring/alerts/concepts-indepth), [PromQL documentation](https://cloud.google.com/monitoring/promql/create-promql-alerts-console)",
     "mimeType": "text/markdown"
   },
   "userLabels": {
@@ -15,19 +15,22 @@
   "conditions": [
     {
       "displayName": "Server Error (5xx) is high for a method",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "trigger": {
-          "count": 1
-        },
-        "query": "fetch prometheus_target\n| metric 'prometheus.googleapis.com/nginx_ingress_controller_requests/counter'\n| filter\n    resource.project_id == '${PROJECT_ID}' &&\n    resource.cluster == '${CLUSTER_NAME}' &&\n    resource.location == '${CLUSTER_LOCATION}' &&\n    resource.namespace == '${NAMESPACE}' &&\n    metric.service =~ '${SERVICES_REGEX}'\n|\n{\n    filter metric.status =~ '5[0-9][0-9]'\n    | align rate(5m)\n    | every 1m\n    | group_by [metric.method, metric.path], [value_nginx_ingress_controller_requests_aggregate: aggregate(value.nginx_ingress_controller_requests)]\n    ;\n    align rate(5m)\n    | every 1m\n    | group_by [metric.method, metric.path], [value_nginx_ingress_controller_requests_aggregate: aggregate(value.nginx_ingress_controller_requests)]\n}\n| join\n| div\n| cast_units('1')\n| scale('%')\n| condition val() > 5'%'"
+        "evaluationInterval": "30s",
+        "query": "(\n  sum by (method, path) (\n    rate({\n      \"nginx_ingress_controller_requests\",\n      project_id=~\"${PROJECT_ID}\",\n      cluster=~\"${CLUSTER_NAME}\",\n      location=~\"${CLUSTER_LOCATION}\",\n      namespace_name=~\"${NAMESPACE}\",\n      service=~\"${SERVICES_REGEX}\",\n      status=~\"5[0-9][0-9]\"\n    }[5m])\n  )\n  /\n  sum by (method, path) (\n    rate({\n      \"nginx_ingress_controller_requests\",\n      project_id=~\"${PROJECT_ID}\",\n      cluster=~\"${CLUSTER_NAME}\",\n      location=~\"${CLUSTER_LOCATION}\",\n      namespace_name=~\"${NAMESPACE}\",\n      service=~\"${SERVICES_REGEX}\"\n    }[5m])\n  )\n) > 0.05"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": []
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }

@@ -9,10 +9,10 @@
 |Filename: [cloudsql-general.json](cloudsql-general.json)|
 |This dashboard has charts displaying logs from Cloud SQL as well as charts of instance states and network throughput. |
 
-|Cloud SQL - Replication|
+|Cloud SQL - Replica|
 |:------------------|
-|Filename: [cloudsql-replication.json](cloudsql-replication.json)|
-|This dashboard has charts displaying information about replication states and replication performance from Cloud SQL. |
+|Filename: [cloudsql-replica.json](cloudsql-replica.json)|
+|This dashboard has charts displaying information about replica states and replica performance from Cloud SQL. |
 
 |Cloud SQL - Transactions|
 |:------------------|

@@ -1,21 +1,25 @@
 {
-    "displayName": "Reservation - High Utilization",
-    "userLabels": {},
-    "conditions": [
-      {
-        "displayName": "High Reservation Utilization",
-        "conditionMonitoringQueryLanguage": {
-          "duration": "0s",
-          "query": "fetch compute.googleapis.com/Reservation\n|\n{ metric 'compute.googleapis.com/reservation/used'\n| align next_older(5m) | every 5m ;\nmetric 'compute.googleapis.com/reservation/reserved'\n| align next_older(5m) | every 5m\n}\n| ratio\n| condition val() >= 0.9",
-          "trigger": {
-            "count": 1
-          }
-        }
+  "displayName": "Reservation - High Utilization",
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "High Reservation Utilization",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "300s",
+        "evaluationInterval": "60s",
+        "query": "(\n  {\"compute.googleapis.com/reservation/used\", monitored_resource=\"compute.googleapis.com/Reservation\"}\n    / on (reservation_id)\n  {\"compute.googleapis.com/reservation/reserved\", monitored_resource=\"compute.googleapis.com/Reservation\"}\n) >= 0.9"
       }
-    ],
-    "alertStrategy": {
-      "autoClose": "604800s"
-    },
-    "combiner": "OR",
-    "enabled": true
-  }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
+}

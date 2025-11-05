@@ -1,0 +1,332 @@
+{
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "project_id",
+      "stringValue": "",
+      "valueType": "STRING"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "location",
+      "stringValue": "",
+      "valueType": "STRING"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster_name",
+      "stringValue": "",
+      "valueType": "STRING"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "node_pool_name",
+      "valueType": "STRING_ARRAY"
+    }
+  ],
+  "displayName": "GKE TPU Node Pool Status",
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "height": 16,
+        "widget": {
+          "title": "Node pool status: Running",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [
+                        "resource.label.\"node_pool_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_FRACTION_TRUE"
+                    },
+                    "filter": "metric.type=\"kubernetes.io/node_pool/status\" resource.type=\"k8s_node_pool\" metric.label.\"status\"=\"RUNNING\""
+                  }
+                }
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 24,
+        "yPos": 36
+      },
+      {
+        "height": 16,
+        "widget": {
+          "title": "Node pool status: Provisioning",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [
+                        "resource.label.\"node_pool_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_FRACTION_TRUE"
+                    },
+                    "filter": "metric.type=\"kubernetes.io/node_pool/status\" resource.type=\"k8s_node_pool\" metric.label.\"status\"=\"PROVISIONING\""
+                  }
+                }
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 24,
+        "xPos": 24,
+        "yPos": 36
+      },
+      {
+        "height": 16,
+        "widget": {
+          "title": "Node pool status: Error",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [
+                        "resource.label.\"node_pool_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_FRACTION_TRUE"
+                    },
+                    "filter": "metric.type=\"kubernetes.io/node_pool/status\" resource.type=\"k8s_node_pool\" metric.label.\"status\"=\"ERROR\""
+                  }
+                }
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 24,
+        "xPos": 24,
+        "yPos": 20
+      },
+      {
+        "height": 16,
+        "widget": {
+          "title": "Node pool status: Reconciling",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [
+                        "resource.label.\"node_pool_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_FRACTION_TRUE"
+                    },
+                    "filter": "metric.type=\"kubernetes.io/node_pool/status\" resource.type=\"k8s_node_pool\" metric.label.\"status\"=\"RECONCILING\""
+                  }
+                }
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 24,
+        "xPos": 24,
+        "yPos": 52
+      },
+      {
+        "height": 16,
+        "widget": {
+          "title": "Node pool status: Stopping",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [
+                        "resource.label.\"node_pool_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_FRACTION_TRUE"
+                    },
+                    "filter": "metric.type=\"kubernetes.io/node_pool/status\" resource.type=\"k8s_node_pool\" metric.label.\"status\"=\"STOPPING\""
+                  }
+                }
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 24,
+        "yPos": 52
+      },
+      {
+        "height": 16,
+        "widget": {
+          "title": "Node pools by status",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_COUNT",
+                      "groupByFields": [
+                        "metric.label.\"status\""
+                      ],
+                      "perSeriesAligner": "ALIGN_COUNT"
+                    },
+                    "filter": "metric.type=\"kubernetes.io/node_pool/status\" resource.type=\"k8s_node_pool\""
+                  }
+                }
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 24,
+        "yPos": 68
+      },
+      {
+        "height": 16,
+        "widget": {
+          "title": "Node pool availability",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [
+                        "resource.label.\"node_pool_name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_FRACTION_TRUE"
+                    },
+                    "filter": "metric.type=\"kubernetes.io/node_pool/multi_host/available\" resource.type=\"k8s_node_pool\""
+                  }
+                }
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        },
+        "width": 24,
+        "yPos": 20
+      },
+      {
+        "height": 20,
+        "widget": {
+          "text": {
+            "content": "Get comprehensive insights into the health of your GKE TPU multi-host node pools. **The dashboard only shows data for TPU multi-host node pools.**\n\n### Charts:\n\n* **Node pool availability:**\n    * Tracks real-time availability to help you identify problem node pools\n    * 100% indicates all nodes are operational; 0% indicates an issue\n* **Node pool status:**\n    * Historical status charts for each pool to help you pinpoint status changes, especially errors\n    * 100% line indicates a sustained status\n* **Node pools by status**\n    * Historical number of node pools in each status\n    * Single pool filter shows its status timeline\n\n### How to use:\n\n* **Filter:** Use cluster-level filters (cluster_name, location, project_id) to focus on your GKE resource\n* **Identify issues:** Review the \"Node pool availability\" chart for dips below 100%\n* **Investigate:** Examine \"Node pool status\" charts for problem pools to understand status changes\n* **Analyze:** Use the node pool name filter to isolate and analyze individual node pool behavior over time",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        },
+        "width": 48
+      },
+      {
+        "height": 48,
+        "widget": {
+          "collapsibleGroup": {},
+          "title": "Individual node pool status"
+        },
+        "width": 48,
+        "yPos": 20
+      },
+      {
+        "height": 16,
+        "widget": {
+          "collapsibleGroup": {},
+          "title": "Aggregated node pool status"
+        },
+        "width": 48,
+        "yPos": 68
+      },
+      {
+        "height": 20,
+        "widget": {
+          "collapsibleGroup": {},
+          "title": "Dashboard overview"
+        },
+        "width": 48
+      }
+    ]
+  }
+}

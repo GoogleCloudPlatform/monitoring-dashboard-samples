@@ -1,0 +1,96 @@
+platforms:
+  - type: GKE
+    launch_stage: GA
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/:tensorflow:serving:request_count/counter
+    exporter_metadata:
+      name: TensorFlow Serving Prometheus Exporter
+      doc_url: https://www.tensorflow.org/tfx/serving/serving_config#monitoring_configuration
+      minimum_supported_version: 2.13.1-gpu
+    default_metrics:
+      - name: prometheus.googleapis.com/:tensorflow:cc:saved_model:load_attempt_count/counter
+        prometheus_name: :tensorflow:cc:saved_model:load_attempt_count
+        value_type: DOUBLE
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:cc:saved_model:load_latency/counter
+        prometheus_name: :tensorflow:cc:saved_model:load_latency
+        value_type: DOUBLE
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:cc:saved_model:load_latency_by_stage/histogram
+        prometheus_name: :tensorflow:cc:saved_model:load_latency_by_stage
+        value_type: DISTRIBUTION
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:core:direct_session_runs/counter
+        prometheus_name: :tensorflow:core:direct_session_runs
+        value_type: DOUBLE
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:core:graph_build_calls/counter
+        prometheus_name: :tensorflow:core:graph_build_calls
+        value_type: DOUBLE
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:core:graph_build_time_usecs/counter
+        prometheus_name: :tensorflow:core:graph_build_time_usecs
+        value_type: DOUBLE
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:core:graph_optimization_usecs/counter
+        prometheus_name: :tensorflow:core:graph_optimization_usecs
+        value_type: DOUBLE
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:core:graph_pending_queue_length_histogram/histogram
+        prometheus_name: :tensorflow:core:graph_pending_queue_length_histogram
+        value_type: DISTRIBUTION
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:core:graph_run_input_tensor_bytes/histogram
+        prometheus_name: :tensorflow:core:graph_run_input_tensor_bytes
+        value_type: DISTRIBUTION
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:core:graph_run_output_tensor_bytes/histogram
+        prometheus_name: :tensorflow:core:graph_run_output_tensor_bytes
+        value_type: DISTRIBUTION
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:core:graph_run_time_usecs/counter
+        prometheus_name: :tensorflow:core:graph_run_time_usecs
+        value_type: DOUBLE
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:core:graph_run_time_usecs_histogram/histogram
+        prometheus_name: :tensorflow:core:graph_run_time_usecs_histogram
+        value_type: DISTRIBUTION
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:core:graph_runs/counter
+        prometheus_name: :tensorflow:core:graph_runs
+        value_type: DOUBLE
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:core:graph_unused_outputs/counter
+        prometheus_name: :tensorflow:core:graph_unused_outputs
+        value_type: DOUBLE
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:core:saved_model:read:api/counter
+        prometheus_name: :tensorflow:core:saved_model:read:api
+        value_type: DOUBLE
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:core:saved_model:read:count/counter
+        prometheus_name: :tensorflow:core:saved_model:read:count
+        value_type: DOUBLE
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:core:saved_model:read:path/gauge
+        prometheus_name: :tensorflow:core:saved_model:read:path
+        value_type: DOUBLE
+        kind: GAUGE
+      - name: prometheus.googleapis.com/:tensorflow:core:session_created/gauge
+        prometheus_name: :tensorflow:core:session_created
+        value_type: DOUBLE
+        kind: GAUGE
+      - name: prometheus.googleapis.com/:tensorflow:serving:request_count/counter
+        prometheus_name: :tensorflow:serving:request_count
+        value_type: DOUBLE
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:serving:request_latency/histogram
+        prometheus_name: :tensorflow:serving:request_latency
+        value_type: DISTRIBUTION
+        kind: CUMULATIVE
+      - name: prometheus.googleapis.com/:tensorflow:serving:runtime_latency/histogram
+        prometheus_name: :tensorflow:serving:runtime_latency
+        value_type: DISTRIBUTION
+        kind: CUMULATIVE
+    install_documentation_url: https://cloud.google.com/stackdriver/docs/managed-prometheus/exporters/tf-serving

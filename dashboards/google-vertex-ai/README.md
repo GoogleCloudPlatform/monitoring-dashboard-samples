@@ -14,3 +14,14 @@
 |Filename: [vertex-ai-endpoints.json](vertex-ai-endpoints.json)|
 |This is a dashboard for monitoring request, latency and error rates for models you have deployed onto Vertex AI Endpoints. |
 
+|Vertex AI Custom Training|
+|:------------------|
+|Filename: [vertex-ai-custom-training.json](vertex-ai-custom-training.json)|
+|This is a dashboard for monitoring the resource usage metrics for Vertex AI custom training jobs. |
+
+
+|Vertex AI Provisioned Throughput|
+|:------------------|
+|Filename: [vertex-ai-provisioned-throughput.json](vertex-ai-provisioned-throughput.json)|
+|This is a dashboard for monitoring utilization of Provisioned Throughput associated with Vertex AI models. |
+

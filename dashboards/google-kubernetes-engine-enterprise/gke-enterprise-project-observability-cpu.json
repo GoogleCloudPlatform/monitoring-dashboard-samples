@@ -1,17 +1,18 @@
 {
-  "category": "CUSTOM",
   "displayName": "GKE Enterprise Project Observability CPU",
   "dashboardFilters": [],
+  "labels": {},
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
       {
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "CPU Request % Used",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -19,14 +20,13 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m)\n  ; { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/request_cores }\n    | union\n    | align next_older(2m) }\n| group_by [resource.project_id], .sum()\n| outer_join 0\n| div\n| scale \"%\"",
-                  "unitOverride": ""
+                  "prometheusQuery": "100 *\n(\n  sum by (project_id) (\n    rate(kubernetes_io:container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[${__interval}])\n    or\n    rate(kubernetes_io:anthos_container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[${__interval}])\n  )\n  /\n  (\n    sum by (project_id) (\n      kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n      or\n      kubernetes_io:anthos_container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n    )\n    and\n    (\n      sum by (project_id) (\n        kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n        or\n        kubernetes_io:anthos_container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n      ) > 0\n    )\n  )\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -34,12 +34,13 @@
       },
       {
         "xPos": 24,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cores Used",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -47,14 +48,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/cpu/core_usage_time\n  ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n| union\n| align rate(1m)\n| every 1m\n| group_by [resource.project_id], .sum()",
-                  "unitOverride": ""
+                  "prometheusQuery": "sum by (project_id) (\n    rate(kubernetes_io:container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[${__interval}])\n    or \n    rate(kubernetes_io:anthos_container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[${__interval}])\n)"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -62,12 +61,13 @@
       },
       {
         "yPos": 16,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Requested Cores",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -75,28 +75,27 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { metric kubernetes.io/container/cpu/request_cores\n  ; metric kubernetes.io/anthos/container/cpu/request_cores }\n| union\n| align next_older(1m)\n| every 1m\n| group_by [resource.project_id], .sum()",
-                  "unitOverride": ""
+                  "prometheusQuery": "sum by (project_id) (\n    kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n    or \n    kubernetes_io:anthos_container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n)"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 24,
         "yPos": 16,
-        "width": 24,
+        "xPos": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Requested Cores Unused",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -104,14 +103,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| { { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/request_cores }\n    | union\n  ; { metric kubernetes.io/container/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/container/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m }\n| align next_older(2m)\n| group_by [resource.project_id], .sum()\n| join\n| sub",
-                  "unitOverride": ""
+                  "prometheusQuery": "sum by (project_id) (\n    kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n    or \n    kubernetes_io:anthos_container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n)\n-\nsum by (project_id) (\n    rate(kubernetes_io:container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[${__interval}])\n    or \n    rate(kubernetes_io:anthos_container_cpu_core_usage_time{monitored_resource=\"k8s_container\"}[${__interval}])\n)"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -119,12 +116,13 @@
       },
       {
         "yPos": 32,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster CPU % Used",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -132,28 +130,28 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "{ fetch k8s_container\n  | { metric kubernetes.io/container/cpu/request_cores\n    ; metric kubernetes.io/anthos/container/cpu/request_cores }\n  | union\n; fetch k8s_node\n  | { metric kubernetes.io/node/cpu/allocatable_cores\n    ; metric kubernetes.io/anthos/node/cpu/allocatable_cores }\n  | union }\n| align next_older(2m)\n| group_by [resource.project_id], .sum()\n| join\n| div\n| scale \"%\"",
-                  "unitOverride": ""
+                  "prometheusQuery": "100 *\n(\n  sum by (project_id) (\n    kubernetes_io:container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n    or\n    kubernetes_io:anthos_container_cpu_request_cores{monitored_resource=\"k8s_container\"}\n  )\n  /\n  (\n    sum by (project_id) (\n      kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\"}\n      or\n      kubernetes_io:anthos_node_cpu_allocatable_cores{monitored_resource=\"k8s_node\"}\n    )\n    and\n    (\n      sum by (project_id) (\n        kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\"}\n        or\n        kubernetes_io:anthos_node_cpu_allocatable_cores{monitored_resource=\"k8s_node\"}\n      ) > 0\n    )\n  )\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 24,
         "yPos": 32,
-        "width": 24,
+        "xPos": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster Cores Unused",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -161,14 +159,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { { metric kubernetes.io/node/cpu/total_cores\n    ; metric kubernetes.io/anthos/node/cpu/total_cores }\n    | union\n    | align next_older(2m)\n  ; { metric kubernetes.io/node/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/node/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m) }\n| group_by [resource.project_id], .sum()\n| join\n| sub",
-                  "unitOverride": ""
+                  "prometheusQuery": "sum by (project_id) (\n    kubernetes_io:node_cpu_total_cores{monitored_resource=\"k8s_node\"}\n    or\n    kubernetes_io:anthos_node_cpu_total_cores{monitored_resource=\"k8s_node\"}\n)\n-\nsum by (project_id) (\n    rate(kubernetes_io:node_cpu_core_usage_time{monitored_resource=\"k8s_node\"}[${__interval}])\n    or\n    rate(kubernetes_io:anthos_node_cpu_core_usage_time{monitored_resource=\"k8s_node\"}[${__interval}])\n)"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -176,12 +172,13 @@
       },
       {
         "yPos": 48,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster CPU % Requested",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -189,28 +186,28 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { { metric kubernetes.io/node/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/node/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m)\n  ; { metric kubernetes.io/node/cpu/total_cores\n    ; metric kubernetes.io/anthos/node/cpu/total_cores }\n    | union\n    | align next_older(2m) }\n| group_by [resource.project_id], .sum()\n| join\n| div\n| scale \"%\"",
-                  "unitOverride": ""
+                  "prometheusQuery": "100 *\n(\n  sum by (project_id) (\n    rate(kubernetes_io:node_cpu_core_usage_time{monitored_resource=\"k8s_node\"}[${__interval}])\n    or\n    rate(kubernetes_io:anthos_node_cpu_core_usage_time{monitored_resource=\"k8s_node\"}[${__interval}])\n  )\n  /\n  (\n    sum by (project_id) (\n      kubernetes_io:node_cpu_total_cores{monitored_resource=\"k8s_node\"}\n      or\n      kubernetes_io:anthos_node_cpu_total_cores{monitored_resource=\"k8s_node\"}\n    )\n    and\n    (\n      sum by (project_id) (\n        kubernetes_io:node_cpu_total_cores{monitored_resource=\"k8s_node\"}\n        or\n        kubernetes_io:anthos_node_cpu_total_cores{monitored_resource=\"k8s_node\"}\n      ) > 0\n    )\n  )\n)\n",
+                  "unitOverride": "%"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 24,
         "yPos": 48,
-        "width": 24,
+        "xPos": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster Unrequested Cores",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -218,14 +215,12 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { { metric kubernetes.io/node/cpu/total_cores\n    ; metric kubernetes.io/anthos/node/cpu/total_cores }\n    | union\n    | align next_older(2m)\n  ; { metric kubernetes.io/node/cpu/core_usage_time\n    ; metric kubernetes.io/anthos/node/cpu/core_usage_time }\n    | union\n    | rate\n    | every 1m\n    | align next_older(2m) }\n| group_by [resource.project_id], .sum()\n| join\n| sub",
-                  "unitOverride": ""
+                  "prometheusQuery": "sum by (project_id) (\n    kubernetes_io:node_cpu_total_cores{monitored_resource=\"k8s_node\"}\n    or \n    kubernetes_io:anthos_node_cpu_total_cores{monitored_resource=\"k8s_node\"}\n)\n-\nsum by (project_id) (\n    rate(kubernetes_io:node_cpu_core_usage_time{monitored_resource=\"k8s_node\"}[${__interval}])\n    or \n    rate(kubernetes_io:anthos_node_cpu_core_usage_time{monitored_resource=\"k8s_node\"}[${__interval}])\n)"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -233,12 +228,13 @@
       },
       {
         "yPos": 64,
-        "width": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster Total Cores",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -246,28 +242,27 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { metric kubernetes.io/node/cpu/total_cores\n  ; metric kubernetes.io/anthos/node/cpu/total_cores }\n| union\n| align next_older(2m)\n| every 2m\n| group_by [resource.project_id], .sum()",
-                  "unitOverride": ""
+                  "prometheusQuery": "sum by (project_id) (\n    kubernetes_io:node_cpu_total_cores{monitored_resource=\"k8s_node\"}\n    or \n    kubernetes_io:anthos_node_cpu_total_cores{monitored_resource=\"k8s_node\"}\n)"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "xPos": 24,
         "yPos": 64,
-        "width": 24,
+        "xPos": 24,
         "height": 16,
+        "width": 24,
         "widget": {
           "title": "Cluster Allocatable Cores",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -275,20 +270,17 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_node\n| { metric kubernetes.io/node/cpu/allocatable_cores\n  ; metric kubernetes.io/anthos/node/cpu/allocatable_cores }\n| union\n| align next_older(2m)\n| every 2m\n| group_by [resource.project_id], .sum()",
-                  "unitOverride": ""
+                  "prometheusQuery": "sum by (project_id) (\n    kubernetes_io:node_cpu_allocatable_cores{monitored_resource=\"k8s_node\"}\n    or \n    kubernetes_io:anthos_node_cpu_allocatable_cores{monitored_resource=\"k8s_node\"}\n)"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       }
     ]
-  },
-  "labels": {}
+  }
 }

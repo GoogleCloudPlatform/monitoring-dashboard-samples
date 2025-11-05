@@ -8,19 +8,22 @@
   "conditions": [
     {
       "displayName": "New condition",
-      "conditionMonitoringQueryLanguage": {
+      "conditionPrometheusQueryLanguage": {
         "duration": "0s",
-        "query": "fetch gce_instance\n| { metric 'workload.googleapis.com/vault.token.renew.time'\n; metric 'workload.googleapis.com/vault.token.revoke.time' }\n| outer_join 0\n| group_by 1m\n| condition val(0) > 1000 || val(1) > 1000",
-        "trigger": {
-          "count": 1
-        }
+        "evaluationInterval": "30s",
+        "query": "{\"workload.googleapis.com/vault.token.renew.time\", monitored_resource=\"gce_instance\"} > 1000\nor\n{\"workload.googleapis.com/vault.token.revoke.time\", monitored_resource=\"gce_instance\"} > 1000"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
   "enabled": true,
-  "notificationChannels": []
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }

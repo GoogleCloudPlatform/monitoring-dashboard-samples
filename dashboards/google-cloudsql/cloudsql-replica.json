@@ -1,0 +1,292 @@
+{
+  "displayName": "Cloud SQL - Replicas",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "region",
+      "templateVariable": "",
+      "valueType": "STRING"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "database_id",
+      "templateVariable": "",
+      "valueType": "STRING"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "zone",
+      "templateVariable": "",
+      "valueType": "STRING"
+    }
+  ],
+  "labels": {},
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "Replica States",
+          "text": {
+            "content": "Count of replicas in each state that indicates whether they are running correctly or not.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "Replica Memory Usage",
+          "text": {
+            "content": "Replica instance memory usage indicates replica load.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Replica States",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_COUNT_TRUE"
+                    },
+                    "filter": "metric.type=\"cloudsql.googleapis.com/database/replication/state\" resource.type=\"cloudsql_database\"",
+                    "secondaryAggregation": {
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"state\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Replication Memory Usage",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id, region) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_memory_utilization{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and\n    on(project_id, database_id, region)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "Replica CPU Usage",
+          "text": {
+            "content": "Replica instance CPU usage indicates replica load.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "xPos": 24,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "Replica Log Archive Failures",
+          "text": {
+            "content": "Total number of log archive failures per replica.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 32,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Replica CPU Usage",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "100*\nlabel_replace(\n  avg by (project_id, database_id, region) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_cpu_utilization{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id, region)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n",
+                  "unitOverride": "%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 32,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Replica Log Archive Failures",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id, region) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_replication_log_archive_failure_count{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id, region)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 48,
+        "height": 8,
+        "width": 24,
+        "widget": {
+          "title": "Replica Lag",
+          "text": {
+            "content": "How far replicas are behind the master node, in seconds.",
+            "format": "RAW",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 56,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Replica Lag",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(\n  avg by (project_id, database_id) (\n    avg_over_time(\n      cloudsql_googleapis_com:database_replication_replica_lag{monitored_resource=\"cloudsql_database\"}[${__interval}]\n    )\n    and on(project_id, database_id)\n    (\n      cloudsql_googleapis_com:database_replication_state{monitored_resource=\"cloudsql_database\"}\n    )\n  ),\n  \"database_id\", \"$1\", \"database_id\", \".*:(.*)\"\n)\n"
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

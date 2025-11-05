@@ -1,0 +1,371 @@
+{
+  "displayName": "Gemini Code Assist Overview from Metadata Logs",
+  "dashboardFilters": [],
+  "labels": {},
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Active Users by Day",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [
+                  {
+                    "column": "event_date",
+                    "columnType": "DATE",
+                    "maxBinCount": 0,
+                    "sortColumn": "event_date",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "timeBinSize": "0s"
+                  }
+                ],
+                "legendTemplate": "",
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "average"
+                    },
+                    "column": "DAU"
+                  }
+                ],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "queryExecutionRules": {
+                      "useReservedSlots": false
+                    },
+                    "queryHandle": "",
+                    "savedQueryId": "",
+                    "sql": "SELECT\n COUNT (DISTINCT JSON_VALUE(labels, '$.user_id')) as DAU, CAST(timestamp AS DATE) AS event_date\nFROM\n `PROJECT_ID.global._Default._Default`\nWHERE\n JSON_VALUE(labels, '$.user_id') is not NULL\n AND (\n   JSON_VALUE(json_payload, '$.chatExposure.originalRequestId') is not NULL\n   OR JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') is not NULL\n   OR JSON_VALUE(json_payload, '$.codeExposure.originalRequestId') is not NULL\n )\n AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\nevent_date\nORDER BY\nevent_date\n"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Acceptance Rate by Day",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [
+                  {
+                    "column": "exposures_date",
+                    "columnType": "DATE",
+                    "maxBinCount": 0,
+                    "sortColumn": "exposures_date",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "timeBinSize": "0s"
+                  }
+                ],
+                "legendTemplate": "",
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "average"
+                    },
+                    "column": "acceptance_rate"
+                  }
+                ],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "queryExecutionRules": {
+                      "useReservedSlots": false
+                    },
+                    "queryHandle": "",
+                    "savedQueryId": "",
+                    "sql": "SELECT\nexposures_date,\nacceptances_count / exposures_count as acceptance_rate\nFROM\n(\nSELECT\nCOUNT (DISTINCT JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId')) as acceptances_count, CAST(timestamp AS DATE) AS acceptances_date\nFROM\n`PROJECT_ID.global._Default._Default`\nWHERE\nJSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') is not NULL \nAND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\nacceptances_date\n) as acceptances\nJOIN\n(\nSELECT\nCOUNT (DISTINCT JSON_VALUE(json_payload, '$.codeExposure.originalRequestId')) as exposures_count, CAST(timestamp AS DATE) AS exposures_date\nFROM\n`PROJECT_ID.global._Default._Default`\nWHERE\nJSON_VALUE(json_payload, '$.codeExposure.originalRequestId') is not NULL\nAND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\nexposures_date\n) as exposures\nON\nexposures.exposures_date = acceptances.acceptances_date\nORDER BY\nexposures_date ASC"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Code Suggestions by Day",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [
+                  {
+                    "column": "exposures_date",
+                    "columnType": "DATE",
+                    "maxBinCount": 0,
+                    "sortColumn": "exposures_date",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "timeBinSize": "0s"
+                  }
+                ],
+                "legendTemplate": "",
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "average"
+                    },
+                    "column": "exposures_count"
+                  }
+                ],
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "queryExecutionRules": {
+                      "useReservedSlots": false
+                    },
+                    "queryHandle": "",
+                    "savedQueryId": "",
+                    "sql": "SELECT\n  COUNT (DISTINCT JSON_VALUE(json_payload, '$.codeExposure.originalRequestId')) as exposures_count, CAST(timestamp AS DATE) AS exposures_date\nFROM\n  `PROJECT_ID.global._Default._Default`\nWHERE\n  JSON_VALUE(json_payload, '$.codeExposure.originalRequestId') is not NULL\n  AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\n  exposures_date\nORDER BY\n  exposures_date\n"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Code Acceptances by Day",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [
+                  {
+                    "column": "acceptances_date",
+                    "columnType": "DATE",
+                    "maxBinCount": 0,
+                    "sortColumn": "acceptances_date",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "timeBinSize": "0s"
+                  }
+                ],
+                "legendTemplate": "",
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "average"
+                    },
+                    "column": "acceptances_count"
+                  }
+                ],
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "queryExecutionRules": {
+                      "useReservedSlots": false
+                    },
+                    "queryHandle": "",
+                    "savedQueryId": "",
+                    "sql": "SELECT\n  COUNT (DISTINCT JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId')) as acceptances_count, CAST(timestamp AS DATE) AS acceptances_date\nFROM\n  `PROJECT_ID.global._Default._Default`\nWHERE\n  JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') is not NULL\n  AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\n  acceptances_date\nORDER BY\n  acceptances_date\n"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 32,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Lines of Code Accepted by Day",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [
+                  {
+                    "column": "line_count_day",
+                    "columnType": "DATE",
+                    "maxBinCount": 0,
+                    "sortColumn": "line_count_day",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "timeBinSize": "0s"
+                  }
+                ],
+                "legendTemplate": "",
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "average"
+                    },
+                    "column": "lines_count"
+                  }
+                ],
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "queryExecutionRules": {
+                      "useReservedSlots": false
+                    },
+                    "queryHandle": "",
+                    "savedQueryId": "",
+                    "sql": "SELECT\n SUM(lines) as lines_count,\n CAST(max_timestamp AS DATE) AS line_count_day\nFROM\n(\n SELECT\n   JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') as request_id,\n   MAX(CAST(JSON_VALUE(json_payload, '$.codeAcceptance.linesCount') AS INT)) as lines,\n   MAX(timestamp) as max_timestamp\n FROM\n   `PROJECT_ID.global._Default._Default`\n WHERE\n   JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') is not NULL\n   AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\n GROUP BY\n   request_id\n )\nGROUP BY\n line_count_day\nORDER BY\n line_count_day"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 32,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Chat Exposures by Day",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [
+                  {
+                    "column": "chat_exposures_date",
+                    "columnType": "DATE",
+                    "maxBinCount": 0,
+                    "sortColumn": "chat_exposures_date",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "timeBinSize": "0s"
+                  }
+                ],
+                "legendTemplate": "",
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "average"
+                    },
+                    "column": "chat_exposures_count"
+                  }
+                ],
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "queryExecutionRules": {
+                      "useReservedSlots": false
+                    },
+                    "queryHandle": "",
+                    "savedQueryId": "",
+                    "sql": "SELECT\n COUNT (DISTINCT JSON_VALUE(json_payload, '$.chatExposure.originalRequestId')) as chat_exposures_count, CAST(timestamp AS DATE) AS chat_exposures_date\nFROM\n   `PROJECT_ID.global._Default._Default`\nWHERE\n JSON_VALUE(json_payload, '$.chatExposure.originalRequestId') is not NULL\n AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\n chat_exposures_date\nORDER BY\n chat_exposures_date"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

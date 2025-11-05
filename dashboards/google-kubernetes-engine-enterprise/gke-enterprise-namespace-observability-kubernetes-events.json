@@ -1,15 +1,18 @@
 {
-  "category": "CUSTOM",
   "displayName": "GKE Enterprise Namespace Observability Kubernetes Events",
   "dashboardFilters": [],
+  "labels": {},
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
       {
+        "height": 16,
+        "width": 24,
         "widget": {
-          "title": "Container Error Logs/Sec. (Top 5 Namespaces)",
+          "title": "Container Error Logs/Sec.",
           "xyChart": {
             "chartOptions": {
+              "displayHorizontal": false,
               "mode": "COLOR"
             },
             "dataSets": [
@@ -17,22 +20,18 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "timeSeriesQueryLanguage": "fetch k8s_container\n| metric logging.googleapis.com/log_entry_count\n| filter metric.severity =~ \"ERROR|CRITICAL|ALERT|EMERGENCY\"\n| align rate(1m)\n| every 1m\n| group_by [resource.namespace_name], .sum()\n| top 5",
-                  "unitOverride": ""
+                  "prometheusQuery": "sum by (namespace_name) (\n  rate(logging_googleapis_com:log_entry_count{monitored_resource=\"k8s_container\", severity=~\"ERROR|CRITICAL|ALERT|EMERGENCY\"}[${__interval}])\n)\n",
+                  "unitOverride": "1/s"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
-        },
-        "height": 16,
-        "width": 24
+        }
       }
     ]
-  },
-  "labels": {}
+  }
 }

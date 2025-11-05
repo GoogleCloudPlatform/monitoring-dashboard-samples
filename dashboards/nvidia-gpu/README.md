@@ -25,4 +25,4 @@
 |NVIDIA Triton Inference Server (GKE Only)|
 |:------------------|
 |Filename: [nvidia-triton-prometheus.json](nvidia-triton-prometheus.json)|
-|Displays Triton Inference Server metrics. This requires your GKE cluster to have NVIDIA Triton installed and exporting metrics via Managed Prometheus.|
+|This dashboard has charts displaying throughput, latency, resource usage, errors, and other metrics for inference.|
