@@ -7,17 +7,6 @@
     "columns": 48,
     "tiles": [
       {
-        "height": 34,
-        "width": 48,
-        "widget": {
-          "title": "Adoption",
-          "collapsibleGroup": {
-            "collapsed": false
-          },
-          "id": "adoption"
-        }
-      },
-      {
         "height": 10,
         "width": 24,
         "widget": {
@@ -62,6 +51,17 @@
         }
       },
       {
+        "height": 34,
+        "width": 48,
+        "widget": {
+          "title": "Usage",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": "usage-overview"
+        }
+      },
+      {
         "xPos": 24,
         "height": 10,
         "width": 24,
@@ -69,10 +69,11 @@
           "title": "Total Sessions",
           "id": "",
           "scorecard": {
+            "blankView": {},
             "breakdowns": [],
             "dimensions": [],
             "measures": [],
-            "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": true,
               "timeSeriesFilter": {
@@ -94,35 +95,65 @@
         "height": 12,
         "width": 24,
         "widget": {
-          "title": "Code Assist Users",
+          "title": "Token Usage",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR"
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "${metric.labels.type}",
+                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_COUNT",
+                      "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
-                        "metric.label.\"user_email\""
+                        "metric.label.\"type\""
                       ],
-                      "perSeriesAligner": "ALIGN_RATE"
+                      "perSeriesAligner": "ALIGN_DELTA"
                     },
-                    "filter": "metric.type=\"custom.googleapis.com/gemini_cli/gemini_cli.session.count\" metric.label.\"user_email\"=monitoring.regex.full_match(\"^[a-zA-Z0-9][a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$\")"
-                  }
+                    "filter": "metric.type=\"custom.googleapis.com/gemini_cli/gemini_cli.token.usage\" metric.label.\"type\"!=\"tool\""
+                  },
+                  "unitOverride": ""
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "total",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/gemini_cli/gemini_cli.token.usage\" metric.label.\"type\"!=\"tool\""
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "unique users",
+              "label": "tokens/min",
               "scale": "LINEAR"
             }
           }
@@ -134,36 +165,26 @@
         "height": 12,
         "width": 24,
         "widget": {
-          "title": "Installations",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_AREA",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_COUNT",
-                      "groupByFields": [
-                        "metric.label.\"installation_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"custom.googleapis.com/gemini_cli/gemini_cli.session.count\""
-                  }
-                }
-              }
-            ],
+          "title": "Total Tokens",
+          "id": "",
+          "scorecard": {
+            "blankView": {},
+            "breakdowns": [],
+            "dimensions": [],
+            "measures": [],
             "thresholds": [],
-            "yAxis": {
-              "label": "unique installations",
-              "scale": "LINEAR"
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "crossSeriesReducer": "REDUCE_SUM",
+                  "groupByFields": [],
+                  "perSeriesAligner": "ALIGN_DELTA"
+                },
+                "filter": "metric.type=\"custom.googleapis.com/gemini_cli/gemini_cli.token.usage\" metric.label.\"type\"!=\"tool\""
+              },
+              "unitOverride": "1"
             }
           }
         }
@@ -246,10 +267,11 @@
           "title": "Total Lines Changed",
           "id": "",
           "scorecard": {
+            "blankView": {},
             "breakdowns": [],
             "dimensions": [],
             "measures": [],
-            "blankView": {},
+            "thresholds": [],
             "timeSeriesQuery": {
               "outputFullDuration": true,
               "timeSeriesFilter": {
@@ -271,7 +293,7 @@
         "height": 12,
         "width": 24,
         "widget": {
-          "title": "Token Usage",
+          "title": "Code Assist Active Users (Realtime)",
           "id": "",
           "xyChart": {
             "chartOptions": {
@@ -283,31 +305,7 @@
               {
                 "breakdowns": [],
                 "dimensions": [],
-                "legendTemplate": "${metric.labels.type}",
-                "measures": [],
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_AREA",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "metric.label.\"type\""
-                      ],
-                      "perSeriesAligner": "ALIGN_DELTA"
-                    },
-                    "filter": "metric.type=\"custom.googleapis.com/gemini_cli/gemini_cli.token.usage\" metric.label.\"type\"!=\"tool\""
-                  },
-                  "unitOverride": ""
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "total",
+                "legendTemplate": "",
                 "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
@@ -317,11 +315,18 @@
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [],
-                      "perSeriesAligner": "ALIGN_DELTA"
+                      "crossSeriesReducer": "REDUCE_COUNT",
+                      "groupByFields": [
+                        "metric.label.\"user_email\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
                     },
-                    "filter": "metric.type=\"custom.googleapis.com/gemini_cli/gemini_cli.token.usage\" metric.label.\"type\"!=\"tool\""
+                    "filter": "metric.type=\"custom.googleapis.com/gemini_cli/gemini_cli.session.count\" metric.label.\"user_email\"=monitoring.regex.full_match(\"^[a-zA-Z0-9][a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$\")",
+                    "secondaryAggregation": {
+                      "crossSeriesReducer": "REDUCE_COUNT",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
                   },
                   "unitOverride": ""
                 }
@@ -329,7 +334,7 @@
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "tokens/min",
+              "label": "unique users",
               "scale": "LINEAR"
             }
           }
@@ -337,14 +342,14 @@
       },
       {
         "yPos": 34,
-        "height": 24,
+        "height": 36,
         "width": 48,
         "widget": {
-          "title": "API",
+          "title": "Adoption",
           "collapsibleGroup": {
             "collapsed": false
           },
-          "id": "api"
+          "id": "user-metrics"
         }
       },
       {
@@ -353,25 +358,50 @@
         "height": 12,
         "width": 24,
         "widget": {
-          "title": "Total Tokens",
+          "title": "Active Installations (Realtime)",
           "id": "",
-          "scorecard": {
-            "breakdowns": [],
-            "dimensions": [],
-            "measures": [],
-            "blankView": {},
-            "timeSeriesQuery": {
-              "outputFullDuration": true,
-              "timeSeriesFilter": {
-                "aggregation": {
-                  "alignmentPeriod": "60s",
-                  "crossSeriesReducer": "REDUCE_SUM",
-                  "groupByFields": [],
-                  "perSeriesAligner": "ALIGN_DELTA"
-                },
-                "filter": "metric.type=\"custom.googleapis.com/gemini_cli/gemini_cli.token.usage\" metric.label.\"type\"!=\"tool\""
-              },
-              "unitOverride": "1"
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_COUNT",
+                      "groupByFields": [
+                        "metric.label.\"installation_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/gemini_cli/gemini_cli.session.count\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_COUNT",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  },
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "unique installations",
+              "scale": "LINEAR"
             }
           }
         }
@@ -381,7 +411,7 @@
         "height": 12,
         "width": 24,
         "widget": {
-          "title": "API Calls",
+          "title": "Code Assist Daily Active Users (DAU)",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -389,11 +419,222 @@
             },
             "dataSets": [
               {
+                "minAlignmentPeriod": "86400s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "86400s",
+                      "crossSeriesReducer": "REDUCE_COUNT",
+                      "groupByFields": [
+                        "metric.label.\"user_email\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/gemini_cli/gemini_cli.session.count\" metric.label.\"user_email\"=monitoring.regex.full_match(\"^[a-zA-Z0-9][a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$\")",
+                    "secondaryAggregation": {
+                      "crossSeriesReducer": "REDUCE_COUNT",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "unique users",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 46,
+        "xPos": 24,
+        "height": 12,
+        "width": 24,
+        "widget": {
+          "title": "Daily Active Installations (DAI)",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "86400s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "86400s",
+                      "crossSeriesReducer": "REDUCE_COUNT",
+                      "groupByFields": [
+                        "metric.label.\"installation_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/gemini_cli/gemini_cli.session.count\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "86400s",
+                      "crossSeriesReducer": "REDUCE_COUNT",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  },
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "unique installations",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 58,
+        "height": 12,
+        "width": 24,
+        "widget": {
+          "title": "Code Assist Weekly Active Users (WAU)",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "604800s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "604800s",
+                      "crossSeriesReducer": "REDUCE_COUNT",
+                      "groupByFields": [
+                        "metric.label.\"user_email\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/gemini_cli/gemini_cli.session.count\" metric.label.\"user_email\"=monitoring.regex.full_match(\"^[a-zA-Z0-9][a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$\")",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "604800s",
+                      "crossSeriesReducer": "REDUCE_COUNT",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  },
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "unique users",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 58,
+        "xPos": 24,
+        "height": 12,
+        "width": 24,
+        "widget": {
+          "title": "Weekly Active Installations (WAI)",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "604800s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "604800s",
+                      "crossSeriesReducer": "REDUCE_COUNT",
+                      "groupByFields": [
+                        "metric.label.\"installation_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"custom.googleapis.com/gemini_cli/gemini_cli.session.count\"",
+                    "secondaryAggregation": {
+                      "alignmentPeriod": "604800s",
+                      "crossSeriesReducer": "REDUCE_COUNT",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    }
+                  },
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "unique installations",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 70,
+        "height": 12,
+        "width": 24,
+        "widget": {
+          "title": "API Calls",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
                 "legendTemplate": "${metric.labels.model}",
+                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_AREA",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -404,7 +645,8 @@
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
                     "filter": "metric.type=\"custom.googleapis.com/gemini_cli/gemini_cli.api.request.count\""
-                  }
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
@@ -417,7 +659,19 @@
         }
       },
       {
-        "yPos": 46,
+        "yPos": 70,
+        "height": 12,
+        "width": 48,
+        "widget": {
+          "title": "API",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": "api"
+        }
+      },
+      {
+        "yPos": 70,
         "xPos": 24,
         "height": 12,
         "width": 24,
@@ -465,19 +719,7 @@
         }
       },
       {
-        "yPos": 58,
-        "height": 12,
-        "width": 48,
-        "widget": {
-          "title": "Tools",
-          "collapsibleGroup": {
-            "collapsed": false
-          },
-          "id": "tools"
-        }
-      },
-      {
-        "yPos": 58,
+        "yPos": 82,
         "height": 12,
         "width": 24,
         "widget": {
@@ -524,7 +766,19 @@
         }
       },
       {
-        "yPos": 58,
+        "yPos": 82,
+        "height": 12,
+        "width": 48,
+        "widget": {
+          "title": "Tools",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": "tools"
+        }
+      },
+      {
+        "yPos": 82,
         "xPos": 24,
         "height": 12,
         "width": 24,
