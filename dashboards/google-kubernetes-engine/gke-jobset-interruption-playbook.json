@@ -17,7 +17,7 @@
       "filterType": "VALUE_ONLY",
       "labelKey": "",
       "stringValue": "4w",
-      "templateVariable": "host_lookback_window",
+      "templateVariable": "lookback_window",
       "valueType": "STRING"
     }
   ],
@@ -43,10 +43,8 @@
         "height": 10,
         "width": 48,
         "widget": {
-          "title": "",
-          "id": "",
           "text": {
-            "content": "Purpose: \n- This dashboard is intended to assist the investigation of unexpected AI Training Job interruptions.\n\nHow to Use:\n- Enable [JobSet metrics package in kube-state-metrics](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/kube-state-metrics#ksm-jobset-metrics) in the cluster if it wasn't enabled; otherwise, some of the charts may not work properly. \n- Specify the JobSet and Cluster from the filter at the top. This dashboard is primarily intended for inspecting a single JobSet at a time.\n- Follow the instructions to inspect Nodepools, Nodes, Pods, and Workers associated with a specified AI training JobSet in a specific cluster.",
+            "content": "Prerequisites\n- Enable Metrics: Ensure the JobSet metrics package is enabled in [kube-state-metrics](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/kube-state-metrics#ksm-jobset-metrics) for your cluster. Without this, several charts may not display data correctly.\n\nHow to Use\n- Select Scope: Use the filters at the top to specify the JobSet and Cluster. This dashboard is optimized for inspecting one JobSet at a time.\n- Adjust Lookback: Use the ***$lookback_window*** variable to expand or contract the historical data window for nodes / hosts in the ***Node-to-Host Mapping*** table.\n- Guided Investigation: Follow the sections below in order to systematically inspect Nodepools, Nodes, Pods, and Workers associated with the selected JobSet.",
             "format": "MARKDOWN",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -129,7 +127,7 @@
           "title": "Steps to identify relevant nodepool interruptions",
           "id": "",
           "text": {
-            "content": "1. Check the provided Nodepool Interruption Chart widget to identify whether the jobset restarts of interest were caused by nodepool interruption.\n1. For each of the identified nodepool interruption events, check the interruption_type from the chart. \n    1. PreemptionEvent means that some nodes were preempted, e.g. for Spot VMs or due to defragmentation. \n    1. MaintenanceEvent means that some nodes were interrupted for maintenance. \n    1. TerminationEvent could mean issues such as host errors. Check the interruption_reason for more information.\n1. For unexpected interuption such as TerminationEvent with interruption_reason of Host Error, follow the rest of the playbook for investigation; for the rest of the cases, no further action should be needed.",
+            "content": "1. Check the provided ***Nodepool Interruption Chart*** widget to identify whether the jobset restarts of interest were caused by nodepool interruption.\n1. For each of the identified nodepool interruption events, check the interruption_type from the chart. \n    1. PreemptionEvent means that some nodes were preempted, e.g. for Spot VMs or due to defragmentation. \n    1. MaintenanceEvent means that some nodes were interrupted for maintenance. \n    1. TerminationEvent could mean issues such as host errors. Check the interruption_reason for more information.\n1. For unexpected interuption such as TerminationEvent with interruption_reason of Host Error, follow the rest of the playbook for investigation; for the rest of the cases, no further action should be needed.",
             "format": "MARKDOWN",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -227,7 +225,7 @@
           "title": "Steps to identify suspicious node/host",
           "id": "",
           "text": {
-            "content": "1. Check the provided Node Timeline View. The Timeline View widgets show the number of nodes of each status across time.\n    1. If there is any abnormality, use \"View in Metrics Exporter\" to dive in and figure out the associated nodes.\n    1. The host VM associated with each node can be found by using the Node-to-Host Mapping widget. Check whether any suspicious host VM appears repeatedly across jobset restart attempts of interest. \n    1. Inspect the logs from the relevant nodes, by using the provided log widget\n1. An alternative approach to identify bad host VMs is to use the provided Job/Pod List View widget in the [Worker/Application Inspection Section](#worker-/-application-inspection)\n    1. Look up the coordinator workers (worker 0 in slice 0) for each interested restart attempt.\n    1. Inspect the logs of the coordinator workers to identify all the problematic worker jobs/pods, by using the provided log widget.\n    1. Check whether any suspicious host VM appears repeatedly among the problematic workers. \n1. Contact Google support and report any suspicious host VMs as potentially faulty.\n",
+            "content": "1. Check the provided ***Node Timeline View***. The Timeline View widgets show the number of nodes of each status across time.\n    1. If there is any abnormality, use \"View in Metrics Exporter\" to dive in and figure out the associated nodes.\n    1. The host VM associated with each node can be found by using the Node-to-Host Mapping widget. Check whether any suspicious host VM appears repeatedly across jobset restart attempts of interest. \n    1. Inspect the logs from the relevant nodes, by using the provided log widget\n1. An alternative approach to identify bad host VMs is to use the provided ***Job/Pod List View*** widget in the [Worker/Application Inspection Section](#worker-/-application-inspection)\n    1. Look up the coordinator workers (worker 0 in slice 0) for each interested restart attempt.\n    1. Inspect the logs of the coordinator workers to identify all the problematic worker jobs/pods, by using the provided log widget.\n    1. Check whether any suspicious host VM appears repeatedly among the problematic workers. \n1. Contact Google support and report any suspicious host VMs as potentially faulty.\n",
             "format": "MARKDOWN",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -312,7 +310,7 @@
                 "visible": true
               },
               {
-                "displayName": "Days since Last seen",
+                "displayName": "Days since Last Active",
                 "alignment": "LEFT",
                 "column": "value",
                 "visible": true
@@ -323,7 +321,7 @@
                 "minAlignmentPeriod": "60s",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "(\n   time()- \nmax by (\"node_name\",\"metadata_user_cloud.google.com/gce-topology-host\",\"metadata_user_cloud.google.com/gke-nodepool\")(\n    max_over_time(\n        timestamp(\n            {\"__name__\"=\"kubernetes.io/node/cpu/total_cores\",\"monitored_resource\"=\"k8s_node\",\"cluster_name\"='${cluster.value}'}\n        )[4w:1m]\n    )\n)\n)\nand on(node_name)\nsum by (node_name, entity_name, cluster_name) (\n    max_over_time(\n        {__name__=\"kubernetes.io/jobset/assigned_nodes\", monitored_resource=\"k8s_entity\", entity_name=~'${jobset_name.value}', cluster_name=~'${cluster.value}'}[4w]\n    )\n)",
+                  "prometheusQuery": "(\n   time()- \nmax by (\"node_name\",\"metadata_user_cloud.google.com/gce-topology-host\",\"metadata_user_cloud.google.com/gke-nodepool\")(\n    max_over_time(\n        timestamp(\n            {\"__name__\"=\"kubernetes.io/node/cpu/total_cores\",\"monitored_resource\"=\"k8s_node\",\"cluster_name\"='${cluster.value}'}\n        )[${lookback_window}:1m]\n    )\n)\n)\nand on(node_name)\nsum by (node_name, entity_name, cluster_name) (\n    max_over_time(\n        {__name__=\"kubernetes.io/jobset/assigned_nodes\", monitored_resource=\"k8s_entity\", entity_name=~'${jobset_name.value}', cluster_name=~'${cluster.value}'}[${lookback_window}]\n    )\n)",
                   "unitOverride": "s"
                 }
               }
@@ -368,7 +366,7 @@
           "title": "Steps to identify suspicious pod",
           "id": "",
           "text": {
-            "content": "1. Check the provided chart of Pod Timeline View widget to identify any unhealthy pod that might assoicated with jobset restarts of interest. The Timeline View widgets show the number of pods of each status across time.\n1. Use the provided log widget to inspect the logs from the pod to identify anything suspicious.\n",
+            "content": "1. Check the provided ***Pod Timeline View*** widget to identify any unhealthy pod that might assoicated with jobset restarts of interest. The Timeline View widgets show the number of pods of each status across time.\n1. Use the provided log widget to inspect the logs from the pod to identify anything suspicious.\n",
             "format": "MARKDOWN",
             "style": {
               "backgroundColor": "#FFFFFF",
@@ -479,7 +477,7 @@
           "title": "Steps to identify suspicious worker",
           "id": "",
           "text": {
-            "content": "1. Use the provided Job/Pod List View widget to identify the coordinator workers (worker 0 in slice 0) of each interested restart attempt.\n1. Inspect the logs of the coordinator workers to identify all the problematic workers, by using the provided log widget.\n1. Inspect the logs of the problematic workers to identify anything suspicious such as Megascale hang.\n1. Reach out to Google support for any assistance if needed.\n",
+            "content": "1. Use the provided ***Job/Pod List View*** widget to identify the coordinator workers (worker 0 in slice 0) of each interested restart attempt.\n1. Inspect the logs of the coordinator workers to identify all the problematic workers, by using the provided log widget.\n1. Inspect the logs of the problematic workers to identify anything suspicious such as Megascale hang.\n1. Reach out to Google support for any assistance if needed.\n",
             "format": "MARKDOWN",
             "style": {
               "backgroundColor": "#FFFFFF",
