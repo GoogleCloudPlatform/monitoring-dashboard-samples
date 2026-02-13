@@ -1,0 +1,593 @@
+{
+  "displayName": "AI Training Job Interruption Interactive Playbook",
+  "dashboardFilters": [
+    {
+      "filterType": "METRIC_LABEL",
+      "labelKey": "jobset_name",
+      "templateVariable": "jobset_name",
+      "valueType": "STRING_ARRAY"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "cluster",
+      "templateVariable": "cluster",
+      "valueType": "STRING_ARRAY"
+    },
+    {
+      "filterType": "VALUE_ONLY",
+      "labelKey": "",
+      "stringValue": "4w",
+      "templateVariable": "lookback_window",
+      "valueType": "STRING"
+    }
+  ],
+  "description": "",
+  "labels": {},
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "height": 3,
+        "width": 48,
+        "widget": {
+          "title": "Overview",
+          "id": "",
+          "sectionHeader": {
+            "dividerBelow": true,
+            "subtitle": ""
+          }
+        }
+      },
+      {
+        "yPos": 3,
+        "height": 10,
+        "width": 48,
+        "widget": {
+          "text": {
+            "content": "Prerequisites\n- Enable Metrics: Ensure the JobSet metrics package is enabled in [kube-state-metrics](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/kube-state-metrics#ksm-jobset-metrics) for your cluster. Without this, several charts may not display data correctly.\n\nHow to Use\n- Select Scope: Use the filters at the top to specify the JobSet and Cluster. This dashboard is optimized for inspecting one JobSet at a time.\n- Adjust Lookback: Use the ***$lookback_window*** variable to expand or contract the historical data window for nodes / hosts in the ***Node-to-Host Mapping*** table.\n- Guided Investigation: Follow the sections below in order to systematically inspect Nodepools, Nodes, Pods, and Workers associated with the selected JobSet.",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 13,
+        "height": 16,
+        "width": 48,
+        "widget": {
+          "title": "Jobset Restart Attempt",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_MAX",
+                      "groupByFields": [
+                        "metric.label.\"jobset_name\"",
+                        "resource.label.\"cluster\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MAX"
+                    },
+                    "filter": "metric.type=\"prometheus.googleapis.com/kube_jobset_restarts/gauge\" resource.type=\"prometheus_target\" ${jobset_name}"
+                  },
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 29,
+        "height": 4,
+        "width": 48,
+        "widget": {
+          "title": "Nodepool Interruption Inspection ",
+          "id": "",
+          "sectionHeader": {
+            "dividerBelow": true,
+            "subtitle": "To identify and inspect any nodepool interruption that might have interrupted the AI training job"
+          }
+        }
+      },
+      {
+        "yPos": 33,
+        "height": 10,
+        "width": 48,
+        "widget": {
+          "title": "Steps to identify relevant nodepool interruptions",
+          "id": "",
+          "text": {
+            "content": "1. Check the provided ***Nodepool Interruption Chart*** widget to identify whether the jobset restarts of interest were caused by nodepool interruption.\n1. For each of the identified nodepool interruption events, check the interruption_type from the chart. \n    1. PreemptionEvent means that some nodes were preempted, e.g. for Spot VMs or due to defragmentation. \n    1. MaintenanceEvent means that some nodes were interrupted for maintenance. \n    1. TerminationEvent could mean issues such as host errors. Check the interruption_reason for more information.\n1. For unexpected interuption such as TerminationEvent with interruption_reason of Host Error, follow the rest of the playbook for investigation; for the rest of the cases, no further action should be needed.",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 33,
+        "height": 51,
+        "width": 48,
+        "widget": {
+          "title": "Nodepool Inspection Guide",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 43,
+        "height": 16,
+        "width": 48,
+        "widget": {
+          "title": "Nodepool Interruption Chart",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "sum by (interruption_type, interruption_reason, node_pool_name, entity_name, cluster_name) (\n   avg_over_time({__name__=\"kubernetes.io/node_pool/interruption_count\", monitored_resource=\"k8s_node_pool\", cluster_name=~'${cluster.value}'}[${__interval}])\n )\nand on(node_pool_name) \n  sum by (node_pool_name, entity_name, cluster_name) (\n    avg_over_time({__name__=\"kubernetes.io/jobset/assigned_node_pools\", monitored_resource=\"k8s_entity\", entity_name=~'${jobset_name.value}', cluster_name=~'${cluster.value}'}[${__interval}])\n  )",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 59,
+        "height": 25,
+        "width": 48,
+        "widget": {
+          "title": "Nodepool logs from AI training jobs",
+          "id": "",
+          "logsPanel": {
+            "filter": "resource.type=\"gke_nodepool\"\nresource.labels.location=~\".*\"\nresource.labels.cluster_name=~\"${cluster.value}\"\n\n",
+            "resourceNames": [
+              "projects/tpu-prod-env-one-vm/locations/global/logScopes/_Default"
+            ]
+          }
+        }
+      },
+      {
+        "yPos": 84,
+        "height": 4,
+        "width": 48,
+        "widget": {
+          "title": "Node / Host Inspection ",
+          "id": "",
+          "sectionHeader": {
+            "dividerBelow": true,
+            "subtitle": "To identify and inspect any node/host issue that might have interrupted the AI training job"
+          }
+        }
+      },
+      {
+        "yPos": 88,
+        "height": 13,
+        "width": 48,
+        "widget": {
+          "title": "Steps to identify suspicious node/host",
+          "id": "",
+          "text": {
+            "content": "1. Check the provided ***Node Timeline View***. The Timeline View widgets show the number of nodes of each status across time.\n    1. If there is any abnormality, use \"View in Metrics Exporter\" to dive in and figure out the associated nodes.\n    1. The host VM associated with each node can be found by using the Node-to-Host Mapping widget. Check whether any suspicious host VM appears repeatedly across jobset restart attempts of interest. \n    1. Inspect the logs from the relevant nodes, by using the provided log widget\n1. An alternative approach to identify bad host VMs is to use the provided ***Job/Pod List View*** widget in the [Worker/Application Inspection Section](#worker-/-application-inspection)\n    1. Look up the coordinator workers (worker 0 in slice 0) for each interested restart attempt.\n    1. Inspect the logs of the coordinator workers to identify all the problematic worker jobs/pods, by using the provided log widget.\n    1. Check whether any suspicious host VM appears repeatedly among the problematic workers. \n1. Contact Google support and report any suspicious host VMs as potentially faulty.\n",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 88,
+        "height": 88,
+        "width": 48,
+        "widget": {
+          "title": "Node / Host Inspection Guide",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 101,
+        "height": 16,
+        "width": 48,
+        "widget": {
+          "title": "Node Timeline View",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "sum by (\"status\", \"condition\", \"node_pool_name\", \"metadata_user_cloud.google.com/gke-nodepool\")(\n        label_replace(\n            {\"__name__\"=\"kubernetes.io/node/status_condition\",\"monitored_resource\"=\"k8s_node\",\"cluster_name\"='${cluster.value}',\"status\"=~\"(True|Unknown)\"},\n            \"node_pool_name\", \"$1\", \"metadata_user_cloud.google.com/gke-nodepool\", \"(.*)\"\n        )\n)\nand on(node_pool_name) \n    sum by (node_pool_name, entity_name, cluster_name) (\n        avg_over_time({__name__=\"kubernetes.io/jobset/assigned_node_pools\", monitored_resource=\"k8s_entity\", entity_name=~'${jobset_name.value}', cluster_name=~'${cluster.value}'}[${__interval}])\n    )",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 117,
+        "height": 34,
+        "width": 48,
+        "widget": {
+          "title": "Node-to-Host Mapping",
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "column": "node_name",
+                "visible": true
+              },
+              {
+                "displayName": "nodepool",
+                "column": "metadata_user_cloud.google.com/gke-nodepool",
+                "visible": true
+              },
+              {
+                "displayName": "host",
+                "column": "metadata_user_cloud.google.com/gce-topology-host",
+                "visible": true
+              },
+              {
+                "displayName": "Days since Last Active",
+                "alignment": "LEFT",
+                "column": "value",
+                "visible": true
+              }
+            ],
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "(\n   time()- \nmax by (\"node_name\",\"metadata_user_cloud.google.com/gce-topology-host\",\"metadata_user_cloud.google.com/gke-nodepool\")(\n    max_over_time(\n        timestamp(\n            {\"__name__\"=\"kubernetes.io/node/cpu/total_cores\",\"monitored_resource\"=\"k8s_node\",\"cluster_name\"='${cluster.value}'}\n        )[${lookback_window}:1m]\n    )\n)\n)\nand on(node_name)\nsum by (node_name, entity_name, cluster_name) (\n    max_over_time(\n        {__name__=\"kubernetes.io/jobset/assigned_nodes\", monitored_resource=\"k8s_entity\", entity_name=~'${jobset_name.value}', cluster_name=~'${cluster.value}'}[${lookback_window}]\n    )\n)",
+                  "unitOverride": "s"
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          }
+        }
+      },
+      {
+        "yPos": 151,
+        "height": 25,
+        "width": 48,
+        "widget": {
+          "title": "Node logs from AI training jobs",
+          "id": "",
+          "logsPanel": {
+            "filter": "resource.type=\"k8s_node\"\nresource.labels.location=~\".*\"\nresource.labels.cluster_name=~\"${cluster.value}\"",
+            "resourceNames": [
+              "projects/tpu-prod-env-one-vm/locations/global/logScopes/_Default"
+            ]
+          }
+        }
+      },
+      {
+        "yPos": 176,
+        "height": 4,
+        "width": 48,
+        "widget": {
+          "title": "Pod Inspection ",
+          "id": "",
+          "sectionHeader": {
+            "dividerBelow": true,
+            "subtitle": "To identify and inspect any pod issue that might have interrupted the AI training job"
+          }
+        }
+      },
+      {
+        "yPos": 180,
+        "height": 8,
+        "width": 48,
+        "widget": {
+          "title": "Steps to identify suspicious pod",
+          "id": "",
+          "text": {
+            "content": "1. Check the provided ***Pod Timeline View*** widget to identify any unhealthy pod that might assoicated with jobset restarts of interest. The Timeline View widgets show the number of pods of each status across time.\n1. Use the provided log widget to inspect the logs from the pod to identify anything suspicious.\n",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 180,
+        "height": 51,
+        "width": 48,
+        "widget": {
+          "title": "Pod Inspection Guide",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 188,
+        "height": 18,
+        "width": 48,
+        "widget": {
+          "title": "Pod Timeline View",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "${metric.labels.phase}",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "sum by (\"phase\")(avg_over_time({\"__name__\"=\"kube_pod_status_phase\",${cluster},pod=~'${jobset_name.value}.*'}[${__interval}]))\n#This promql query was automatically converted from a builder query, and it may not be fully equivalent to the builder query. Manually verify the promql query before using it and edit as needed.",
+                  "unitOverride": ""
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "Unschedulable",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "sum(avg_over_time({\"__name__\"=\"kube_pod_status_unschedulable\",${cluster},pod=~'${jobset_name.value}.*'}[${__interval}]))\n#This promql query was automatically converted from a builder query, and it may not be fully equivalent to the builder query. Manually verify the promql query before using it and edit as needed.",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 206,
+        "height": 25,
+        "width": 48,
+        "widget": {
+          "title": "Pod logs from AI training jobs",
+          "id": "",
+          "logsPanel": {
+            "filter": "resource.type=\"k8s_pod\"\nresource.labels.location=~\".*\"\nresource.labels.cluster_name=~\"${cluster.value}\"\nresource.labels.namespace_name=~\".*\"\nresource.labels.pod_name=~\"${jobset_name.value}.*\"",
+            "resourceNames": [
+              "projects/tpu-prod-env-one-vm/locations/global/logScopes/_Default"
+            ]
+          }
+        }
+      },
+      {
+        "yPos": 231,
+        "height": 4,
+        "width": 48,
+        "widget": {
+          "title": "Worker / Application Inspection",
+          "id": "",
+          "sectionHeader": {
+            "dividerBelow": true,
+            "subtitle": "To identify and inspect any worker / application issue that might have interrupted the AI training job"
+          }
+        }
+      },
+      {
+        "yPos": 235,
+        "height": 8,
+        "width": 48,
+        "widget": {
+          "title": "Steps to identify suspicious worker",
+          "id": "",
+          "text": {
+            "content": "1. Use the provided ***Job/Pod List View*** widget to identify the coordinator workers (worker 0 in slice 0) of each interested restart attempt.\n1. Inspect the logs of the coordinator workers to identify all the problematic workers, by using the provided log widget.\n1. Inspect the logs of the problematic workers to identify anything suspicious such as Megascale hang.\n1. Reach out to Google support for any assistance if needed.\n",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "padding": "P_EXTRA_SMALL",
+              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+              "textColor": "#212121",
+              "verticalAlignment": "V_TOP"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 235,
+        "height": 67,
+        "width": 48,
+        "widget": {
+          "title": "Worker / Application Inspection Guide",
+          "collapsibleGroup": {
+            "collapsed": false
+          },
+          "id": ""
+        }
+      },
+      {
+        "yPos": 243,
+        "height": 34,
+        "width": 48,
+        "widget": {
+          "title": "Job/Pod List View",
+          "id": "",
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "column": "restart_attempt",
+                "visible": false
+              },
+              {
+                "displayName": "jobset-name",
+                "column": "metadata_user_jobset.sigs.k8s.io/jobset-name",
+                "visible": true
+              },
+              {
+                "displayName": "restart_attempt",
+                "alignment": "LEFT",
+                "column": "metadata_user_jobset.sigs.k8s.io/restart-attempt",
+                "visible": true
+              },
+              {
+                "displayName": "node-name",
+                "column": "metadata_system_node_name",
+                "visible": true
+              },
+              {
+                "column": "node_name",
+                "visible": false
+              },
+              {
+                "column": "jobset_name",
+                "visible": false
+              },
+              {
+                "column": "pod_name",
+                "visible": true
+              },
+              {
+                "column": "slice_id",
+                "visible": true
+              },
+              {
+                "column": "worker_id",
+                "visible": true
+              },
+              {
+                "column": "value",
+                "visible": false
+              }
+            ],
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "(\nsum by (\n  \"pod_name\", \n  \"slice_id\", \n  \"worker_id\", \n  \"metadata_system_node_name\",\n  \"metadata_user_jobset.sigs.k8s.io/restart-attempt\",\n  \"metadata_user_jobset.sigs.k8s.io/jobset-name\",\n) (\n  label_replace(\n    label_replace(\n        avg_over_time({\"__name__\"=\"kubernetes.io/container/cpu/request_cores\",\"monitored_resource\"=\"k8s_container\",\"cluster_name\"=\"akshu-mps-v6e4\",\"metadata_user_jobset.sigs.k8s.io/jobset-name\"=\"isc-akshu-cluster-1\"}[${__interval}]),\n      \"slice_id\", \"$1\", \"pod_name\", \".*-(.*)-.*-.*\"\n    ),\n    \"worker_id\", \"$1\", \"pod_name\", \".*-.*-(.*)-.*\"\n  )\n)\n)",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "displayColumnType": false,
+            "metricVisualization": "NUMBER"
+          }
+        }
+      },
+      {
+        "yPos": 277,
+        "height": 25,
+        "width": 48,
+        "widget": {
+          "title": "Worker/container logs from AI training jobs",
+          "id": "",
+          "logsPanel": {
+            "filter": "resource.type=\"k8s_container\"\nresource.labels.location=~\".*\"\nresource.labels.cluster_name=~\"${cluster.value}\"\nresource.labels.namespace_name=~\".*\"\nresource.labels.pod_name=~\".*\"\nlabels.\"k8s-pod/jobset_sigs_k8s_io/jobset-name\"=~\"${jobset_name.value}\"\nlabels.\"k8s-pod/jobset_sigs_k8s_io/restart-attempt\"=~\".*\"",
+            "resourceNames": [
+              "projects/tpu-prod-env-one-vm/locations/global/logScopes/_Default"
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
