@@ -2,7 +2,7 @@
 
 This repo provides a sample dashboard for monitoring the maintenance operations of long running GKE clusters. This will live under Google Cloud Monitoring, and it’s built on top of [Log Analytics](https://cloud.google.com/logging/docs/log-analytics#analytics).
 
-![GKE AI Maintenance Dashboard](gke-ai-maintenance-dashboard.png)
+![GKE Maintenance Dashboard](gke-maintenance-dashboard.png)
 
 This dashboard has the following tables and charts, including:
 - Maintenance activity tables at the cluster, nodepool, and node level
@@ -61,7 +61,7 @@ Then apply the following filter to the sink to filter the correct logs:
 
 ### Analytics View setup
 
-We also need to create an analytics view for the dashboard to query against. In Observability Logging \> Log Router, paste in the following SQL query, change PROJECT_ID to your project ID (in both places) and save it as an Analytics View named `Inferred_MaintenanceEvents_Aggregated`.
+We also need to create an analytics view for the dashboard to query against. In Observability Logging \> Observability Analytics, paste in the following SQL query, change PROJECT_ID to your project ID (in both places) and save it as an Analytics View named `Inferred_MaintenanceEvents_Aggregated`.
 
 <details>
 
@@ -322,7 +322,7 @@ FROM (
 - Click on 'Create Custom Dashboard'.
 - On the top right, click on the 'Settings' icon.
 - Under 'JSON' -> 'JSON Editor'
-- Copy the content of [this](https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples/blob/master/dashboards/google-kubernetes-engine-ai/gke-ai-maintenance-dashboard.json) file, replacing `PROJECT_ID` with your own Project_ID.
+- Copy the content of [this](https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples/blob/master/dashboards/google-kubernetes-engine-ai/gke-maintenance-dashboard.json) file, replacing `PROJECT_ID` with your own Project_ID.
 - Click on Apply changes.
 
 ### Considerations:
