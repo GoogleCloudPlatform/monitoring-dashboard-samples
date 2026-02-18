@@ -1,0 +1,386 @@
+{
+  "displayName": "GKE AI Maintenance Dashboard",
+  "dashboardFilters": [],
+  "description": "Follow setup guide at https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples/tree/master/dashboards/google-kubernetes-engine-ai/",
+  "labels": {},
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "height": 18,
+        "width": 24,
+        "widget": {
+          "title": "Maintenance Activity (Cluster level, grouped by the day of start time)",
+          "id": "",
+          "timeSeriesTable": {
+            "columnSettings": [],
+            "dataSets": [
+              {
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "queryHandle": "",
+                    "savedQueryId": "",
+                    "sql": "WITH Config AS (\n  -- DECLARE TIMEZONE HERE\n  SELECT 'America/Los_Angeles' AS timezone\n),\nPrep AS (\n  SELECT\n    t.Cluster,\n    t.Nodepool,\n    t.Node,\n    t.Is_CTM,\n    t.Status,\n    t.Type, -- Retrieve the Type from the base table\n    c.timezone,\n    -- Pre-calculate the day bucket using the timezone\n    TIMESTAMP_TRUNC(t.MaintenanceStartTime, DAY, c.timezone) AS MaintenanceDay\n  FROM\n    `analytics_view.PROJECT_ID.global.Inferred_MaintenanceEvents_Aggregated` AS t,\n    Config AS c\n)\nSELECT\n  Cluster AS Cluster_name,\n  \n  -- 1. Determine Type: If there are multiple unique types in this group, call it MIXED\n  CASE \n    WHEN COUNT(DISTINCT Type) > 1 THEN 'MIXED'\n    ELSE MAX(Type) -- MAX works safely here to pull the only existing type (SCHEDULED or UNSCHEDULED)\n  END AS Type,\n\n  -- 2. Determine Status percentage: (Completed / Total) * 100, rounded to 2 decimal places\n  ROUND((COUNTIF(Status = 'COMPLETE') * 100.0) / COUNT(Node), 2) AS Status_percent_COMPLETE,\n\n  -- distinct count of nodepools in this cluster for this day\n  COUNT(DISTINCT Nodepool) AS Nodepool_count,\n  COUNT(Node) AS Node_count,\n  COUNTIF(Is_CTM) AS CTM_count,\n  COUNTIF(Status = 'COMPLETE') AS COMPLETE_count,\n  COUNTIF(Status = 'PENDING') AS PENDING_count,\n  \n  -- Format the grouping key directly (will show 00:00 for the time)\n  FORMAT_TIMESTAMP(\"%Y, %b, %d %H:%M %Z\", MaintenanceDay, ANY_VALUE(timezone)) AS Maintenance_start_time\n\nFROM\n  Prep\n\nGROUP BY\n  Cluster,\n  MaintenanceDay\n\nORDER BY\n  MaintenanceDay DESC,\n  Status_percent_COMPLETE ASC"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "displayColumnType": false,
+            "metricVisualization": "NUMBER"
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "height": 18,
+        "width": 24,
+        "widget": {
+          "title": "Maintenance Activity (nodepool level, grouped by the hour of start time)",
+          "id": "",
+          "timeSeriesTable": {
+            "columnSettings": [],
+            "dataSets": [
+              {
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "queryHandle": "",
+                    "savedQueryId": "",
+                    "sql": "WITH Config AS (\n  -- DECLARE TIMEZONE HERE\n  SELECT 'America/Los_Angeles' AS timezone\n),\nPrep AS (\n  SELECT\n    t.Cluster,\n    t.Nodepool,\n    t.Node,\n    t.Is_CTM,\n    t.Status,\n    t.Type, -- Retrieve the Type from the base table\n    c.timezone,\n    -- Pre-calculate the hour bucket using the timezone\n    TIMESTAMP_TRUNC(t.MaintenanceStartTime, HOUR, c.timezone) AS MaintenanceHour\n  FROM\n    `analytics_view.PROJECT_ID.global.Inferred_MaintenanceEvents_Aggregated` AS t,\n    Config AS c\n)\nSELECT\n  Cluster AS Cluster_name,\n  Nodepool AS Nodepool_name,\n\n  -- 1. Determine Type: If there are multiple unique types in this hour group, call it MIXED\n  CASE \n    WHEN COUNT(DISTINCT Type) > 1 THEN 'MIXED'\n    ELSE MAX(Type)\n  END AS Type,\n\n  -- 2. Determine Status percentage: (Completed / Total) * 100, rounded to 2 decimal places\n  ROUND((COUNTIF(Status = 'COMPLETE') * 100.0) / COUNT(Node), 2) AS Status_percent_COMPLETE,\n\n  -- Aggregations\n  COUNT(Node) AS Node_count,\n  COUNTIF(Is_CTM) AS CTM_count,\n  COUNTIF(Status = 'COMPLETE') AS COMPLETE_count,\n  COUNTIF(Status = 'PENDING') AS PENDING_count,\n  \n  -- Format the grouping key directly\n  FORMAT_TIMESTAMP(\"%Y, %b, %d %H:00 %Z\", MaintenanceHour, ANY_VALUE(timezone)) AS Maintenance_start_time\n\nFROM\n  Prep\n\nGROUP BY\n  Cluster,\n  Nodepool,\n  MaintenanceHour\n\nORDER BY\n  MaintenanceHour DESC,\n  Status_percent_COMPLETE ASC"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "displayColumnType": false,
+            "metricVisualization": "NUMBER"
+          }
+        }
+      },
+      {
+        "yPos": 18,
+        "height": 18,
+        "width": 8,
+        "widget": {
+          "title": "Num maintenance cycles, by type",
+          "id": "",
+          "pieChart": {
+            "chartType": "DONUT",
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [
+                  {
+                    "column": "Type",
+                    "columnType": "STRING",
+                    "maxBinCount": 5,
+                    "sortColumn": "Type",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "xMax": 0,
+                    "xMin": 0
+                  }
+                ],
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "count"
+                    },
+                    "column": ""
+                  }
+                ],
+                "sliceNameTemplate": "",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "queryHandle": "",
+                    "savedQueryId": "",
+                    "sql": "SELECT\n  *\nFROM\n  `analytics_view.PROJECT_ID.global.Inferred_MaintenanceEvents_Aggregated`\nLIMIT 10000"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "showLabels": false,
+            "showTotal": false,
+            "sliceAggregatedThreshold": 0
+          }
+        }
+      },
+      {
+        "yPos": 18,
+        "xPos": 8,
+        "height": 18,
+        "width": 8,
+        "widget": {
+          "title": "Num nodes, by maintenance status",
+          "id": "",
+          "pieChart": {
+            "chartType": "DONUT",
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [
+                  {
+                    "column": "Status",
+                    "columnType": "STRING",
+                    "maxBinCount": 5,
+                    "sortColumn": "Status",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "xMax": 0,
+                    "xMin": 0
+                  }
+                ],
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "count"
+                    },
+                    "column": ""
+                  }
+                ],
+                "sliceNameTemplate": "",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "queryHandle": "",
+                    "savedQueryId": "",
+                    "sql": "SELECT\n  *\nFROM\n  `analytics_view.PROJECT_ID.global.Inferred_MaintenanceEvents_Aggregated`\nWHERE TRUE -- Added to satisfy the syntax requirement for QUALIFY\nQUALIFY ROW_NUMBER() OVER (PARTITION BY Node ORDER BY CycleCount DESC) = 1\nORDER BY\n  MaintenanceEndTime DESC\nLIMIT 10000\n"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "showLabels": false,
+            "showTotal": false,
+            "sliceAggregatedThreshold": 0
+          }
+        }
+      },
+      {
+        "yPos": 18,
+        "xPos": 16,
+        "height": 18,
+        "width": 24,
+        "widget": {
+          "title": "Node status at maintenance start time",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "count"
+                    },
+                    "column": "Status",
+                    "limit": 3,
+                    "sortOrder": "SORT_ORDER_DESCENDING"
+                  }
+                ],
+                "dimensions": [
+                  {
+                    "column": "MaintenanceStartTime_YYMMDD",
+                    "columnType": "STRING",
+                    "maxBinCount": 50,
+                    "sortColumn": "MaintenanceStartTime_YYMMDD",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "xMax": 0,
+                    "xMin": 0
+                  }
+                ],
+                "legendTemplate": "",
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "count"
+                    },
+                    "column": "CycleCount"
+                  }
+                ],
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "queryHandle": "",
+                    "savedQueryId": "",
+                    "sql": "SELECT\n  *,\n  -- Formats as yy/mm/dd (e.g., 26/03/05). This is \n  FORMAT_TIMESTAMP('%y/%m/%d', MaintenanceStartTime, \"America/Los_Angeles\") AS MaintenanceStartTime_YYMMDD\nFROM\n  `analytics_view.PROJECT_ID.global.Inferred_MaintenanceEvents_Aggregated`\nORDER BY\n  MaintenanceStartTime DESC\nLIMIT 10000\n\n"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 18,
+        "xPos": 40,
+        "height": 9,
+        "width": 8,
+        "widget": {
+          "title": "Avg days between maintenance cycles",
+          "id": "",
+          "scorecard": {
+            "breakdowns": [],
+            "dimensions": [
+              {
+                "column": "MaintenanceEndTime",
+                "columnType": "TIMESTAMP",
+                "maxBinCount": 0,
+                "sortColumn": "MaintenanceEndTime",
+                "sortOrder": "SORT_ORDER_ASCENDING",
+                "timeBinSize": "86400s",
+                "xMax": 0,
+                "xMin": 0
+              }
+            ],
+            "measures": [
+              {
+                "aggregationFunction": {
+                  "parameters": [],
+                  "type": "average"
+                },
+                "column": "DaysSinceLastMaintenance"
+              }
+            ],
+            "thresholds": [
+              {
+                "color": "RED",
+                "direction": "BELOW",
+                "label": "",
+                "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                "value": 60
+              },
+              {
+                "color": "YELLOW",
+                "direction": "BELOW",
+                "label": "",
+                "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                "value": 30
+              }
+            ],
+            "timeSeriesQuery": {
+              "opsAnalyticsQuery": {
+                "queryHandle": "",
+                "savedQueryId": "",
+                "sql": "SELECT\n  -- Cast to FLOAT64 or INT64 to perform the division for day-count\n  CAST(TimeSinceLastMaintenance AS FLOAT64) / 86400 AS DaysSinceLastMaintenance,\n  MaintenanceEndTime\nFROM\n  `analytics_view.PROJECT_ID.global.Inferred_MaintenanceEvents_Aggregated`\nWHERE \n  TimeSinceLastMaintenance IS NOT NULL "
+              },
+              "outputFullDuration": false,
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "yPos": 27,
+        "xPos": 40,
+        "height": 9,
+        "width": 8,
+        "widget": {
+          "title": "P95 hours maintenance downtime",
+          "id": "",
+          "scorecard": {
+            "breakdowns": [],
+            "dimensions": [
+              {
+                "column": "MaintenanceEndTime",
+                "columnType": "TIMESTAMP",
+                "maxBinCount": 0,
+                "sortColumn": "MaintenanceEndTime",
+                "sortOrder": "SORT_ORDER_ASCENDING",
+                "timeBinSize": "86400s",
+                "xMax": 0,
+                "xMin": 0
+              }
+            ],
+            "measures": [
+              {
+                "aggregationFunction": {
+                  "parameters": [
+                    {
+                      "intValue": "95"
+                    }
+                  ],
+                  "type": "percentile"
+                },
+                "column": "maintenance_duration_days"
+              }
+            ],
+            "thresholds": [
+              {
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "",
+                "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                "value": 3.87
+              },
+              {
+                "color": "RED",
+                "direction": "ABOVE",
+                "label": "",
+                "targetAxis": "TARGET_AXIS_UNSPECIFIED",
+                "value": 4
+              }
+            ],
+            "timeSeriesQuery": {
+              "opsAnalyticsQuery": {
+                "queryHandle": "",
+                "savedQueryId": "",
+                "sql": "SELECT\n  TIMESTAMP_DIFF(MaintenanceEndTime, MaintenanceStartTime, SECOND) / 86400 AS maintenance_duration_days,\n  MaintenanceEndTime,\nFROM\n  `analytics_view.PROJECT_ID.global.Inferred_MaintenanceEvents_Aggregated`\nWHERE \n  -- Requirement: It is completed\n  Status = 'COMPLETE'\n  -- Requirement: It isn't cancelled (it must have reached an ONGOING state)\n  AND EXISTS(\n    SELECT 1 \n    FROM UNNEST(Events) AS e \n    WHERE e.Reason IN ('MaintenanceWindowStarted', 'TerminateOnHostMaintenance')\n  )\n\nORDER BY \n  MaintenanceEndTime DESC"
+              },
+              "outputFullDuration": false,
+              "unitOverride": ""
+            }
+          }
+        }
+      },
+      {
+        "yPos": 36,
+        "height": 18,
+        "width": 48,
+        "widget": {
+          "title": "Maintenance Activity (Node Level, shows underlying events but may be *too* granular)",
+          "id": "",
+          "timeSeriesTable": {
+            "columnSettings": [],
+            "dataSets": [
+              {
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "queryHandle": "",
+                    "savedQueryId": "",
+                    "sql": "WITH Config AS (\n  -- DECLARE TIMEZONE HERE\n  SELECT 'America/Los_Angeles' AS timezone\n)\nSELECT\n  Status,\n  Type,\n  -- Uses Config.timezone\n  FORMAT_TIMESTAMP(\"%Y, %b, %d %H:%M %Z\", t.MaintenanceStartTime, c.timezone) AS Maintenance_start_time,\n  FORMAT_TIMESTAMP(\"%Y, %b, %d %H:%M %Z\", t.MaintenanceEndTime, c.timezone) AS Maintenance_end_time,\n  Node AS Node_name,\n  Nodepool AS Nodepool_name,\n  Cluster AS Cluster_name,\n  Is_CTM AS Is_customer_triggered,\n  \n  -- Logic updated: The view now returns NULL for invalid/cancelled cycles.\n  -- We cast to INT64 to ensure the math functions work correctly on the STRING from the view.\n  CASE \n    WHEN t.TimeSinceLastMaintenance IS NOT NULL THEN\n      FORMAT(\"%d days, %d hours, %d minutes, %d seconds\",\n        DIV(CAST(t.TimeSinceLastMaintenance AS INT64), 86400),\n        DIV(MOD(CAST(t.TimeSinceLastMaintenance AS INT64), 86400), 3600),\n        DIV(MOD(CAST(t.TimeSinceLastMaintenance AS INT64), 3600), 60),\n        MOD(CAST(t.TimeSinceLastMaintenance AS INT64), 60)\n      )\n    ELSE 'N/A'\n  END AS Time_since_last_maintenance_cycle,\n  \n  -- Events List: Inherits timezone from Config\n  ARRAY(\n    SELECT FORMAT('%s: %s', \n      FORMAT_TIMESTAMP(\"%Y, %b, %d %H:%M %Z\", e.EventTime, c.timezone), \n      e.Reason\n    )\n    FROM UNNEST(t.Events) AS e\n  ) AS Events\nFROM\n  `analytics_view.PROJECT_ID.global.Inferred_MaintenanceEvents_Aggregated` AS t, Config AS c\nORDER BY\n  t.MaintenanceStartTime DESC\nLIMIT 10000"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "displayColumnType": false,
+            "metricVisualization": "NUMBER"
+          }
+        }
+      }
+    ]
+  }
+}
