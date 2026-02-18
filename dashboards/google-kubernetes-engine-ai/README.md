@@ -2,6 +2,8 @@
 
 This repo provides a sample dashboard for monitoring the maintenance operations of long running GKE clusters. This will live under Google Cloud Monitoring, and it’s built on top of [Log Analytics](https://cloud.google.com/logging/docs/log-analytics#analytics).
 
+![GKE AI Maintenance Dashboard](gke-ai-maintenance-dashboard.png)
+
 This dashboard has the following tables and charts, including:
 - Maintenance activity tables at the cluster, nodepool, and node level
 - Number of maintenance cycles, by type (SCHEDULED/UNSCHEDULED)
