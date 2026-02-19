@@ -1,0 +1,126 @@
+{
+    "displayName": "BigQuery Managed Routine Query Monitoring",
+    "dashboardFilters": [
+        {
+            "filterType": "RESOURCE_LABEL",
+            "labelKey": "query_job_id",
+            "valueType": "STRING_ARRAY"
+        }
+    ],
+    "labels": {},
+    "mosaicLayout": {
+        "columns": 48,
+        "tiles": [
+            {
+                "height": 6,
+                "width": 48,
+                "widget": {
+                    "title": "About",
+                    "id": "",
+                    "text": {
+                        "content": "Track your [managed routine executions](https://docs.cloud.google.com/bigquery/docs/user-defined-functions-python) through this dashboard. Use the dropdown filters at the top to specify a BigQuery job ID or routine path for detailed execution data. Note that metrics may take up to five minutes to appear in Cloud Monitoring.",
+                        "format": "MARKDOWN",
+                        "style": {
+                            "backgroundColor": "#E7EFFE",
+                            "fontSize": "FS_LARGE",
+                            "horizontalAlignment": "H_LEFT",
+                            "padding": "P_EXTRA_SMALL",
+                            "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
+                            "textColor": "#212121",
+                            "verticalAlignment": "V_TOP"
+                        }
+                    }
+                }
+            },
+            {
+                "height": 16,
+                "width": 24,
+                "widget": {
+                    "title": "Instance CPU utilization",
+                    "id": "",
+                    "xyChart": {
+                        "chartOptions": {
+                            "displayHorizontal": false,
+                            "mode": "COLOR",
+                            "showLegend": false
+                        },
+                        "dataSets": [
+                            {
+                                "breakdowns": [],
+                                "dimensions": [],
+                                "legendTemplate": "",
+                                "measures": [],
+                                "minAlignmentPeriod": "60s",
+                                "plotType": "HEATMAP",
+                                "targetAxis": "Y1",
+                                "timeSeriesQuery": {
+                                    "outputFullDuration": false,
+                                    "timeSeriesFilter": {
+                                        "aggregation": {
+                                            "alignmentPeriod": "60s",
+                                            "crossSeriesReducer": "REDUCE_SUM",
+                                            "groupByFields": [],
+                                            "perSeriesAligner": "ALIGN_DELTA"
+                                        },
+                                        "filter": "metric.type=\"bigquery.googleapis.com/managed_routine/python/cpu_utilizations\" resource.type=\"bigquery.googleapis.com/ManagedRoutineInvocation\""
+                                    },
+                                    "unitOverride": ""
+                                }
+                            }
+                        ],
+                        "thresholds": [],
+                        "yAxis": {
+                            "label": "",
+                            "scale": "LINEAR"
+                        }
+                    }
+                }
+            },
+            {
+                "xPos": 24,
+                "height": 16,
+                "width": 24,
+                "widget": {
+                    "title": "Instance memory utilization",
+                    "id": "",
+                    "xyChart": {
+                        "chartOptions": {
+                            "displayHorizontal": false,
+                            "mode": "COLOR",
+                            "showLegend": false
+                        },
+                        "dataSets": [
+                            {
+                                "breakdowns": [],
+                                "dimensions": [],
+                                "legendTemplate": "",
+                                "measures": [],
+                                "minAlignmentPeriod": "60s",
+                                "plotType": "HEATMAP",
+                                "targetAxis": "Y1",
+                                "timeSeriesQuery": {
+                                    "outputFullDuration": false,
+                                    "timeSeriesFilter": {
+                                        "aggregation": {
+                                            "alignmentPeriod": "60s",
+                                            "crossSeriesReducer": "REDUCE_SUM",
+                                            "groupByFields": [],
+                                            "perSeriesAligner": "ALIGN_DELTA"
+                                        },
+                                        "filter": "metric.type=\"bigquery.googleapis.com/managed_routine/python/memory_utilizations\" resource.type=\"bigquery.googleapis.com/ManagedRoutineInvocation\""
+                                    },
+                                    "unitOverride": ""
+                                }
+                            }
+                        ],
+                        "thresholds": [],
+                        "yAxis": {
+                            "label": "",
+                            "scale": "LINEAR"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
