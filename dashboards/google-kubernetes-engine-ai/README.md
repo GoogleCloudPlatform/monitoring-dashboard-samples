@@ -67,6 +67,9 @@ We also need to create an analytics view for the dashboard to query against. In 
 
 <summary><i>SQL Query</i></summary>
 
+> **Note**: The variable `@__project_id` is dynamic and changes based on the project, but as of writing this, it is not supported in the Cloud Console. If the following filter does not work, replace `@__project_id` with your own project ID query in both places it exists in this query.
+
+
 ```sql
 -- 1. Extract raw logs from the maintenance-handler container
 WITH RawLogs AS (
@@ -77,7 +80,7 @@ WITH RawLogs AS (
     JSON_VALUE(resource.labels.location) AS zone,
     REGEXP_EXTRACT(JSON_VALUE(json_payload.message), r'Handling (?:scheduled )?maintenance event with state: "(.*)"') AS raw_state
   FROM
-    `PROJECT_ID.global.Inferred_MaintenanceEvents_Bucket._AllLogs` -- TODO: use your own project here
+    `@__project_id.global._Default._Default`
   WHERE
     -- resource.type is usually a STRING, but JSON_VALUE(resource.labels.container_name) is required
     resource.type = 'k8s_container' 
@@ -210,7 +213,7 @@ KubernetesEvents AS (
     SAFE_CAST(JSON_VALUE(json_payload, '$.metadata.annotations."maintenance.gke.io/maintenance-start-time"') AS TIMESTAMP) AS maintenance_start_time,
     SAFE_CAST(JSON_VALUE(json_payload, '$.metadata.annotations."maintenance.gke.io/window-end-time"') AS TIMESTAMP) AS maintenance_end_time
   FROM
-   `PROJECT_ID.global.Inferred_MaintenanceEvents_Bucket._AllLogs` -- TODO: use your own project here
+    `@__project_id.global._Default._Default`
   WHERE
     resource.type = 'k8s_node'
     AND (
@@ -287,20 +290,25 @@ FROM (
     Nodepool,
     ARRAY_AGG(Type ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] AS Type,
     ARRAY_AGG(MaintenanceStartTime ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] AS MaintenanceStartTime,
-    MAX(EventTime) AS MaintenanceEndTime,
+    
+    -- FIX: Use EventTime ONLY if status is COMPLETE. Otherwise, use Metadata End Time.
+    CASE 
+      WHEN ARRAY_AGG(Status ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] = 'COMPLETE' 
+      THEN MAX(EventTime) 
+      ELSE ARRAY_AGG(MaintenanceEndTime ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)]
+    END AS MaintenanceEndTime,
+
     ARRAY_AGG(STRUCT(EventTime, Reason, Type) ORDER BY EventTime ASC) AS Events,
     ARRAY_AGG(Status ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] AS Status,
     LOGICAL_OR(Reason = 'CustomerTriggeredMaintenance') AS Is_CTM,
     
-    -- VALID CYCLE DEFINITION: 
-    -- 1. Status is COMPLETE
-    -- 2. Max(EventTime) is >= MaintenanceStartTime (Not cancelled early)
+    -- VALID CYCLE DEFINITION
     (
       ARRAY_AGG(Status ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] = 'COMPLETE' AND 
       MAX(EventTime) >= ARRAY_AGG(MaintenanceStartTime ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)]
     ) AS is_valid_cycle,
 
-    -- Get the EndTime of the most recent valid cycle before this one
+    -- Get the EndTime of the most recent valid cycle
     LAG(CASE 
           WHEN ARRAY_AGG(Status ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] = 'COMPLETE' AND 
                MAX(EventTime) >= ARRAY_AGG(MaintenanceStartTime ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)]
@@ -312,6 +320,7 @@ FROM (
   GROUP BY
     CycleCount, Cluster, Nodepool, Node
 )
+
 ```
 
 </details>
@@ -322,7 +331,7 @@ FROM (
 - Click on 'Create Custom Dashboard'.
 - On the top right, click on the 'Settings' icon.
 - Under 'JSON' -> 'JSON Editor'
-- Copy the content of [this](https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples/blob/master/dashboards/google-kubernetes-engine-ai/gke-maintenance-dashboard.json) file, replacing `PROJECT_ID` with your own Project_ID.
+- Copy the content of [this](https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples/blob/master/dashboards/google-kubernetes-engine-ai/gke-maintenance-dashboard.json) file, replacing `@__project_id` with your own Project_ID, if necessary.
 - Click on Apply changes.
 
 ### Considerations:
