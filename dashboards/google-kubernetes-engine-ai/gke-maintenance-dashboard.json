@@ -119,28 +119,20 @@
         "height": 20,
         "width": 31,
         "widget": {
-          "title": "Maintenance status",
-          "id": "",
-          "singleViewGroup": {
-            "displayType": "TAB"
-          }
-        }
-      },
-      {
-        "height": 20,
-        "width": 31,
-        "widget": {
           "title": "Node count at scheduled start",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR"
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
                 "breakdowns": [
                   {
                     "aggregationFunction": {
+                      "parameters": [],
                       "type": "count"
                     },
                     "column": "Status",
@@ -154,9 +146,12 @@
                     "columnType": "STRING",
                     "maxBinCount": 50,
                     "sortColumn": "MaintenanceStartTime_YYMMDD",
-                    "sortOrder": "SORT_ORDER_ASCENDING"
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "xMax": 0,
+                    "xMin": 0
                   }
                 ],
+                "legendTemplate": "",
                 "measures": [
                   {
                     "aggregationFunction": {
@@ -167,23 +162,21 @@
                   }
                 ],
                 "plotType": "STACKED_BAR",
-                "sort": [
-                  {
-                    "column": "MaintenanceStartTime_YYMMDD",
-                    "direction": "SORT_ORDER_NONE"
-                  }
-                ],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "opsAnalyticsQuery": {
                     "queryHandle": "",
+                    "savedQueryId": "",
                     "sql": "SELECT\n  *,\n  -- Formats as yy/mm/dd (e.g., 26/03/05). This is \n  FORMAT_TIMESTAMP('%y/%m/%d', t.MaintenanceStartTime, \"America/Los_Angeles\") AS MaintenanceStartTime_YYMMDD\nFROM\n  `analytics_view.@__project_id.global.Inferred_MaintenanceEvents_Aggregated` AS t\nWHERE\n  (\n    IF(ARRAY_LENGTH(@Cluster) = 0, TRUE, t.Cluster IN UNNEST(@Cluster))\n    AND IF(ARRAY_LENGTH(@Nodepool) = 0, TRUE, t.Nodepool IN UNNEST(@Nodepool))\n    AND IF(ARRAY_LENGTH(@Node) = 0, TRUE, t.Node IN UNNEST(@Node))\n    AND IF(ARRAY_LENGTH(@Type) = 0, TRUE, t.Type IN UNNEST(@Type))\n    AND IF(ARRAY_LENGTH(@Status) = 0, TRUE, t.Status IN UNNEST(@Status))\n    AND (ARRAY_LENGTH(@Is_CTM) = 0 OR CAST(t.Is_CTM AS STRING) IN UNNEST(@Is_CTM))\n  )\nORDER BY\n  t.MaintenanceStartTime DESC\nLIMIT 10000\n"
-                  }
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -193,17 +186,31 @@
         "height": 20,
         "width": 31,
         "widget": {
+          "title": "Maintenance status",
+          "id": "",
+          "singleViewGroup": {
+            "displayType": "TAB"
+          }
+        }
+      },
+      {
+        "height": 20,
+        "width": 31,
+        "widget": {
           "title": "Node count at maintenance end",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR"
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
                 "breakdowns": [
                   {
                     "aggregationFunction": {
+                      "parameters": [],
                       "type": "count"
                     },
                     "column": "Status",
@@ -217,35 +224,37 @@
                     "columnType": "STRING",
                     "maxBinCount": 50,
                     "sortColumn": "MaintenanceEndTime_YYMMDD",
-                    "sortOrder": "SORT_ORDER_ASCENDING"
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "xMax": 0,
+                    "xMin": 0
                   }
                 ],
+                "legendTemplate": "",
                 "measures": [
                   {
                     "aggregationFunction": {
+                      "parameters": [],
                       "type": "count"
                     },
                     "column": "CycleCount"
                   }
                 ],
                 "plotType": "STACKED_BAR",
-                "sort": [
-                  {
-                    "column": "MaintenanceEndTime_YYMMDD",
-                    "direction": "SORT_ORDER_NONE"
-                  }
-                ],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "opsAnalyticsQuery": {
                     "queryHandle": "",
+                    "savedQueryId": "",
                     "sql": "SELECT\n  *,\n  -- Formats as yy/mm/dd (e.g., 26/03/05).\n  FORMAT_TIMESTAMP('%y/%m/%d', t.MaintenanceEndTime, \"America/Los_Angeles\") AS MaintenanceEndTime_YYMMDD\nFROM\n  `analytics_view.@__project_id.global.Inferred_MaintenanceEvents_Aggregated` AS t\nWHERE\n  (\n    IF(ARRAY_LENGTH(@Cluster) = 0, TRUE, t.Cluster IN UNNEST(@Cluster))\n    AND IF(ARRAY_LENGTH(@Nodepool) = 0, TRUE, t.Nodepool IN UNNEST(@Nodepool))\n    AND IF(ARRAY_LENGTH(@Node) = 0, TRUE, t.Node IN UNNEST(@Node))\n    AND IF(ARRAY_LENGTH(@Type) = 0, TRUE, t.Type IN UNNEST(@Type))\n    AND IF(ARRAY_LENGTH(@Status) = 0, TRUE, t.Status IN UNNEST(@Status))\n    AND (ARRAY_LENGTH(@Is_CTM) = 0 OR CAST(t.Is_CTM AS STRING) IN UNNEST(@Is_CTM))\n  )\nORDER BY\n  t.MaintenanceEndTime DESC\nLIMIT 10000"
-                  }
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
@@ -269,7 +278,7 @@
                       "type": "count"
                     },
                     "column": "Effective_Pool_Status",
-                    "limit": "3",
+                    "limit": 3,
                     "sortOrder": "SORT_ORDER_DESCENDING"
                   }
                 ],
@@ -302,7 +311,7 @@
                 "timeSeriesQuery": {
                   "opsAnalyticsQuery": {
                     "queryHandle": "",
-                    "sql": "WITH Config AS (\n  SELECT 'America/Los_Angeles' AS timezone\n),\nPrep AS (\n  SELECT\n    t.Cluster,\n    t.Nodepool,\n    t.Node,\n    t.Is_CTM,\n    t.Status,\n    t.Type,\n    c.timezone,\n    TIMESTAMP_TRUNC(t.MaintenanceStartTime, HOUR, c.timezone) AS MaintenanceHour\n  FROM\n    `analytics_view.@__project_id.global.Inferred_MaintenanceEvents_Aggregated` AS t,\n    Config AS c\n  WHERE\n    (\n      IF(ARRAY_LENGTH(@Cluster) = 0, TRUE, t.Cluster IN UNNEST(@Cluster))\n      AND IF(ARRAY_LENGTH(@Nodepool) = 0, TRUE, t.Nodepool IN UNNEST(@Nodepool))\n      AND IF(ARRAY_LENGTH(@Node) = 0, TRUE, t.Node IN UNNEST(@Node))\n      AND IF(ARRAY_LENGTH(@Type) = 0, TRUE, t.Type IN UNNEST(@Type))\n      AND IF(ARRAY_LENGTH(@Status) = 0, TRUE, t.Status IN UNNEST(@Status))\n      AND (ARRAY_LENGTH(@Is_CTM) = 0 OR CAST(t.Is_CTM AS STRING) IN UNNEST(@Is_CTM))\n    )\n),\nAggregatedPools AS (\n  SELECT\n    Cluster,\n    Nodepool,\n    MaintenanceHour,\n    ANY_VALUE(timezone) AS tz,\n    COUNT(Node) AS Total_Nodes,\n    COUNTIF(Status = 'COMPLETE') AS Count_COMPLETE,\n    COUNTIF(Status = 'ONGOING') AS Count_ONGOING,\n    COUNTIF(Status = 'PENDING') AS Count_PENDING,\n    COUNTIF(Is_CTM) AS CTM_count,\n    CASE WHEN COUNT(DISTINCT Type) > 1 THEN 'MIXED' ELSE MAX(Type) END AS Combined_Type\n  FROM Prep\n  GROUP BY Cluster, Nodepool, MaintenanceHour\n)\nSELECT\n  Cluster AS Cluster_name,\n  Nodepool AS Nodepool_name,\n  Combined_Type AS Type,\n  Total_Nodes,\n  \n  -- Calculate Percentages\n  ROUND((Count_COMPLETE * 100.0) / Total_Nodes, 2) AS Status_percent_COMPLETE,\n  ROUND((Count_ONGOING * 100.0) / Total_Nodes, 2) AS Status_percent_ONGOING,\n  \n  -- 95% Threshold Status Logic\n  CASE \n    WHEN (Count_COMPLETE * 1.0 / Total_Nodes) >= 0.95 THEN 'COMPLETE'\n    WHEN ((Count_COMPLETE + Count_ONGOING) * 1.0 / Total_Nodes) >= 0.95 THEN 'ONGOING'\n    ELSE 'PENDING'\n  END AS Effective_Pool_Status,\n\n  CTM_count,\n  FORMAT_TIMESTAMP(\"%Y, %b, %d %H:00 %Z\", MaintenanceHour, tz) AS Maintenance_start_time\nFROM\n  AggregatedPools\nORDER BY\n  MaintenanceHour DESC,\n  Status_percent_COMPLETE ASC"
+                    "sql": "WITH Config AS (\n  SELECT 'America/Los_Angeles' AS timezone\n),\nPrep AS (\n  SELECT\n    t.Cluster,\n    t.Nodepool,\n    t.Node,\n    t.Is_CTM,\n    t.Status,\n    t.Type,\n    c.timezone,\n    TIMESTAMP_TRUNC(t.MaintenanceStartTime, HOUR, c.timezone) AS MaintenanceHour\n  FROM\n    `analytics_view.@__project_id.global.Inferred_MaintenanceEvents_Aggregated` AS t,\n    Config AS c\n  WHERE\n    t.Nodepool IS NOT NULL\n    AND (\n      IF(ARRAY_LENGTH(@Cluster) = 0, TRUE, t.Cluster IN UNNEST(@Cluster))\n      AND IF(ARRAY_LENGTH(@Nodepool) = 0, TRUE, t.Nodepool IN UNNEST(@Nodepool))\n      AND IF(ARRAY_LENGTH(@Node) = 0, TRUE, t.Node IN UNNEST(@Node))\n      AND IF(ARRAY_LENGTH(@Type) = 0, TRUE, t.Type IN UNNEST(@Type))\n      AND IF(ARRAY_LENGTH(@Status) = 0, TRUE, t.Status IN UNNEST(@Status))\n      AND (ARRAY_LENGTH(@Is_CTM) = 0 OR CAST(t.Is_CTM AS STRING) IN UNNEST(@Is_CTM))\n    )\n),\nAggregatedPools AS (\n  SELECT\n    Cluster,\n    Nodepool,\n    MaintenanceHour,\n    ANY_VALUE(timezone) AS tz,\n    COUNT(Node) AS Total_Nodes,\n    COUNTIF(Status = 'COMPLETE') AS Count_COMPLETE,\n    COUNTIF(Status = 'ONGOING') AS Count_ONGOING,\n    COUNTIF(Status = 'PENDING') AS Count_PENDING,\n    COUNTIF(Is_CTM) AS CTM_count,\n    CASE WHEN COUNT(DISTINCT Type) > 1 THEN 'MIXED' ELSE MAX(Type) END AS Combined_Type\n  FROM Prep\n  GROUP BY Cluster, Nodepool, MaintenanceHour\n)\nSELECT\n  Cluster AS Cluster_name,\n  Nodepool AS Nodepool_name,\n  Combined_Type AS Type,\n  Total_Nodes,\n  \n  -- Calculate Percentages\n  ROUND((Count_COMPLETE * 100.0) / Total_Nodes, 2) AS Status_percent_COMPLETE,\n  ROUND((Count_ONGOING * 100.0) / Total_Nodes, 2) AS Status_percent_ONGOING,\n  \n  -- 95% Threshold Status Logic\n  CASE \n    WHEN (Count_COMPLETE * 1.0 / Total_Nodes) >= 0.95 THEN 'COMPLETE'\n    WHEN ((Count_COMPLETE + Count_ONGOING) * 1.0 / Total_Nodes) >= 0.95 THEN 'ONGOING'\n    ELSE 'PENDING'\n  END AS Effective_Pool_Status,\n\n  CTM_count,\n  FORMAT_TIMESTAMP(\"%Y, %b, %d %H:00 %Z\", MaintenanceHour, tz) AS Maintenance_start_time\nFROM\n  AggregatedPools\nORDER BY\n  MaintenanceHour DESC,\n  Status_percent_COMPLETE ASC"
                   }
                 }
               }
@@ -348,6 +357,7 @@
                 "measures": [
                   {
                     "aggregationFunction": {
+                      "parameters": [],
                       "type": "count"
                     },
                     "column": "Nodepool_name"
@@ -364,7 +374,7 @@
                 "timeSeriesQuery": {
                   "opsAnalyticsQuery": {
                     "queryHandle": "",
-                    "sql": "WITH Config AS (\n  SELECT 'America/Los_Angeles' AS timezone\n),\nPrep AS (\n  SELECT\n    t.Cluster,\n    t.Nodepool,\n    t.Node,\n    t.Is_CTM,\n    t.Status,\n    t.Type,\n    c.timezone,\n    -- Truncate by End Time for this view\n    TIMESTAMP_TRUNC(t.MaintenanceEndTime, HOUR, c.timezone) AS MaintenanceEndHour,\n    t.MaintenanceEndTime\n  FROM\n    `analytics_view.@__project_id.global.Inferred_MaintenanceEvents_Aggregated` AS t,\n    Config AS c\n  WHERE\n    (\n      IF(ARRAY_LENGTH(@Cluster) = 0, TRUE, t.Cluster IN UNNEST(@Cluster))\n      AND IF(ARRAY_LENGTH(@Nodepool) = 0, TRUE, t.Nodepool IN UNNEST(@Nodepool))\n      AND IF(ARRAY_LENGTH(@Node) = 0, TRUE, t.Node IN UNNEST(@Node))\n      AND IF(ARRAY_LENGTH(@Type) = 0, TRUE, t.Type IN UNNEST(@Type))\n      AND IF(ARRAY_LENGTH(@Status) = 0, TRUE, t.Status IN UNNEST(@Status))\n      AND (ARRAY_LENGTH(@Is_CTM) = 0 OR CAST(t.Is_CTM AS STRING) IN UNNEST(@Is_CTM))\n    )\n),\nAggregatedPools AS (\n  SELECT\n    Cluster,\n    Nodepool,\n    MaintenanceEndHour,\n    ANY_VALUE(timezone) AS tz,\n    -- Get a representative timestamp for the whole pool\n    MAX(MaintenanceEndTime) AS Max_End_Time,\n    COUNT(Node) AS Total_Nodes,\n    COUNTIF(Status = 'COMPLETE') AS Count_COMPLETE,\n    COUNTIF(Status = 'ONGOING') AS Count_ONGOING,\n    COUNTIF(Status = 'PENDING') AS Count_PENDING,\n    COUNTIF(Is_CTM) AS CTM_count,\n    CASE WHEN COUNT(DISTINCT Type) > 1 THEN 'MIXED' ELSE MAX(Type) END AS Combined_Type\n  FROM Prep\n  GROUP BY Cluster, Nodepool, MaintenanceEndHour\n)\nSELECT\n  Cluster AS Cluster_name,\n  Nodepool AS Nodepool_name,\n  Combined_Type AS Type,\n  Total_Nodes,\n  \n  -- Logic: Status percentages\n  ROUND((Count_COMPLETE * 100.0) / Total_Nodes, 2) AS Status_percent_COMPLETE,\n  \n  -- 95% Threshold Status Logic\n  CASE \n    WHEN (Count_COMPLETE * 1.0 / Total_Nodes) >= 0.95 THEN 'COMPLETE'\n    WHEN ((Count_COMPLETE + Count_ONGOING) * 1.0 / Total_Nodes) >= 0.95 THEN 'ONGOING'\n    ELSE 'PENDING'\n  END AS Effective_Pool_Status,\n\n  CTM_count,\n  -- Original Request: yy/mm/dd format for the specific end time\n  FORMAT_TIMESTAMP('%y/%m/%d', Max_End_Time, tz) AS MaintenanceEndTime_YYMMDD,\n  -- Hour bucket for chart grouping\n  FORMAT_TIMESTAMP(\"%Y, %b, %d %H:00 %Z\", MaintenanceEndHour, tz) AS Maintenance_end_hour_bucket\nFROM\n  AggregatedPools\nORDER BY\n  Max_End_Time DESC,\n  Status_percent_COMPLETE ASC\nLIMIT 10000"
+                    "sql": "WITH Config AS (\n  SELECT 'America/Los_Angeles' AS timezone\n),\nPrep AS (\n  SELECT\n    t.Cluster,\n    t.Nodepool,\n    t.Node,\n    t.Is_CTM,\n    t.Status,\n    t.Type,\n    c.timezone,\n    -- Truncate by End Time for this view\n    TIMESTAMP_TRUNC(t.MaintenanceEndTime, HOUR, c.timezone) AS MaintenanceEndHour,\n    t.MaintenanceEndTime\n  FROM\n    `analytics_view.@__project_id.global.Inferred_MaintenanceEvents_Aggregated` AS t,\n    Config AS c\n  WHERE\n    t.Nodepool IS NOT NULL\n    AND (\n      IF(ARRAY_LENGTH(@Cluster) = 0, TRUE, t.Cluster IN UNNEST(@Cluster))\n      AND IF(ARRAY_LENGTH(@Nodepool) = 0, TRUE, t.Nodepool IN UNNEST(@Nodepool))\n      AND IF(ARRAY_LENGTH(@Node) = 0, TRUE, t.Node IN UNNEST(@Node))\n      AND IF(ARRAY_LENGTH(@Type) = 0, TRUE, t.Type IN UNNEST(@Type))\n      AND IF(ARRAY_LENGTH(@Status) = 0, TRUE, t.Status IN UNNEST(@Status))\n      AND (ARRAY_LENGTH(@Is_CTM) = 0 OR CAST(t.Is_CTM AS STRING) IN UNNEST(@Is_CTM))\n    )\n),\nAggregatedPools AS (\n  SELECT\n    Cluster,\n    Nodepool,\n    MaintenanceEndHour,\n    ANY_VALUE(timezone) AS tz,\n    -- Get a representative timestamp for the whole pool\n    MAX(MaintenanceEndTime) AS Max_End_Time,\n    COUNT(Node) AS Total_Nodes,\n    COUNTIF(Status = 'COMPLETE') AS Count_COMPLETE,\n    COUNTIF(Status = 'ONGOING') AS Count_ONGOING,\n    COUNTIF(Status = 'PENDING') AS Count_PENDING,\n    COUNTIF(Is_CTM) AS CTM_count,\n    CASE WHEN COUNT(DISTINCT Type) > 1 THEN 'MIXED' ELSE MAX(Type) END AS Combined_Type\n  FROM Prep\n  GROUP BY Cluster, Nodepool, MaintenanceEndHour\n)\nSELECT\n  Cluster AS Cluster_name,\n  Nodepool AS Nodepool_name,\n  Combined_Type AS Type,\n  Total_Nodes,\n  \n  -- Logic: Status percentages\n  ROUND((Count_COMPLETE * 100.0) / Total_Nodes, 2) AS Status_percent_COMPLETE,\n  \n  -- 95% Threshold Status Logic\n  CASE \n    WHEN (Count_COMPLETE * 1.0 / Total_Nodes) >= 0.95 THEN 'COMPLETE'\n    WHEN ((Count_COMPLETE + Count_ONGOING) * 1.0 / Total_Nodes) >= 0.95 THEN 'ONGOING'\n    ELSE 'PENDING'\n  END AS Effective_Pool_Status,\n\n  CTM_count,\n  -- Original Request: yy/mm/dd format for the specific end time\n  FORMAT_TIMESTAMP('%y/%m/%d', Max_End_Time, tz) AS MaintenanceEndTime_YYMMDD,\n  -- Hour bucket for chart grouping\n  FORMAT_TIMESTAMP(\"%Y, %b, %d %H:00 %Z\", MaintenanceEndHour, tz) AS Maintenance_end_hour_bucket\nFROM\n  AggregatedPools\nORDER BY\n  Max_End_Time DESC,\n  Status_percent_COMPLETE ASC\nLIMIT 10000"
                   }
                 }
               }
