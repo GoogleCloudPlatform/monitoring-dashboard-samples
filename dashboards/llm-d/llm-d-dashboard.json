@@ -1,5 +1,5 @@
 {
-  "displayName": "GKE Inference Gateway Prometheus Overview",
+  "displayName": "llm-d dashboard",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
@@ -23,682 +23,117 @@
       "valueType": "STRING"
     },
     {
-      "filterType": "RESOURCE_LABEL",
-      "labelKey": "forwarding_rule_name",
+      "filterType": "USER_METADATA_LABEL",
+      "labelKey": "goog-k8s-cluster-name",
       "stringValue": "",
       "templateVariable": "",
       "valueType": "STRING"
     }
   ],
+  "description": "This dashboard has charts displaying throughput, latency, cache usage, and other metrics for running llm-d stacks on GKE.",
   "labels": {},
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
       {
-        "height": 20,
-        "width": 48,
-        "widget": {
-          "title": "",
-          "id": "",
-          "text": {
-            "content": "### Charts\n#### Application Load Balancer Metrics\n\n* Tracks the request and latency of external and internal application load balancers.\n* Please refer to the [public page](https://cloud.google.com/load-balancing/docs/metrics) for complete list of Application Load Balancer metrics.\n\n#### Inferece Gateway Metrics\n* Tracks the performance of inference model and inference pool. \n* Please refer to the [official documentation](https://github.com/kubernetes-sigs/gateway-api-inference-extension/blob/main/site-src/guides/metrics.md) for more details of underlying metrics used in the dashboard.\n\n#### Model Server Metrics\n* Tracks the performance of model servers, including token throughput, request latency, time per output token latency and time to first token latency. \n* Charts are only populated if the model server is exporting metrics.\n* You can navigate to the detail dashboard for model servers under the integration tab (e.g. [vLLM](https://console.cloud.google.com/monitoring/dashboards/integration/vllm.vllm-prometheus)). \n\n### How to use:\n\n#### Inference Pool has high queue length and kv-cache utilization\n\n* **Filter**: Use the filter dropdowns above to drill down to a single cluster / location / namespace / Load Balancer.\n* **Identify issues**: Review the *Inference Pool* section for overview of high-level metrics like queue length and kv-cache utilization.\n* **Investigate**: Review *Request / s* charts.\n* **Analyze**: Examine the chart to see if the issue is caused by increasing number of requests and cause saturation of resources.\n* **Decision**: Follow the [Configure autoscaling](https://cloud.google.com/kubernetes-engine/docs/how-to/customize-gke-inference-gateway-configurations#autoscaling) to autoscales your workloads.\n\n",
-            "format": "MARKDOWN",
-            "style": {
-              "backgroundColor": "#FFFFFF",
-              "fontSize": "FS_EXTRA_LARGE",
-              "horizontalAlignment": "H_LEFT",
-              "padding": "P_EXTRA_SMALL",
-              "pointerLocation": "POINTER_LOCATION_UNSPECIFIED",
-              "textColor": "#212121",
-              "verticalAlignment": "V_TOP"
-            }
-          }
-        }
-      },
-      {
-        "height": 20,
-        "width": 48,
-        "widget": {
-          "title": "Dashboard overview",
-          "collapsibleGroup": {
-            "collapsed": false
-          },
-          "id": ""
-        }
-      },
-      {
-        "yPos": 20,
-        "height": 15,
-        "width": 16,
-        "widget": {
-          "title": "External Regional L7LB Request /s (by code)",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "metric.label.\"response_code\"",
-                        "resource.label.\"forwarding_rule_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"loadbalancing.googleapis.com/https/external/regional/request_count\" resource.type=\"http_external_regional_lb_rule\""
-                  },
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 20,
-        "xPos": 16,
-        "height": 15,
-        "width": 16,
-        "widget": {
-          "title": "Inference Pool Average KV Cache Utilization",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "sum by (name, cluster)(avg_over_time(inference_pool_average_kv_cache_utilization[${__interval}]))",
-                  "unitOverride": "10^2.%"
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 20,
-        "xPos": 32,
-        "height": 15,
-        "width": 16,
-        "widget": {
-          "title": "Inference Pool Average Queue Size",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "sum by (name, cluster) (avg_over_time(inference_pool_average_queue_size[${__interval}]))",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 35,
         "height": 4,
         "width": 48,
         "widget": {
-          "title": "Application Load Balancer",
+          "title": "Networking",
           "id": "",
           "sectionHeader": {
             "dividerBelow": false,
-            "subtitle": "Tracks the request and latency of external and internal application load balancers."
+            "subtitle": "To apply the cluster filter to networking metrics, use the `goog-k8s-cluster-name` label in the filter section."
           }
         }
       },
       {
-        "yPos": 39,
-        "height": 16,
-        "width": 16,
+        "yPos": 4,
+        "height": 14,
+        "width": 24,
         "widget": {
-          "title": "E2E Request Latency p999 (by code)",
-          "id": "",
+          "title": "Throughput TX Bytes per Pod",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.999, sum by(le, response_code) (rate(loadbalancing_googleapis_com:https_external_regional_total_latencies_bucket{monitored_resource=\"http_external_regional_lb_rule\"}[1m])))",
-                  "unitOverride": "ms"
+                  "prometheusQuery": "group by (node, pod) ({\"__name__\"=\"vllm:generation_tokens_total\"})\n* on (node) group_left ()\n(\n    label_replace(\n        sum by (metadata_system_name)(\n            avg_over_time({\"__name__\"=\"compute.googleapis.com/instance/gpu/throughput_tx_bytes\",\"monitored_resource\"=\"gce_instance\"}[1m])/1m\n        ),\n        \"node\",\n        \"$1\",\n        \"metadata_system_name\",\n        \"(.+)\"\n    )\n    / on (node)\n    count by (node) (\n      group by (node, pod) ({\"__name__\"=\"vllm:generation_tokens_total\"})\n    )\n)",
+                  "unitOverride": "By/s"
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "yPos": 39,
-        "height": 32,
+        "yPos": 4,
+        "xPos": 24,
+        "height": 14,
+        "width": 24,
+        "widget": {
+          "title": "Throughput RX Bytes per Pod",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "group by (node, pod) ({\"__name__\"=\"vllm:generation_tokens_total\"})\n* on (node) group_left ()\n(\n    label_replace(\n        sum by (metadata_system_name)(\n            avg_over_time({\"__name__\"=\"compute.googleapis.com/instance/gpu/throughput_rx_bytes\",\"monitored_resource\"=\"gce_instance\"}[1m])/1m\n        ),\n        \"node\",\n        \"$1\",\n        \"metadata_system_name\",\n        \"(.+)\"\n    )\n    / on (node)\n    count by (node) (\n      group by (node, pod) ({\"__name__\"=\"vllm:generation_tokens_total\"})\n    )\n)",
+                  "unitOverride": "By/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 18,
+        "height": 13,
         "width": 48,
         "widget": {
-          "title": "Regional external application load balancer",
-          "collapsibleGroup": {
-            "collapsed": true
-          },
-          "id": ""
-        }
-      },
-      {
-        "yPos": 39,
-        "xPos": 16,
-        "height": 16,
-        "width": 16,
-        "widget": {
-          "title": "E2E Request Latency p99 (by code)",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.99, sum by(le, response_code) (rate(loadbalancing_googleapis_com:https_external_regional_total_latencies_bucket{monitored_resource=\"http_external_regional_lb_rule\"}[1m])))",
-                  "unitOverride": "ms"
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 39,
-        "xPos": 32,
-        "height": 16,
-        "width": 16,
-        "widget": {
-          "title": "E2E Request Latency p95 (by code)",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.95, sum by(le, response_code) (rate(loadbalancing_googleapis_com:https_external_regional_total_latencies_bucket{monitored_resource=\"http_external_regional_lb_rule\"}[1m])))",
-                  "unitOverride": "ms"
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 55,
-        "height": 16,
-        "width": 16,
-        "widget": {
-          "title": "E2E Request Latency p90 (by code)",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.90, sum by(le, response_code) (rate(loadbalancing_googleapis_com:https_external_regional_total_latencies_bucket{monitored_resource=\"http_external_regional_lb_rule\"}[1m])))",
-                  "unitOverride": "ms"
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 55,
-        "xPos": 16,
-        "height": 16,
-        "width": 16,
-        "widget": {
-          "title": "E2E Request Latency p50 (by code)",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.50, sum by(le, response_code) (rate(loadbalancing_googleapis_com:https_external_regional_total_latencies_bucket{monitored_resource=\"http_external_regional_lb_rule\"}[1m])))",
-                  "unitOverride": "ms"
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 55,
-        "xPos": 32,
-        "height": 16,
-        "width": 16,
-        "widget": {
-          "title": "Request /s (by code)",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "metric.label.\"response_code\"",
-                        "resource.label.\"forwarding_rule_name\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"loadbalancing.googleapis.com/https/external/regional/request_count\" resource.type=\"http_external_regional_lb_rule\""
-                  },
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 71,
-        "height": 32,
-        "width": 48,
-        "widget": {
-          "title": "Regional internal application load balancer",
-          "collapsibleGroup": {
-            "collapsed": true
-          },
-          "id": ""
-        }
-      },
-      {
-        "yPos": 71,
-        "height": 16,
-        "width": 16,
-        "widget": {
-          "title": "E2E Request Latency p999 (by code)",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.999, sum by(le, response_code) (rate(loadbalancing_googleapis_com:https_internal_total_latencies_bucket{monitored_resource=\"internal_http_lb_rule\"}[1m])))",
-                  "unitOverride": "ms"
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 71,
-        "xPos": 16,
-        "height": 16,
-        "width": 16,
-        "widget": {
-          "title": "E2E Request Latency p99 (by code)",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.99, sum by(le, response_code) (rate(loadbalancing_googleapis_com:https_internal_total_latencies_bucket{monitored_resource=\"internal_http_lb_rule\"}[1m])))",
-                  "unitOverride": "ms"
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 71,
-        "xPos": 32,
-        "height": 16,
-        "width": 16,
-        "widget": {
-          "title": "E2E Request Latency p95 (by code)",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.95, sum by(le, response_code) (rate(loadbalancing_googleapis_com:https_internal_total_latencies_bucket{monitored_resource=\"internal_http_lb_rule\"}[1m])))",
-                  "unitOverride": "ms"
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 87,
-        "height": 16,
-        "width": 16,
-        "widget": {
-          "title": "E2E Request Latency p90 (by code)",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.90, sum by(le, response_code) (rate(loadbalancing_googleapis_com:https_internal_total_latencies_bucket{monitored_resource=\"internal_http_lb_rule\"}[1m])))",
-                  "unitOverride": "ms"
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 87,
-        "xPos": 16,
-        "height": 16,
-        "width": 16,
-        "widget": {
-          "title": "E2E Request Latency p50 (by code)",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.50, sum by(le, response_code) (rate(loadbalancing_googleapis_com:https_internal_total_latencies_bucket{monitored_resource=\"internal_http_lb_rule\"}[1m])))",
-                  "unitOverride": "ms"
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 87,
-        "xPos": 32,
-        "height": 16,
-        "width": 16,
-        "widget": {
-          "title": "Request /s (by code)",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "sum by (response_code)(rate(loadbalancing_googleapis_com:https_internal_request_count{monitored_resource=\"internal_http_lb_rule\"}[1m]))",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 103,
-        "height": 4,
-        "width": 48,
-        "widget": {
-          "title": "Inference Optimized Gateway",
-          "id": "",
-          "sectionHeader": {
-            "dividerBelow": false,
-            "subtitle": "Tracks the performance of inference model and inference pool."
-          }
-        }
-      },
-      {
-        "yPos": 107,
-        "height": 8,
-        "width": 48,
-        "widget": {
-          "title": "Build Info",
+          "title": "Pod and Node Mapping",
           "id": "",
           "timeSeriesTable": {
-            "columnSettings": [],
+            "columnSettings": [
+              {
+                "column": "Metric",
+                "visible": false
+              },
+              {
+                "column": "pod_name",
+                "visible": true
+              },
+              {
+                "column": "system_labels.node_name",
+                "visible": true
+              },
+              {
+                "column": "project_id",
+                "visible": false
+              },
+              {
+                "column": "value",
+                "visible": false
+              }
+            ],
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
@@ -708,17 +143,14 @@
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
+                      "crossSeriesReducer": "REDUCE_MEAN",
                       "groupByFields": [
-                        "metric.label.\"pod\"",
-                        "metric.label.\"build_ref\"",
-                        "metric.label.\"commit\"",
-                        "resource.label.\"cluster\"",
-                        "resource.label.\"location\""
+                        "resource.label.\"pod_name\"",
+                        "metadata.system_labels.\"node_name\""
                       ],
                       "perSeriesAligner": "ALIGN_MEAN"
                     },
-                    "filter": "metric.type=\"prometheus.googleapis.com/inference_extension_info/gauge\" resource.type=\"prometheus_target\""
+                    "filter": "metric.type=\"kubernetes.io/container/accelerator/duty_cycle\" resource.type=\"k8s_container\" resource.label.\"pod_name\"=monitoring.regex.full_match(\".*vllm.*\")"
                   },
                   "unitOverride": ""
                 }
@@ -730,11 +162,419 @@
         }
       },
       {
-        "yPos": 115,
+        "yPos": 31,
+        "height": 14,
+        "width": 16,
+        "widget": {
+          "title": "Throughput TX Bytes per Instance",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metadata.system_labels.\"name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"compute.googleapis.com/instance/gpu/throughput_tx_bytes\" resource.type=\"gce_instance\""
+                  },
+                  "unitOverride": "By/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 31,
+        "xPos": 16,
+        "height": 14,
+        "width": 16,
+        "widget": {
+          "title": "Throughput RX Bytes per Instance",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metadata.system_labels.\"name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"compute.googleapis.com/instance/gpu/throughput_rx_bytes\" resource.type=\"gce_instance\""
+                  },
+                  "unitOverride": "By/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 31,
+        "xPos": 32,
+        "height": 14,
+        "width": 16,
+        "widget": {
+          "title": "Packets Retransmission per Instance",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metadata.system_labels.\"name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"compute.googleapis.com/instance/gpu/packet_retransmission_count\" resource.type=\"gce_instance\""
+                  },
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 45,
+        "height": 14,
+        "width": 16,
+        "widget": {
+          "title": "Intra-Subblock Bytes per Instance",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metadata.system_labels.\"name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"compute.googleapis.com/instance/gpu/intra_subblock_tx\" resource.type=\"gce_instance\""
+                  },
+                  "unitOverride": "By/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 45,
+        "xPos": 16,
+        "height": 14,
+        "width": 16,
+        "widget": {
+          "title": "Inter-Subblock Bytes per Instance",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metadata.system_labels.\"name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_MEAN"
+                    },
+                    "filter": "metric.type=\"compute.googleapis.com/instance/gpu/inter_subblock_tx\" resource.type=\"gce_instance\""
+                  },
+                  "unitOverride": "By/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 45,
+        "xPos": 32,
+        "height": 14,
+        "width": 16,
+        "widget": {
+          "title": "P99 Network RTT per Instance",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": [
+                        "metadata.system_labels.\"name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"compute.googleapis.com/instance/gpu/network_rtt\" resource.type=\"gce_instance\""
+                  },
+                  "unitOverride": "µs"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 45,
+        "xPos": 32,
+        "height": 14,
+        "width": 16,
+        "widget": {
+          "title": "",
+          "id": "",
+          "singleViewGroup": {
+            "displayType": "DROPDOWN"
+          }
+        }
+      },
+      {
+        "yPos": 45,
+        "xPos": 32,
+        "height": 14,
+        "width": 16,
+        "widget": {
+          "title": "p95 Network RTT per Instance",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": [
+                        "metadata.system_labels.\"name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"compute.googleapis.com/instance/gpu/network_rtt\" resource.type=\"gce_instance\""
+                  },
+                  "unitOverride": "µs"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 45,
+        "xPos": 32,
+        "height": 14,
+        "width": 16,
+        "widget": {
+          "title": "P50 Network RTT per Instance",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": [
+                        "metadata.system_labels.\"name\""
+                      ],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"compute.googleapis.com/instance/gpu/network_rtt\" resource.type=\"gce_instance\""
+                  },
+                  "unitOverride": "µs"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 59,
+        "height": 4,
+        "width": 48,
+        "widget": {
+          "title": "Inference Scheduler",
+          "id": "",
+          "sectionHeader": {
+            "dividerBelow": false,
+            "subtitle": "Monitor the health and performance of llm-d-inference-scheduler"
+          }
+        }
+      },
+      {
+        "yPos": 63,
         "height": 8,
         "width": 48,
         "widget": {
-          "title": "Running Request",
+          "title": "Running Requests",
           "id": "",
           "scorecard": {
             "breakdowns": [],
@@ -753,11 +593,11 @@
         }
       },
       {
-        "yPos": 115,
+        "yPos": 63,
         "height": 53,
         "width": 48,
         "widget": {
-          "title": "Inference Model",
+          "title": "Inference Objective",
           "collapsibleGroup": {
             "collapsed": false
           },
@@ -765,7 +605,7 @@
         }
       },
       {
-        "yPos": 123,
+        "yPos": 71,
         "height": 15,
         "width": 16,
         "widget": {
@@ -866,7 +706,7 @@
         }
       },
       {
-        "yPos": 123,
+        "yPos": 71,
         "xPos": 16,
         "height": 15,
         "width": 16,
@@ -903,7 +743,7 @@
         }
       },
       {
-        "yPos": 123,
+        "yPos": 71,
         "xPos": 32,
         "height": 15,
         "width": 16,
@@ -940,7 +780,7 @@
         }
       },
       {
-        "yPos": 138,
+        "yPos": 86,
         "height": 15,
         "width": 16,
         "widget": {
@@ -1015,7 +855,7 @@
         }
       },
       {
-        "yPos": 138,
+        "yPos": 86,
         "xPos": 16,
         "height": 15,
         "width": 16,
@@ -1091,7 +931,7 @@
         }
       },
       {
-        "yPos": 138,
+        "yPos": 86,
         "xPos": 32,
         "height": 15,
         "width": 16,
@@ -1189,7 +1029,7 @@
         }
       },
       {
-        "yPos": 153,
+        "yPos": 101,
         "height": 15,
         "width": 16,
         "widget": {
@@ -1286,7 +1126,7 @@
         }
       },
       {
-        "yPos": 153,
+        "yPos": 101,
         "xPos": 16,
         "height": 15,
         "width": 16,
@@ -1323,7 +1163,7 @@
         }
       },
       {
-        "yPos": 153,
+        "yPos": 101,
         "xPos": 32,
         "height": 15,
         "width": 16,
@@ -1360,7 +1200,7 @@
         }
       },
       {
-        "yPos": 168,
+        "yPos": 116,
         "height": 16,
         "width": 24,
         "widget": {
@@ -1396,7 +1236,7 @@
         }
       },
       {
-        "yPos": 168,
+        "yPos": 116,
         "height": 32,
         "width": 48,
         "widget": {
@@ -1408,7 +1248,7 @@
         }
       },
       {
-        "yPos": 168,
+        "yPos": 116,
         "xPos": 24,
         "height": 16,
         "width": 24,
@@ -1445,7 +1285,7 @@
         }
       },
       {
-        "yPos": 184,
+        "yPos": 132,
         "height": 16,
         "width": 24,
         "widget": {
@@ -1481,7 +1321,7 @@
         }
       },
       {
-        "yPos": 184,
+        "yPos": 132,
         "xPos": 24,
         "height": 16,
         "width": 24,
@@ -1531,7 +1371,7 @@
         }
       },
       {
-        "yPos": 200,
+        "yPos": 148,
         "height": 15,
         "width": 24,
         "widget": {
@@ -1606,7 +1446,7 @@
         }
       },
       {
-        "yPos": 200,
+        "yPos": 148,
         "xPos": 24,
         "height": 15,
         "width": 24,
@@ -1682,80 +1522,11 @@
         }
       },
       {
-        "yPos": 215,
+        "yPos": 163,
         "height": 15,
         "width": 24,
         "widget": {
           "title": "Scheduler E2E Latency",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR"
-            },
-            "dataSets": [
-              {
-                "legendTemplate": "p99",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(inference_extension_scheduler_e2e_duration_seconds_bucket[${__interval}])))\n",
-                  "unitOverride": "s"
-                }
-              },
-              {
-                "legendTemplate": "p95",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "histogram_quantile(0.95, sum by(le) (rate(inference_extension_scheduler_e2e_duration_seconds_bucket[${__interval}])))\n",
-                  "unitOverride": "s"
-                }
-              },
-              {
-                "legendTemplate": "p90",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "histogram_quantile(0.90, sum by(le) (rate(inference_extension_scheduler_e2e_duration_seconds_bucket[${__interval}])))\n",
-                  "unitOverride": "s"
-                }
-              },
-              {
-                "legendTemplate": "p50",
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "prometheusQuery": "histogram_quantile(0.50, sum by(le) (rate(inference_extension_scheduler_e2e_duration_seconds_bucket[${__interval}])))\n",
-                  "unitOverride": "s"
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 230,
-        "height": 4,
-        "width": 48,
-        "widget": {
-          "title": "Model Server",
-          "id": "",
-          "sectionHeader": {
-            "dividerBelow": true,
-            "subtitle": "The following charts will only be populated if model server is exporting metrics."
-          }
-        }
-      },
-      {
-        "yPos": 234,
-        "height": 15,
-        "width": 16,
-        "widget": {
-          "title": "Token Throughput",
           "id": "",
           "xyChart": {
             "chartOptions": {
@@ -1767,51 +1538,205 @@
               {
                 "breakdowns": [],
                 "dimensions": [],
-                "legendTemplate": "Prompt Tokens/Sec",
+                "legendTemplate": "p99",
                 "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "sum by(model_name) (rate(vllm:prompt_tokens_total[${__interval}]))",
-                  "unitOverride": ""
+                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(inference_extension_scheduler_e2e_duration_seconds_bucket[${__interval}])))\n",
+                  "unitOverride": "s"
                 }
               },
               {
                 "breakdowns": [],
                 "dimensions": [],
-                "legendTemplate": "Generation Tokens/Sec",
+                "legendTemplate": "p95",
                 "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "sum by(model_name) (rate(vllm:generation_tokens_total[${__interval}]))",
-                  "unitOverride": ""
+                  "prometheusQuery": "histogram_quantile(0.95, sum by(le) (rate(inference_extension_scheduler_e2e_duration_seconds_bucket[${__interval}])))\n",
+                  "unitOverride": "s"
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "p90",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "histogram_quantile(0.90, sum by(le) (rate(inference_extension_scheduler_e2e_duration_seconds_bucket[${__interval}])))\n",
+                  "unitOverride": "s"
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "p50",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "histogram_quantile(0.50, sum by(le) (rate(inference_extension_scheduler_e2e_duration_seconds_bucket[${__interval}])))\n",
+                  "unitOverride": "s"
                 }
               }
             ],
-            "thresholds": []
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
           }
         }
       },
       {
-        "yPos": 234,
-        "height": 30,
-        "width": 48,
+        "yPos": 163,
+        "xPos": 24,
+        "height": 15,
+        "width": 24,
         "widget": {
-          "title": "vLLM",
-          "collapsibleGroup": {
-            "collapsed": false
-          },
-          "id": ""
+          "title": "P99 Inference Extension Plugin Duration",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "histogram_quantile(0.99,sum by (\"plugin_type\",\"plugin_name\",\"extension_point\",\"le\")(increase({\"__name__\"=\"inference_extension_plugin_duration_seconds_bucket\"}[${__interval}])))",
+                  "unitOverride": "s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
         }
       },
       {
-        "yPos": 234,
-        "xPos": 16,
+        "yPos": 163,
+        "xPos": 24,
         "height": 15,
-        "width": 16,
+        "width": 24,
+        "widget": {
+          "title": "",
+          "id": "",
+          "singleViewGroup": {
+            "displayType": "DROPDOWN"
+          }
+        }
+      },
+      {
+        "yPos": 163,
+        "xPos": 24,
+        "height": 15,
+        "width": 24,
+        "widget": {
+          "title": "P95 Inference Extension Plugin Duration",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "histogram_quantile(0.95,sum by (\"plugin_type\",\"plugin_name\",\"extension_point\",\"le\")(increase({\"__name__\"=\"inference_extension_plugin_duration_seconds_bucket\"}[${__interval}])))",
+                  "unitOverride": "s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 163,
+        "xPos": 24,
+        "height": 15,
+        "width": 24,
+        "widget": {
+          "title": "P50 Inference Extension Plugin Duration",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "histogram_quantile(0.50,sum by (\"plugin_type\",\"plugin_name\",\"extension_point\",\"le\")(increase({\"__name__\"=\"inference_extension_plugin_duration_seconds_bucket\"}[${__interval}])))",
+                  "unitOverride": "s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 178,
+        "height": 3,
+        "width": 48,
+        "widget": {
+          "title": "vLLM",
+          "id": "",
+          "sectionHeader": {
+            "dividerBelow": true,
+            "subtitle": ""
+          }
+        }
+      },
+      {
+        "yPos": 181,
+        "height": 15,
+        "width": 48,
         "widget": {
           "title": "Request Latency",
           "id": "",
@@ -1827,11 +1752,20 @@
                 "dimensions": [],
                 "legendTemplate": "p99",
                 "measures": [],
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(vllm:e2e_request_latency_seconds_bucket[${__interval}])))",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"prometheus.googleapis.com/vllm:e2e_request_latency_seconds/histogram\" resource.type=\"prometheus_target\""
+                  },
                   "unitOverride": "s"
                 }
               },
@@ -1840,24 +1774,20 @@
                 "dimensions": [],
                 "legendTemplate": "p95",
                 "measures": [],
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.95, sum by(le) (rate(vllm:e2e_request_latency_seconds_bucket[${__interval}])))",
-                  "unitOverride": "s"
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p90",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.90, sum by(le) (rate(vllm:e2e_request_latency_seconds_bucket[${__interval}])))",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"prometheus.googleapis.com/vllm:e2e_request_latency_seconds/histogram\" resource.type=\"prometheus_target\""
+                  },
                   "unitOverride": "s"
                 }
               },
@@ -1866,11 +1796,20 @@
                 "dimensions": [],
                 "legendTemplate": "p50",
                 "measures": [],
+                "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.5, sum by(le) (rate(vllm:e2e_request_latency_seconds_bucket[${__interval}])))",
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                      "groupByFields": [],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"prometheus.googleapis.com/vllm:e2e_request_latency_seconds/histogram\" resource.type=\"prometheus_target\""
+                  },
                   "unitOverride": "s"
                 }
               }
@@ -1884,12 +1823,11 @@
         }
       },
       {
-        "yPos": 234,
-        "xPos": 32,
+        "yPos": 196,
         "height": 15,
         "width": 16,
         "widget": {
-          "title": "TPOT (Time Per Output Token Latency)",
+          "title": "P/D Pod Count",
           "id": "",
           "xyChart": {
             "chartOptions": {
@@ -1901,53 +1839,14 @@
               {
                 "breakdowns": [],
                 "dimensions": [],
-                "legendTemplate": "p99",
+                "legendTemplate": "",
                 "measures": [],
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(vllm:request_time_per_output_token_seconds_bucket[${__interval}])))",
-                  "unitOverride": "s"
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p95",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.95, sum by(le) (rate(vllm:request_time_per_output_token_seconds_bucket[${__interval}])))",
-                  "unitOverride": "s"
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p90",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.9, sum by(le) (rate(vllm:request_time_per_output_token_seconds_bucket[${__interval}])))",
-                  "unitOverride": "s"
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p50",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.5, sum by(le) (rate(vllm:request_time_per_output_token_seconds_bucket[${__interval}])))",
-                  "unitOverride": "s"
+                  "prometheusQuery": "(count by (cluster, role) ({\"__name__\"=\"vllm:generation_tokens_total\"}))",
+                  "unitOverride": ""
                 }
               }
             ],
@@ -1960,87 +1859,12 @@
         }
       },
       {
-        "yPos": 249,
-        "height": 15,
-        "width": 16,
-        "widget": {
-          "title": "TTFT (Time To First Token Latency)",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p99",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(vllm:time_to_first_token_seconds_bucket[${__interval}])))",
-                  "unitOverride": "s"
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p95",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.95, sum by(le) (rate(vllm:time_to_first_token_seconds_bucket[${__interval}])))",
-                  "unitOverride": "s"
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p90",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.9, sum by(le) (rate(vllm:time_to_first_token_seconds_bucket[${__interval}])))",
-                  "unitOverride": "s"
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "p50",
-                "measures": [],
-                "plotType": "LINE",
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.5, sum by(le) (rate(vllm:time_to_first_token_seconds_bucket[${__interval}])))",
-                  "unitOverride": "s"
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 249,
+        "yPos": 196,
         "xPos": 16,
         "height": 15,
         "width": 16,
         "widget": {
-          "title": "Prefix Cache Hit Total",
+          "title": "Generation Token Throughput",
           "id": "",
           "xyChart": {
             "chartOptions": {
@@ -2058,7 +1882,80 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "sum by (model_name,pod,cluster)(rate(vllm:prefix_cache_hits_total[${__interval}]))",
+                  "prometheusQuery": "sum by(role) (rate(vllm:generation_tokens_total[${__interval}]))",
+                  "unitOverride": "1/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 196,
+        "xPos": 32,
+        "height": 15,
+        "width": 16,
+        "widget": {
+          "title": "Input Token Throughput",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "sum by(role) (rate(vllm:prompt_tokens_total[${__interval}]))",
+                  "unitOverride": "1/s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 211,
+        "height": 15,
+        "width": 16,
+        "widget": {
+          "title": "Running Requests",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "sum by(role) (vllm:num_requests_running)\n",
                   "unitOverride": ""
                 }
               }
@@ -2072,12 +1969,12 @@
         }
       },
       {
-        "yPos": 249,
-        "xPos": 32,
+        "yPos": 211,
+        "xPos": 16,
         "height": 15,
         "width": 16,
         "widget": {
-          "title": "Prefix Cache Queries Total",
+          "title": "Requests Waiting",
           "id": "",
           "xyChart": {
             "chartOptions": {
@@ -2095,8 +1992,291 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "sum by (model_name,pod,cluster)(rate(vllm:prefix_cache_queries_total[${__interval}]))",
+                  "prometheusQuery": "sum by(role) (vllm:num_requests_waiting)\n",
                   "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 211,
+        "xPos": 32,
+        "height": 15,
+        "width": 16,
+        "widget": {
+          "title": "Prefix Cache Hit Rate",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "sum by (\"model_name\",\"role\")(rate({\"__name__\"=\"vllm:prefix_cache_hits_total\"}[5m]))\n/\nsum by (\"model_name\",\"role\")(rate({\"__name__\"=\"vllm:prefix_cache_queries_total\"}[5m]))",
+                  "unitOverride": "10^2.%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 226,
+        "height": 15,
+        "width": 16,
+        "widget": {
+          "title": "P99 KV Cache Usage",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "quantile by (\"role\")(0.99,avg_over_time({\"__name__\"=\"vllm:kv_cache_usage_perc\"}[${__interval}])) * 100",
+                  "unitOverride": "%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 226,
+        "height": 15,
+        "width": 16,
+        "widget": {
+          "title": "",
+          "id": "",
+          "singleViewGroup": {
+            "displayType": "DROPDOWN"
+          }
+        }
+      },
+      {
+        "yPos": 226,
+        "height": 15,
+        "width": 16,
+        "widget": {
+          "title": "P95 KV Cache Usage",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "quantile by (\"role\")(0.95,avg_over_time({\"__name__\"=\"vllm:kv_cache_usage_perc\"}[${__interval}])) * 100",
+                  "unitOverride": "%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 226,
+        "height": 15,
+        "width": 16,
+        "widget": {
+          "title": "P50 KV Cache Usage",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "quantile by (\"role\")(0.50,avg_over_time({\"__name__\"=\"vllm:kv_cache_usage_perc\"}[${__interval}])) * 100",
+                  "unitOverride": "%"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 226,
+        "xPos": 16,
+        "height": 15,
+        "width": 16,
+        "widget": {
+          "title": "Decode TTFT (Time To First Token Latency)",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "p99",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(vllm:time_to_first_token_seconds_bucket{role=\"decode\"}[${__interval}])))",
+                  "unitOverride": "s"
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "p95",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "histogram_quantile(0.95, sum by(le) (rate(vllm:time_to_first_token_seconds_bucket{role=\"decode\"}[${__interval}])))",
+                  "unitOverride": "s"
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "p50",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "histogram_quantile(0.50, sum by(le) (rate(vllm:time_to_first_token_seconds_bucket{role=\"decode\"}[${__interval}])))",
+                  "unitOverride": "s"
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 226,
+        "xPos": 32,
+        "height": 15,
+        "width": 16,
+        "widget": {
+          "title": "Decode TPOT(Time Per Output Token)",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "p99",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "histogram_quantile(0.99, sum by (le) (rate(vllm:time_per_output_token_seconds_bucket{role=\"decode\"}[${__interval}])))\n",
+                  "unitOverride": "s"
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "p95",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "histogram_quantile(0.95, sum by (le) (rate(vllm:time_per_output_token_seconds_bucket{role=\"decode\"}[${__interval}])))\n",
+                  "unitOverride": "s"
+                }
+              },
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "p50",
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "histogram_quantile(0.50, sum by (le) (rate(vllm:time_per_output_token_seconds_bucket{role=\"decode\"}[${__interval}])))\n",
+                  "unitOverride": "s"
                 }
               }
             ],
