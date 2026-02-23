@@ -34,27 +34,47 @@ Then apply the following filter to the sink to filter the correct logs:
 
 <summary><i>Log Sink Filter</i></summary>
 
-```
+```sql
 (
-    -- for OnHostMaintenanceTerminate
+    -- for recreating certain 1.35+ maintenance events needed for the context of a node's maintenance status
     resource.type="k8s_container"
+    log_id("stderr")
     resource.labels.container_name="maintenance-handler"
-    jsonPayload.message:"Handling maintenance event with state"
-) OR (
-    -- for maintenance window updates
-    resource.type="k8s_container"
-    sourceLocation.file="gceTerminationHandler.go"
-    jsonPayload.message=~"Handling scheduled maintenance event with state:"
-) OR (
-    -- for all other events not tied to maintenance window (excluding deprecated <1.35 events)
-    jsonPayload.kind="Event"
-    jsonPayload.source.component="NodeTerminationHandler"
-    -jsonPayload.reason="NodeMaintenanceScheduled"
-    -jsonPayload.reason="MaintenanceStarted"
-    -jsonPayload.reason="NoPendingMaintenance"
+    (
+        -- for OnHostMaintenanceTerminate
+        jsonPayload.message=~"Handling maintenance event with state"
+        -jsonPayload.message="Handling maintenance event with state: \"NONE\""
+    )
+    OR 
+    (
+        -- for maintenance window updates
+        jsonPayload.message=~"Handling scheduled maintenance event with state:"
+        -jsonPayload.message="Handling scheduled maintenance event with state: \"\\\"NONE\\\"\""
+    )
 )
--jsonPayload.message="Handling scheduled maintenance event with state: \"\\\"NONE\\\"\""
--jsonPayload.message="Handling maintenance event with state: \"NONE\""
+OR 
+(
+    -- for maintenance events emitted at the node-level
+    resource.type="k8s_node"
+    log_id("events")
+    (
+        -- for information on deleted nodes, which are excluded from dashboard
+        jsonPayload.reportingComponent="cloud-node-lifecycle-controller"
+        jsonPayload.reason="DeletingNode"
+    )
+    OR
+    (
+        -- for information on recreated nodes, which can indicate the return of a deleted node that needed maintenance
+        jsonPayload.reportingComponent="node-controller"
+        jsonPayload.reason="RegisteredNode"
+    )
+    OR
+    (
+        -- for all other maintenance handler events (excluding deprecated <1.35 events)
+        jsonPayload.source.component="NodeTerminationHandler"
+        -jsonPayload.reason=("NodeMaintenanceScheduled" OR "MaintenanceStarted" OR "NoPendingMaintenance")
+    )
+)
 ```
 
 </details>
@@ -82,12 +102,12 @@ WITH RawLogs AS (
   FROM
     `@__project_id.global._Default._Default`
   WHERE
-    -- resource.type is usually a STRING, but JSON_VALUE(resource.labels.container_name) is required
     resource.type = 'k8s_container' 
     AND JSON_VALUE(resource.labels.container_name) = 'maintenance-handler'
     AND (
-      JSON_VALUE(json_payload.message) LIKE 'Handling scheduled maintenance event with state:%'
-      OR JSON_VALUE(json_payload.message) LIKE 'Handling maintenance event with state:%'
+      (JSON_VALUE(json_payload.message) LIKE 'Handling scheduled maintenance event with state:%' AND JSON_VALUE(json_payload.message) NOT LIKE '%"NONE"%')
+      OR 
+      (JSON_VALUE(json_payload.message) LIKE 'Handling maintenance event with state:%' AND JSON_VALUE(json_payload.message) NOT LIKE '%"NONE"%')
     )
 ),
 
@@ -198,7 +218,7 @@ HandlerGeneratedEvents AS (
     ev IS NOT NULL
 ),
 
--- 6. Combine with standard Kubernetes events
+-- 6. Combine with standard Kubernetes events (Filtering by Component)
 KubernetesEvents AS (
   SELECT
     timestamp,
@@ -217,21 +237,32 @@ KubernetesEvents AS (
   WHERE
     resource.type = 'k8s_node'
     AND (
-      JSON_VALUE(json_payload.reason) = 'CustomerTriggeredMaintenance' OR
-      JSON_VALUE(json_payload.reason) = 'PodEvictionComplete'
+      JSON_VALUE(json_payload, '$.source.component') = 'NodeTerminationHandler'
+      OR JSON_VALUE(json_payload, '$.reportingComponent') = 'cloud-node-lifecycle-controller'
+      OR JSON_VALUE(json_payload, '$.reportingComponent') = 'node-controller'
+      OR JSON_VALUE(json_payload, '$.reason') IN ('CustomerTriggeredMaintenance', 'PodEvictionComplete')
     )
+    AND JSON_VALUE(json_payload, '$.reason') NOT IN ('NodeMaintenanceScheduled', 'MaintenanceStarted', 'NoPendingMaintenance')
 ),
 
--- 7. Normalize combined events
+-- 7. Normalize combined events and assign Precedence Ranks
 normalized_events AS (
   SELECT
     timestamp, node, reason, action, type, cluster, nodepool, zone, maintenance_start_time, maintenance_end_time,
     CASE
-     WHEN reason IN ('MaintenanceWindowScheduled', 'MaintenanceWindowRescheduled', 'CustomerTriggeredMaintenance') THEN 'PENDING' 
-     WHEN reason IN ('MaintenanceWindowStarted', 'TerminateOnHostMaintenance') THEN 'ONGOING' 
-     WHEN reason IN ('MaintenanceWindowCleared', 'MaintenanceWindowCancelled') THEN 'COMPLETE'
-     ELSE 'UNKNOWN'
-    END AS status
+      WHEN reason IN ('MaintenanceWindowCleared', 'MaintenanceWindowCancelled') THEN 'COMPLETE'
+      WHEN reason IN ('DeletingNode') THEN 'DELETED'
+      WHEN reason IN ('MaintenanceWindowStarted', 'TerminateOnHostMaintenance') THEN 'ONGOING' 
+      WHEN reason IN ('MaintenanceWindowScheduled', 'MaintenanceWindowRescheduled') THEN 'PENDING' 
+      ELSE 'UNKNOWN'
+    END AS status,
+    CASE
+      WHEN reason IN ('MaintenanceWindowCleared', 'MaintenanceWindowCancelled') THEN 1
+      WHEN reason IN ('DeletingNode') THEN 2
+      WHEN reason IN ('MaintenanceWindowStarted', 'TerminateOnHostMaintenance') THEN 3
+      WHEN reason IN ('MaintenanceWindowScheduled', 'MaintenanceWindowRescheduled') THEN 4
+      ELSE 5
+    END AS status_rank
   FROM (
     SELECT * FROM HandlerGeneratedEvents
     UNION ALL
@@ -239,17 +270,21 @@ normalized_events AS (
   )
 ),
 
--- 8. Identify cycle boundaries and assign counts
+-- 8. Identify cycle boundaries and assign counts safely ignoring UNKNOWNs
 flagged_cycles AS (
   SELECT
     *,
     CASE
       WHEN status IN ('PENDING', 'ONGOING')
-           AND LAG(status, 1, 'COMPLETE') OVER (PARTITION BY node ORDER BY timestamp) NOT IN ('PENDING', 'ONGOING')
+           AND COALESCE(
+                 -- skip over UNKNOWN rows and fetch the most recent valid status
+                 LAST_VALUE(CASE WHEN status != 'UNKNOWN' THEN status END IGNORE NULLS) 
+                   OVER (PARTITION BY node ORDER BY timestamp ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING), 
+                 'COMPLETE'
+               ) NOT IN ('PENDING', 'ONGOING')
       THEN 1 ELSE 0
     END AS is_new_cycle
   FROM normalized_events
-  WHERE status != 'UNKNOWN' and reason != 'PodEvictionComplete'
 ),
 
 events_with_counts AS (
@@ -263,7 +298,7 @@ distinct_events_ranked AS (
   SELECT
     e.cycle_count AS CycleCount, e.timestamp AS EventTime, e.reason AS Reason, e.action AS Action,
     e.type AS Type, e.maintenance_start_time AS MaintenanceStartTime, e.maintenance_end_time AS MaintenanceEndTime,
-    e.cluster AS Cluster, e.nodepool AS Nodepool, e.node AS Node, e.status AS Status, e.zone AS Zone,
+    e.cluster AS Cluster, e.nodepool AS Nodepool, e.node AS Node, e.status AS Status, e.status_rank, e.zone AS Zone,
     ROW_NUMBER() OVER (PARTITION BY e.node, e.cycle_count, e.reason ORDER BY e.timestamp DESC) AS row_num
   FROM events_with_counts e
 ),
@@ -288,30 +323,32 @@ FROM (
     Node,
     Cluster,
     Nodepool,
-    ARRAY_AGG(Type ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] AS Type,
-    ARRAY_AGG(MaintenanceStartTime ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] AS MaintenanceStartTime,
     
-    -- FIX: Use EventTime ONLY if status is COMPLETE. Otherwise, use Metadata End Time.
+    -- FIX: Ignore NULLs so trailing K8s events without metadata don't wipe out the cycle's state
+    ARRAY_AGG(Type IGNORE NULLS ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] AS Type,
+    ARRAY_AGG(MaintenanceStartTime IGNORE NULLS ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] AS MaintenanceStartTime,
+    
     CASE 
-      WHEN ARRAY_AGG(Status ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] = 'COMPLETE' 
-      THEN MAX(EventTime) 
-      ELSE ARRAY_AGG(MaintenanceEndTime ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)]
+      WHEN ARRAY_AGG(Status ORDER BY status_rank ASC, EventTime DESC LIMIT 1)[OFFSET(0)] = 'COMPLETE' 
+      THEN ARRAY_AGG(EventTime ORDER BY status_rank ASC, EventTime DESC LIMIT 1)[OFFSET(0)]
+      ELSE ARRAY_AGG(MaintenanceEndTime IGNORE NULLS ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)]
     END AS MaintenanceEndTime,
 
     ARRAY_AGG(STRUCT(EventTime, Reason, Type) ORDER BY EventTime ASC) AS Events,
-    ARRAY_AGG(Status ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] AS Status,
+    
+    ARRAY_AGG(Status ORDER BY status_rank ASC, EventTime DESC LIMIT 1)[OFFSET(0)] AS Status,
     LOGICAL_OR(Reason = 'CustomerTriggeredMaintenance') AS Is_CTM,
     
     -- VALID CYCLE DEFINITION
     (
-      ARRAY_AGG(Status ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] = 'COMPLETE' AND 
-      MAX(EventTime) >= ARRAY_AGG(MaintenanceStartTime ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)]
+      ARRAY_AGG(Status ORDER BY status_rank ASC, EventTime DESC LIMIT 1)[OFFSET(0)] = 'COMPLETE' AND 
+      MAX(EventTime) >= ARRAY_AGG(MaintenanceStartTime IGNORE NULLS ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)]
     ) AS is_valid_cycle,
 
     -- Get the EndTime of the most recent valid cycle
     LAG(CASE 
-          WHEN ARRAY_AGG(Status ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] = 'COMPLETE' AND 
-               MAX(EventTime) >= ARRAY_AGG(MaintenanceStartTime ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)]
+          WHEN ARRAY_AGG(Status ORDER BY status_rank ASC, EventTime DESC LIMIT 1)[OFFSET(0)] = 'COMPLETE' AND 
+               MAX(EventTime) >= ARRAY_AGG(MaintenanceStartTime IGNORE NULLS ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)]
           THEN MAX(EventTime) 
         END) OVER (PARTITION BY Node ORDER BY CycleCount) AS prev_valid_end_time
 
@@ -320,7 +357,8 @@ FROM (
   GROUP BY
     CycleCount, Cluster, Nodepool, Node
 )
-
+WHERE Status NOT IN ('DELETED', 'UNKNOWN')
+ORDER BY MaintenanceEndTime
 ```
 
 </details>
