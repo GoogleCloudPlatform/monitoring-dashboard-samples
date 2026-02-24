@@ -1,0 +1,27 @@
+### Dashboards for Cloud Operations agent for Google Cloud VMware Engine
+
+| GCVE OTEL Contention                                                                                                                                                                                                                                                       |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Filename: [gcve-otel-contention.json](gcve-otel-contention.json)                                                                                                                                                                                                           |
+| This dashboard has a variety of widgets and graphs that are split up into the sections for cluster, hosts and virtual machines to help identify resource allocation and distribution. Including such metrics as `Available Memory`, `CPU Usage`, `Memory Utilization` etc. |
+
+| GCVE OTEL Overview                                                                                                                                                                                                                    |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Filename: [gcve-otel-overview.json](gcve-otel-overview.json)                                                                                                                                                                          |
+| This dashboard includes several widgets focusing on getting a quick glance summary of a single cluster being monitored. This includes metrics like `Running VMs`, `Total VMs`, `CPU Utilization`, and `Network Throughput Bytes` etc. |
+
+| GCVE Virtual Machine Performance                                                                                                                                                                                                                                                                                 |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Filename: [gcve-otel-virtual-machine-performance.json](gcve-otel-virtual-machine-performance.json)                                                                                                                                                                                                               |
+| This sample dashboard focuses specifically on virtual machine metrics. Allowing users to filter via instance name to draw comparisons and summary of a given virtual machine. This includes key performance indicators like `CPU Usage`, `Memory Utilization`, `Network Throughput`, and `Disk Space Usage` etc. |
+
+| GCVE OTEL NSX-T Overview                                                                                                                                                                                                     |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Filename: [gcve-otel-nsxt.json](gcve-otel-nsxt.json)                                                                                                                                                                         |
+| This dashboard includes several widgets allowing users a quick summary of their NSX-T environments. This includes metrics like `Node CPU Usage`, `Node Memory Usage`, `Node Filesystem Usage`, and `Network Throughput` etc. |
+
+| GCVE OTEL OS Overview                                                                                                                                                                                                                                                                                     |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Filename: [gcve-otel-os-overview.json](gcve-otel-os-overview.json)                                                                                                                                                                                                                                        |
+| This sample dashboard focuses specifically on host machine metrics. Allowing users to gather information on the state of their machine. This includes key performance indicators like `CPU Utilization`, `Memory Utilization`, `Network Throughput`, `Filesystem Utilization`, and `Disk Throughput` etc. |
+
