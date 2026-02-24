@@ -25,3 +25,10 @@
 |:-------------------------|
 |Filename: [reservations-monitoring.json](reservations-monitoring.json)|
 |This dashboard enables you to visualize and monitor [local and shared reservation usage](https://cloud.google.com/compute/docs/instances/reservations-monitor) at the owner project level.|
+
+&nbsp;
+
+|GCE Maintenance Events Monitoring|
+|:-------------------------|
+|Filename: [maintenance-system-events.json](maintenance-system-events.json)|
+|This dashboard has charts displaying Log Analytics queries for Compute Engine Instance maintenance events, filterable by Machine Type.  See the [maintenance-system-events-setup.md](maintenance-system-events-setup.md) for setup instructions.|
