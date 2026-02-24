@@ -1,0 +1,263 @@
+{
+  "displayName": "Agent for SAP - Backint Metrics",
+  "dashboardFilters": [],
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "yPos": 8,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Backup Status",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance | metric 'workload.googleapis.com/sap/agent/backint/backup/status'",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 24,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Backup Throughput",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance | metric 'workload.googleapis.com/sap/agent/backint/backup/throughput'",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 8,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Restore Status",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance | metric 'workload.googleapis.com/sap/agent/backint/restore/status'",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 24,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Restore Throughput",
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "measures": [],
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesQueryLanguage": "fetch gce_instance | metric 'workload.googleapis.com/sap/agent/backint/restore/throughput'",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 40,
+        "width": 48,
+        "height": 32,
+        "widget": {
+          "title": "Backint Logs",
+          "logsPanel": {
+            "filter": "logName=~\"/logs/google-cloud-sap-agent-backint\"\n",
+            "resourceNames": []
+          }
+        }
+      },
+      {
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Backup Success Rate",
+          "scorecard": {
+            "dimensions": [],
+            "measures": [],
+            "thresholds": [
+              {
+                "color": "YELLOW",
+                "direction": "BELOW",
+                "label": "",
+                "value": 1
+              }
+            ],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "crossSeriesReducer": "REDUCE_MEAN",
+                  "groupByFields": [],
+                  "perSeriesAligner": "ALIGN_FRACTION_TRUE"
+                },
+                "filter": "metric.type=\"workload.googleapis.com/sap/agent/backint/backup/status\" resource.type=\"gce_instance\""
+              }
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Restore Success Rate",
+          "scorecard": {
+            "dimensions": [],
+            "measures": [],
+            "thresholds": [
+              {
+                "color": "YELLOW",
+                "direction": "BELOW",
+                "label": "",
+                "value": 1
+              }
+            ],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "crossSeriesReducer": "REDUCE_MEAN",
+                  "groupByFields": [],
+                  "perSeriesAligner": "ALIGN_FRACTION_TRUE"
+                },
+                "filter": "metric.type=\"workload.googleapis.com/sap/agent/backint/restore/status\" resource.type=\"gce_instance\""
+              }
+            }
+          }
+        }
+      },
+      {
+        "xPos": 12,
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Backup Average MBps",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "crossSeriesReducer": "REDUCE_MEAN",
+                  "groupByFields": [],
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"workload.googleapis.com/sap/agent/backint/backup/throughput\" resource.type=\"gce_instance\""
+              }
+            }
+          }
+        }
+      },
+      {
+        "xPos": 36,
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Restore Average MBps",
+          "scorecard": {
+            "blankView": {},
+            "thresholds": [],
+            "timeSeriesQuery": {
+              "outputFullDuration": true,
+              "timeSeriesFilter": {
+                "aggregation": {
+                  "alignmentPeriod": "60s",
+                  "crossSeriesReducer": "REDUCE_MEAN",
+                  "groupByFields": [],
+                  "perSeriesAligner": "ALIGN_MEAN"
+                },
+                "filter": "metric.type=\"workload.googleapis.com/sap/agent/backint/restore/throughput\" resource.type=\"gce_instance\""
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "labels": {}
+}
