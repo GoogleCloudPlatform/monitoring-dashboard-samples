@@ -13,8 +13,9 @@ This dashboard has charts for Gemini Code Assist using [Gemini for Google Cloud 
 - Click on 'Create Custom Dashboard'.
 - On the top right, click on the 'Settings' icon.
 - Under 'JSON' -> 'JSON Editor'
-- Copy the content of [this](https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples/blob/master/dashboards/google-gemini-code-assist/gemini-code-assist-overview-from-metadata-logs.json) file, replacing Project_ID with your own Project_ID.
-- Click on Apply changes.
+- Copy the content of [this](https://github.com/GoogleCloudPlatform/monitoring-dashboard-samples/blob/master/dashboards/google-gemini-code-assist/gemini-code-assist-overview-from-metadata-logs.json) file and paste it into the JSON Editor.
+- Click on 'Apply changes'.
+- At the top of the dashboard, use the **PROJECT_ID** filter to select your project.
 
 ### Considerations:
 - The dashboard contains daily metrics that must be viewed with a time window greater than one day.
