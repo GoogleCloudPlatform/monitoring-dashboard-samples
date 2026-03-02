@@ -66,7 +66,12 @@ We also need to create an analytics view for the dashboard to query against. In 
 <summary><i>SQL Query</i></summary>
 
 ```sql
--- 1. Extract raw logs from the maintenance-handler container
+-- =========================================================================================
+-- GKE MAINTENANCE ANALYTICS VIEW: STATE MACHINE LOGIC
+-- This query transforms stateless log entries into stateful maintenance cycles.
+-- =========================================================================================
+
+-- 1. EXTRACT RAW LOGS: Initial filtering of the maintenance-handler container logs.
 WITH RawLogs AS (
   SELECT
     timestamp,
@@ -75,18 +80,18 @@ WITH RawLogs AS (
     JSON_VALUE(resource.labels.location) AS zone,
     REGEXP_EXTRACT(JSON_VALUE(json_payload.message), r'Handling (?:scheduled )?maintenance event with state: "(.*)"') AS raw_state
   FROM
-    `PROJECT_ID.global.Inferred_MaintenanceEvents_Bucket._AllLogs` -- TODO: use your own project here
+    `@__project_id.global._Default._Default`
   WHERE
-    -- resource.type is usually a STRING, but JSON_VALUE(resource.labels.container_name) is required
     resource.type = 'k8s_container' 
     AND JSON_VALUE(resource.labels.container_name) = 'maintenance-handler'
     AND (
-      JSON_VALUE(json_payload.message) LIKE 'Handling scheduled maintenance event with state:%'
-      OR JSON_VALUE(json_payload.message) LIKE 'Handling maintenance event with state:%'
+      (JSON_VALUE(json_payload.message) LIKE 'Handling scheduled maintenance event with state:%' AND JSON_VALUE(json_payload.message) NOT LIKE '%"NONE"%')
+      OR 
+      (JSON_VALUE(json_payload.message) LIKE 'Handling maintenance event with state:%' AND JSON_VALUE(json_payload.message) NOT LIKE '%"NONE"%')
     )
 ),
 
--- 2. Determine if the event is a host maintenance termination
+-- 2. PRE-PARSE LOGS: Identify Host Maintenance Terminations in the GKE <1.35 case
 ParsedLogs AS (
   SELECT
     timestamp,
@@ -101,7 +106,7 @@ ParsedLogs AS (
   FROM RawLogs
 ),
 
--- 3. Parse JSON states into structured fields
+-- 3. STRUCTURED DATA: Extracting individual fields from the JSON blob.
 ParsedStates AS (
   SELECT
     timestamp,
@@ -117,20 +122,10 @@ ParsedStates AS (
   FROM ParsedLogs
 ),
 
--- 4. Calculate transitions to identify maintenance cycles
+-- 4. CALCULATE TRANSITIONS: The core of the state machine.
 StateTransitions AS (
   SELECT
-    timestamp,
-    node,
-    cluster,
-    zone,
-    state_json,
-    type,
-    status,
-    maintenance_start_time,
-    maintenance_end_time,
-    is_terminate_event,
-    
+    *,
     (state_json IS NOT NULL OR is_terminate_event) AS upcoming_maintenance,
     (state_json IS NOT NULL OR is_terminate_event) AND timestamp >= maintenance_start_time AS maintenance_ongoing,
     
@@ -140,17 +135,16 @@ StateTransitions AS (
     LAG(maintenance_start_time) OVER(PARTITION BY node ORDER BY timestamp) AS prev_maintenance_start_time,
     LAG(maintenance_end_time) OVER(PARTITION BY node ORDER BY timestamp) AS prev_maintenance_end_time,
     
-    COALESCE(LAG(state_json IS NOT NULL OR is_terminate_event) OVER(PARTITION BY node ORDER BY timestamp), FALSE) AS prev_upcoming_maintenance,
-    COALESCE(
+    LAG(state_json IS NOT NULL OR is_terminate_event) OVER(PARTITION BY node ORDER BY timestamp) AS prev_upcoming_maintenance,
+    (
       LAG(state_json IS NOT NULL OR is_terminate_event) OVER(PARTITION BY node ORDER BY timestamp) 
-      AND LAG(timestamp) OVER(PARTITION BY node ORDER BY timestamp) >= LAG(maintenance_start_time) OVER(PARTITION BY node ORDER BY timestamp), 
-      FALSE
+      AND LAG(timestamp) OVER(PARTITION BY node ORDER BY timestamp) >= LAG(maintenance_start_time) OVER(PARTITION BY node ORDER BY timestamp)
     ) AS prev_maintenance_ongoing
       
   FROM ParsedStates
 ),
 
--- 5. Generate discrete events from handler state transitions
+-- 5. SYNTHETIC EVENT GENERATION: Emits discrete events based on the logic of state transitions.
 HandlerGeneratedEvents AS (
   SELECT
     timestamp,
@@ -173,15 +167,15 @@ HandlerGeneratedEvents AS (
   FROM StateTransitions,
     UNNEST([
       CASE 
-        WHEN upcoming_maintenance AND NOT maintenance_ongoing AND NOT prev_upcoming_maintenance 
+        WHEN upcoming_maintenance AND NOT maintenance_ongoing AND COALESCE(prev_upcoming_maintenance, FALSE) = FALSE 
         THEN STRUCT('MaintenanceWindowScheduled' AS reason, 'Maintenance Pending' AS action) 
       END,
       CASE 
-        WHEN maintenance_ongoing AND NOT prev_maintenance_ongoing AND state_json IS NOT NULL
+        WHEN maintenance_ongoing AND COALESCE(prev_maintenance_ongoing, FALSE) = FALSE AND state_json IS NOT NULL
         THEN STRUCT('MaintenanceWindowStarted' AS reason, 'Maintenance Ongoing' AS action) 
       END,
       CASE 
-        WHEN NOT upcoming_maintenance AND prev_upcoming_maintenance 
+        WHEN NOT upcoming_maintenance AND COALESCE(prev_upcoming_maintenance, TRUE) = TRUE 
         THEN STRUCT('MaintenanceWindowCleared' AS reason, 'Complete' AS action) 
       END,
       CASE 
@@ -193,7 +187,7 @@ HandlerGeneratedEvents AS (
     ev IS NOT NULL
 ),
 
--- 6. Combine with standard Kubernetes events
+-- 6. KUBERNETES NATIVE EVENTS: Pulls events directly from the k8s_node event logs
 KubernetesEvents AS (
   SELECT
     timestamp,
@@ -201,32 +195,48 @@ KubernetesEvents AS (
     JSON_VALUE(json_payload, '$.action') AS action,
     JSON_VALUE(resource.labels, '$.node_name') AS node,
     JSON_VALUE(resource.labels, '$.cluster_name') AS cluster,
-    JSON_VALUE(json_payload, '$.metadata.annotations."maintenance.gke.io/nodepool-name"') AS nodepool,
+    
+    -- NULLIF on all annotation strings to prevent empty strings ("") from breaking logic
+    NULLIF(JSON_VALUE(json_payload, '$.metadata.annotations."maintenance.gke.io/nodepool-name"'), '') AS nodepool,
     JSON_VALUE(resource.labels, '$.location') AS zone,
-    JSON_VALUE(json_payload, '$.metadata.annotations."maintenance.gke.io/type"') AS type,
-    JSON_VALUE(json_payload, '$.metadata.annotations."maintenance.gke.io/status"') AS status,
-    SAFE_CAST(JSON_VALUE(json_payload, '$.metadata.annotations."maintenance.gke.io/maintenance-start-time"') AS TIMESTAMP) AS maintenance_start_time,
-    SAFE_CAST(JSON_VALUE(json_payload, '$.metadata.annotations."maintenance.gke.io/window-end-time"') AS TIMESTAMP) AS maintenance_end_time
+    NULLIF(JSON_VALUE(json_payload, '$.metadata.annotations."maintenance.gke.io/type"'), '') AS type,
+    NULLIF(JSON_VALUE(json_payload, '$.metadata.annotations."maintenance.gke.io/status"'), '') AS status,
+    
+    -- NULLIF chained to also catch empty strings and Go's '0001-01-01T00:00:00Z' zero-time
+    SAFE_CAST(NULLIF(NULLIF(JSON_VALUE(json_payload, '$.metadata.annotations."maintenance.gke.io/maintenance-start-time"'), ''), '0001-01-01T00:00:00Z') AS TIMESTAMP) AS maintenance_start_time,
+    SAFE_CAST(NULLIF(NULLIF(JSON_VALUE(json_payload, '$.metadata.annotations."maintenance.gke.io/window-end-time"'), ''), '0001-01-01T00:00:00Z') AS TIMESTAMP) AS maintenance_end_time
+    
   FROM
-   `PROJECT_ID.global.Inferred_MaintenanceEvents_Bucket._AllLogs` -- TODO: use your own project here
+    `@__project_id.global._Default._Default`
   WHERE
     resource.type = 'k8s_node'
     AND (
-      JSON_VALUE(json_payload.reason) = 'CustomerTriggeredMaintenance' OR
-      JSON_VALUE(json_payload.reason) = 'PodEvictionComplete'
+      JSON_VALUE(json_payload, '$.source.component') = 'NodeTerminationHandler'
+      OR JSON_VALUE(json_payload, '$.reportingComponent') = 'cloud-node-lifecycle-controller'
+      OR JSON_VALUE(json_payload, '$.reportingComponent') = 'node-controller'
+      OR JSON_VALUE(json_payload, '$.reason') IN ('CustomerTriggeredMaintenance', 'PodEvictionComplete', 'RegisteredNode', 'DeletingNode', 'RemovingNode', 'NodeNotReady')
     )
+    AND JSON_VALUE(json_payload, '$.reason') NOT IN ('NodeMaintenanceScheduled', 'MaintenanceStarted', 'NoPendingMaintenance')
 ),
 
--- 7. Normalize combined events
+-- 7. NORMALIZE & RANK: Combines both log sources and ranks the status.
 normalized_events AS (
   SELECT
     timestamp, node, reason, action, type, cluster, nodepool, zone, maintenance_start_time, maintenance_end_time,
     CASE
-     WHEN reason IN ('MaintenanceWindowScheduled', 'MaintenanceWindowRescheduled', 'CustomerTriggeredMaintenance') THEN 'PENDING' 
-     WHEN reason IN ('MaintenanceWindowStarted', 'TerminateOnHostMaintenance') THEN 'ONGOING' 
-     WHEN reason IN ('MaintenanceWindowCleared', 'MaintenanceWindowCancelled') THEN 'COMPLETE'
-     ELSE 'UNKNOWN'
-    END AS status
+      WHEN reason IN ('MaintenanceWindowCleared', 'MaintenanceWindowCancelled') THEN 'COMPLETE'
+      WHEN reason IN ('DeletingNode') THEN 'DELETED'
+      WHEN reason IN ('MaintenanceWindowStarted', 'TerminateOnHostMaintenance') THEN 'ONGOING' 
+      WHEN reason IN ('MaintenanceWindowScheduled', 'MaintenanceWindowRescheduled') THEN 'PENDING' 
+      ELSE 'UNKNOWN'
+    END AS status,
+    CASE
+      WHEN reason IN ('MaintenanceWindowCleared', 'MaintenanceWindowCancelled') THEN 1
+      WHEN reason IN ('DeletingNode') THEN 2
+      WHEN reason IN ('MaintenanceWindowStarted', 'TerminateOnHostMaintenance') THEN 3
+      WHEN reason IN ('MaintenanceWindowScheduled', 'MaintenanceWindowRescheduled') THEN 4
+      ELSE 5
+    END AS status_rank
   FROM (
     SELECT * FROM HandlerGeneratedEvents
     UNION ALL
@@ -234,19 +244,23 @@ normalized_events AS (
   )
 ),
 
--- 8. Identify cycle boundaries and assign counts
+-- 8. BOUNDARY DETECTION: Identifies when one maintenance cycle ends and a new one begins.
 flagged_cycles AS (
   SELECT
     *,
     CASE
       WHEN status IN ('PENDING', 'ONGOING')
-           AND LAG(status, 1, 'COMPLETE') OVER (PARTITION BY node ORDER BY timestamp) NOT IN ('PENDING', 'ONGOING')
+           AND COALESCE(
+                 LAST_VALUE(CASE WHEN status != 'UNKNOWN' THEN status END IGNORE NULLS) 
+                   OVER (PARTITION BY node ORDER BY timestamp ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING), 
+                 'COMPLETE'
+               ) NOT IN ('PENDING', 'ONGOING')
       THEN 1 ELSE 0
     END AS is_new_cycle
   FROM normalized_events
-  WHERE status != 'UNKNOWN' and reason != 'PodEvictionComplete'
 ),
 
+-- 9. ASSIGN CYCLE IDs: Generates a unique integer for each maintenance session per node.
 events_with_counts AS (
   SELECT
     *,
@@ -254,22 +268,24 @@ events_with_counts AS (
   FROM flagged_cycles
 ),
 
+-- 10. DEDUPLICATION: Ensures we only keep the latest instance of a reason within a cycle.
 distinct_events_ranked AS (
   SELECT
     e.cycle_count AS CycleCount, e.timestamp AS EventTime, e.reason AS Reason, e.action AS Action,
     e.type AS Type, e.maintenance_start_time AS MaintenanceStartTime, e.maintenance_end_time AS MaintenanceEndTime,
-    e.cluster AS Cluster, e.nodepool AS Nodepool, e.node AS Node, e.status AS Status, e.zone AS Zone,
+    e.cluster AS Cluster, e.nodepool AS Nodepool, e.node AS Node, e.status AS Status, e.status_rank, e.zone AS Zone,
     ROW_NUMBER() OVER (PARTITION BY e.node, e.cycle_count, e.reason ORDER BY e.timestamp DESC) AS row_num
   FROM events_with_counts e
 ),
 
+-- 11. CLEAN TABLE: Removes duplicates identified in the previous step.
 MaintenanceData_Distinct AS (
   SELECT * EXCEPT(row_num)
   FROM distinct_events_ranked
   WHERE row_num = 1
 )
 
--- 9. Final Aggregation & Inter-Cycle Calculation
+-- 12. FINAL AGGREGATION: Collapse all events for a cycle into a single summary row.
 SELECT
   * EXCEPT(prev_valid_end_time, is_valid_cycle),
   CASE 
@@ -282,34 +298,41 @@ FROM (
     CycleCount,
     Node,
     Cluster,
-    Nodepool,
-    ARRAY_AGG(Type ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] AS Type,
-    ARRAY_AGG(MaintenanceStartTime ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] AS MaintenanceStartTime,
-    MAX(EventTime) AS MaintenanceEndTime,
+    
+    ARRAY_AGG(Nodepool IGNORE NULLS ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] AS Nodepool,
+    ARRAY_AGG(Type IGNORE NULLS ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] AS Type,
+    ARRAY_AGG(MaintenanceStartTime IGNORE NULLS ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] AS MaintenanceStartTime,
+    
+    CASE 
+      WHEN ARRAY_AGG(Status ORDER BY status_rank ASC, EventTime DESC LIMIT 1)[OFFSET(0)] = 'COMPLETE' 
+      THEN ARRAY_AGG(EventTime ORDER BY status_rank ASC, EventTime DESC LIMIT 1)[OFFSET(0)]
+      ELSE ARRAY_AGG(MaintenanceEndTime IGNORE NULLS ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)]
+    END AS MaintenanceEndTime,
+
     ARRAY_AGG(STRUCT(EventTime, Reason, Type) ORDER BY EventTime ASC) AS Events,
-    ARRAY_AGG(Status ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] AS Status,
+    
+    ARRAY_AGG(Status ORDER BY status_rank ASC, EventTime DESC LIMIT 1)[OFFSET(0)] AS Status,
     LOGICAL_OR(Reason = 'CustomerTriggeredMaintenance') AS Is_CTM,
     
-    -- VALID CYCLE DEFINITION: 
-    -- 1. Status is COMPLETE
-    -- 2. Max(EventTime) is >= MaintenanceStartTime (Not cancelled early)
     (
-      ARRAY_AGG(Status ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] = 'COMPLETE' AND 
-      MAX(EventTime) >= ARRAY_AGG(MaintenanceStartTime ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)]
+      ARRAY_AGG(Status ORDER BY status_rank ASC, EventTime DESC LIMIT 1)[OFFSET(0)] = 'COMPLETE' AND 
+      MAX(EventTime) >= ARRAY_AGG(MaintenanceStartTime IGNORE NULLS ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)]
     ) AS is_valid_cycle,
 
-    -- Get the EndTime of the most recent valid cycle before this one
     LAG(CASE 
-          WHEN ARRAY_AGG(Status ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)] = 'COMPLETE' AND 
-               MAX(EventTime) >= ARRAY_AGG(MaintenanceStartTime ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)]
+          WHEN ARRAY_AGG(Status ORDER BY status_rank ASC, EventTime DESC LIMIT 1)[OFFSET(0)] = 'COMPLETE' AND 
+               MAX(EventTime) >= ARRAY_AGG(MaintenanceStartTime IGNORE NULLS ORDER BY EventTime DESC LIMIT 1)[OFFSET(0)]
           THEN MAX(EventTime) 
         END) OVER (PARTITION BY Node ORDER BY CycleCount) AS prev_valid_end_time
 
   FROM
     MaintenanceData_Distinct
   GROUP BY
-    CycleCount, Cluster, Nodepool, Node
+    CycleCount, Cluster, Node
 )
+
+WHERE Status NOT IN ('DELETED', 'UNKNOWN') AND Type IS NOT NULL 
+ORDER BY MaintenanceEndTime
 ```
 
 </details>
