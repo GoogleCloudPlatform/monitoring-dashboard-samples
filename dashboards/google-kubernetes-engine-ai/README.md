@@ -80,7 +80,7 @@ WITH RawLogs AS (
     JSON_VALUE(resource.labels.location) AS zone,
     REGEXP_EXTRACT(JSON_VALUE(json_payload.message), r'Handling (?:scheduled )?maintenance event with state: "(.*)"') AS raw_state
   FROM
-    `@__project_id.global._Default._Default`
+    `@__project_id.global.GKE_MaintenanceData_Bucket._AllLogs`
   WHERE
     resource.type = 'k8s_container' 
     AND JSON_VALUE(resource.labels.container_name) = 'maintenance-handler'
@@ -207,7 +207,7 @@ KubernetesEvents AS (
     SAFE_CAST(NULLIF(NULLIF(JSON_VALUE(json_payload, '$.metadata.annotations."maintenance.gke.io/window-end-time"'), ''), '0001-01-01T00:00:00Z') AS TIMESTAMP) AS maintenance_end_time
     
   FROM
-    `@__project_id.global._Default._Default`
+    `@__project_id.global.GKE_MaintenanceData_Bucket._AllLogs`
   WHERE
     resource.type = 'k8s_node'
     AND (
