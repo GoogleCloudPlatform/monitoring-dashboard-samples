@@ -56,6 +56,13 @@
 
 &nbsp;
 
+|GKE DNS Observability - Cluster View|
+|:---------------------|
+|Filename: [gke-dns-observability-cluster-flows-overview.json](gke-dns-observability-cluster-flows-overview.json)|
+|This dashboard provides 6 charts with overview data about the KubeDNS traffic in your GKE cluster. Including KubeDNS requests, KubeDNS request latency, KubeDNS upstream requests, KubeDNS upstream request latency, KubeDNS max concurrent drops, KubeDNS Cache hits/misses.|
+
+&nbsp;
+
 |GKE DPv2 Observability - Cluster Flows Overview|
 |:---------------------|
 |Filename: [gke-dpv2-observability-cluster-flows-overview.json](gke-dpv2-observability-cluster-flows-overview.json)|
