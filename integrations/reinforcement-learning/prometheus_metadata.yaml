@@ -1,0 +1,27 @@
+platforms:
+  - type: GKE
+    launch_stage: HIDDEN
+    version: 1
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/rl.loop.duration/histogram
+    exporter_metadata:
+      name: OpenTelemetry
+      doc_url: https://opentelemetry.io/docs/specs/semconv/
+    default_metrics:
+      - name: prometheus.googleapis.com/rl.loop.duration/histogram
+        prometheus_name: rl.loop.duration
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/rl.environment.reward.mean/gauge
+        prometheus_name: rl.environment.reward.mean
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/rl.train.loss/gauge
+        prometheus_name: rl.train.loss
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/rl.train.mfu/histogram
+        prometheus_name: rl.train.mfu
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
