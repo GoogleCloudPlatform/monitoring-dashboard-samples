@@ -1,0 +1,53 @@
+platforms:
+  - type: GKE
+    launch_stage: HIDDEN
+    version: 1
+    detections:
+      - characteristic_metric:
+          metric_type: prometheus.googleapis.com/rl.loop.duration/histogram
+    exporter_metadata:
+      name: OpenTelemetry
+      doc_url: https://opentelemetry.io/docs/specs/semconv/
+    default_metrics:
+      - name: prometheus.googleapis.com/rl.loop.duration/histogram
+        prometheus_name: rl.loop.duration
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/rl.environment.reward.mean/gauge
+        prometheus_name: rl.environment.reward.mean
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/rl.train.loss/gauge
+        prometheus_name: rl.train.loss
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/rl.train.mfu/gauge
+        prometheus_name: rl.train.mfu
+        kind: GAUGE
+        value_type: DOUBLE
+      # Duration Breakdowns
+      - name: prometheus.googleapis.com/rl.train.duration/histogram
+        prometheus_name: rl.train.duration
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/rl.sync.duration/histogram
+        prometheus_name: rl.sync.duration
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/rl.sample.duration/histogram
+        prometheus_name: rl.sample.duration
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      - name: prometheus.googleapis.com/rl.reward.duration/histogram
+        prometheus_name: rl.reward.duration
+        kind: CUMULATIVE
+        value_type: DISTRIBUTION
+      # Throughput
+      - name: prometheus.googleapis.com/rl.samples.rate/gauge
+        prometheus_name: rl.samples.rate
+        kind: GAUGE
+        value_type: DOUBLE
+      - name: prometheus.googleapis.com/rl.tokens.rate/gauge
+        prometheus_name: rl.tokens.rate
+        kind: GAUGE
+        value_type: DOUBLE
