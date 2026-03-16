@@ -1,6 +1,12 @@
 {
   "displayName": "Gemini Code Assist Overview from Metadata Logs",
-  "dashboardFilters": [],
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "project_id",
+      "templateVariable": "PROJECT_ID"
+    }
+  ],
   "labels": {},
   "mosaicLayout": {
     "columns": 48,
@@ -49,7 +55,7 @@
                     },
                     "queryHandle": "",
                     "savedQueryId": "",
-                    "sql": "SELECT\n COUNT (DISTINCT JSON_VALUE(labels, '$.user_id')) as DAU, CAST(timestamp AS DATE) AS event_date\nFROM\n `PROJECT_ID.global._Default._Default`\nWHERE\n JSON_VALUE(labels, '$.user_id') is not NULL\n AND (\n   JSON_VALUE(json_payload, '$.chatExposure.originalRequestId') is not NULL\n   OR JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') is not NULL\n   OR JSON_VALUE(json_payload, '$.codeExposure.originalRequestId') is not NULL\n )\n AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\nevent_date\nORDER BY\nevent_date\n"
+                    "sql": "SELECT\n COUNT (DISTINCT JSON_VALUE(labels, '$.user_id')) as DAU, CAST(timestamp AS DATE) AS event_date\nFROM\n `@PROJECT_ID.global._Default._Default`\nWHERE\n JSON_VALUE(labels, '$.user_id') is not NULL\n AND (\n   JSON_VALUE(json_payload, '$.chatExposure.originalRequestId') is not NULL\n   OR JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') is not NULL\n   OR JSON_VALUE(json_payload, '$.codeExposure.originalRequestId') is not NULL\n )\n AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\nevent_date\nORDER BY\nevent_date\n"
                   },
                   "outputFullDuration": false,
                   "unitOverride": ""
@@ -109,7 +115,7 @@
                     },
                     "queryHandle": "",
                     "savedQueryId": "",
-                    "sql": "SELECT\nexposures_date,\nacceptances_count / exposures_count as acceptance_rate\nFROM\n(\nSELECT\nCOUNT (DISTINCT JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId')) as acceptances_count, CAST(timestamp AS DATE) AS acceptances_date\nFROM\n`PROJECT_ID.global._Default._Default`\nWHERE\nJSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') is not NULL \nAND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\nacceptances_date\n) as acceptances\nJOIN\n(\nSELECT\nCOUNT (DISTINCT JSON_VALUE(json_payload, '$.codeExposure.originalRequestId')) as exposures_count, CAST(timestamp AS DATE) AS exposures_date\nFROM\n`PROJECT_ID.global._Default._Default`\nWHERE\nJSON_VALUE(json_payload, '$.codeExposure.originalRequestId') is not NULL\nAND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\nexposures_date\n) as exposures\nON\nexposures.exposures_date = acceptances.acceptances_date\nORDER BY\nexposures_date ASC"
+                    "sql": "SELECT\nexposures_date,\nacceptances_count / exposures_count as acceptance_rate\nFROM\n(\nSELECT\nCOUNT (DISTINCT JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId')) as acceptances_count, CAST(timestamp AS DATE) AS acceptances_date\nFROM\n`@PROJECT_ID.global._Default._Default`\nWHERE\nJSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') is not NULL \nAND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\nacceptances_date\n) as acceptances\nJOIN\n(\nSELECT\nCOUNT (DISTINCT JSON_VALUE(json_payload, '$.codeExposure.originalRequestId')) as exposures_count, CAST(timestamp AS DATE) AS exposures_date\nFROM\n`@PROJECT_ID.global._Default._Default`\nWHERE\nJSON_VALUE(json_payload, '$.codeExposure.originalRequestId') is not NULL\nAND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\nexposures_date\n) as exposures\nON\nexposures.exposures_date = acceptances.acceptances_date\nORDER BY\nexposures_date ASC"
                   },
                   "outputFullDuration": false,
                   "unitOverride": ""
@@ -169,7 +175,7 @@
                     },
                     "queryHandle": "",
                     "savedQueryId": "",
-                    "sql": "SELECT\n  COUNT (DISTINCT JSON_VALUE(json_payload, '$.codeExposure.originalRequestId')) as exposures_count, CAST(timestamp AS DATE) AS exposures_date\nFROM\n  `PROJECT_ID.global._Default._Default`\nWHERE\n  JSON_VALUE(json_payload, '$.codeExposure.originalRequestId') is not NULL\n  AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\n  exposures_date\nORDER BY\n  exposures_date\n"
+                    "sql": "SELECT\n  COUNT (DISTINCT JSON_VALUE(json_payload, '$.codeExposure.originalRequestId')) as exposures_count, CAST(timestamp AS DATE) AS exposures_date\nFROM\n  `@PROJECT_ID.global._Default._Default`\nWHERE\n  JSON_VALUE(json_payload, '$.codeExposure.originalRequestId') is not NULL\n  AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\n  exposures_date\nORDER BY\n  exposures_date\n"
                   },
                   "outputFullDuration": false,
                   "unitOverride": ""
@@ -230,7 +236,7 @@
                     },
                     "queryHandle": "",
                     "savedQueryId": "",
-                    "sql": "SELECT\n  COUNT (DISTINCT JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId')) as acceptances_count, CAST(timestamp AS DATE) AS acceptances_date\nFROM\n  `PROJECT_ID.global._Default._Default`\nWHERE\n  JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') is not NULL\n  AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\n  acceptances_date\nORDER BY\n  acceptances_date\n"
+                    "sql": "SELECT\n  COUNT (DISTINCT JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId')) as acceptances_count, CAST(timestamp AS DATE) AS acceptances_date\nFROM\n  `@PROJECT_ID.global._Default._Default`\nWHERE\n  JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') is not NULL\n  AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\n  acceptances_date\nORDER BY\n  acceptances_date\n"
                   },
                   "outputFullDuration": false,
                   "unitOverride": ""
@@ -290,7 +296,7 @@
                     },
                     "queryHandle": "",
                     "savedQueryId": "",
-                    "sql": "SELECT\n SUM(lines) as lines_count,\n CAST(max_timestamp AS DATE) AS line_count_day\nFROM\n(\n SELECT\n   JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') as request_id,\n   MAX(CAST(JSON_VALUE(json_payload, '$.codeAcceptance.linesCount') AS INT)) as lines,\n   MAX(timestamp) as max_timestamp\n FROM\n   `PROJECT_ID.global._Default._Default`\n WHERE\n   JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') is not NULL\n   AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\n GROUP BY\n   request_id\n )\nGROUP BY\n line_count_day\nORDER BY\n line_count_day"
+                    "sql": "SELECT\n SUM(lines) as lines_count,\n CAST(max_timestamp AS DATE) AS line_count_day\nFROM\n(\n SELECT\n   JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') as request_id,\n   MAX(CAST(JSON_VALUE(json_payload, '$.codeAcceptance.linesCount') AS INT)) as lines,\n   MAX(timestamp) as max_timestamp\n FROM\n   `@PROJECT_ID.global._Default._Default`\n WHERE\n   JSON_VALUE(json_payload, '$.codeAcceptance.originalRequestId') is not NULL\n   AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\n GROUP BY\n   request_id\n )\nGROUP BY\n line_count_day\nORDER BY\n line_count_day"
                   },
                   "outputFullDuration": false,
                   "unitOverride": ""
@@ -351,7 +357,7 @@
                     },
                     "queryHandle": "",
                     "savedQueryId": "",
-                    "sql": "SELECT\n COUNT (DISTINCT JSON_VALUE(json_payload, '$.chatExposure.originalRequestId')) as chat_exposures_count, CAST(timestamp AS DATE) AS chat_exposures_date\nFROM\n   `PROJECT_ID.global._Default._Default`\nWHERE\n JSON_VALUE(json_payload, '$.chatExposure.originalRequestId') is not NULL\n AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\n chat_exposures_date\nORDER BY\n chat_exposures_date"
+                    "sql": "SELECT\n COUNT (DISTINCT JSON_VALUE(json_payload, '$.chatExposure.originalRequestId')) as chat_exposures_count, CAST(timestamp AS DATE) AS chat_exposures_date\nFROM\n   `@PROJECT_ID.global._Default._Default`\nWHERE\n JSON_VALUE(json_payload, '$.chatExposure.originalRequestId') is not NULL\n AND resource.type = \"cloudaicompanion.googleapis.com/Instance\"\nGROUP BY\n chat_exposures_date\nORDER BY\n chat_exposures_date"
                   },
                   "outputFullDuration": false,
                   "unitOverride": ""
