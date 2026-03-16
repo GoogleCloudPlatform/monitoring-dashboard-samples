@@ -563,7 +563,7 @@
                 "tableTemplate": "",
                 "timeSeriesQuery": {
                   "outputFullDuration": true,
-                  "prometheusQuery": "(\nsum by (\n  \"pod_name\", \n  \"slice_id\", \n  \"worker_id\", \n  \"metadata_system_node_name\",\n  \"metadata_user_jobset.sigs.k8s.io/restart-attempt\",\n  \"metadata_user_jobset.sigs.k8s.io/jobset-name\",\n) (\n  label_replace(\n    label_replace(\n        avg_over_time({\"__name__\"=\"kubernetes.io/container/cpu/request_cores\",\"monitored_resource\"=\"k8s_container\",\"cluster_name\"=\"akshu-mps-v6e4\",\"metadata_user_jobset.sigs.k8s.io/jobset-name\"=\"isc-akshu-cluster-1\"}[${__interval}]),\n      \"slice_id\", \"$1\", \"pod_name\", \".*-(.*)-.*-.*\"\n    ),\n    \"worker_id\", \"$1\", \"pod_name\", \".*-.*-(.*)-.*\"\n  )\n)\n)",
+                  "prometheusQuery": "(\nsum by (\n  \"pod_name\", \n  \"slice_id\", \n  \"worker_id\", \n  \"metadata_system_node_name\",\n  \"metadata_user_jobset.sigs.k8s.io/restart-attempt\",\n  \"metadata_user_jobset.sigs.k8s.io/jobset-name\",\n) (\n  label_replace(\n    label_replace(\n        avg_over_time({\"__name__\"=\"kubernetes.io/container/cpu/request_cores\",\"monitored_resource\"=\"k8s_container\",\"cluster_name\"='${cluster.value}',\"metadata_user_jobset.sigs.k8s.io/jobset-name\"='${jobset_name.value}'}[${__interval}]),\n      \"slice_id\", \"$1\", \"pod_name\", \".*-(.*)-.*-.*\"\n    ),\n    \"worker_id\", \"$1\", \"pod_name\", \".*-.*-(.*)-.*\"\n  )\n)\n)",
                   "unitOverride": ""
                 }
               }
