@@ -58,8 +58,8 @@
 
 |GKE DNS Observability - Cluster View|
 |:---------------------|
-|Filename: [gke-dns-observability-cluster-flows-overview.json](gke-dns-observability-cluster-flows-overview.json)|
-|This dashboard provides 6 charts with overview data about the KubeDNS traffic in your GKE cluster. Including KubeDNS requests, KubeDNS request latency, KubeDNS upstream requests, KubeDNS upstream request latency, KubeDNS max concurrent drops, KubeDNS Cache hits/misses.|
+|Filename: [gke-dns-observability-cluster-view.json](gke-dns-observability-cluster-view.json)|
+|This dashboard features 6 charts each for KubeDNS and NodeLocalDNS traffic in your GKE cluster. For both DNS you can monitor: requests, request latency, upstream requests, upstream request latency, max concurrent drops, KubeDNS Cache hits/misses.|
 
 &nbsp;
 
