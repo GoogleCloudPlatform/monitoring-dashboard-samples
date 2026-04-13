@@ -4,9 +4,11 @@
         {
             "filterType": "RESOURCE_LABEL",
             "labelKey": "query_job_id",
+            "templateVariable": "",
             "valueType": "STRING_ARRAY"
         }
     ],
+    "description": "",
     "labels": {},
     "mosaicLayout": {
         "columns": 48,
@@ -33,10 +35,11 @@
                 }
             },
             {
+                "yPos": 6,
                 "height": 16,
                 "width": 24,
                 "widget": {
-                    "title": "Instance CPU utilization",
+                    "title": "p50",
                     "id": "",
                     "xyChart": {
                         "chartOptions": {
@@ -51,15 +54,22 @@
                                 "legendTemplate": "",
                                 "measures": [],
                                 "minAlignmentPeriod": "60s",
-                                "plotType": "HEATMAP",
+                                "plotType": "LINE",
+                                "sort": [],
                                 "targetAxis": "Y1",
                                 "timeSeriesQuery": {
                                     "outputFullDuration": false,
                                     "timeSeriesFilter": {
                                         "aggregation": {
                                             "alignmentPeriod": "60s",
-                                            "crossSeriesReducer": "REDUCE_SUM",
-                                            "groupByFields": [],
+                                            "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                                            "groupByFields": [
+                                                "resource.label.\"project_id\"",
+                                                "resource.label.\"routine_project_id\"",
+                                                "resource.label.\"routine_dataset_id\"",
+                                                "resource.label.\"routine_id\"",
+                                                "resource.label.\"location\""
+                                            ],
                                             "perSeriesAligner": "ALIGN_DELTA"
                                         },
                                         "filter": "metric.type=\"bigquery.googleapis.com/managed_routine/python/cpu_utilizations\" resource.type=\"bigquery.googleapis.com/ManagedRoutineInvocation\""
@@ -69,6 +79,7 @@
                             }
                         ],
                         "thresholds": [],
+                        "timeshiftDuration": "0s",
                         "yAxis": {
                             "label": "",
                             "scale": "LINEAR"
@@ -77,11 +88,23 @@
                 }
             },
             {
-                "xPos": 24,
+                "yPos": 6,
                 "height": 16,
                 "width": 24,
                 "widget": {
-                    "title": "Instance memory utilization",
+                    "title": "Instance CPU utilization",
+                    "id": "",
+                    "singleViewGroup": {
+                        "displayType": "TAB"
+                    }
+                }
+            },
+            {
+                "yPos": 6,
+                "height": 16,
+                "width": 24,
+                "widget": {
+                    "title": "p95",
                     "id": "",
                     "xyChart": {
                         "chartOptions": {
@@ -96,15 +119,129 @@
                                 "legendTemplate": "",
                                 "measures": [],
                                 "minAlignmentPeriod": "60s",
-                                "plotType": "HEATMAP",
+                                "plotType": "LINE",
+                                "sort": [],
                                 "targetAxis": "Y1",
                                 "timeSeriesQuery": {
                                     "outputFullDuration": false,
                                     "timeSeriesFilter": {
                                         "aggregation": {
                                             "alignmentPeriod": "60s",
-                                            "crossSeriesReducer": "REDUCE_SUM",
-                                            "groupByFields": [],
+                                            "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                                            "groupByFields": [
+                                                "resource.label.\"project_id\"",
+                                                "resource.label.\"routine_project_id\"",
+                                                "resource.label.\"routine_dataset_id\"",
+                                                "resource.label.\"routine_id\"",
+                                                "resource.label.\"location\""
+                                            ],
+                                            "perSeriesAligner": "ALIGN_DELTA"
+                                        },
+                                        "filter": "metric.type=\"bigquery.googleapis.com/managed_routine/python/cpu_utilizations\" resource.type=\"bigquery.googleapis.com/ManagedRoutineInvocation\""
+                                    },
+                                    "unitOverride": ""
+                                }
+                            }
+                        ],
+                        "thresholds": [],
+                        "timeshiftDuration": "0s",
+                        "yAxis": {
+                            "label": "",
+                            "scale": "LINEAR"
+                        }
+                    }
+                }
+            },
+            {
+                "yPos": 6,
+                "height": 16,
+                "width": 24,
+                "widget": {
+                    "title": "p99",
+                    "id": "",
+                    "xyChart": {
+                        "chartOptions": {
+                            "displayHorizontal": false,
+                            "mode": "COLOR",
+                            "showLegend": false
+                        },
+                        "dataSets": [
+                            {
+                                "breakdowns": [],
+                                "dimensions": [],
+                                "legendTemplate": "",
+                                "measures": [],
+                                "minAlignmentPeriod": "60s",
+                                "plotType": "LINE",
+                                "sort": [],
+                                "targetAxis": "Y1",
+                                "timeSeriesQuery": {
+                                    "outputFullDuration": false,
+                                    "timeSeriesFilter": {
+                                        "aggregation": {
+                                            "alignmentPeriod": "60s",
+                                            "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                                            "groupByFields": [
+                                                "resource.label.\"project_id\"",
+                                                "resource.label.\"routine_project_id\"",
+                                                "resource.label.\"routine_dataset_id\"",
+                                                "resource.label.\"routine_id\"",
+                                                "resource.label.\"location\""
+                                            ],
+                                            "perSeriesAligner": "ALIGN_DELTA"
+                                        },
+                                        "filter": "metric.type=\"bigquery.googleapis.com/managed_routine/python/cpu_utilizations\" resource.type=\"bigquery.googleapis.com/ManagedRoutineInvocation\""
+                                    },
+                                    "unitOverride": ""
+                                }
+                            }
+                        ],
+                        "thresholds": [],
+                        "timeshiftDuration": "0s",
+                        "yAxis": {
+                            "label": "",
+                            "scale": "LINEAR"
+                        }
+                    }
+                }
+            },
+            {
+                "yPos": 6,
+                "xPos": 24,
+                "height": 16,
+                "width": 24,
+                "widget": {
+                    "title": "p50",
+                    "id": "",
+                    "xyChart": {
+                        "chartOptions": {
+                            "displayHorizontal": false,
+                            "mode": "COLOR",
+                            "showLegend": false
+                        },
+                        "dataSets": [
+                            {
+                                "breakdowns": [],
+                                "dimensions": [],
+                                "legendTemplate": "",
+                                "measures": [],
+                                "minAlignmentPeriod": "60s",
+                                "plotType": "LINE",
+                                "sort": [],
+                                "targetAxis": "Y1",
+                                "timeSeriesQuery": {
+                                    "outputFullDuration": false,
+                                    "timeSeriesFilter": {
+                                        "aggregation": {
+                                            "alignmentPeriod": "60s",
+                                            "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                                            "groupByFields": [
+                                                "resource.label.\"project_id\"",
+                                                "resource.label.\"routine_project_id\"",
+                                                "resource.label.\"routine_dataset_id\"",
+                                                "resource.label.\"routine_id\"",
+                                                "resource.label.\"location\""
+                                            ],
                                             "perSeriesAligner": "ALIGN_DELTA"
                                         },
                                         "filter": "metric.type=\"bigquery.googleapis.com/managed_routine/python/memory_utilizations\" resource.type=\"bigquery.googleapis.com/ManagedRoutineInvocation\""
@@ -114,6 +251,299 @@
                             }
                         ],
                         "thresholds": [],
+                        "timeshiftDuration": "0s",
+                        "yAxis": {
+                            "label": "",
+                            "scale": "LINEAR"
+                        }
+                    }
+                }
+            },
+            {
+                "yPos": 6,
+                "xPos": 24,
+                "height": 16,
+                "width": 24,
+                "widget": {
+                    "title": "Instance memory utilization",
+                    "id": "",
+                    "singleViewGroup": {
+                        "displayType": "TAB"
+                    }
+                }
+            },
+            {
+                "yPos": 6,
+                "xPos": 24,
+                "height": 16,
+                "width": 24,
+                "widget": {
+                    "title": "p95",
+                    "id": "",
+                    "xyChart": {
+                        "chartOptions": {
+                            "displayHorizontal": false,
+                            "mode": "COLOR",
+                            "showLegend": false
+                        },
+                        "dataSets": [
+                            {
+                                "breakdowns": [],
+                                "dimensions": [],
+                                "legendTemplate": "",
+                                "measures": [],
+                                "minAlignmentPeriod": "60s",
+                                "plotType": "LINE",
+                                "sort": [],
+                                "targetAxis": "Y1",
+                                "timeSeriesQuery": {
+                                    "outputFullDuration": false,
+                                    "timeSeriesFilter": {
+                                        "aggregation": {
+                                            "alignmentPeriod": "60s",
+                                            "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                                            "groupByFields": [
+                                                "resource.label.\"project_id\"",
+                                                "resource.label.\"routine_project_id\"",
+                                                "resource.label.\"routine_dataset_id\"",
+                                                "resource.label.\"routine_id\"",
+                                                "resource.label.\"location\""
+                                            ],
+                                            "perSeriesAligner": "ALIGN_DELTA"
+                                        },
+                                        "filter": "metric.type=\"bigquery.googleapis.com/managed_routine/python/memory_utilizations\" resource.type=\"bigquery.googleapis.com/ManagedRoutineInvocation\""
+                                    },
+                                    "unitOverride": ""
+                                }
+                            }
+                        ],
+                        "thresholds": [],
+                        "timeshiftDuration": "0s",
+                        "yAxis": {
+                            "label": "",
+                            "scale": "LINEAR"
+                        }
+                    }
+                }
+            },
+            {
+                "yPos": 6,
+                "xPos": 24,
+                "height": 16,
+                "width": 24,
+                "widget": {
+                    "title": "p99",
+                    "id": "",
+                    "xyChart": {
+                        "chartOptions": {
+                            "displayHorizontal": false,
+                            "mode": "COLOR",
+                            "showLegend": false
+                        },
+                        "dataSets": [
+                            {
+                                "breakdowns": [],
+                                "dimensions": [],
+                                "legendTemplate": "",
+                                "measures": [],
+                                "minAlignmentPeriod": "60s",
+                                "plotType": "LINE",
+                                "sort": [],
+                                "targetAxis": "Y1",
+                                "timeSeriesQuery": {
+                                    "outputFullDuration": false,
+                                    "timeSeriesFilter": {
+                                        "aggregation": {
+                                            "alignmentPeriod": "60s",
+                                            "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                                            "groupByFields": [
+                                                "resource.label.\"project_id\"",
+                                                "resource.label.\"routine_project_id\"",
+                                                "resource.label.\"routine_dataset_id\"",
+                                                "resource.label.\"routine_id\"",
+                                                "resource.label.\"location\""
+                                            ],
+                                            "perSeriesAligner": "ALIGN_DELTA"
+                                        },
+                                        "filter": "metric.type=\"bigquery.googleapis.com/managed_routine/python/memory_utilizations\" resource.type=\"bigquery.googleapis.com/ManagedRoutineInvocation\""
+                                    },
+                                    "unitOverride": ""
+                                }
+                            }
+                        ],
+                        "thresholds": [],
+                        "timeshiftDuration": "0s",
+                        "yAxis": {
+                            "label": "",
+                            "scale": "LINEAR"
+                        }
+                    }
+                }
+            },
+            {
+                "yPos": 22,
+                "height": 16,
+                "width": 24,
+                "widget": {
+                    "title": "p50",
+                    "id": "",
+                    "xyChart": {
+                        "chartOptions": {
+                            "displayHorizontal": false,
+                            "mode": "COLOR",
+                            "showLegend": false
+                        },
+                        "dataSets": [
+                            {
+                                "breakdowns": [],
+                                "dimensions": [],
+                                "legendTemplate": "",
+                                "measures": [],
+                                "minAlignmentPeriod": "60s",
+                                "plotType": "LINE",
+                                "sort": [],
+                                "targetAxis": "Y1",
+                                "timeSeriesQuery": {
+                                    "outputFullDuration": false,
+                                    "timeSeriesFilter": {
+                                        "aggregation": {
+                                            "alignmentPeriod": "60s",
+                                            "crossSeriesReducer": "REDUCE_PERCENTILE_50",
+                                            "groupByFields": [
+                                                "resource.label.\"project_id\"",
+                                                "resource.label.\"routine_project_id\"",
+                                                "resource.label.\"routine_dataset_id\"",
+                                                "resource.label.\"routine_id\"",
+                                                "resource.label.\"location\""
+                                            ],
+                                            "perSeriesAligner": "ALIGN_DELTA"
+                                        },
+                                        "filter": "metric.type=\"bigquery.googleapis.com/managed_routine/python/max_request_concurrencies\" resource.type=\"bigquery.googleapis.com/ManagedRoutineInvocation\""
+                                    },
+                                    "unitOverride": ""
+                                }
+                            }
+                        ],
+                        "thresholds": [],
+                        "timeshiftDuration": "0s",
+                        "yAxis": {
+                            "label": "",
+                            "scale": "LINEAR"
+                        }
+                    }
+                }
+            },
+            {
+                "yPos": 22,
+                "height": 16,
+                "width": 24,
+                "widget": {
+                    "title": "Max Concurrent Requests",
+                    "id": "",
+                    "singleViewGroup": {
+                        "displayType": "TAB"
+                    }
+                }
+            },
+            {
+                "yPos": 22,
+                "height": 16,
+                "width": 24,
+                "widget": {
+                    "title": "p95",
+                    "id": "",
+                    "xyChart": {
+                        "chartOptions": {
+                            "displayHorizontal": false,
+                            "mode": "COLOR",
+                            "showLegend": false
+                        },
+                        "dataSets": [
+                            {
+                                "breakdowns": [],
+                                "dimensions": [],
+                                "legendTemplate": "",
+                                "measures": [],
+                                "minAlignmentPeriod": "60s",
+                                "plotType": "LINE",
+                                "sort": [],
+                                "targetAxis": "Y1",
+                                "timeSeriesQuery": {
+                                    "outputFullDuration": false,
+                                    "timeSeriesFilter": {
+                                        "aggregation": {
+                                            "alignmentPeriod": "60s",
+                                            "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+                                            "groupByFields": [
+                                                "resource.label.\"project_id\"",
+                                                "resource.label.\"routine_project_id\"",
+                                                "resource.label.\"routine_dataset_id\"",
+                                                "resource.label.\"routine_id\"",
+                                                "resource.label.\"location\""
+                                            ],
+                                            "perSeriesAligner": "ALIGN_DELTA"
+                                        },
+                                        "filter": "metric.type=\"bigquery.googleapis.com/managed_routine/python/max_request_concurrencies\" resource.type=\"bigquery.googleapis.com/ManagedRoutineInvocation\""
+                                    },
+                                    "unitOverride": ""
+                                }
+                            }
+                        ],
+                        "thresholds": [],
+                        "timeshiftDuration": "0s",
+                        "yAxis": {
+                            "label": "",
+                            "scale": "LINEAR"
+                        }
+                    }
+                }
+            },
+            {
+                "yPos": 22,
+                "height": 16,
+                "width": 24,
+                "widget": {
+                    "title": "p99",
+                    "id": "",
+                    "xyChart": {
+                        "chartOptions": {
+                            "displayHorizontal": false,
+                            "mode": "COLOR",
+                            "showLegend": false
+                        },
+                        "dataSets": [
+                            {
+                                "breakdowns": [],
+                                "dimensions": [],
+                                "legendTemplate": "",
+                                "measures": [],
+                                "minAlignmentPeriod": "60s",
+                                "plotType": "LINE",
+                                "sort": [],
+                                "targetAxis": "Y1",
+                                "timeSeriesQuery": {
+                                    "outputFullDuration": false,
+                                    "timeSeriesFilter": {
+                                        "aggregation": {
+                                            "alignmentPeriod": "60s",
+                                            "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                                            "groupByFields": [
+                                                "resource.label.\"project_id\"",
+                                                "resource.label.\"routine_project_id\"",
+                                                "resource.label.\"routine_dataset_id\"",
+                                                "resource.label.\"routine_id\"",
+                                                "resource.label.\"location\""
+                                            ],
+                                            "perSeriesAligner": "ALIGN_DELTA"
+                                        },
+                                        "filter": "metric.type=\"bigquery.googleapis.com/managed_routine/python/max_request_concurrencies\" resource.type=\"bigquery.googleapis.com/ManagedRoutineInvocation\""
+                                    },
+                                    "unitOverride": ""
+                                }
+                            }
+                        ],
+                        "thresholds": [],
+                        "timeshiftDuration": "0s",
                         "yAxis": {
                             "label": "",
                             "scale": "LINEAR"
