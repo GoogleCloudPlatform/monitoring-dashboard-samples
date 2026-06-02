@@ -1,0 +1,38 @@
+{
+  "displayName": "Agent Runtime - High P95 Request Latency (${REASONING_ENGINE_ID})",
+  "documentation": {
+    "content": "This alert fires when the P95 request latency of the agent runtime instance (${REASONING_ENGINE_ID}) rises above 120s for 5 minutes or more.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {
+    "agent_display_name": "${AGENT_NAME}",
+    "reasoning_engine_id": "${REASONING_ENGINE_ID}",
+    "location": "${LOCATION}"
+  },
+  "conditions": [
+    {
+      "displayName": "Agent Runtime - High P95 Request Latency (${REASONING_ENGINE_ID})",
+      "conditionThreshold": {
+        "filter": "resource.type = \"aiplatform.googleapis.com/ReasoningEngine\" AND (resource.labels.location = \"${LOCATION}\" AND resource.labels.reasoning_engine_id = \"${REASONING_ENGINE_ID}\") AND metric.type = \"aiplatform.googleapis.com/reasoning_engine/request_latencies\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "crossSeriesReducer": "REDUCE_NONE",
+            "perSeriesAligner": "ALIGN_PERCENTILE_95"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        },
+        "thresholdValue": 120000
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}

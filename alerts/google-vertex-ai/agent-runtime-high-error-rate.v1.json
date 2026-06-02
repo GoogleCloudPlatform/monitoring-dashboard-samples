@@ -1,0 +1,27 @@
+{
+  "displayName": "Agent Runtime - High Error Rate (${REASONING_ENGINE_ID})",
+  "documentation": {
+    "content": "This alert fires when the error rate of the agent runtime instance (${REASONING_ENGINE_ID}) rises above 5% for 5 minutes or more.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {
+    "agent_display_name": "${AGENT_NAME}",
+    "reasoning_engine_id": "${REASONING_ENGINE_ID}",
+    "location": "${LOCATION}"
+  },
+  "conditions": [
+    {
+      "displayName": "Agent Runtime - High Error Rate (${REASONING_ENGINE_ID})",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "30s",
+        "query": "(\n    sum (\n        rate({\n            \"__name__\"=\"aiplatform.googleapis.com/reasoning_engine/request_count\",\n            \"monitored_resource\"=\"aiplatform.googleapis.com/ReasoningEngine\",\n            \"location\"=\"${LOCATION}\",\n            \"reasoning_engine_id\"=\"${REASONING_ENGINE_ID}\",\n            \"response_code\"!=\"200\"\n        }[5m])\n    )\n    /\n    sum (\n        rate({\n            \"__name__\"=\"aiplatform.googleapis.com/reasoning_engine/request_count\",\n            \"monitored_resource\"=\"aiplatform.googleapis.com/ReasoningEngine\",\n            \"location\"=\"${LOCATION}\",\n            \"reasoning_engine_id\"=\"${REASONING_ENGINE_ID}\"\n        }[5m])\n    )\n) > 0.05"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
