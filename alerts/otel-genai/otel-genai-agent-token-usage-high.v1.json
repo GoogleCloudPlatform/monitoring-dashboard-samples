@@ -1,0 +1,27 @@
+{
+  "displayName": "Agent - High Token Usage  (${AGENT_NAME})",
+  "documentation": {
+    "content": "This alert fires when token usage (over both input and output) exceeds 1 million tokens over the past hour.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {
+    "agent_display_name": "${AGENT_NAME}",
+    "agent_id": "${AGENT_ID}",
+    "location": "${LOCATION}"
+  },
+  "conditions": [
+    {
+      "displayName": "Agent - High Token Usage (${AGENT_NAME})",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "300s",
+        "evaluationInterval": "60s",
+        "query": "sum (increase({\n    \"__name__\"=\"gen_ai.client.token.usage_sum\",\n    \"location\"=\"${LOCATION}\",\n    \"cluster\"=\"${AGENT_ID}\", \n    \"gen_ai.token.type\"=\"input\"\n}[1m])) + \nsum(increase({\n    \"__name__\"=\"gen_ai.client.token.usage_sum\", \n    \"location\"=\"${LOCATION}\",\n    \"cluster\"=\"${AGENT_ID}\", \n    \"gen_ai.token.type\"=\"output\"\n}[1m])) > 1000000"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
