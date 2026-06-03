@@ -1,0 +1,27 @@
+{
+  "displayName": "Agent - High Tool Call Error Rate (${AGENT_NAME})",
+  "documentation": {
+    "content": "This alert will be triggered if the agent has a > 5% error rate in invoking a given tool for 5 mins or more.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {
+    "agent_display_name": "${AGENT_NAME}",
+    "agent_id": "${AGENT_ID}",
+    "location": "${LOCATION}"
+  },
+  "conditions": [
+    {
+      "displayName": "Agent - High Tool Call Error Rate (${AGENT_NAME})",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "30s",
+        "query": "sum by (\"gen_ai.tool.name\")(\n    increase({\n        \"__name__\"=\"gen_ai.tool.execution.duration_count\", \n        \"location\"=\"${LOCATION}\",\n        \"cluster\"=\"${AGENT_ID}\",\n        \"error.type\"!= \"\"}[5m]\n    )\n)\n/\nsum by (\"gen_ai.tool.name\")(\n    increase({\n        \"__name__\"=\"gen_ai.tool.execution.duration_count\", \n        \"location\"=\"${LOCATION}\",\n        \"cluster\"=\"${AGENT_ID}\",\n        \"error.type\"!= \"\"}[5m]\n    )\n) > 0.05\n"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
