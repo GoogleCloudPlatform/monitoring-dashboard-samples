@@ -4,22 +4,40 @@
     {
       "filterType": "RESOURCE_LABEL",
       "labelKey": "model_user_id",
+      "stringValue": "",
       "templateVariable": "",
       "valueType": "STRING"
     },
     {
       "filterType": "RESOURCE_LABEL",
       "labelKey": "location",
+      "stringValue": "",
       "templateVariable": "",
       "valueType": "STRING"
     },
     {
       "filterType": "METRIC_LABEL",
       "labelKey": "request_type",
+      "stringValue": "",
       "templateVariable": "",
+      "valueType": "STRING"
+    },
+    {
+      "filterType": "VALUE_ONLY",
+      "labelKey": "",
+      "stringArray": {
+        "values": [
+          "\"per second\"",
+          "\"per minute\""
+        ]
+      },
+      "stringValue": "\"per second\"",
+      "templateVariable": "time_unit",
       "valueType": "STRING"
     }
   ],
+  "description": "This is a dashboard for monitoring request, latency and error rates for your managed model invocations. Compare different models or drill down to an individual one.",
+  "labels": {},
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
@@ -28,6 +46,7 @@
         "width": 12,
         "widget": {
           "title": "About",
+          "id": "",
           "text": {
             "content": "Use this dashboard to monitor your invocations of [Google-managed foundational models](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models). \n\nUse the **Throughput**, **Latency** and **Errors** sections to view application golden signals and troubleshoot service health.\n\nThe **Tokens and Characters** section provides views into your consumption, which allows you to monitor costs and inspect whether you are approaching quota limits. If you rely on [Provisioned Throughput](https://cloud.google.com/vertex-ai/generative-ai/docs/provisioned-throughput#metrics), filter the `request_type` parameter to `dedicated` to track your provisioned character counts and throughputs.\n\n",
             "format": "MARKDOWN",
@@ -48,7 +67,8 @@
         "height": 18,
         "width": 36,
         "widget": {
-          "title": "Model invocation rate",
+          "title": "Model Invocations (per second)",
+          "id": "",
           "timeSeriesTable": {
             "columnSettings": [
               {
@@ -78,6 +98,10 @@
                 "displayName": "Characters",
                 "column": "value-3",
                 "visible": true
+              },
+              {
+                "column": "project_id",
+                "visible": false
               }
             ],
             "dataSets": [
@@ -163,21 +187,128 @@
               }
             ],
             "displayColumnType": false,
-            "metricVisualization": "NUMBER",
-            "opsAnalyticsSettings": {
-              "maxRows": "0",
-              "pageSize": "0",
-              "showFilterBar": false
+            "metricVisualization": "NUMBER"
+          },
+          "visibilityCondition": {
+            "templateVariableCondition": {
+              "comparator": "REGEX_FULL_MATCH",
+              "templateVariable": "time_unit",
+              "templateVariableValue": "\"per second\""
             }
           }
         }
       },
       {
         "yPos": 18,
+        "xPos": 12,
+        "height": 18,
+        "width": 36,
+        "widget": {
+          "title": "Model invocation rate (per minute)",
+          "id": "",
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "column": "model_user_id",
+                "visible": true
+              },
+              {
+                "column": "location",
+                "visible": true
+              },
+              {
+                "displayName": "Invocations",
+                "column": "value",
+                "visible": true
+              },
+              {
+                "displayName": "p99 invocation latency",
+                "column": "value-1",
+                "visible": true
+              },
+              {
+                "displayName": "Tokens",
+                "column": "value-2",
+                "visible": true
+              },
+              {
+                "displayName": "Characters",
+                "column": "value-3",
+                "visible": true
+              },
+              {
+                "column": "project_id",
+                "visible": false
+              }
+            ],
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "sum by (\"model_user_id\",\"location\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))*60\n",
+                  "unitOverride": ""
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
+                      "groupByFields": [
+                        "resource.label.\"model_user_id\"",
+                        "resource.label.\"location\""
+                      ],
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_latencies\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                  },
+                  "unitOverride": ""
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "sum by (\"model_user_id\",\"location\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/token_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))*60",
+                  "unitOverride": ""
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "sum by (\"model_user_id\",\"location\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/character_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))*60",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "displayColumnType": false,
+            "metricVisualization": "NUMBER"
+          },
+          "visibilityCondition": {
+            "templateVariableCondition": {
+              "comparator": "REGEX_FULL_MATCH",
+              "templateVariable": "time_unit",
+              "templateVariableValue": "\"per minute\""
+            }
+          }
+        }
+      },
+      {
+        "yPos": 36,
         "height": 4,
         "width": 48,
         "widget": {
           "title": "Throughput",
+          "id": "",
           "sectionHeader": {
             "dividerBelow": false,
             "subtitle": "Inspect the rate of requests being made against the managed model(s)."
@@ -185,11 +316,19 @@
         }
       },
       {
-        "yPos": 22,
+        "yPos": 40,
         "height": 18,
         "width": 24,
         "widget": {
           "title": "Model requests per second (QPS) ",
+          "id": "",
+          "visibilityCondition": {
+            "templateVariableCondition": {
+              "comparator": "REGEX_FULL_MATCH",
+              "templateVariable": "time_unit",
+              "templateVariableValue": "\"per second\""
+            }
+          },
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -238,23 +377,38 @@
         }
       },
       {
-        "yPos": 22,
+        "yPos": 40,
         "xPos": 24,
         "height": 18,
         "width": 24,
         "widget": {
-          "title": "Token count by model",
+          "title": "Token count by model (per second)",
+          "id": "",
+          "visibilityCondition": {
+            "templateVariableCondition": {
+              "comparator": "REGEX_FULL_MATCH",
+              "templateVariable": "time_unit",
+              "templateVariableValue": "\"per second\""
+            }
+          },
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR"
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
+                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -266,23 +420,115 @@
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/token_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  }
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "yPos": 40,
+        "yPos": 58,
+        "height": 18,
+        "width": 24,
+        "widget": {
+          "title": "Model requests per minute (QPM) ",
+          "id": "",
+          "visibilityCondition": {
+            "templateVariableCondition": {
+              "comparator": "REGEX_FULL_MATCH",
+              "templateVariable": "time_unit",
+              "templateVariableValue": "\"per minute\""
+            }
+          },
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "sort": [],
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "topk(30, sum by (\"model_user_id\",\"location\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}])))*60\n",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 58,
+        "xPos": 24,
+        "height": 18,
+        "width": 24,
+        "widget": {
+          "title": "Token count by model (per minute)",
+          "id": "",
+          "visibilityCondition": {
+            "templateVariableCondition": {
+              "comparator": "REGEX_FULL_MATCH",
+              "templateVariable": "time_unit",
+              "templateVariableValue": "\"per minute\""
+            }
+          },
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "LINE",
+                "sort": [],
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "sum by (\"model_user_id\",\"location\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/token_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))*60\n",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 76,
         "height": 18,
         "width": 7,
         "widget": {
           "title": "",
+          "id": "",
           "text": {
             "content": "To see the input/output token breakdown for a single model, use the filter dropdowns at the top to drill down to a single `model_user_id`.",
             "format": "MARKDOWN",
@@ -299,12 +545,20 @@
         }
       },
       {
-        "yPos": 40,
+        "yPos": 76,
         "xPos": 7,
         "height": 18,
         "width": 17,
         "widget": {
-          "title": "Token throughput",
+          "title": "Token throughput (per second)",
+          "id": "",
+          "visibilityCondition": {
+            "templateVariableCondition": {
+              "comparator": "REGEX_FULL_MATCH",
+              "templateVariable": "time_unit",
+              "templateVariableValue": "\"per second\""
+            }
+          },
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -347,11 +601,57 @@
         }
       },
       {
-        "yPos": 58,
+        "yPos": 94,
+        "xPos": 7,
+        "height": 18,
+        "width": 17,
+        "widget": {
+          "title": "Token throughput (per minute)",
+          "id": "",
+          "visibilityCondition": {
+            "templateVariableCondition": {
+              "comparator": "REGEX_FULL_MATCH",
+              "templateVariable": "time_unit",
+              "templateVariableValue": "\"per minute\""
+            }
+          },
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "plotType": "STACKED_BAR",
+                "sort": [],
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "sum by (\"type\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/token_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))*60",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 112,
         "height": 4,
         "width": 48,
         "widget": {
           "title": "Latency",
+          "id": "",
           "sectionHeader": {
             "dividerBelow": false,
             "subtitle": "Inspect the average latency for a given model to respond to requests."
@@ -359,11 +659,12 @@
         }
       },
       {
-        "yPos": 62,
+        "yPos": 116,
         "height": 4,
         "width": 48,
         "widget": {
           "title": "",
+          "id": "",
           "text": {
             "content": "**Note**: The top two latency charts are aggregated over all models, which may not be meaningful. To see p50/p95/p99 latencies for a single model, use the filter dropdowns on the top to drill down to a single `model_user_id`.",
             "format": "MARKDOWN",
@@ -380,11 +681,12 @@
         }
       },
       {
-        "yPos": 66,
+        "yPos": 120,
         "height": 18,
         "width": 24,
         "widget": {
           "title": "First token latencies",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -471,12 +773,13 @@
         }
       },
       {
-        "yPos": 66,
+        "yPos": 120,
         "xPos": 24,
         "height": 18,
         "width": 24,
         "widget": {
           "title": "Model invocation latencies",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -563,11 +866,12 @@
         }
       },
       {
-        "yPos": 84,
+        "yPos": 138,
         "height": 18,
         "width": 24,
         "widget": {
           "title": "p50 invocation latency by model",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -610,12 +914,13 @@
         }
       },
       {
-        "yPos": 84,
+        "yPos": 138,
         "xPos": 24,
         "height": 18,
         "width": 24,
         "widget": {
           "title": "p50 first token latency by model",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -658,11 +963,12 @@
         }
       },
       {
-        "yPos": 102,
+        "yPos": 156,
         "height": 4,
         "width": 48,
         "widget": {
           "title": "Errors",
+          "id": "",
           "sectionHeader": {
             "dividerBelow": false,
             "subtitle": "Inspect how many requests to the managed model returned with an error."
@@ -670,11 +976,12 @@
         }
       },
       {
-        "yPos": 106,
+        "yPos": 160,
         "height": 20,
         "width": 24,
         "widget": {
           "title": "Model invocations by response code",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -695,6 +1002,7 @@
                   "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
+                      "alignmentPeriod": "60s",
                       "crossSeriesReducer": "REDUCE_SUM",
                       "groupByFields": [
                         "metric.label.\"response_code\""
@@ -716,12 +1024,13 @@
         }
       },
       {
-        "yPos": 106,
+        "yPos": 160,
         "xPos": 24,
         "height": 20,
         "width": 24,
         "widget": {
           "title": "Model invocations error rate (%)",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -774,11 +1083,12 @@
         }
       },
       {
-        "yPos": 126,
+        "yPos": 180,
         "height": 4,
         "width": 48,
         "widget": {
           "title": "Tokens and characters",
+          "id": "",
           "sectionHeader": {
             "dividerBelow": false,
             "subtitle": "Use the token and character throughput signals to estimate costs and to compare against your quota usage."
@@ -786,11 +1096,12 @@
         }
       },
       {
-        "yPos": 130,
+        "yPos": 184,
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Token throughput",
+          "title": "Token throughput (per second)",
+          "id": "",
           "timeSeriesTable": {
             "columnSettings": [
               {
@@ -824,6 +1135,7 @@
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
                 "timeSeriesQuery": {
                   "outputFullDuration": true,
                   "timeSeriesFilter": {
@@ -836,11 +1148,13 @@
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_token_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  }
+                  },
+                  "unitOverride": ""
                 }
               },
               {
                 "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
                 "timeSeriesQuery": {
                   "outputFullDuration": true,
                   "timeSeriesFilter": {
@@ -853,11 +1167,13 @@
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/token_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\" metric.label.\"type\"=\"input\""
-                  }
+                  },
+                  "unitOverride": ""
                 }
               },
               {
                 "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
                 "timeSeriesQuery": {
                   "outputFullDuration": true,
                   "timeSeriesFilter": {
@@ -870,44 +1186,49 @@
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/token_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\" metric.label.\"type\"=\"output\""
-                  }
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
+            "displayColumnType": false,
             "metricVisualization": "NUMBER"
+          },
+          "visibilityCondition": {
+            "templateVariableCondition": {
+              "comparator": "REGEX_FULL_MATCH",
+              "templateVariable": "time_unit",
+              "templateVariableValue": "\"per second\""
+            }
           }
         }
       },
       {
-        "yPos": 130,
-        "xPos": 24,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "",
-          "singleViewGroup": {
-            "displayType": "DROPDOWN"
-          }
-        }
-      },
-      {
-        "yPos": 130,
+        "yPos": 184,
         "xPos": 24,
         "height": 16,
         "width": 24,
         "widget": {
           "title": "Token throughput by model",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR"
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
+                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -918,35 +1239,58 @@
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_token_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  }
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "yPos": 130,
+        "yPos": 184,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "",
+          "id": "",
+          "singleViewGroup": {
+            "displayType": "DROPDOWN"
+          }
+        }
+      },
+      {
+        "yPos": 184,
         "xPos": 24,
         "height": 16,
         "width": 24,
         "widget": {
           "title": "Token count by model",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR"
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_BAR",
+                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -957,35 +1301,45 @@
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/token_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  }
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "yPos": 130,
+        "yPos": 184,
         "xPos": 24,
         "height": 16,
         "width": 24,
         "widget": {
           "title": "Token count by input vs output",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR"
+              "mode": "COLOR",
+              "showLegend": false
             },
             "dataSets": [
               {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_BAR",
+                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -996,64 +1350,105 @@
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/token_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  }
+                  },
+                  "unitOverride": ""
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
+              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "yPos": 162,
+        "yPos": 200,
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Character count",
+          "title": "Token throughput (per minute)",
+          "id": "",
           "timeSeriesTable": {
-            "columnSettings": [],
+            "columnSettings": [
+              {
+                "column": "Name",
+                "visible": true
+              },
+              {
+                "column": "model_user_id",
+                "visible": true
+              },
+              {
+                "column": "project_id",
+                "visible": true
+              },
+              {
+                "displayName": "Token throughput",
+                "column": "value",
+                "visible": true
+              },
+              {
+                "displayName": "Input token count",
+                "column": "value-1",
+                "visible": true
+              },
+              {
+                "displayName": "Output token count",
+                "column": "value-2",
+                "visible": true
+              }
+            ],
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
                 "tableTemplate": "",
                 "timeSeriesQuery": {
                   "outputFullDuration": true,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"model_user_id\"",
-                        "metric.label.\"type\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/character_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
+                  "prometheusQuery": "sum by (\"model_user_id\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/consumed_token_throughput\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))*60",
+                  "unitOverride": ""
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "sum by (\"model_user_id\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/token_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\",\"type\"=\"input\"}[${__interval}]))*60",
+                  "unitOverride": ""
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "sum by (\"model_user_id\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/token_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\",\"type\"=\"output\"}[${__interval}]))*60",
                   "unitOverride": ""
                 }
               }
             ],
             "displayColumnType": false,
-            "metricVisualization": "NUMBER",
-            "opsAnalyticsSettings": {
-              "maxRows": "0",
-              "pageSize": "0",
-              "showFilterBar": false
+            "metricVisualization": "NUMBER"
+          },
+          "visibilityCondition": {
+            "templateVariableCondition": {
+              "comparator": "REGEX_FULL_MATCH",
+              "templateVariable": "time_unit",
+              "templateVariableValue": "\"per minute\""
             }
           }
         }
       },
       {
-        "yPos": 162,
+        "yPos": 200,
         "xPos": 24,
         "height": 16,
         "width": 24,
         "widget": {
           "title": "Character count by model",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -1096,11 +1491,136 @@
         }
       },
       {
-        "yPos": 178,
+        "yPos": 216,
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Consumed character throughput",
+          "title": "Character count (per second)",
+          "id": "",
+          "timeSeriesTable": {
+            "columnSettings": [],
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"model_user_id\"",
+                        "metric.label.\"type\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/character_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                  },
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "displayColumnType": false,
+            "metricVisualization": "NUMBER"
+          },
+          "visibilityCondition": {
+            "templateVariableCondition": {
+              "comparator": "REGEX_FULL_MATCH",
+              "templateVariable": "time_unit",
+              "templateVariableValue": "\"per second\""
+            }
+          }
+        }
+      },
+      {
+        "yPos": 216,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Character throughput by model",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [],
+                "legendTemplate": "",
+                "measures": [],
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_BAR",
+                "sort": [],
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"model_user_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                  },
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 232,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Character count (per minute)",
+          "id": "",
+          "timeSeriesTable": {
+            "columnSettings": [],
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "tableTemplate": "",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "prometheusQuery": "sum by (\"model_user_id\",\"type\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/character_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))*60",
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "displayColumnType": false,
+            "metricVisualization": "NUMBER"
+          },
+          "visibilityCondition": {
+            "templateVariableCondition": {
+              "comparator": "REGEX_FULL_MATCH",
+              "templateVariable": "time_unit",
+              "templateVariableValue": "\"per minute\""
+            }
+          }
+        }
+      },
+      {
+        "yPos": 248,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Consumed character throughput (per second)",
+          "id": "",
           "timeSeriesTable": {
             "columnSettings": [],
             "dataSets": [
@@ -1126,69 +1646,56 @@
               }
             ],
             "displayColumnType": false,
-            "metricVisualization": "NUMBER",
-            "opsAnalyticsSettings": {
-              "maxRows": "0",
-              "pageSize": "0",
-              "showFilterBar": false
+            "metricVisualization": "NUMBER"
+          },
+          "visibilityCondition": {
+            "templateVariableCondition": {
+              "comparator": "REGEX_FULL_MATCH",
+              "templateVariable": "time_unit",
+              "templateVariableValue": "\"per second\""
             }
           }
         }
       },
       {
-        "yPos": 178,
-        "xPos": 24,
+        "yPos": 264,
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "Character throughput by model",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
+          "title": "Consumed character throughput (per minute)",
+          "id": "",
+          "timeSeriesTable": {
+            "columnSettings": [],
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
                 "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_BAR",
-                "sort": [],
-                "targetAxis": "Y1",
+                "tableTemplate": "",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"model_user_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
+                  "outputFullDuration": true,
+                  "prometheusQuery": "sum by (\"model_user_id\",\"request_type\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/consumed_throughput\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))*60",
                   "unitOverride": ""
                 }
               }
             ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
+            "displayColumnType": false,
+            "metricVisualization": "NUMBER"
+          },
+          "visibilityCondition": {
+            "templateVariableCondition": {
+              "comparator": "REGEX_FULL_MATCH",
+              "templateVariable": "time_unit",
+              "templateVariableValue": "\"per minute\""
             }
           }
         }
       },
       {
-        "yPos": 194,
+        "yPos": 280,
         "height": 4,
         "width": 48,
         "widget": {
           "title": "Provisioned Throughput",
+          "id": "",
           "sectionHeader": {
             "dividerBelow": false,
             "subtitle": "Provisioned Throughput is a fixed-cost monthly subscription or weekly service that reserves throughput for supported generative AI models on Vertex AI."
@@ -1196,11 +1703,12 @@
         }
       },
       {
-        "yPos": 198,
+        "yPos": 284,
         "height": 17,
         "width": 29,
         "widget": {
           "title": "Provisioned Throughput Utilization",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -1300,12 +1808,13 @@
         }
       },
       {
-        "yPos": 198,
+        "yPos": 284,
         "xPos": 29,
         "height": 17,
         "width": 19,
         "widget": {
           "title": "",
+          "id": "",
           "text": {
             "content": "[Provisioned Throughput](https://cloud.google.com/vertex-ai/generative-ai/docs/provisioned-throughput) ensures available capacity for Vertex AI model traffic.\n\nIf utilization is high and it's likely that future traffic for critical model requests will increase, it may make sense to [buy more provisioned throughput](https://cloud.google.com/vertex-ai/generative-ai/docs/purchase-provisioned-throughput). \n\nYou can view character and token throughput for individual models on the [Provisioned Throughput page in your Cloud Console](https://console.cloud.google.com/vertex-ai/provisioned-throughput/utilization-summary).",
             "format": "MARKDOWN",
