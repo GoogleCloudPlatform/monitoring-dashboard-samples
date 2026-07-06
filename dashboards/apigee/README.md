@@ -4,6 +4,13 @@
 
 - These dashboards are for [Apigee Hybrid](https://cloud.google.com/apigee/hybrid)
 
+|Apigee API Health & Availability|
+|:---------------------------------|
+|Filename:[health-availability.json](health-availability.json)|
+|This dashboard provides high-level health and availability monitoring for Apigee proxies, including request rates and error breakdowns by proxy.|
+
+- The following dashboards are for [Apigee Hybrid](https://cloud.google.com/apigee/hybrid)
+
 |Apigee Hybrid Cassandra Monitoring|
 |:---------------------------------|
 |Filename:[hybrid-cassandra-monitoring.json](hybrid-cassandra-monitoring.json)|
