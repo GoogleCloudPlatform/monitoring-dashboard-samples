@@ -1,0 +1,200 @@
+{
+  "displayName": "GCE MIG Instance Distribution Monitoring",
+  "dashboardFilters": [
+    {
+      "filterType": "SYSTEM_METADATA_LABEL",
+      "labelKey": "region",
+      "templateVariable": "",
+      "valueType": "STRING_ARRAY"
+    },
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "zone",
+      "templateVariable": "",
+      "valueType": "STRING_ARRAY"
+    },
+    {
+      "filterType": "SYSTEM_METADATA_LABEL",
+      "labelKey": "instance_group",
+      "templateVariable": "",
+      "valueType": "STRING_ARRAY"
+    }
+  ],
+  "gridLayout": {
+    "columns": "2",
+    "widgets": [
+      {
+        "title": "Instance distribution by zone",
+        "id": "",
+        "xyChart": {
+          "chartOptions": {
+            "displayHorizontal": false,
+            "mode": "COLOR",
+            "showLegend": false
+          },
+          "dataSets": [
+            {
+              "breakdowns": [],
+              "dimensions": [],
+              "legendTemplate": "${resource.labels.zone}",
+              "measures": [],
+              "minAlignmentPeriod": "60s",
+              "plotType": "STACKED_AREA",
+              "sort": [],
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "outputFullDuration": false,
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_COUNT",
+                    "groupByFields": [
+                      "resource.label.\"zone\""
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"compute.googleapis.com/instance/cpu/utilization\" resource.type=\"gce_instance\""
+                },
+                "unitOverride": ""
+              }
+            }
+          ],
+          "thresholds": [],
+          "yAxis": {
+            "label": "",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Instance distribution by machine type",
+        "id": "",
+        "xyChart": {
+          "chartOptions": {
+            "displayHorizontal": false,
+            "mode": "COLOR",
+            "showLegend": false
+          },
+          "dataSets": [
+            {
+              "breakdowns": [],
+              "dimensions": [],
+              "legendTemplate": "${metadata.system_labels\\.machine_type}",
+              "measures": [],
+              "minAlignmentPeriod": "60s",
+              "plotType": "STACKED_AREA",
+              "sort": [],
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "outputFullDuration": false,
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_COUNT",
+                    "groupByFields": [
+                      "metadata.system_labels.\"machine_type\""
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"compute.googleapis.com/instance/cpu/utilization\" resource.type=\"gce_instance\""
+                },
+                "unitOverride": ""
+              }
+            }
+          ],
+          "thresholds": [],
+          "yAxis": {
+            "label": "",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Instance distribution by state",
+        "id": "",
+        "xyChart": {
+          "chartOptions": {
+            "displayHorizontal": false,
+            "mode": "COLOR",
+            "showLegend": false
+          },
+          "dataSets": [
+            {
+              "breakdowns": [],
+              "dimensions": [],
+              "legendTemplate": "${metadata.system_labels\\.state}",
+              "measures": [],
+              "minAlignmentPeriod": "60s",
+              "plotType": "STACKED_AREA",
+              "sort": [],
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "outputFullDuration": false,
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_COUNT",
+                    "groupByFields": [
+                      "metadata.system_labels.\"state\""
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"compute.googleapis.com/instance/cpu/utilization\" resource.type=\"gce_instance\""
+                },
+                "unitOverride": ""
+              }
+            }
+          ],
+          "thresholds": [],
+          "yAxis": {
+            "label": "",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Total instance count",
+        "id": "",
+        "xyChart": {
+          "chartOptions": {
+            "displayHorizontal": false,
+            "mode": "COLOR",
+            "showLegend": false
+          },
+          "dataSets": [
+            {
+              "breakdowns": [],
+              "dimensions": [],
+              "legendTemplate": "${metadata.system_labels\\.instance_group}",
+              "measures": [],
+              "minAlignmentPeriod": "60s",
+              "plotType": "STACKED_AREA",
+              "sort": [],
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "outputFullDuration": false,
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_COUNT",
+                    "groupByFields": [
+                      "metadata.system_labels.\"instance_group\""
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"compute.googleapis.com/instance/cpu/utilization\" resource.type=\"gce_instance\""
+                },
+                "unitOverride": ""
+              }
+            }
+          ],
+          "thresholds": [],
+          "yAxis": {
+            "label": "",
+            "scale": "LINEAR"
+          }
+        }
+      }
+    ]
+  }
+}

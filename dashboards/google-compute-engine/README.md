@@ -25,3 +25,10 @@
 |:-------------------------|
 |Filename: [reservations-monitoring.json](reservations-monitoring.json)|
 |This dashboard enables you to visualize and monitor [local and shared reservation usage](https://cloud.google.com/compute/docs/instances/reservations-monitor) at the owner project level.|
+
+&nbsp;
+
+|GCE MIG Instance Distribution Monitoring|
+|:-------------------------|
+|Filename: [mig-instance-distribution-monitoring.json](mig-instance-distribution-monitoring.json)|
+|This dashboard with 4 charts helps you monitor instance distribution in a managed instance group (MIG). The charts display instance distribution across zones (location flexibility), machine types (instance flexibility), and instance states, along with the total number of instances in the group. This real-time visibility enables you to evaluate resource availability, verify high availability, and optimize infrastructure resilience.|
