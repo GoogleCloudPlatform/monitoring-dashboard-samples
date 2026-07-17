@@ -1,0 +1,26 @@
+{
+  "displayName": "Agent - High Workflow Error Rate (${AGENT_NAME})",
+  "documentation": {
+    "content": "This alert fires when the error rate (calculated as the percentage of instrumented workflows with error.type != '') of the Agent rises above 5% for 5 minutes or more.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {
+    "reasoning_engine_id": "${REASONING_ENGINE_ID}",
+    "location": "${LOCATION}"
+  },
+  "conditions": [
+    {
+      "displayName": "Agent - High Workflow Error Rate (${AGENT_NAME})",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "30s",
+        "query": "(\n  sum (increase({\n    \"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\n    \"location\"=\"${LOCATION}\",\n    \"job\"=\"${AGENT_ID}\",\n    \"gen_ai.workflow.nested\"!=\"true\",\n    \"error.type\"!=\"\"\n  }[5m]))\n  / \n  sum (increase({\n    \"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\n    \"location\"=\"${LOCATION}\",\n    \"job\"=\"${AGENT_ID}\",\n    \"gen_ai.workflow.nested\"!=\"true\"\n  }[5m])) > 0\n) > 0.05\n"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}

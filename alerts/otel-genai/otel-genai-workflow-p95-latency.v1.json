@@ -1,0 +1,37 @@
+{
+  "displayName": "Agent - High P95 Workflow Latency (${AGENT_NAME})",
+  "documentation": {
+    "content": "This alert fires if the P95 latency of the agent workflow rises above 120s for 5 minutes or more.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {
+    "reasoning_engine_id": "${REASONING_ENGINE_ID}",
+    "location": "${LOCATION}"
+  },
+  "conditions": [
+    {
+      "displayName": "Agent - High P95 Workflow Latency (${AGENT_NAME})",
+      "conditionThreshold": {
+        "filter": "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/gen_ai.invoke_workflow.duration/histogram\" AND (resource.labels.location = \"${LOCATION}\" AND resource.labels.job = \"${AGENT_ID}\") AND metric.labels.\"gen_ai.workflow.nested\" != \"true\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "crossSeriesReducer": "REDUCE_PERCENTILE_95",
+            "perSeriesAligner": "ALIGN_DELTA"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        },
+        "thresholdValue": 120
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
