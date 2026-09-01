@@ -1,0 +1,32 @@
+{
+  "displayName": "Crashlytics - New Issue Alert",
+  "combiner": "OR",
+  "enabled": true,
+  "severity": "WARNING",
+  "conditions": [
+    {
+      "displayName": "Log match condition (CrashReportingErrorGroupNew - New)",
+      "conditionMatchedLog": {
+        "filter": "logName=\"projects/${PROJECT_ID}/logs/clouderrorreporting.googleapis.com%2Finsights\" AND labels.activity_type_name=\"CrashReportingErrorGroupNew\" AND labels.notificationType=\"New\" AND labels.deploymentAppId=\"${GMP_APP_ID}\"",
+        "labelExtractors": {
+          "issue_id": "EXTRACT(labels.errorGroupId)",
+          "exception_type": "EXTRACT(jsonPayload.exceptionInfo.type)",
+          "exception_message": "EXTRACT(jsonPayload.exceptionInfo.message)",
+          "app_id": "EXTRACT(labels.deploymentAppId)",
+          "version": "EXTRACT(labels.deploymentVersion)",
+          "cause_full_file_path": "EXTRACT(labels.causeFullFilePath)"
+        }
+      }
+    }
+  ],
+  "alertStrategy": {
+    "notificationRateLimit": {
+      "period": "300s"
+    },
+    "autoClose": "1800s",
+    "notificationPrompts": [
+      "OPENED"
+    ]
+  },
+  "notificationChannels": []
+}
