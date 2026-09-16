@@ -1,0 +1,26 @@
+{
+  "displayName": "Agent - High Model Call Error Rate (${AGENT_NAME})",
+  "documentation": {
+    "content": "This alert will be triggered if the agent has a > 5% error rate in invoking a given model for 5 mins or more.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {
+    "agent_display_name": "${AGENT_NAME}",
+    "agent_urn": "${AGENT_URN}"
+  },
+  "conditions": [
+    {
+      "displayName": "Agent - High Model Call Error Rate (${AGENT_NAME})",
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "30s",
+        "query": "sum by (\"gen_ai.response.model\")(\n    increase({\n        \"__name__\"=\"gen_ai.client.operation.duration_count\",\n        \"gen_ai.main_agent.id\"=\"${AGENT_URN}\",\n        \"error.type\"!= \"\"\n    }[5m])\n)\n/\nsum by (\"gen_ai.response.model\")(\n    increase({\n        \"__name__\"=\"gen_ai.client.operation.duration_count\",\n        \"gen_ai.main_agent.id\"=\"${AGENT_URN}\"\n    }[5m])\n) > 0.05\n"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
