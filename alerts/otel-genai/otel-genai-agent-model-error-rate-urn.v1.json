@@ -14,7 +14,7 @@
       "conditionPrometheusQueryLanguage": {
         "duration": "0s",
         "evaluationInterval": "30s",
-        "query": "sum by (\"gen_ai.response.model\")(\n    increase({\n        \"__name__\"=\"gen_ai.client.operation.duration_count\",\n        \"gen_ai.main_agent.id\"=\"${AGENT_URN}\",\n        \"error.type\"!= \"\"\n    }[5m])\n)\n/\nsum by (\"gen_ai.response.model\")(\n    increase({\n        \"__name__\"=\"gen_ai.client.operation.duration_count\",\n        \"gen_ai.main_agent.id\"=\"${AGENT_URN}\"\n    }[5m])\n) > 0.05\n"
+        "query": "sum by (\"gen_ai.response.model\")(\n    increase({\n        \"__name__\"=\"gen_ai.client.operation.duration_count\",\n        \"otel.resource.gen_ai.main_agent.id\"=\"${AGENT_URN}\",\n        \"error.type\"!= \"\"\n    }[5m])\n)\n/\nsum by (\"gen_ai.response.model\")(\n    increase({\n        \"__name__\"=\"gen_ai.client.operation.duration_count\",\n        \"otel.resource.gen_ai.main_agent.id\"=\"${AGENT_URN}\"\n    }[5m])\n) > 0.05\n"
       }
     }
   ],

@@ -14,7 +14,7 @@
       "conditionPrometheusQueryLanguage": {
         "duration": "0s",
         "evaluationInterval": "30s",
-        "query": "(\n  sum (increase({\n    \"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\n    \"gen_ai.main_agent.id\"=\"${AGENT_URN}\",\n    \"gen_ai.workflow.nested\"!=\"true\",\n    \"error.type\"!=\"\"\n  }[5m]))\n  / \n  sum (increase({\n    \"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\n    \"gen_ai.main_agent.id\"=\"${AGENT_URN}\",\n    \"gen_ai.workflow.nested\"!=\"true\"\n  }[5m])) > 0\n) > 0.05\n"
+        "query": "(\n  sum (increase({\n    \"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\n    \"otel.resource.gen_ai.main_agent.id\"=\"${AGENT_URN}\",\n    \"gen_ai.workflow.nested\"!=\"true\",\n    \"error.type\"!=\"\"\n  }[5m]))\n  / \n  sum (increase({\n    \"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\n    \"otel.resource.gen_ai.main_agent.id\"=\"${AGENT_URN}\",\n    \"gen_ai.workflow.nested\"!=\"true\"\n  }[5m])) > 0\n) > 0.05\n"
       }
     }
   ],
