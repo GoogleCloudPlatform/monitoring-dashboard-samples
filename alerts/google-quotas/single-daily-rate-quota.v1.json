@@ -8,18 +8,22 @@
   "conditions": [
     {
       "displayName": "Usage nearing daily rate quota limit",
-      "conditionMonitoringQueryLanguage": {
-        "query": "fetch ${MONITORED_RESOURCE}| filter ${OUTER_FILTER}| {metric ${METRIC_USAGE_TYPE}| filter ${QUOTA_USAGE_FILTER}${OPTIONAL_USAGE_QUERY}|map add [day: end().timestamp_to_string('%Y%m%d', 'America/Los_Angeles').string_to_int64]| group_by 1d, .sum| map add [current_day: end().timestamp_to_string('%Y%m%d', 'America/Los_Angeles').string_to_int64]| (current_day == day)| group_by [${GROUPING}]; metric ${METRIC_LIMIT_TYPE}| filter ${QUOTA_LIMIT_FILTER}| group_by [${GROUPING}], .min}| ratio| window 1d| every 1m| condition gt(val(), 0.8 '1')",
-        "duration": "60s",
-        "trigger": {
-          "count": 1
-        }
+      "conditionPrometheusQueryLanguage": {
+        "duration": "0s",
+        "evaluationInterval": "30s",
+        "query": "(\n  sum by ('${GROUPING}') (\n    sum_over_time(\n        (\n            {\n                '${METRIC_USAGE_TYPE}',\n                monitored_resource='${MONITORED_RESOURCE}',\n                '${OUTER_FILTER}',\n                '${QUOTA_USAGE_FILTER}',\n                '${OPTIONAL_USAGE_QUERY}'\n            }\n            *\n            # only the last 24 hours since midnight Los Angeles time (UTC-8)\n            clamp_max(day_of_year(max(timestamp({'${METRIC_USAGE_TYPE}',monitored_resource='${MONITORED_RESOURCE}','${OUTER_FILTER}','${QUOTA_USAGE_FILTER}','${OPTIONAL_USAGE_QUERY}'} @ end()))) == day_of_year(max(timestamp({'${METRIC_USAGE_TYPE}',monitored_resource='${MONITORED_RESOURCE}','${OUTER_FILTER}','${QUOTA_USAGE_FILTER}','${OPTIONAL_USAGE_QUERY}'} @ end())) - (8*3600)), 1) \n        )[1d]\n    )\n  )\n  /\n  min by ('${GROUPING}') ({\n    '${METRIC_LIMIT_TYPE}',\n    monitored_resource='${MONITORED_RESOURCE}',\n    '${OUTER_FILTER}',\n    '${QUOTA_LIMIT_FILTER}'\n  })\n) > 0.8"
       }
     }
   ],
   "alertStrategy": {
-    "autoClose": "604800s"
+    "autoClose": "604800s",
+    "notificationPrompts": [
+      "OPENED",
+      "CLOSED"
+    ]
   },
   "combiner": "OR",
-  "enabled": true
+  "enabled": true,
+  "notificationChannels": [],
+  "severity": "SEVERITY_UNSPECIFIED"
 }
