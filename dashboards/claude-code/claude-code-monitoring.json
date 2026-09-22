@@ -1,0 +1,521 @@
+{
+  "displayName": "Claude Code Monitoring",
+  "dashboardFilters": [],
+  "labels": {},
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "width": 48,
+        "height": 20,
+        "widget": {
+          "title": "Adoption",
+          "collapsibleGroup": {
+            "collapsed": false
+          }
+        }
+      },
+      {
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Sessions (30d)",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(increase({\"__name__\"=\"claude_code.session.count\"}[30d]))"
+            },
+            "blankView": {}
+          }
+        }
+      },
+      {
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Active users (30d)",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "count(sum by (\"enduser.id\")(increase({\"__name__\"=\"claude_code.session.count\"}[30d])) > 0)"
+            },
+            "blankView": {}
+          }
+        },
+        "xPos": 12
+      },
+      {
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Commits (30d)",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(increase({\"__name__\"=\"claude_code.commit.count\"}[30d]))"
+            },
+            "blankView": {}
+          }
+        },
+        "xPos": 24
+      },
+      {
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Pull requests (30d)",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(increase({\"__name__\"=\"claude_code.pull_request.count\"}[30d]))"
+            },
+            "blankView": {}
+          }
+        },
+        "xPos": 36
+      },
+      {
+        "width": 16,
+        "height": 12,
+        "widget": {
+          "title": "Sessions",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum(increase({\"__name__\"=\"claude_code.session.count\"}[${__interval}]))"
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "legendTemplate": "sessions"
+              }
+            ],
+            "yAxis": {
+              "label": "sessions",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        },
+        "yPos": 8
+      },
+      {
+        "width": 16,
+        "height": 12,
+        "widget": {
+          "title": "Active users (trailing 24 hours)",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "count(sum by (\"enduser.id\")(increase({\"__name__\"=\"claude_code.session.count\"}[1d])) > 0)"
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "legendTemplate": "active users"
+              }
+            ],
+            "yAxis": {
+              "label": "users",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        },
+        "xPos": 16,
+        "yPos": 8
+      },
+      {
+        "width": 16,
+        "height": 12,
+        "widget": {
+          "title": "Sessions by start type",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (start_type)(increase({\"__name__\"=\"claude_code.session.count\"}[${__interval}]))"
+                },
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1"
+              }
+            ],
+            "yAxis": {
+              "label": "sessions",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        },
+        "xPos": 32,
+        "yPos": 8
+      },
+      {
+        "width": 48,
+        "height": 32,
+        "widget": {
+          "title": "Coding activity",
+          "collapsibleGroup": {
+            "collapsed": false
+          }
+        },
+        "yPos": 20
+      },
+      {
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Active coding hours (30d)",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(increase({\"__name__\"=\"claude_code.active_time.total\"}[30d])) / 3600"
+            },
+            "blankView": {}
+          }
+        },
+        "yPos": 20
+      },
+      {
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Lines added (30d)",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(increase({\"__name__\"=\"claude_code.lines_of_code.count\", type=\"added\"}[30d]))"
+            },
+            "blankView": {}
+          }
+        },
+        "xPos": 12,
+        "yPos": 20
+      },
+      {
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Lines removed (30d)",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(increase({\"__name__\"=\"claude_code.lines_of_code.count\", type=\"removed\"}[30d]))"
+            },
+            "blankView": {}
+          }
+        },
+        "xPos": 24,
+        "yPos": 20
+      },
+      {
+        "width": 12,
+        "height": 8,
+        "widget": {
+          "title": "Edit-tool accept rate % (30d)",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "100 * sum(increase({\"__name__\"=\"claude_code.code_edit_tool.decision\", decision=\"accept\"}[30d])) / sum(increase({\"__name__\"=\"claude_code.code_edit_tool.decision\"}[30d]))"
+            },
+            "blankView": {}
+          }
+        },
+        "xPos": 36,
+        "yPos": 20
+      },
+      {
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Commits by user",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"enduser.id\")(increase({\"__name__\"=\"claude_code.commit.count\"}[${__interval}]))"
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1"
+              }
+            ],
+            "yAxis": {
+              "label": "commits",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        },
+        "yPos": 28
+      },
+      {
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Lines of code (added vs removed)",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (type)(increase({\"__name__\"=\"claude_code.lines_of_code.count\"}[${__interval}]))"
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1"
+              }
+            ],
+            "yAxis": {
+              "label": "lines",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        },
+        "xPos": 24,
+        "yPos": 28
+      },
+      {
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Active coding hours",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum(increase({\"__name__\"=\"claude_code.active_time.total\"}[${__interval}])) / 3600"
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "legendTemplate": "hours"
+              }
+            ],
+            "yAxis": {
+              "label": "hours",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        },
+        "yPos": 40
+      },
+      {
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Edit-tool decisions by decision",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (decision)(increase({\"__name__\"=\"claude_code.code_edit_tool.decision\"}[${__interval}]))"
+                },
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1"
+              }
+            ],
+            "yAxis": {
+              "label": "decisions",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        },
+        "xPos": 24,
+        "yPos": 40
+      },
+      {
+        "width": 48,
+        "height": 44,
+        "widget": {
+          "title": "Tokens and estimated spend",
+          "collapsibleGroup": {
+            "collapsed": false
+          }
+        },
+        "yPos": 52
+      },
+      {
+        "width": 16,
+        "height": 8,
+        "widget": {
+          "title": "Tokens in millions (30d)",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(increase({\"__name__\"=\"claude_code.token.usage\"}[30d])) / 1e6"
+            },
+            "blankView": {}
+          }
+        },
+        "yPos": 52
+      },
+      {
+        "width": 16,
+        "height": 8,
+        "widget": {
+          "title": "Prompt cache hit rate % (30d)",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "100 * sum(increase({\"__name__\"=\"claude_code.token.usage\", type=\"cacheRead\"}[30d])) / sum(increase({\"__name__\"=\"claude_code.token.usage\", type=~\"input|cacheRead|cacheCreation\"}[30d]))"
+            },
+            "blankView": {}
+          }
+        },
+        "xPos": 16,
+        "yPos": 52
+      },
+      {
+        "width": 16,
+        "height": 8,
+        "widget": {
+          "title": "Estimated spend USD (30d)",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(increase({\"__name__\"=\"claude_code.cost.usage\"}[30d]))"
+            },
+            "blankView": {}
+          }
+        },
+        "xPos": 32,
+        "yPos": 52
+      },
+      {
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Token usage rate by model",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (model)(rate({\"__name__\"=\"claude_code.token.usage\"}[1h]))"
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1"
+              }
+            ],
+            "yAxis": {
+              "label": "tokens/sec",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        },
+        "yPos": 60
+      },
+      {
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Token usage rate by type",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (type)(rate({\"__name__\"=\"claude_code.token.usage\"}[1h]))"
+                },
+                "plotType": "STACKED_AREA",
+                "targetAxis": "Y1"
+              }
+            ],
+            "yAxis": {
+              "label": "tokens/sec",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        },
+        "xPos": 24,
+        "yPos": 60
+      },
+      {
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Estimated spend by model",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (model)(increase({\"__name__\"=\"claude_code.cost.usage\"}[${__interval}]))"
+                },
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1"
+              }
+            ],
+            "yAxis": {
+              "label": "USD (estimate)",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        },
+        "yPos": 72
+      },
+      {
+        "width": 24,
+        "height": 12,
+        "widget": {
+          "title": "Estimated spend by query source",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (query_source)(increase({\"__name__\"=\"claude_code.cost.usage\"}[${__interval}]))"
+                },
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1"
+              }
+            ],
+            "yAxis": {
+              "label": "USD (estimate)",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        },
+        "xPos": 24,
+        "yPos": 72
+      },
+      {
+        "width": 48,
+        "height": 12,
+        "widget": {
+          "title": "Estimated spend by user",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"enduser.id\")(increase({\"__name__\"=\"claude_code.cost.usage\"}[${__interval}]))"
+                },
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1"
+              }
+            ],
+            "yAxis": {
+              "label": "USD (estimate)",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        },
+        "yPos": 84
+      }
+    ]
+  }
+}
