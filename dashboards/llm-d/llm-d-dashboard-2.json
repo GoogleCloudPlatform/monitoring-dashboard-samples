@@ -63,7 +63,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "group by (node, pod) ({\"__name__\"=\"vllm:generation_tokens_total\"})\n* on (node) group_left ()\n(\n    label_replace(\n        sum by (metadata_system_name)(\n            avg_over_time({\"__name__\"=\"compute.googleapis.com/instance/gpu/throughput_tx_bytes\",\"monitored_resource\"=\"gce_instance\"}[1m])/1m\n        ),\n        \"node\",\n        \"$1\",\n        \"metadata_system_name\",\n        \"(.+)\"\n    )\n    / on (node)\n    count by (node) (\n      group by (node, pod) ({\"__name__\"=\"vllm:generation_tokens_total\"})\n    )\n)",
+                  "prometheusQuery": "label_replace(\n  group by (metadata_system_node_name, pod_name) ({\"__name__\"=\"kubernetes.io/container/uptime\",\"monitored_resource\"=\"k8s_container\",\"pod_name\"=~\".*(vllm|sglang|decode|prefill|worker).*\"}),\n  \"node\",\n  \"$1\",\n  \"metadata_system_node_name\",\n  \"(.+)\"\n)\n* on (node) group_left ()\n(\n    label_replace(\n        sum by (metadata_system_name)(\n            avg_over_time({\"__name__\"=\"compute.googleapis.com/instance/gpu/throughput_tx_bytes\",\"monitored_resource\"=\"gce_instance\"}[1m])/1m\n        ),\n        \"node\",\n        \"$1\",\n        \"metadata_system_name\",\n        \"(.+)\"\n    )\n    / on (node)\n    count by (node) (\n      label_replace(\n        group by (metadata_system_node_name, pod_name) ({\"__name__\"=\"kubernetes.io/container/uptime\",\"monitored_resource\"=\"k8s_container\",\"pod_name\"=~\".*(vllm|sglang|decode|prefill|worker).*\"}),\n        \"node\",\n        \"$1\",\n        \"metadata_system_node_name\",\n        \"(.+)\"\n      )\n    )\n)",
                   "unitOverride": "By/s"
                 }
               }
@@ -92,7 +92,7 @@
                 "plotType": "LINE",
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "prometheusQuery": "group by (node, pod) ({\"__name__\"=\"vllm:generation_tokens_total\"})\n* on (node) group_left ()\n(\n    label_replace(\n        sum by (metadata_system_name)(\n            avg_over_time({\"__name__\"=\"compute.googleapis.com/instance/gpu/throughput_rx_bytes\",\"monitored_resource\"=\"gce_instance\"}[1m])/1m\n        ),\n        \"node\",\n        \"$1\",\n        \"metadata_system_name\",\n        \"(.+)\"\n    )\n    / on (node)\n    count by (node) (\n      group by (node, pod) ({\"__name__\"=\"vllm:generation_tokens_total\"})\n    )\n)",
+                  "prometheusQuery": "label_replace(\n  group by (metadata_system_node_name, pod_name) ({\"__name__\"=\"kubernetes.io/container/uptime\",\"monitored_resource\"=\"k8s_container\",\"pod_name\"=~\".*(vllm|sglang|decode|prefill|worker).*\"}),\n  \"node\",\n  \"$1\",\n  \"metadata_system_node_name\",\n  \"(.+)\"\n)\n* on (node) group_left ()\n(\n    label_replace(\n        sum by (metadata_system_name)(\n            avg_over_time({\"__name__\"=\"compute.googleapis.com/instance/gpu/throughput_rx_bytes\",\"monitored_resource\"=\"gce_instance\"}[1m])/1m\n        ),\n        \"node\",\n        \"$1\",\n        \"metadata_system_name\",\n        \"(.+)\"\n    )\n    / on (node)\n    count by (node) (\n      label_replace(\n        group by (metadata_system_node_name, pod_name) ({\"__name__\"=\"kubernetes.io/container/uptime\",\"monitored_resource\"=\"k8s_container\",\"pod_name\"=~\".*(vllm|sglang|decode|prefill|worker).*\"}),\n        \"node\",\n        \"$1\",\n        \"metadata_system_node_name\",\n        \"(.+)\"\n      )\n    )\n)",
                   "unitOverride": "By/s"
                 }
               }
@@ -2186,7 +2186,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.99, sum by(le) (rate(vllm:time_to_first_token_seconds_bucket{role=~\"decode|\"}[${__interval}])))",
+                  "prometheusQuery": "(histogram_quantile(0.99, sum by(le) (rate({\"__name__\"=\"vllm:time_to_first_token_seconds_bucket\"}[${__interval}]))) >= 0) or on() vector(0)",
                   "unitOverride": "s"
                 }
               },
@@ -2199,7 +2199,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.95, sum by(le) (rate(vllm:time_to_first_token_seconds_bucket{role=~\"decode|\"}[${__interval}])))",
+                  "prometheusQuery": "(histogram_quantile(0.95, sum by(le) (rate({\"__name__\"=\"vllm:time_to_first_token_seconds_bucket\"}[${__interval}]))) >= 0) or on() vector(0)",
                   "unitOverride": "s"
                 }
               },
@@ -2212,7 +2212,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.50, sum by(le) (rate(vllm:time_to_first_token_seconds_bucket{role=~\"decode|\"}[${__interval}])))",
+                  "prometheusQuery": "(histogram_quantile(0.50, sum by(le) (rate({\"__name__\"=\"vllm:time_to_first_token_seconds_bucket\"}[${__interval}]))) >= 0) or on() vector(0)",
                   "unitOverride": "s"
                 }
               }
@@ -2249,7 +2249,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.99, sum by (le) (rate(vllm:request_time_per_output_token_seconds_bucket{role=~\"decode|\"}[${__interval}])))\n",
+                  "prometheusQuery": "(histogram_quantile(0.99, sum by (le) (rate({\"__name__\"=\"vllm:request_time_per_output_token_seconds_bucket\"}[${__interval}]))) >= 0) or on() vector(0)\n",
                   "unitOverride": "s"
                 }
               },
@@ -2262,7 +2262,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.95, sum by (le) (rate(vllm:request_time_per_output_token_seconds_bucket{role=~\"decode|\"}[${__interval}])))\n",
+                  "prometheusQuery": "(histogram_quantile(0.95, sum by (le) (rate({\"__name__\"=\"vllm:request_time_per_output_token_seconds_bucket\"}[${__interval}]))) >= 0) or on() vector(0)\n",
                   "unitOverride": "s"
                 }
               },
@@ -2275,7 +2275,7 @@
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "outputFullDuration": false,
-                  "prometheusQuery": "histogram_quantile(0.50, sum by (le) (rate(vllm:request_time_per_output_token_seconds_bucket{role=~\"decode|\"}[${__interval}])))\n",
+                  "prometheusQuery": "(histogram_quantile(0.50, sum by (le) (rate({\"__name__\"=\"vllm:request_time_per_output_token_seconds_bucket\"}[${__interval}]))) >= 0) or on() vector(0)\n",
                   "unitOverride": "s"
                 }
               }
