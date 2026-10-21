@@ -1,42 +1,26 @@
 {
-  "displayName": "Vertex AI Model Garden (Monitoring)",
+  "displayName": "Vertex AI Model Garden",
   "dashboardFilters": [
     {
       "filterType": "RESOURCE_LABEL",
       "labelKey": "model_user_id",
       "stringValue": "",
-      "templateVariable": "",
       "valueType": "STRING"
     },
     {
       "filterType": "RESOURCE_LABEL",
       "labelKey": "location",
       "stringValue": "",
-      "templateVariable": "",
       "valueType": "STRING"
     },
     {
       "filterType": "METRIC_LABEL",
       "labelKey": "request_type",
       "stringValue": "",
-      "templateVariable": "",
-      "valueType": "STRING"
-    },
-    {
-      "filterType": "VALUE_ONLY",
-      "labelKey": "",
-      "stringArray": {
-        "values": [
-          "\"per second\"",
-          "\"per minute\""
-        ]
-      },
-      "stringValue": "\"per second\"",
-      "templateVariable": "time_unit",
       "valueType": "STRING"
     }
   ],
-  "description": "This is a dashboard for monitoring request, latency and error rates for your managed model invocations. Compare different models or drill down to an individual one.",
+  "description": "",
   "labels": {},
   "mosaicLayout": {
     "columns": 48,
@@ -48,7 +32,7 @@
           "title": "About",
           "id": "",
           "text": {
-            "content": "Use this dashboard to monitor your invocations of [Google-managed foundational models](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models). \n\nUse the **Throughput**, **Latency** and **Errors** sections to view application golden signals and troubleshoot service health.\n\nThe **Tokens and Characters** section provides views into your consumption, which allows you to monitor costs and inspect whether you are approaching quota limits. If you rely on [Provisioned Throughput](https://cloud.google.com/vertex-ai/generative-ai/docs/provisioned-throughput#metrics), filter the `request_type` parameter to `dedicated` to track your provisioned character counts and throughputs.\n\n",
+            "content": "Use this dashboard to monitor your invocations of [Google-managed foundational models](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models).\n\nUse the **Throughput**, **Latency** and **Errors** sections to view application golden signals and troubleshoot service health.\n\nThe **Tokens** section provides views into your consumption, which allows you to monitor costs and inspect whether you are approaching quota limits. If you rely on [Provisioned Throughput](https://cloud.google.com/vertex-ai/generative-ai/docs/provisioned-throughput#metrics), filter the `request_type` parameter to `dedicated` to track your provisioned token throughput.\n\n**1-second resolution from logs.** Charts with a dropdown in their header offer a *1-second resolution from logs* option next to the default *1-minute resolution from metrics*: Model requests per second (QPS), Token count by model, Model invocations by response code, Model invocations error rate (%), and the Tokens section charts, which add Token throughput by model and served traffic type. The 1-second options read inference request logs for Gemini and Claude models. To see them, turn on inference request logging for the project and upgrade its _Default log bucket to Observability Analytics; logging incurs Cloud Logging charges. Points are 1 second apart when the window is 200 seconds or less. [Learn how to turn on logging](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/inference-metadata-logging).",
             "format": "MARKDOWN",
             "style": {
               "backgroundColor": "#E7EFFE",
@@ -67,8 +51,7 @@
         "height": 18,
         "width": 36,
         "widget": {
-          "title": "Model Invocations (per second)",
-          "id": "",
+          "title": "Model Invocations",
           "timeSeriesTable": {
             "columnSettings": [
               {
@@ -107,7 +90,6 @@
             "dataSets": [
               {
                 "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
                 "timeSeriesQuery": {
                   "outputFullDuration": true,
                   "timeSeriesFilter": {
@@ -121,13 +103,11 @@
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
+                  }
                 }
               },
               {
                 "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
                 "timeSeriesQuery": {
                   "outputFullDuration": true,
                   "timeSeriesFilter": {
@@ -141,13 +121,11 @@
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_latencies\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
+                  }
                 }
               },
               {
                 "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
                 "timeSeriesQuery": {
                   "outputFullDuration": true,
                   "timeSeriesFilter": {
@@ -161,13 +139,11 @@
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/token_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
+                  }
                 }
               },
               {
                 "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
                 "timeSeriesQuery": {
                   "outputFullDuration": true,
                   "timeSeriesFilter": {
@@ -181,129 +157,16 @@
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/character_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
+                  }
                 }
               }
             ],
-            "displayColumnType": false,
             "metricVisualization": "NUMBER"
-          },
-          "visibilityCondition": {
-            "templateVariableCondition": {
-              "comparator": "REGEX_FULL_MATCH",
-              "templateVariable": "time_unit",
-              "templateVariableValue": "\"per second\""
-            }
           }
         }
       },
       {
         "yPos": 18,
-        "xPos": 12,
-        "height": 18,
-        "width": 36,
-        "widget": {
-          "title": "Model invocation rate (per minute)",
-          "id": "",
-          "timeSeriesTable": {
-            "columnSettings": [
-              {
-                "column": "model_user_id",
-                "visible": true
-              },
-              {
-                "column": "location",
-                "visible": true
-              },
-              {
-                "displayName": "Invocations",
-                "column": "value",
-                "visible": true
-              },
-              {
-                "displayName": "p99 invocation latency",
-                "column": "value-1",
-                "visible": true
-              },
-              {
-                "displayName": "Tokens",
-                "column": "value-2",
-                "visible": true
-              },
-              {
-                "displayName": "Characters",
-                "column": "value-3",
-                "visible": true
-              },
-              {
-                "column": "project_id",
-                "visible": false
-              }
-            ],
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
-                "timeSeriesQuery": {
-                  "outputFullDuration": true,
-                  "prometheusQuery": "sum by (\"model_user_id\",\"location\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))*60\n",
-                  "unitOverride": ""
-                }
-              },
-              {
-                "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
-                "timeSeriesQuery": {
-                  "outputFullDuration": true,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_PERCENTILE_99",
-                      "groupByFields": [
-                        "resource.label.\"model_user_id\"",
-                        "resource.label.\"location\""
-                      ],
-                      "perSeriesAligner": "ALIGN_DELTA"
-                    },
-                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_latencies\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
-                }
-              },
-              {
-                "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
-                "timeSeriesQuery": {
-                  "outputFullDuration": true,
-                  "prometheusQuery": "sum by (\"model_user_id\",\"location\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/token_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))*60",
-                  "unitOverride": ""
-                }
-              },
-              {
-                "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
-                "timeSeriesQuery": {
-                  "outputFullDuration": true,
-                  "prometheusQuery": "sum by (\"model_user_id\",\"location\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/character_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))*60",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "displayColumnType": false,
-            "metricVisualization": "NUMBER"
-          },
-          "visibilityCondition": {
-            "templateVariableCondition": {
-              "comparator": "REGEX_FULL_MATCH",
-              "templateVariable": "time_unit",
-              "templateVariableValue": "\"per minute\""
-            }
-          }
-        }
-      },
-      {
-        "yPos": 36,
         "height": 4,
         "width": 48,
         "widget": {
@@ -316,37 +179,22 @@
         }
       },
       {
-        "yPos": 40,
+        "yPos": 22,
         "height": 18,
         "width": 24,
         "widget": {
-          "title": "Model requests per second (QPS) ",
-          "id": "",
-          "visibilityCondition": {
-            "templateVariableCondition": {
-              "comparator": "REGEX_FULL_MATCH",
-              "templateVariable": "time_unit",
-              "templateVariableValue": "\"per second\""
-            }
-          },
+          "title": "Model requests per second (QPS), 1-minute resolution from metrics",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
-                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -363,52 +211,106 @@
                       "numTimeSeries": 30,
                       "rankingMethod": "METHOD_MEAN"
                     }
-                  },
-                  "unitOverride": ""
+                  }
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "yPos": 40,
-        "xPos": 24,
+        "yPos": 22,
         "height": 18,
         "width": 24,
         "widget": {
-          "title": "Token count by model (per second)",
+          "title": "",
           "id": "",
-          "visibilityCondition": {
-            "templateVariableCondition": {
-              "comparator": "REGEX_FULL_MATCH",
-              "templateVariable": "time_unit",
-              "templateVariableValue": "\"per second\""
-            }
-          },
+          "singleViewGroup": {
+            "displayType": "DROPDOWN"
+          }
+        }
+      },
+      {
+        "yPos": 22,
+        "height": 18,
+        "width": 24,
+        "widget": {
+          "title": "Model requests per second (QPS), 1-second resolution from logs",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "minAlignmentPeriod": "60s",
+                "breakdowns": [
+                  {
+                    "aggregationFunction": {
+                      "type": "count"
+                    },
+                    "column": "model",
+                    "limit": 16,
+                    "sortOrder": "SORT_ORDER_DESCENDING"
+                  }
+                ],
+                "dimensions": [
+                  {
+                    "column": "bucket",
+                    "columnType": "TIMESTAMP",
+                    "sortColumn": "bucket",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "timeBinSize": "0s"
+                  }
+                ],
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "max"
+                    },
+                    "column": "requests_per_second"
+                  }
+                ],
                 "plotType": "LINE",
                 "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
+                  "opsAnalyticsQuery": {
+                    "queryHandle": "",
+                    "sql": "WITH final AS (WITH e AS (SELECT timestamp, IFNULL(JSON_VALUE(resource.labels.model_user_id), '') AS model, IFNULL(JSON_VALUE(resource.labels.location), '') AS location, SAFE_CAST(RTRIM(JSON_VALUE(json_payload.requestDuration), 's') AS FLOAT64) * 1000 AS latency_ms, CASE IFNULL(SAFE_CAST(JSON_VALUE(json_payload.error.code) AS INT64), 0) WHEN 0 THEN '200' WHEN 1 THEN '499' WHEN 3 THEN '400' WHEN 4 THEN '504' WHEN 5 THEN '404' WHEN 6 THEN '409' WHEN 7 THEN '403' WHEN 8 THEN '429' WHEN 9 THEN '400' WHEN 10 THEN '409' WHEN 11 THEN '400' WHEN 12 THEN '501' WHEN 14 THEN '503' WHEN 16 THEN '401' WHEN 2 THEN '500' WHEN 13 THEN '500' WHEN 15 THEN '500' ELSE 'other' END AS response_code FROM `cloud-llm-preview1.global._Default._Default` WHERE log_id = 'aiplatform.googleapis.com/inference_request' AND resource.type = 'aiplatform.googleapis.com/PublisherModel' AND IFNULL(JSON_VALUE(json_payload.method), '') IN ('GENERATE_CONTENT', 'STREAM_GENERATE_CONTENT', 'RAW_PREDICT', 'STREAM_RAW_PREDICT') AND REGEXP_CONTAINS(IFNULL(JSON_VALUE(resource.labels.model_user_id), ''), r'^(gemini|claude)')), el AS (SELECT timestamp, CONCAT(model, ' ', location) AS model FROM e), ranked AS (SELECT model, RANK() OVER (ORDER BY COUNT(*) DESC, model) AS rk FROM el GROUP BY model), s AS (SELECT TIMESTAMP_TRUNC(el.timestamp, SECOND) AS second, IF(ranked.rk <= 10, el.model, 'other') AS model, COUNT(*) AS requests FROM el JOIN ranked USING (model) GROUP BY second, model), w AS (SELECT s.*, CASE WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 200 THEN 1 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 2000 THEN 10 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 12000 THEN 60 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 60000 THEN 300 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 180000 THEN 900 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 720000 THEN 3600 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 4320000 THEN 21600 ELSE 86400 END AS b FROM s) SELECT TIMESTAMP_SECONDS(DIV(UNIX_SECONDS(second), b) * b) AS bucket, model, SUM(requests) / MAX(b) AS requests_per_second FROM w GROUP BY bucket, model ORDER BY bucket, model) SELECT bucket, model, requests_per_second FROM final UNION ALL SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), SECOND) AS bucket, IF((SELECT COUNT(*) > 0 FROM `cloud-llm-preview1.global._Default._Default` WHERE log_id = 'aiplatform.googleapis.com/inference_request' AND resource.type = 'aiplatform.googleapis.com/PublisherModel' AND REGEXP_CONTAINS(IFNULL(JSON_VALUE(resource.labels.model_user_id), ''), r'^(gemini|claude)')), 'No requests in this window.', 'No inference request logs in this window. Turn on logging to see 1-second data.') AS model, 0 AS requests_per_second FROM (SELECT 1) WHERE NOT EXISTS (SELECT 1 FROM final)"
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 22,
+        "xPos": 24,
+        "height": 18,
+        "width": 24,
+        "widget": {
+          "title": "Token count by model (per second), 1-minute resolution from metrics",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -420,110 +322,92 @@
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/token_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
+                  }
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "yPos": 58,
-        "height": 18,
-        "width": 24,
-        "widget": {
-          "title": "Model requests per minute (QPM) ",
-          "id": "",
-          "visibilityCondition": {
-            "templateVariableCondition": {
-              "comparator": "REGEX_FULL_MATCH",
-              "templateVariable": "time_unit",
-              "templateVariableValue": "\"per minute\""
-            }
-          },
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "plotType": "LINE",
-                "sort": [],
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "topk(30, sum by (\"model_user_id\",\"location\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}])))*60\n",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 58,
+        "yPos": 22,
         "xPos": 24,
         "height": 18,
         "width": 24,
         "widget": {
-          "title": "Token count by model (per minute)",
+          "title": "",
           "id": "",
-          "visibilityCondition": {
-            "templateVariableCondition": {
-              "comparator": "REGEX_FULL_MATCH",
-              "templateVariable": "time_unit",
-              "templateVariableValue": "\"per minute\""
-            }
-          },
+          "singleViewGroup": {
+            "displayType": "DROPDOWN"
+          }
+        }
+      },
+      {
+        "yPos": 22,
+        "xPos": 24,
+        "height": 18,
+        "width": 24,
+        "widget": {
+          "title": "Token count by model (per second), 1-second resolution from logs",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
+                "breakdowns": [
+                  {
+                    "aggregationFunction": {
+                      "type": "count"
+                    },
+                    "column": "model",
+                    "limit": 16,
+                    "sortOrder": "SORT_ORDER_DESCENDING"
+                  }
+                ],
+                "dimensions": [
+                  {
+                    "column": "bucket",
+                    "columnType": "TIMESTAMP",
+                    "sortColumn": "bucket",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "timeBinSize": "0s"
+                  }
+                ],
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "max"
+                    },
+                    "column": "tokens_per_second"
+                  }
+                ],
                 "plotType": "LINE",
                 "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "prometheusQuery": "sum by (\"model_user_id\",\"location\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/token_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))*60\n",
-                  "unitOverride": ""
+                  "opsAnalyticsQuery": {
+                    "queryHandle": "",
+                    "sql": "WITH final AS (WITH cfg AS (SELECT * FROM UNNEST([STRUCT('claude-opus-5-5' AS model, 0.05 AS cache_read_weight), ('claude-sonnet-5-5', 0.05), ('claude-fable-5-1', 0.025), ('claude-mythos-5-1', 0.025)])), r AS ( SELECT timestamp, IFNULL(JSON_VALUE(resource.labels.model_user_id), '') AS model, IFNULL(JSON_VALUE(resource.labels.location), '') AS location, IFNULL(JSON_VALUE(json_payload.trafficType), '') AS traffic_type, IFNULL(JSON_VALUE(resource.labels.publisher), '') IN ('google', '') AS is_google, LOWER(IFNULL(JSON_VALUE(json_payload, '$.httpHeaders.\"x-vertex-ai-llm-request-type\".values[0]'), '')) AS request_type, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.promptTokenCount) AS INT64), 0) AS g_prompt, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.toolUsePromptTokenCount) AS INT64), 0) AS g_tool, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.cachedContentTokenCount) AS INT64), 0) AS g_cached, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.candidatesTokenCount) AS INT64), 0) AS g_out, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.thoughtsTokenCount) AS INT64), 0) AS g_thoughts, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.input_tokens) AS INT64), 0) AS c_in, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.cache_read_input_tokens) AS INT64), 0) AS c_read, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.cache_creation_input_tokens) AS INT64), 0) AS c_write, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.cache_creation.ephemeral_1h_input_tokens) AS INT64), 0) AS c_write_1h, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.output_tokens) AS INT64), 0) AS c_out FROM `cloud-llm-preview1.global._Default._Default` WHERE log_id = 'aiplatform.googleapis.com/inference_request' AND resource.type = 'aiplatform.googleapis.com/PublisherModel' AND IFNULL(JSON_VALUE(json_payload.method), '') IN ('GENERATE_CONTENT', 'STREAM_GENERATE_CONTENT', 'RAW_PREDICT', 'STREAM_RAW_PREDICT') AND IFNULL(JSON_VALUE(resource.labels.model_user_id), '') != 'count-tokens' AND severity = 'INFO' AND REGEXP_CONTAINS(IFNULL(JSON_VALUE(resource.labels.model_user_id), ''), r'^(gemini|claude)')), u AS (SELECT timestamp, CONCAT(model, ' ', location) AS model, IF(is_google, g_prompt + g_tool + g_out + g_thoughts, c_in + c_read + c_write + c_out) AS tokens FROM r), ranked AS (SELECT model, RANK() OVER (ORDER BY SUM(tokens) DESC, model) AS rk FROM u GROUP BY model), s AS (SELECT TIMESTAMP_TRUNC(u.timestamp, SECOND) AS second, IF(ranked.rk <= 10, u.model, 'other') AS model, SUM(u.tokens) AS tokens FROM u JOIN ranked USING (model) GROUP BY second, model), w AS (SELECT s.*, CASE WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 200 THEN 1 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 2000 THEN 10 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 12000 THEN 60 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 60000 THEN 300 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 180000 THEN 900 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 720000 THEN 3600 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 4320000 THEN 21600 ELSE 86400 END AS b FROM s) SELECT TIMESTAMP_SECONDS(DIV(UNIX_SECONDS(second), b) * b) AS bucket, model, SUM(tokens) / MAX(b) AS tokens_per_second FROM w GROUP BY bucket, model ORDER BY bucket, model) SELECT bucket, model, tokens_per_second FROM final UNION ALL SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), SECOND) AS bucket, IF((SELECT COUNT(*) > 0 FROM `cloud-llm-preview1.global._Default._Default` WHERE log_id = 'aiplatform.googleapis.com/inference_request' AND resource.type = 'aiplatform.googleapis.com/PublisherModel' AND REGEXP_CONTAINS(IFNULL(JSON_VALUE(resource.labels.model_user_id), ''), r'^(gemini|claude)')), 'No requests in this window.', 'No inference request logs in this window. Turn on logging to see 1-second data.') AS model, 0 AS tokens_per_second FROM (SELECT 1) WHERE NOT EXISTS (SELECT 1 FROM final)"
+                  }
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "yPos": 76,
+        "yPos": 40,
         "height": 18,
         "width": 7,
         "widget": {
@@ -545,38 +429,23 @@
         }
       },
       {
-        "yPos": 76,
+        "yPos": 40,
         "xPos": 7,
         "height": 18,
         "width": 17,
         "widget": {
-          "title": "Token throughput (per second)",
-          "id": "",
-          "visibilityCondition": {
-            "templateVariableCondition": {
-              "comparator": "REGEX_FULL_MATCH",
-              "templateVariable": "time_unit",
-              "templateVariableValue": "\"per second\""
-            }
-          },
+          "title": "Token throughput",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_BAR",
-                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -587,7 +456,219 @@
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/token_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 40,
+        "xPos": 24,
+        "height": 18,
+        "width": 24,
+        "widget": {
+          "title": "Token throughput",
+          "timeSeriesTable": {
+            "columnSettings": [
+              {
+                "column": "Name",
+                "visible": true
+              },
+              {
+                "column": "model_user_id",
+                "visible": true
+              },
+              {
+                "column": "project_id",
+                "visible": true
+              },
+              {
+                "displayName": "Token throughput",
+                "column": "value",
+                "visible": true
+              },
+              {
+                "displayName": "Input token count",
+                "column": "value-1",
+                "visible": true
+              },
+              {
+                "displayName": "Output token count",
+                "column": "value-2",
+                "visible": true
+              }
+            ],
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"model_user_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_token_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                  }
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"model_user_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/token_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\" metric.label.\"type\"=\"input\""
+                  }
+                }
+              },
+              {
+                "minAlignmentPeriod": "60s",
+                "timeSeriesQuery": {
+                  "outputFullDuration": true,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"model_user_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/token_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\" metric.label.\"type\"=\"output\""
+                  }
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER"
+          }
+        }
+      },
+      {
+        "yPos": 58,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Token throughput by model, 1-minute resolution from metrics",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"model_user_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_token_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 58,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "",
+          "id": "",
+          "singleViewGroup": {
+            "displayType": "DROPDOWN"
+          }
+        }
+      },
+      {
+        "yPos": 58,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Token throughput by model, 1-second resolution from logs",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "count"
+                    },
+                    "column": "model",
+                    "limit": 16,
+                    "sortOrder": "SORT_ORDER_DESCENDING"
+                  }
+                ],
+                "dimensions": [
+                  {
+                    "column": "bucket",
+                    "columnType": "TIMESTAMP",
+                    "maxBinCount": 0,
+                    "sortColumn": "bucket",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "timeBinSize": "0s",
+                    "xMax": 0,
+                    "xMin": 0
+                  }
+                ],
+                "legendTemplate": "",
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "max"
+                    },
+                    "column": "consumed_tokens_per_second"
+                  }
+                ],
+                "plotType": "LINE",
+                "sort": [],
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "savedQueryId": "",
+                    "sql": "WITH final AS (WITH cfg AS (SELECT * FROM UNNEST([STRUCT('claude-opus-5-5' AS model, 0.05 AS cache_read_weight), ('claude-sonnet-5-5', 0.05), ('claude-fable-5-1', 0.025), ('claude-mythos-5-1', 0.025)])), r AS ( SELECT timestamp, IFNULL(JSON_VALUE(resource.labels.model_user_id), '') AS model, IFNULL(JSON_VALUE(json_payload.trafficType), '') AS traffic_type, IFNULL(JSON_VALUE(resource.labels.publisher), '') IN ('google', '') AS is_google, LOWER(IFNULL(JSON_VALUE(json_payload, '$.httpHeaders.\"x-vertex-ai-llm-request-type\".values[0]'), '')) AS request_type, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.promptTokenCount) AS INT64), 0) AS g_prompt, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.toolUsePromptTokenCount) AS INT64), 0) AS g_tool, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.cachedContentTokenCount) AS INT64), 0) AS g_cached, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.candidatesTokenCount) AS INT64), 0) AS g_out, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.thoughtsTokenCount) AS INT64), 0) AS g_thoughts, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.input_tokens) AS INT64), 0) AS c_in, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.cache_read_input_tokens) AS INT64), 0) AS c_read, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.cache_creation_input_tokens) AS INT64), 0) AS c_write, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.cache_creation.ephemeral_1h_input_tokens) AS INT64), 0) AS c_write_1h, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.output_tokens) AS INT64), 0) AS c_out FROM `cloud-llm-preview1.global._Default._Default` WHERE log_id = 'aiplatform.googleapis.com/inference_request' AND resource.type = 'aiplatform.googleapis.com/PublisherModel' AND IFNULL(JSON_VALUE(json_payload.method), '') IN ('GENERATE_CONTENT', 'STREAM_GENERATE_CONTENT', 'RAW_PREDICT', 'STREAM_RAW_PREDICT') AND IFNULL(JSON_VALUE(resource.labels.model_user_id), '') != 'count-tokens' AND severity = 'INFO' AND REGEXP_CONTAINS(IFNULL(JSON_VALUE(resource.labels.model_user_id), ''), r'^(gemini|claude)')), t AS ( SELECT r.*, IF(is_google, g_prompt + g_tool - 0.9 * LEAST(g_cached, g_prompt + g_tool) + g_out + g_thoughts, c_in + IFNULL(cfg.cache_read_weight, 0.1) * c_read + 1.25 * GREATEST(c_write - c_write_1h, 0) + 2 * c_write_1h + 5 * c_out) AS consumed, IF(is_google, g_cached, c_read) AS cache_read, IF(is_google, GREATEST(g_prompt + g_tool, g_cached), c_in + c_read + c_write) AS all_input, CASE WHEN traffic_type = 'PROVISIONED_THROUGHPUT' THEN 'PROVISIONED_THROUGHPUT' WHEN traffic_type != '' AND LOGICAL_OR(traffic_type = 'PROVISIONED_THROUGHPUT') OVER (PARTITION BY model) AND IF(is_google, request_type NOT IN ('dedicated', 'shared'), request_type = 'batch') THEN 'PT_SPILLOVER' ELSE traffic_type END AS traffic_class FROM r LEFT JOIN cfg USING (model)), ranked AS (SELECT model, RANK() OVER (ORDER BY SUM(consumed) DESC, model) AS rk FROM t WHERE traffic_class != '' GROUP BY model), s AS (SELECT TIMESTAMP_TRUNC(t.timestamp, SECOND) AS second, IF(ranked.rk <= 10, t.model, 'other') AS model, SUM(t.consumed) AS consumed FROM t JOIN ranked USING (model) WHERE t.traffic_class != '' GROUP BY second, model), w AS (SELECT s.*, CASE WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 200 THEN 1 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 2000 THEN 10 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 12000 THEN 60 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 60000 THEN 300 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 180000 THEN 900 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 720000 THEN 3600 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 4320000 THEN 21600 ELSE 86400 END AS b FROM s) SELECT TIMESTAMP_SECONDS(DIV(UNIX_SECONDS(second), b) * b) AS bucket, model, SUM(consumed) / MAX(b) AS consumed_tokens_per_second FROM w GROUP BY bucket, model ORDER BY bucket, model) SELECT bucket, model, consumed_tokens_per_second FROM final UNION ALL SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), SECOND) AS bucket, IF((SELECT COUNT(*) > 0 FROM `cloud-llm-preview1.global._Default._Default` WHERE log_id = 'aiplatform.googleapis.com/inference_request' AND resource.type = 'aiplatform.googleapis.com/PublisherModel' AND REGEXP_CONTAINS(IFNULL(JSON_VALUE(resource.labels.model_user_id), ''), r'^(gemini|claude)')), 'No requests in this window.', 'No inference request logs in this window. Turn on logging to see 1-second data.') AS model, 0 AS consumed_tokens_per_second FROM (SELECT 1) WHERE NOT EXISTS (SELECT 1 FROM final)"
                   },
+                  "outputFullDuration": false,
                   "unitOverride": ""
                 }
               }
@@ -601,20 +682,159 @@
         }
       },
       {
-        "yPos": 94,
-        "xPos": 7,
-        "height": 18,
-        "width": 17,
+        "yPos": 58,
+        "height": 16,
+        "width": 24,
         "widget": {
-          "title": "Token throughput (per minute)",
+          "title": "Token count by model, 1-minute resolution from metrics",
           "id": "",
-          "visibilityCondition": {
-            "templateVariableCondition": {
-              "comparator": "REGEX_FULL_MATCH",
-              "templateVariable": "time_unit",
-              "templateVariableValue": "\"per minute\""
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.\"model_user_id\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/token_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
             }
-          },
+          }
+        }
+      },
+      {
+        "yPos": 58,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Token count by model, 1-second resolution from logs",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "count"
+                    },
+                    "column": "model",
+                    "limit": 16,
+                    "sortOrder": "SORT_ORDER_DESCENDING"
+                  }
+                ],
+                "dimensions": [
+                  {
+                    "column": "bucket",
+                    "columnType": "TIMESTAMP",
+                    "maxBinCount": 0,
+                    "sortColumn": "bucket",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "timeBinSize": "0s",
+                    "xMax": 0,
+                    "xMin": 0
+                  }
+                ],
+                "legendTemplate": "",
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "max"
+                    },
+                    "column": "tokens_per_second"
+                  }
+                ],
+                "plotType": "LINE",
+                "sort": [],
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "savedQueryId": "",
+                    "sql": "WITH final AS (WITH cfg AS (SELECT * FROM UNNEST([STRUCT('claude-opus-5-5' AS model, 0.05 AS cache_read_weight), ('claude-sonnet-5-5', 0.05), ('claude-fable-5-1', 0.025), ('claude-mythos-5-1', 0.025)])), r AS ( SELECT timestamp, IFNULL(JSON_VALUE(resource.labels.model_user_id), '') AS model, IFNULL(JSON_VALUE(resource.labels.location), '') AS location, IFNULL(JSON_VALUE(json_payload.trafficType), '') AS traffic_type, IFNULL(JSON_VALUE(resource.labels.publisher), '') IN ('google', '') AS is_google, LOWER(IFNULL(JSON_VALUE(json_payload, '$.httpHeaders.\"x-vertex-ai-llm-request-type\".values[0]'), '')) AS request_type, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.promptTokenCount) AS INT64), 0) AS g_prompt, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.toolUsePromptTokenCount) AS INT64), 0) AS g_tool, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.cachedContentTokenCount) AS INT64), 0) AS g_cached, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.candidatesTokenCount) AS INT64), 0) AS g_out, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.thoughtsTokenCount) AS INT64), 0) AS g_thoughts, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.input_tokens) AS INT64), 0) AS c_in, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.cache_read_input_tokens) AS INT64), 0) AS c_read, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.cache_creation_input_tokens) AS INT64), 0) AS c_write, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.cache_creation.ephemeral_1h_input_tokens) AS INT64), 0) AS c_write_1h, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.output_tokens) AS INT64), 0) AS c_out FROM `cloud-llm-preview1.global._Default._Default` WHERE log_id = 'aiplatform.googleapis.com/inference_request' AND resource.type = 'aiplatform.googleapis.com/PublisherModel' AND IFNULL(JSON_VALUE(json_payload.method), '') IN ('GENERATE_CONTENT', 'STREAM_GENERATE_CONTENT', 'RAW_PREDICT', 'STREAM_RAW_PREDICT') AND IFNULL(JSON_VALUE(resource.labels.model_user_id), '') != 'count-tokens' AND severity = 'INFO' AND REGEXP_CONTAINS(IFNULL(JSON_VALUE(resource.labels.model_user_id), ''), r'^(gemini|claude)')), ranked AS (SELECT model, RANK() OVER (ORDER BY SUM(IF(is_google, g_prompt + g_tool + g_out + g_thoughts, c_in + c_read + c_write + c_out)) DESC, model) AS rk FROM r GROUP BY model), w AS (SELECT r.timestamp, IF(ranked.rk <= 10, r.model, 'other') AS model, IF(r.is_google, r.g_prompt + r.g_tool + r.g_out + r.g_thoughts, r.c_in + r.c_read + r.c_write + r.c_out) AS tokens, CASE WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 200 THEN 1 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 2000 THEN 10 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 12000 THEN 60 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 60000 THEN 300 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 180000 THEN 900 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 720000 THEN 3600 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 4320000 THEN 21600 ELSE 86400 END AS b FROM r JOIN ranked USING (model)) SELECT TIMESTAMP_SECONDS(DIV(UNIX_SECONDS(timestamp), b) * b) AS bucket, model, SUM(tokens) / MAX(b) AS tokens_per_second FROM w GROUP BY bucket, model ORDER BY bucket, model) SELECT bucket, model, tokens_per_second FROM final UNION ALL SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), SECOND) AS bucket, IF((SELECT COUNT(*) > 0 FROM `cloud-llm-preview1.global._Default._Default` WHERE log_id = 'aiplatform.googleapis.com/inference_request' AND resource.type = 'aiplatform.googleapis.com/PublisherModel' AND REGEXP_CONTAINS(IFNULL(JSON_VALUE(resource.labels.model_user_id), ''), r'^(gemini|claude)')), 'No requests in this window.', 'No inference request logs in this window. Turn on logging to see 1-second data.') AS model, 0 AS tokens_per_second FROM (SELECT 1) WHERE NOT EXISTS (SELECT 1 FROM final)"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 58,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Token count by input vs output, 1-minute resolution from metrics",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"type\""
+                      ],
+                      "perSeriesAligner": "ALIGN_RATE"
+                    },
+                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/token_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 58,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Token count by input vs output, 1-second resolution from logs",
+          "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
@@ -624,15 +844,65 @@
             "dataSets": [
               {
                 "breakdowns": [],
-                "dimensions": [],
+                "dimensions": [
+                  {
+                    "column": "bucket",
+                    "columnType": "TIMESTAMP",
+                    "maxBinCount": 0,
+                    "sortColumn": "bucket",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "timeBinSize": "0s",
+                    "xMax": 0,
+                    "xMin": 0
+                  }
+                ],
                 "legendTemplate": "",
-                "measures": [],
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "sum"
+                    },
+                    "column": "input"
+                  },
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "sum"
+                    },
+                    "column": "cache_read_input"
+                  },
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "sum"
+                    },
+                    "column": "cache_write_input"
+                  },
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "sum"
+                    },
+                    "column": "cache_write_1h_input"
+                  },
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "sum"
+                    },
+                    "column": "output"
+                  }
+                ],
                 "plotType": "STACKED_BAR",
                 "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "savedQueryId": "",
+                    "sql": "WITH cfg AS (SELECT * FROM UNNEST([STRUCT('claude-opus-5-5' AS model, 0.05 AS cache_read_weight), ('claude-sonnet-5-5', 0.05), ('claude-fable-5-1', 0.025), ('claude-mythos-5-1', 0.025)])), r AS ( SELECT timestamp, IFNULL(JSON_VALUE(resource.labels.model_user_id), '') AS model, IFNULL(JSON_VALUE(resource.labels.location), '') AS location, IFNULL(JSON_VALUE(json_payload.trafficType), '') AS traffic_type, IFNULL(JSON_VALUE(resource.labels.publisher), '') IN ('google', '') AS is_google, LOWER(IFNULL(JSON_VALUE(json_payload, '$.httpHeaders.\"x-vertex-ai-llm-request-type\".values[0]'), '')) AS request_type, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.promptTokenCount) AS INT64), 0) AS g_prompt, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.toolUsePromptTokenCount) AS INT64), 0) AS g_tool, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.cachedContentTokenCount) AS INT64), 0) AS g_cached, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.candidatesTokenCount) AS INT64), 0) AS g_out, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.thoughtsTokenCount) AS INT64), 0) AS g_thoughts, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.input_tokens) AS INT64), 0) AS c_in, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.cache_read_input_tokens) AS INT64), 0) AS c_read, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.cache_creation_input_tokens) AS INT64), 0) AS c_write, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.cache_creation.ephemeral_1h_input_tokens) AS INT64), 0) AS c_write_1h, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.output_tokens) AS INT64), 0) AS c_out FROM `cloud-llm-preview1.global._Default._Default` WHERE log_id = 'aiplatform.googleapis.com/inference_request' AND resource.type = 'aiplatform.googleapis.com/PublisherModel' AND IFNULL(JSON_VALUE(json_payload.method), '') IN ('GENERATE_CONTENT', 'STREAM_GENERATE_CONTENT', 'RAW_PREDICT', 'STREAM_RAW_PREDICT') AND IFNULL(JSON_VALUE(resource.labels.model_user_id), '') != 'count-tokens' AND severity = 'INFO' AND REGEXP_CONTAINS(IFNULL(JSON_VALUE(resource.labels.model_user_id), ''), r'^(gemini|claude)')), w AS (SELECT r.*, CASE WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 200 THEN 1 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 2000 THEN 10 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 12000 THEN 60 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 60000 THEN 300 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 180000 THEN 900 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 720000 THEN 3600 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 4320000 THEN 21600 ELSE 86400 END AS b FROM r), x AS (SELECT TIMESTAMP_SECONDS(DIV(UNIX_SECONDS(timestamp), b) * b) AS bucket, MAX(b) AS b, SUM(IF(is_google, g_prompt + g_tool, c_in)) AS input, SUM(IF(is_google, 0, c_read)) AS cache_read_input, SUM(IF(is_google, 0, GREATEST(c_write - c_write_1h, 0))) AS cache_write_input, SUM(IF(is_google, 0, c_write_1h)) AS cache_write_1h_input, SUM(IF(is_google, g_out + g_thoughts, c_out)) AS output FROM w GROUP BY bucket) SELECT bucket, input / b AS input, cache_read_input / b AS cache_read_input, cache_write_input / b AS cache_write_input, cache_write_1h_input / b AS cache_write_1h_input, output / b AS output FROM x ORDER BY bucket"
+                  },
                   "outputFullDuration": false,
-                  "prometheusQuery": "sum by (\"type\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/token_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))*60",
                   "unitOverride": ""
                 }
               }
@@ -646,7 +916,76 @@
         }
       },
       {
-        "yPos": 112,
+        "yPos": 58,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Token throughput by model and served traffic type, 1-second resolution from logs",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "count"
+                    },
+                    "column": "model_traffic_type",
+                    "limit": 16,
+                    "sortOrder": "SORT_ORDER_DESCENDING"
+                  }
+                ],
+                "dimensions": [
+                  {
+                    "column": "bucket",
+                    "columnType": "TIMESTAMP",
+                    "maxBinCount": 0,
+                    "sortColumn": "bucket",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "timeBinSize": "0s",
+                    "xMax": 0,
+                    "xMin": 0
+                  }
+                ],
+                "legendTemplate": "",
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "max"
+                    },
+                    "column": "consumed_tokens_per_second"
+                  }
+                ],
+                "plotType": "LINE",
+                "sort": [],
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "savedQueryId": "",
+                    "sql": "WITH final AS (WITH cfg AS (SELECT * FROM UNNEST([STRUCT('claude-opus-5-5' AS model, 0.05 AS cache_read_weight), ('claude-sonnet-5-5', 0.05), ('claude-fable-5-1', 0.025), ('claude-mythos-5-1', 0.025)])), r AS ( SELECT timestamp, IFNULL(JSON_VALUE(resource.labels.model_user_id), '') AS model, IFNULL(JSON_VALUE(json_payload.trafficType), '') AS traffic_type, IFNULL(JSON_VALUE(resource.labels.publisher), '') IN ('google', '') AS is_google, LOWER(IFNULL(JSON_VALUE(json_payload, '$.httpHeaders.\"x-vertex-ai-llm-request-type\".values[0]'), '')) AS request_type, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.promptTokenCount) AS INT64), 0) AS g_prompt, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.toolUsePromptTokenCount) AS INT64), 0) AS g_tool, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.cachedContentTokenCount) AS INT64), 0) AS g_cached, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.candidatesTokenCount) AS INT64), 0) AS g_out, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.generateContentDetails.usageMetadata.thoughtsTokenCount) AS INT64), 0) AS g_thoughts, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.input_tokens) AS INT64), 0) AS c_in, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.cache_read_input_tokens) AS INT64), 0) AS c_read, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.cache_creation_input_tokens) AS INT64), 0) AS c_write, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.cache_creation.ephemeral_1h_input_tokens) AS INT64), 0) AS c_write_1h, IFNULL(SAFE_CAST(JSON_VALUE(json_payload.rawPredictDetails.usageMetadata.output_tokens) AS INT64), 0) AS c_out FROM `cloud-llm-preview1.global._Default._Default` WHERE log_id = 'aiplatform.googleapis.com/inference_request' AND resource.type = 'aiplatform.googleapis.com/PublisherModel' AND IFNULL(JSON_VALUE(json_payload.method), '') IN ('GENERATE_CONTENT', 'STREAM_GENERATE_CONTENT', 'RAW_PREDICT', 'STREAM_RAW_PREDICT') AND IFNULL(JSON_VALUE(resource.labels.model_user_id), '') != 'count-tokens' AND severity = 'INFO' AND REGEXP_CONTAINS(IFNULL(JSON_VALUE(resource.labels.model_user_id), ''), r'^(gemini|claude)')), t AS ( SELECT r.*, IF(is_google, g_prompt + g_tool - 0.9 * LEAST(g_cached, g_prompt + g_tool) + g_out + g_thoughts, c_in + IFNULL(cfg.cache_read_weight, 0.1) * c_read + 1.25 * GREATEST(c_write - c_write_1h, 0) + 2 * c_write_1h + 5 * c_out) AS consumed, IF(is_google, g_cached, c_read) AS cache_read, IF(is_google, GREATEST(g_prompt + g_tool, g_cached), c_in + c_read + c_write) AS all_input, CASE WHEN traffic_type = 'PROVISIONED_THROUGHPUT' THEN 'PROVISIONED_THROUGHPUT' WHEN traffic_type != '' AND LOGICAL_OR(traffic_type = 'PROVISIONED_THROUGHPUT') OVER (PARTITION BY model) AND IF(is_google, request_type NOT IN ('dedicated', 'shared'), request_type = 'batch') THEN 'PT_SPILLOVER' ELSE traffic_type END AS traffic_class FROM r LEFT JOIN cfg USING (model)), l AS (SELECT timestamp, CONCAT(model, CASE traffic_class WHEN 'ON_DEMAND' THEN ' standard PayGo' WHEN 'ON_DEMAND_PRIORITY' THEN ' priority PayGo' WHEN 'ON_DEMAND_FLEX' THEN ' flex PayGo' WHEN 'ON_DEMAND_OFFPEAK' THEN ' offpeak PayGo' WHEN 'PROVISIONED_THROUGHPUT' THEN ' Provisioned Throughput' WHEN 'PT_SPILLOVER' THEN ' PT spillover' ELSE CONCAT(' ', traffic_class) END) AS series, consumed FROM t WHERE traffic_class NOT IN ('', 'PROVISIONED_THROUGHPUT', 'PT_SPILLOVER')), ranked AS (SELECT series, RANK() OVER (ORDER BY SUM(consumed) DESC, series) AS rk FROM l GROUP BY series), s AS (SELECT TIMESTAMP_TRUNC(l.timestamp, SECOND) AS second, IF(ranked.rk <= 15, l.series, 'other') AS series, SUM(l.consumed) AS consumed FROM l JOIN ranked USING (series) GROUP BY second, series), w AS (SELECT s.*, CASE WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 200 THEN 1 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 2000 THEN 10 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 12000 THEN 60 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 60000 THEN 300 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 180000 THEN 900 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 720000 THEN 3600 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 4320000 THEN 21600 ELSE 86400 END AS b FROM s) SELECT TIMESTAMP_SECONDS(DIV(UNIX_SECONDS(second), b) * b) AS bucket, series AS model_traffic_type, SUM(consumed) / MAX(b) AS consumed_tokens_per_second FROM w GROUP BY bucket, series ORDER BY bucket, series) SELECT bucket, model_traffic_type, consumed_tokens_per_second FROM final UNION ALL SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), SECOND) AS bucket, IF((SELECT COUNT(*) > 0 FROM `cloud-llm-preview1.global._Default._Default` WHERE log_id = 'aiplatform.googleapis.com/inference_request' AND resource.type = 'aiplatform.googleapis.com/PublisherModel' AND REGEXP_CONTAINS(IFNULL(JSON_VALUE(resource.labels.model_user_id), ''), r'^(gemini|claude)')), 'No pay-as-you-go traffic in this window.', 'No inference request logs in this window. Turn on logging to see 1-second data.') AS model_traffic_type, 0 AS consumed_tokens_per_second FROM (SELECT 1) WHERE NOT EXISTS (SELECT 1 FROM final)"
+                  },
+                  "outputFullDuration": false,
+                  "unitOverride": ""
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "label": "",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 74,
         "height": 4,
         "width": 48,
         "widget": {
@@ -659,7 +998,7 @@
         }
       },
       {
-        "yPos": 116,
+        "yPos": 78,
         "height": 4,
         "width": 48,
         "widget": {
@@ -681,7 +1020,7 @@
         }
       },
       {
-        "yPos": 120,
+        "yPos": 82,
         "height": 18,
         "width": 24,
         "widget": {
@@ -690,21 +1029,15 @@
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
                 "legendTemplate": "p50",
-                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
-                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -713,21 +1046,15 @@
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/first_token_latencies\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
+                  }
                 }
               },
               {
-                "breakdowns": [],
-                "dimensions": [],
                 "legendTemplate": "p95",
-                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
-                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -736,21 +1063,15 @@
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/first_token_latencies\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
+                  }
                 }
               },
               {
-                "breakdowns": [],
-                "dimensions": [],
                 "legendTemplate": "p99",
-                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
-                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -759,21 +1080,19 @@
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/first_token_latencies\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
+                  }
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "yPos": 120,
+        "yPos": 82,
         "xPos": 24,
         "height": 18,
         "width": 24,
@@ -783,21 +1102,15 @@
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
                 "legendTemplate": "p50",
-                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
-                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -806,21 +1119,15 @@
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_latencies\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
+                  }
                 }
               },
               {
-                "breakdowns": [],
-                "dimensions": [],
                 "legendTemplate": "p95",
-                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
-                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -829,21 +1136,15 @@
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_latencies\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
+                  }
                 }
               },
               {
-                "breakdowns": [],
-                "dimensions": [],
                 "legendTemplate": "p99",
-                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
-                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -852,21 +1153,19 @@
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_latencies\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
+                  }
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "yPos": 138,
+        "yPos": 100,
         "height": 18,
         "width": 24,
         "widget": {
@@ -875,21 +1174,14 @@
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
-                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -900,21 +1192,19 @@
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_latencies\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
+                  }
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "yPos": 138,
+        "yPos": 100,
         "xPos": 24,
         "height": 18,
         "width": 24,
@@ -924,21 +1214,14 @@
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
-                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -949,21 +1232,19 @@
                       "perSeriesAligner": "ALIGN_DELTA"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/first_token_latencies\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
+                  }
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "yPos": 156,
+        "yPos": 118,
         "height": 4,
         "width": 48,
         "widget": {
@@ -976,30 +1257,24 @@
         }
       },
       {
-        "yPos": 160,
+        "yPos": 122,
         "height": 20,
         "width": 24,
         "widget": {
-          "title": "Model invocations by response code",
+          "title": "Model invocations by response code, 1-minute resolution from metrics",
           "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
                 "legendTemplate": "${metric.labels.response_code}",
-                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "STACKED_BAR",
-                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
                   "timeSeriesFilter": {
                     "aggregation": {
                       "alignmentPeriod": "60s",
@@ -1010,7 +1285,139 @@
                       "perSeriesAligner": "ALIGN_RATE"
                     },
                     "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                  }
+                }
+              }
+            ],
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 122,
+        "height": 20,
+        "width": 24,
+        "widget": {
+          "title": "",
+          "id": "",
+          "singleViewGroup": {
+            "displayType": "DROPDOWN"
+          }
+        }
+      },
+      {
+        "yPos": 122,
+        "height": 20,
+        "width": 24,
+        "widget": {
+          "title": "Model invocations by response code, 1-second resolution from logs",
+          "id": "",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "breakdowns": [],
+                "dimensions": [
+                  {
+                    "column": "bucket",
+                    "columnType": "TIMESTAMP",
+                    "maxBinCount": 0,
+                    "sortColumn": "bucket",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "timeBinSize": "0s",
+                    "xMax": 0,
+                    "xMin": 0
+                  }
+                ],
+                "legendTemplate": "",
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "sum"
+                    },
+                    "column": "code_200"
                   },
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "sum"
+                    },
+                    "column": "code_400"
+                  },
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "sum"
+                    },
+                    "column": "code_403"
+                  },
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "sum"
+                    },
+                    "column": "code_404"
+                  },
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "sum"
+                    },
+                    "column": "code_429"
+                  },
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "sum"
+                    },
+                    "column": "code_499"
+                  },
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "sum"
+                    },
+                    "column": "code_500"
+                  },
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "sum"
+                    },
+                    "column": "code_503"
+                  },
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "sum"
+                    },
+                    "column": "code_504"
+                  },
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "sum"
+                    },
+                    "column": "code_other"
+                  }
+                ],
+                "plotType": "STACKED_BAR",
+                "sort": [],
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "savedQueryId": "",
+                    "sql": "WITH e AS (SELECT timestamp, IFNULL(JSON_VALUE(resource.labels.model_user_id), '') AS model, IFNULL(JSON_VALUE(resource.labels.location), '') AS location, SAFE_CAST(RTRIM(JSON_VALUE(json_payload.requestDuration), 's') AS FLOAT64) * 1000 AS latency_ms, CASE IFNULL(SAFE_CAST(JSON_VALUE(json_payload.error.code) AS INT64), 0) WHEN 0 THEN '200' WHEN 1 THEN '499' WHEN 3 THEN '400' WHEN 4 THEN '504' WHEN 5 THEN '404' WHEN 6 THEN '409' WHEN 7 THEN '403' WHEN 8 THEN '429' WHEN 9 THEN '400' WHEN 10 THEN '409' WHEN 11 THEN '400' WHEN 12 THEN '501' WHEN 14 THEN '503' WHEN 16 THEN '401' WHEN 2 THEN '500' WHEN 13 THEN '500' WHEN 15 THEN '500' ELSE 'other' END AS response_code FROM `cloud-llm-preview1.global._Default._Default` WHERE log_id = 'aiplatform.googleapis.com/inference_request' AND resource.type = 'aiplatform.googleapis.com/PublisherModel' AND IFNULL(JSON_VALUE(json_payload.method), '') IN ('GENERATE_CONTENT', 'STREAM_GENERATE_CONTENT', 'RAW_PREDICT', 'STREAM_RAW_PREDICT') AND REGEXP_CONTAINS(IFNULL(JSON_VALUE(resource.labels.model_user_id), ''), r'^(gemini|claude)')), s AS (SELECT TIMESTAMP_TRUNC(timestamp, SECOND) AS second, response_code, COUNT(*) AS requests FROM e GROUP BY second, response_code), w AS (SELECT s.*, CASE WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 200 THEN 1 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 2000 THEN 10 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 12000 THEN 60 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 60000 THEN 300 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 180000 THEN 900 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 720000 THEN 3600 WHEN TIMESTAMP_DIFF(MAX(second) OVER (), MIN(second) OVER (), SECOND) <= 4320000 THEN 21600 ELSE 86400 END AS b FROM s) SELECT TIMESTAMP_SECONDS(DIV(UNIX_SECONDS(second), b) * b) AS bucket, SUM(IF(response_code = '200', requests, 0)) / MAX(b) AS code_200, SUM(IF(response_code = '400', requests, 0)) / MAX(b) AS code_400, SUM(IF(response_code = '403', requests, 0)) / MAX(b) AS code_403, SUM(IF(response_code = '404', requests, 0)) / MAX(b) AS code_404, SUM(IF(response_code = '429', requests, 0)) / MAX(b) AS code_429, SUM(IF(response_code = '499', requests, 0)) / MAX(b) AS code_499, SUM(IF(response_code = '500', requests, 0)) / MAX(b) AS code_500, SUM(IF(response_code = '503', requests, 0)) / MAX(b) AS code_503, SUM(IF(response_code = '504', requests, 0)) / MAX(b) AS code_504, SUM(IF(response_code NOT IN ('200', '400', '403', '404', '429', '499', '500', '503', '504'), requests, 0)) / MAX(b) AS code_other FROM w GROUP BY bucket ORDER BY bucket"
+                  },
+                  "outputFullDuration": false,
                   "unitOverride": ""
                 }
               }
@@ -1024,31 +1431,25 @@
         }
       },
       {
-        "yPos": 160,
+        "yPos": 122,
         "xPos": 24,
         "height": 20,
         "width": 24,
         "widget": {
-          "title": "Model invocations error rate (%)",
+          "title": "Model invocations error rate (%), 1-minute resolution from metrics",
           "id": "",
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
                 "legendTemplate": "${metric.labels.response_code}",
-                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
-                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
                   "timeSeriesFilterRatio": {
                     "numerator": {
                       "aggregation": {
@@ -1069,193 +1470,21 @@
                       },
                       "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/model_invocation_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
                     }
-                  },
-                  "unitOverride": ""
+                  }
                 }
               }
             ],
             "thresholds": [],
             "yAxis": {
-              "label": "",
               "scale": "LINEAR"
             }
           }
         }
       },
       {
-        "yPos": 180,
-        "height": 4,
-        "width": 48,
-        "widget": {
-          "title": "Tokens and characters",
-          "id": "",
-          "sectionHeader": {
-            "dividerBelow": false,
-            "subtitle": "Use the token and character throughput signals to estimate costs and to compare against your quota usage."
-          }
-        }
-      },
-      {
-        "yPos": 184,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "Token throughput (per second)",
-          "id": "",
-          "timeSeriesTable": {
-            "columnSettings": [
-              {
-                "column": "Name",
-                "visible": true
-              },
-              {
-                "column": "model_user_id",
-                "visible": true
-              },
-              {
-                "column": "project_id",
-                "visible": true
-              },
-              {
-                "displayName": "Token throughput",
-                "column": "value",
-                "visible": true
-              },
-              {
-                "displayName": "Input token count",
-                "column": "value-1",
-                "visible": true
-              },
-              {
-                "displayName": "Output token count",
-                "column": "value-2",
-                "visible": true
-              }
-            ],
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
-                "timeSeriesQuery": {
-                  "outputFullDuration": true,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"model_user_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_token_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
-                }
-              },
-              {
-                "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
-                "timeSeriesQuery": {
-                  "outputFullDuration": true,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"model_user_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/token_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\" metric.label.\"type\"=\"input\""
-                  },
-                  "unitOverride": ""
-                }
-              },
-              {
-                "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
-                "timeSeriesQuery": {
-                  "outputFullDuration": true,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"model_user_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/token_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\" metric.label.\"type\"=\"output\""
-                  },
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "displayColumnType": false,
-            "metricVisualization": "NUMBER"
-          },
-          "visibilityCondition": {
-            "templateVariableCondition": {
-              "comparator": "REGEX_FULL_MATCH",
-              "templateVariable": "time_unit",
-              "templateVariableValue": "\"per second\""
-            }
-          }
-        }
-      },
-      {
-        "yPos": 184,
+        "yPos": 122,
         "xPos": 24,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "Token throughput by model",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "sort": [],
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"model_user_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_token_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 184,
-        "xPos": 24,
-        "height": 16,
+        "height": 20,
         "width": 24,
         "widget": {
           "title": "",
@@ -1266,12 +1495,12 @@
         }
       },
       {
-        "yPos": 184,
+        "yPos": 122,
         "xPos": 24,
-        "height": 16,
+        "height": 20,
         "width": 24,
         "widget": {
-          "title": "Token count by model",
+          "title": "Model invocations error rate (%), 1-second resolution from logs",
           "id": "",
           "xyChart": {
             "chartOptions": {
@@ -1281,28 +1510,49 @@
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
+                "breakdowns": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "count"
+                    },
+                    "column": "response_code",
+                    "limit": 16,
+                    "sortOrder": "SORT_ORDER_DESCENDING"
+                  }
+                ],
+                "dimensions": [
+                  {
+                    "column": "bucket",
+                    "columnType": "TIMESTAMP",
+                    "maxBinCount": 0,
+                    "sortColumn": "bucket",
+                    "sortOrder": "SORT_ORDER_ASCENDING",
+                    "timeBinSize": "0s",
+                    "xMax": 0,
+                    "xMin": 0
+                  }
+                ],
                 "legendTemplate": "",
-                "measures": [],
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_BAR",
+                "measures": [
+                  {
+                    "aggregationFunction": {
+                      "parameters": [],
+                      "type": "max"
+                    },
+                    "column": "error_rate_pct"
+                  }
+                ],
+                "plotType": "LINE",
                 "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"model_user_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/token_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
+                  "opsAnalyticsQuery": {
+                    "savedQueryId": "",
+                    "sql": "WITH final AS (WITH e AS (SELECT timestamp, IFNULL(JSON_VALUE(resource.labels.model_user_id), '') AS model, IFNULL(JSON_VALUE(resource.labels.location), '') AS location, SAFE_CAST(RTRIM(JSON_VALUE(json_payload.requestDuration), 's') AS FLOAT64) * 1000 AS latency_ms, CASE IFNULL(SAFE_CAST(JSON_VALUE(json_payload.error.code) AS INT64), 0) WHEN 0 THEN '200' WHEN 1 THEN '499' WHEN 3 THEN '400' WHEN 4 THEN '504' WHEN 5 THEN '404' WHEN 6 THEN '409' WHEN 7 THEN '403' WHEN 8 THEN '429' WHEN 9 THEN '400' WHEN 10 THEN '409' WHEN 11 THEN '400' WHEN 12 THEN '501' WHEN 14 THEN '503' WHEN 16 THEN '401' WHEN 2 THEN '500' WHEN 13 THEN '500' WHEN 15 THEN '500' ELSE 'other' END AS response_code FROM `cloud-llm-preview1.global._Default._Default` WHERE log_id = 'aiplatform.googleapis.com/inference_request' AND resource.type = 'aiplatform.googleapis.com/PublisherModel' AND IFNULL(JSON_VALUE(json_payload.method), '') IN ('GENERATE_CONTENT', 'STREAM_GENERATE_CONTENT', 'RAW_PREDICT', 'STREAM_RAW_PREDICT') AND REGEXP_CONTAINS(IFNULL(JSON_VALUE(resource.labels.model_user_id), ''), r'^(gemini|claude)')), w AS (SELECT e.*, CASE WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 200 THEN 1 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 2000 THEN 10 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 12000 THEN 60 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 60000 THEN 300 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 180000 THEN 900 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 720000 THEN 3600 WHEN TIMESTAMP_DIFF(MAX(timestamp) OVER (), MIN(timestamp) OVER (), SECOND) <= 4320000 THEN 21600 ELSE 86400 END AS b FROM e), c AS (SELECT TIMESTAMP_SECONDS(DIV(UNIX_SECONDS(timestamp), b) * b) AS bucket, response_code, COUNT(*) AS n FROM w GROUP BY bucket, response_code), p AS (SELECT bucket, response_code, SAFE_DIVIDE(n, SUM(n) OVER (PARTITION BY bucket)) * 100 AS error_rate_pct FROM c) SELECT bucket, response_code, error_rate_pct FROM p WHERE response_code != '200' ORDER BY bucket, response_code) SELECT bucket, response_code, error_rate_pct FROM final UNION ALL SELECT TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), SECOND) AS bucket, IF((SELECT COUNT(*) > 0 FROM `cloud-llm-preview1.global._Default._Default` WHERE log_id = 'aiplatform.googleapis.com/inference_request' AND resource.type = 'aiplatform.googleapis.com/PublisherModel' AND REGEXP_CONTAINS(IFNULL(JSON_VALUE(resource.labels.model_user_id), ''), r'^(gemini|claude)')), 'No errors in this window.', 'No inference request logs in this window. Turn on logging to see 1-second data.') AS response_code, 0 AS error_rate_pct FROM (SELECT 1) WHERE NOT EXISTS (SELECT 1 FROM final)"
                   },
-                  "unitOverride": ""
+                  "outputFullDuration": false,
+                  "unitOverride": "%"
                 }
               }
             ],
@@ -1315,382 +1565,7 @@
         }
       },
       {
-        "yPos": 184,
-        "xPos": 24,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "Token count by input vs output",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_BAR",
-                "sort": [],
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "metric.label.\"type\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/token_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 200,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "Token throughput (per minute)",
-          "id": "",
-          "timeSeriesTable": {
-            "columnSettings": [
-              {
-                "column": "Name",
-                "visible": true
-              },
-              {
-                "column": "model_user_id",
-                "visible": true
-              },
-              {
-                "column": "project_id",
-                "visible": true
-              },
-              {
-                "displayName": "Token throughput",
-                "column": "value",
-                "visible": true
-              },
-              {
-                "displayName": "Input token count",
-                "column": "value-1",
-                "visible": true
-              },
-              {
-                "displayName": "Output token count",
-                "column": "value-2",
-                "visible": true
-              }
-            ],
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
-                "timeSeriesQuery": {
-                  "outputFullDuration": true,
-                  "prometheusQuery": "sum by (\"model_user_id\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/consumed_token_throughput\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))*60",
-                  "unitOverride": ""
-                }
-              },
-              {
-                "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
-                "timeSeriesQuery": {
-                  "outputFullDuration": true,
-                  "prometheusQuery": "sum by (\"model_user_id\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/token_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\",\"type\"=\"input\"}[${__interval}]))*60",
-                  "unitOverride": ""
-                }
-              },
-              {
-                "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
-                "timeSeriesQuery": {
-                  "outputFullDuration": true,
-                  "prometheusQuery": "sum by (\"model_user_id\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/token_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\",\"type\"=\"output\"}[${__interval}]))*60",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "displayColumnType": false,
-            "metricVisualization": "NUMBER"
-          },
-          "visibilityCondition": {
-            "templateVariableCondition": {
-              "comparator": "REGEX_FULL_MATCH",
-              "templateVariable": "time_unit",
-              "templateVariableValue": "\"per minute\""
-            }
-          }
-        }
-      },
-      {
-        "yPos": 200,
-        "xPos": 24,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "Character count by model",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_BAR",
-                "sort": [],
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"model_user_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/character_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 216,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "Character count (per second)",
-          "id": "",
-          "timeSeriesTable": {
-            "columnSettings": [],
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
-                "timeSeriesQuery": {
-                  "outputFullDuration": true,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"model_user_id\"",
-                        "metric.label.\"type\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/character_count\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "displayColumnType": false,
-            "metricVisualization": "NUMBER"
-          },
-          "visibilityCondition": {
-            "templateVariableCondition": {
-              "comparator": "REGEX_FULL_MATCH",
-              "templateVariable": "time_unit",
-              "templateVariableValue": "\"per second\""
-            }
-          }
-        }
-      },
-      {
-        "yPos": 216,
-        "xPos": 24,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "Character throughput by model",
-          "id": "",
-          "xyChart": {
-            "chartOptions": {
-              "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
-            },
-            "dataSets": [
-              {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "",
-                "measures": [],
-                "minAlignmentPeriod": "60s",
-                "plotType": "STACKED_BAR",
-                "sort": [],
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"model_user_id\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "thresholds": [],
-            "yAxis": {
-              "label": "",
-              "scale": "LINEAR"
-            }
-          }
-        }
-      },
-      {
-        "yPos": 232,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "Character count (per minute)",
-          "id": "",
-          "timeSeriesTable": {
-            "columnSettings": [],
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
-                "timeSeriesQuery": {
-                  "outputFullDuration": true,
-                  "prometheusQuery": "sum by (\"model_user_id\",\"type\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/character_count\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))*60",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "displayColumnType": false,
-            "metricVisualization": "NUMBER"
-          },
-          "visibilityCondition": {
-            "templateVariableCondition": {
-              "comparator": "REGEX_FULL_MATCH",
-              "templateVariable": "time_unit",
-              "templateVariableValue": "\"per minute\""
-            }
-          }
-        }
-      },
-      {
-        "yPos": 248,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "Consumed character throughput (per second)",
-          "id": "",
-          "timeSeriesTable": {
-            "columnSettings": [],
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
-                "timeSeriesQuery": {
-                  "outputFullDuration": true,
-                  "timeSeriesFilter": {
-                    "aggregation": {
-                      "alignmentPeriod": "60s",
-                      "crossSeriesReducer": "REDUCE_SUM",
-                      "groupByFields": [
-                        "resource.label.\"model_user_id\"",
-                        "metric.label.\"request_type\""
-                      ],
-                      "perSeriesAligner": "ALIGN_RATE"
-                    },
-                    "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                  },
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "displayColumnType": false,
-            "metricVisualization": "NUMBER"
-          },
-          "visibilityCondition": {
-            "templateVariableCondition": {
-              "comparator": "REGEX_FULL_MATCH",
-              "templateVariable": "time_unit",
-              "templateVariableValue": "\"per second\""
-            }
-          }
-        }
-      },
-      {
-        "yPos": 264,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "title": "Consumed character throughput (per minute)",
-          "id": "",
-          "timeSeriesTable": {
-            "columnSettings": [],
-            "dataSets": [
-              {
-                "minAlignmentPeriod": "60s",
-                "tableTemplate": "",
-                "timeSeriesQuery": {
-                  "outputFullDuration": true,
-                  "prometheusQuery": "sum by (\"model_user_id\",\"request_type\")(rate({\"__name__\"=\"aiplatform.googleapis.com/publisher/online_serving/consumed_throughput\",\"monitored_resource\"=\"aiplatform.googleapis.com/PublisherModel\"}[${__interval}]))*60",
-                  "unitOverride": ""
-                }
-              }
-            ],
-            "displayColumnType": false,
-            "metricVisualization": "NUMBER"
-          },
-          "visibilityCondition": {
-            "templateVariableCondition": {
-              "comparator": "REGEX_FULL_MATCH",
-              "templateVariable": "time_unit",
-              "templateVariableValue": "\"per minute\""
-            }
-          }
-        }
-      },
-      {
-        "yPos": 280,
+        "yPos": 142,
         "height": 4,
         "width": 48,
         "widget": {
@@ -1703,7 +1578,7 @@
         }
       },
       {
-        "yPos": 284,
+        "yPos": 146,
         "height": 17,
         "width": 29,
         "widget": {
@@ -1712,62 +1587,15 @@
           "xyChart": {
             "chartOptions": {
               "displayHorizontal": false,
-              "mode": "COLOR",
-              "showLegend": false
+              "mode": "COLOR"
             },
             "dataSets": [
               {
-                "breakdowns": [],
-                "dimensions": [],
-                "legendTemplate": "${resource.labels.model_user_id} ${resource.labels.location}${resource.labels.monitored_resource_container}",
-                "measures": [],
-                "minAlignmentPeriod": "60s",
-                "plotType": "LINE",
-                "sort": [],
-                "targetAxis": "Y1",
-                "timeSeriesQuery": {
-                  "outputFullDuration": false,
-                  "timeSeriesFilterRatio": {
-                    "numerator": {
-                      "aggregation": {
-                        "alignmentPeriod": "60s",
-                        "crossSeriesReducer": "REDUCE_MAX",
-                        "groupByFields": [
-                          "resource.label.\"model_user_id\"",
-                          "resource.label.\"location\"",
-                          "resource.label.\"monitored_resource_container\""
-                        ],
-                        "perSeriesAligner": "ALIGN_RATE"
-                      },
-                      "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/consumed_throughput\" resource.type=\"aiplatform.googleapis.com/PublisherModel\" metric.label.\"request_type\"=\"dedicated\""
-                    },
-                    "denominator": {
-                      "aggregation": {
-                        "crossSeriesReducer": "REDUCE_MEAN",
-                        "groupByFields": [
-                          "resource.label.\"model_user_id\"",
-                          "resource.label.\"location\"",
-                          "resource.label.\"monitored_resource_container\""
-                        ],
-                        "perSeriesAligner": "ALIGN_MEAN"
-                      },
-                      "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/dedicated_character_limit\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
-                    }
-                  },
-                  "unitOverride": ""
-                }
-              },
-              {
-                "breakdowns": [],
-                "dimensions": [],
                 "legendTemplate": "${resource.labels.model_user_id} ${resource.labels.location} ${resource.labels.monitored_resource_container}",
-                "measures": [],
                 "minAlignmentPeriod": "60s",
                 "plotType": "LINE",
-                "sort": [],
                 "targetAxis": "Y1",
                 "timeSeriesQuery": {
-                  "outputFullDuration": false,
                   "timeSeriesFilterRatio": {
                     "numerator": {
                       "aggregation": {
@@ -1794,8 +1622,7 @@
                       },
                       "filter": "metric.type=\"aiplatform.googleapis.com/publisher/online_serving/dedicated_token_limit\" resource.type=\"aiplatform.googleapis.com/PublisherModel\""
                     }
-                  },
-                  "unitOverride": ""
+                  }
                 }
               }
             ],
@@ -1808,7 +1635,7 @@
         }
       },
       {
-        "yPos": 284,
+        "yPos": 146,
         "xPos": 29,
         "height": 17,
         "width": 19,
