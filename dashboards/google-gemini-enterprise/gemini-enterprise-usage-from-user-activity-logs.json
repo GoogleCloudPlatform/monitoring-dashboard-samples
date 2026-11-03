@@ -1,0 +1,1327 @@
+{
+  "displayName": "Gemini Enterprise Usage from User Activity Logs",
+  "dashboardFilters": [
+    {
+      "filterType": "VALUE_ONLY",
+      "templateVariable": "app",
+      "valueType": "STRING_ARRAY",
+      "timeSeriesQuery": {
+        "opsAnalyticsQuery": {
+          "sql": "SELECT DISTINCT engine_id\nFROM (\n  SELECT COALESCE(\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n    JSON_VALUE(resource.labels.engine_id),\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n  ) AS engine_id\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id IN ('discoveryengine.googleapis.com/gemini_enterprise_user_activity', 'discoveryengine.googleapis.com/gen_ai.client.inference.operation.details')\n    AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n)\nWHERE engine_id IS NOT NULL\nORDER BY engine_id\nLIMIT 1000"
+        }
+      }
+    },
+    {
+      "filterType": "VALUE_ONLY",
+      "templateVariable": "user",
+      "valueType": "STRING_ARRAY",
+      "timeSeriesQuery": {
+        "opsAnalyticsQuery": {
+          "sql": "SELECT DISTINCT user_key\nFROM (\n  SELECT COALESCE(\n    NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n    JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n    JSON_VALUE(json_payload.request.userInfo.userId)\n  ) AS user_key\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n)\nWHERE user_key IS NOT NULL\nORDER BY user_key\nLIMIT 1000"
+        }
+      }
+    }
+  ],
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "width": 48,
+        "height": 5,
+        "widget": {
+          "text": {
+            "content": "## Gemini Enterprise Usage from User Activity Logs\n\nAdoption and usage of your Gemini Enterprise apps, built with Log Analytics SQL from the\n`discoveryengine.googleapis.com/gemini_enterprise_user_activity` log ([setup guide](https://docs.cloud.google.com/gemini/enterprise/docs/set-up-usage-audit-logs)).\n\n* Prerequisites: turn on **Enable instrumentation of OpenTelemetry traces and logs** for each app\n  ([observability settings](https://docs.cloud.google.com/gemini/enterprise/docs/manage-observability-settings)) and [upgrade the `_Default` log bucket to Log Analytics](https://cloud.google.com/logging/docs/buckets#upgrade-bucket).\n* User identities and prompts are logged only when **Enable logging of prompt inputs and response outputs** is on;\n  otherwise they show as `<elided>` and users are counted as `(identity not logged)`.\n* Select a time range of at least one day. Use the **app** and **user** variables to focus on one app or user.",
+            "format": "MARKDOWN",
+            "style": {
+              "backgroundColor": "#FFFFFF",
+              "textColor": "#212121",
+              "fontSize": "FS_LARGE",
+              "horizontalAlignment": "H_LEFT",
+              "verticalAlignment": "V_TOP",
+              "padding": "P_EXTRA_SMALL"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 5,
+        "width": 8,
+        "height": 4,
+        "widget": {
+          "title": "Assistant turns",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "opsAnalyticsQuery": {
+                "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          IFNULL(MAX(timestamp), CURRENT_TIMESTAMP()) AS ts,\n          COUNTIF(method = 'StreamAssist') AS assistant_turns,\n          COUNTIF(method = 'Search') AS searches,\n          COUNTIF(method = 'WriteUserEvent') AS ui_events,\n          COUNT(DISTINCT user_key) AS identified_users,\n          COUNT(DISTINCT session_id) AS sessions,\n          COUNT(DISTINCT engine_id) AS apps,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(answer_state = 'SUCCEEDED'), COUNTIF(method = 'StreamAssist')), 1) AS answer_success_pct,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(method = 'StreamAssist' AND reference_count > 0), COUNTIF(method = 'StreamAssist')), 1) AS grounded_answer_pct,\n          COUNTIF(method = 'StreamAssist' AND (answer_state IS DISTINCT FROM 'SUCCEEDED' OR status_code IS NOT NULL)) AS failed_turns,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'LIKE') AS likes,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'DISLIKE') AS dislikes\n        FROM ua"
+              }
+            },
+            "dimensions": [
+              {
+                "column": "ts",
+                "columnType": "TIMESTAMP",
+                "timeBinSize": "31536000s",
+                "sortColumn": "ts",
+                "sortOrder": "SORT_ORDER_ASCENDING"
+              }
+            ],
+            "measures": [
+              {
+                "column": "assistant_turns",
+                "aggregationFunction": {
+                  "type": "sum"
+                }
+              }
+            ],
+            "blankView": {}
+          }
+        }
+      },
+      {
+        "xPos": 8,
+        "yPos": 5,
+        "width": 8,
+        "height": 4,
+        "widget": {
+          "title": "Searches",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "opsAnalyticsQuery": {
+                "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          IFNULL(MAX(timestamp), CURRENT_TIMESTAMP()) AS ts,\n          COUNTIF(method = 'StreamAssist') AS assistant_turns,\n          COUNTIF(method = 'Search') AS searches,\n          COUNTIF(method = 'WriteUserEvent') AS ui_events,\n          COUNT(DISTINCT user_key) AS identified_users,\n          COUNT(DISTINCT session_id) AS sessions,\n          COUNT(DISTINCT engine_id) AS apps,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(answer_state = 'SUCCEEDED'), COUNTIF(method = 'StreamAssist')), 1) AS answer_success_pct,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(method = 'StreamAssist' AND reference_count > 0), COUNTIF(method = 'StreamAssist')), 1) AS grounded_answer_pct,\n          COUNTIF(method = 'StreamAssist' AND (answer_state IS DISTINCT FROM 'SUCCEEDED' OR status_code IS NOT NULL)) AS failed_turns,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'LIKE') AS likes,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'DISLIKE') AS dislikes\n        FROM ua"
+              }
+            },
+            "dimensions": [
+              {
+                "column": "ts",
+                "columnType": "TIMESTAMP",
+                "timeBinSize": "31536000s",
+                "sortColumn": "ts",
+                "sortOrder": "SORT_ORDER_ASCENDING"
+              }
+            ],
+            "measures": [
+              {
+                "column": "searches",
+                "aggregationFunction": {
+                  "type": "sum"
+                }
+              }
+            ],
+            "blankView": {}
+          }
+        }
+      },
+      {
+        "xPos": 16,
+        "yPos": 5,
+        "width": 8,
+        "height": 4,
+        "widget": {
+          "title": "Identified users",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "opsAnalyticsQuery": {
+                "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          IFNULL(MAX(timestamp), CURRENT_TIMESTAMP()) AS ts,\n          COUNTIF(method = 'StreamAssist') AS assistant_turns,\n          COUNTIF(method = 'Search') AS searches,\n          COUNTIF(method = 'WriteUserEvent') AS ui_events,\n          COUNT(DISTINCT user_key) AS identified_users,\n          COUNT(DISTINCT session_id) AS sessions,\n          COUNT(DISTINCT engine_id) AS apps,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(answer_state = 'SUCCEEDED'), COUNTIF(method = 'StreamAssist')), 1) AS answer_success_pct,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(method = 'StreamAssist' AND reference_count > 0), COUNTIF(method = 'StreamAssist')), 1) AS grounded_answer_pct,\n          COUNTIF(method = 'StreamAssist' AND (answer_state IS DISTINCT FROM 'SUCCEEDED' OR status_code IS NOT NULL)) AS failed_turns,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'LIKE') AS likes,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'DISLIKE') AS dislikes\n        FROM ua"
+              }
+            },
+            "dimensions": [
+              {
+                "column": "ts",
+                "columnType": "TIMESTAMP",
+                "timeBinSize": "31536000s",
+                "sortColumn": "ts",
+                "sortOrder": "SORT_ORDER_ASCENDING"
+              }
+            ],
+            "measures": [
+              {
+                "column": "identified_users",
+                "aggregationFunction": {
+                  "type": "sum"
+                }
+              }
+            ],
+            "blankView": {}
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 5,
+        "width": 8,
+        "height": 4,
+        "widget": {
+          "title": "Sessions",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "opsAnalyticsQuery": {
+                "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          IFNULL(MAX(timestamp), CURRENT_TIMESTAMP()) AS ts,\n          COUNTIF(method = 'StreamAssist') AS assistant_turns,\n          COUNTIF(method = 'Search') AS searches,\n          COUNTIF(method = 'WriteUserEvent') AS ui_events,\n          COUNT(DISTINCT user_key) AS identified_users,\n          COUNT(DISTINCT session_id) AS sessions,\n          COUNT(DISTINCT engine_id) AS apps,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(answer_state = 'SUCCEEDED'), COUNTIF(method = 'StreamAssist')), 1) AS answer_success_pct,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(method = 'StreamAssist' AND reference_count > 0), COUNTIF(method = 'StreamAssist')), 1) AS grounded_answer_pct,\n          COUNTIF(method = 'StreamAssist' AND (answer_state IS DISTINCT FROM 'SUCCEEDED' OR status_code IS NOT NULL)) AS failed_turns,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'LIKE') AS likes,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'DISLIKE') AS dislikes\n        FROM ua"
+              }
+            },
+            "dimensions": [
+              {
+                "column": "ts",
+                "columnType": "TIMESTAMP",
+                "timeBinSize": "31536000s",
+                "sortColumn": "ts",
+                "sortOrder": "SORT_ORDER_ASCENDING"
+              }
+            ],
+            "measures": [
+              {
+                "column": "sessions",
+                "aggregationFunction": {
+                  "type": "sum"
+                }
+              }
+            ],
+            "blankView": {}
+          }
+        }
+      },
+      {
+        "xPos": 32,
+        "yPos": 5,
+        "width": 8,
+        "height": 4,
+        "widget": {
+          "title": "Answer success rate (%)",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "opsAnalyticsQuery": {
+                "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          IFNULL(MAX(timestamp), CURRENT_TIMESTAMP()) AS ts,\n          COUNTIF(method = 'StreamAssist') AS assistant_turns,\n          COUNTIF(method = 'Search') AS searches,\n          COUNTIF(method = 'WriteUserEvent') AS ui_events,\n          COUNT(DISTINCT user_key) AS identified_users,\n          COUNT(DISTINCT session_id) AS sessions,\n          COUNT(DISTINCT engine_id) AS apps,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(answer_state = 'SUCCEEDED'), COUNTIF(method = 'StreamAssist')), 1) AS answer_success_pct,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(method = 'StreamAssist' AND reference_count > 0), COUNTIF(method = 'StreamAssist')), 1) AS grounded_answer_pct,\n          COUNTIF(method = 'StreamAssist' AND (answer_state IS DISTINCT FROM 'SUCCEEDED' OR status_code IS NOT NULL)) AS failed_turns,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'LIKE') AS likes,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'DISLIKE') AS dislikes\n        FROM ua"
+              }
+            },
+            "dimensions": [
+              {
+                "column": "ts",
+                "columnType": "TIMESTAMP",
+                "timeBinSize": "31536000s",
+                "sortColumn": "ts",
+                "sortOrder": "SORT_ORDER_ASCENDING"
+              }
+            ],
+            "measures": [
+              {
+                "column": "answer_success_pct",
+                "aggregationFunction": {
+                  "type": "sum"
+                }
+              }
+            ],
+            "thresholds": [
+              {
+                "value": 90,
+                "color": "RED",
+                "direction": "BELOW",
+                "label": "critical"
+              },
+              {
+                "value": 98,
+                "color": "YELLOW",
+                "direction": "BELOW",
+                "label": "warning"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "xPos": 40,
+        "yPos": 5,
+        "width": 8,
+        "height": 4,
+        "widget": {
+          "title": "Failed / skipped turns",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "opsAnalyticsQuery": {
+                "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          IFNULL(MAX(timestamp), CURRENT_TIMESTAMP()) AS ts,\n          COUNTIF(method = 'StreamAssist') AS assistant_turns,\n          COUNTIF(method = 'Search') AS searches,\n          COUNTIF(method = 'WriteUserEvent') AS ui_events,\n          COUNT(DISTINCT user_key) AS identified_users,\n          COUNT(DISTINCT session_id) AS sessions,\n          COUNT(DISTINCT engine_id) AS apps,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(answer_state = 'SUCCEEDED'), COUNTIF(method = 'StreamAssist')), 1) AS answer_success_pct,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(method = 'StreamAssist' AND reference_count > 0), COUNTIF(method = 'StreamAssist')), 1) AS grounded_answer_pct,\n          COUNTIF(method = 'StreamAssist' AND (answer_state IS DISTINCT FROM 'SUCCEEDED' OR status_code IS NOT NULL)) AS failed_turns,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'LIKE') AS likes,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'DISLIKE') AS dislikes\n        FROM ua"
+              }
+            },
+            "dimensions": [
+              {
+                "column": "ts",
+                "columnType": "TIMESTAMP",
+                "timeBinSize": "31536000s",
+                "sortColumn": "ts",
+                "sortOrder": "SORT_ORDER_ASCENDING"
+              }
+            ],
+            "measures": [
+              {
+                "column": "failed_turns",
+                "aggregationFunction": {
+                  "type": "sum"
+                }
+              }
+            ],
+            "thresholds": [
+              {
+                "value": 1,
+                "color": "YELLOW",
+                "direction": "ABOVE",
+                "label": "any failure"
+              },
+              {
+                "value": 10,
+                "color": "RED",
+                "direction": "ABOVE",
+                "label": "many failures"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "yPos": 9,
+        "width": 8,
+        "height": 4,
+        "widget": {
+          "title": "Grounded answers (%)",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "opsAnalyticsQuery": {
+                "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          IFNULL(MAX(timestamp), CURRENT_TIMESTAMP()) AS ts,\n          COUNTIF(method = 'StreamAssist') AS assistant_turns,\n          COUNTIF(method = 'Search') AS searches,\n          COUNTIF(method = 'WriteUserEvent') AS ui_events,\n          COUNT(DISTINCT user_key) AS identified_users,\n          COUNT(DISTINCT session_id) AS sessions,\n          COUNT(DISTINCT engine_id) AS apps,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(answer_state = 'SUCCEEDED'), COUNTIF(method = 'StreamAssist')), 1) AS answer_success_pct,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(method = 'StreamAssist' AND reference_count > 0), COUNTIF(method = 'StreamAssist')), 1) AS grounded_answer_pct,\n          COUNTIF(method = 'StreamAssist' AND (answer_state IS DISTINCT FROM 'SUCCEEDED' OR status_code IS NOT NULL)) AS failed_turns,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'LIKE') AS likes,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'DISLIKE') AS dislikes\n        FROM ua"
+              }
+            },
+            "dimensions": [
+              {
+                "column": "ts",
+                "columnType": "TIMESTAMP",
+                "timeBinSize": "31536000s",
+                "sortColumn": "ts",
+                "sortOrder": "SORT_ORDER_ASCENDING"
+              }
+            ],
+            "measures": [
+              {
+                "column": "grounded_answer_pct",
+                "aggregationFunction": {
+                  "type": "sum"
+                }
+              }
+            ],
+            "blankView": {}
+          }
+        }
+      },
+      {
+        "xPos": 8,
+        "yPos": 9,
+        "width": 8,
+        "height": 4,
+        "widget": {
+          "title": "Likes",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "opsAnalyticsQuery": {
+                "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          IFNULL(MAX(timestamp), CURRENT_TIMESTAMP()) AS ts,\n          COUNTIF(method = 'StreamAssist') AS assistant_turns,\n          COUNTIF(method = 'Search') AS searches,\n          COUNTIF(method = 'WriteUserEvent') AS ui_events,\n          COUNT(DISTINCT user_key) AS identified_users,\n          COUNT(DISTINCT session_id) AS sessions,\n          COUNT(DISTINCT engine_id) AS apps,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(answer_state = 'SUCCEEDED'), COUNTIF(method = 'StreamAssist')), 1) AS answer_success_pct,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(method = 'StreamAssist' AND reference_count > 0), COUNTIF(method = 'StreamAssist')), 1) AS grounded_answer_pct,\n          COUNTIF(method = 'StreamAssist' AND (answer_state IS DISTINCT FROM 'SUCCEEDED' OR status_code IS NOT NULL)) AS failed_turns,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'LIKE') AS likes,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'DISLIKE') AS dislikes\n        FROM ua"
+              }
+            },
+            "dimensions": [
+              {
+                "column": "ts",
+                "columnType": "TIMESTAMP",
+                "timeBinSize": "31536000s",
+                "sortColumn": "ts",
+                "sortOrder": "SORT_ORDER_ASCENDING"
+              }
+            ],
+            "measures": [
+              {
+                "column": "likes",
+                "aggregationFunction": {
+                  "type": "sum"
+                }
+              }
+            ],
+            "blankView": {}
+          }
+        }
+      },
+      {
+        "xPos": 16,
+        "yPos": 9,
+        "width": 8,
+        "height": 4,
+        "widget": {
+          "title": "Dislikes",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "opsAnalyticsQuery": {
+                "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          IFNULL(MAX(timestamp), CURRENT_TIMESTAMP()) AS ts,\n          COUNTIF(method = 'StreamAssist') AS assistant_turns,\n          COUNTIF(method = 'Search') AS searches,\n          COUNTIF(method = 'WriteUserEvent') AS ui_events,\n          COUNT(DISTINCT user_key) AS identified_users,\n          COUNT(DISTINCT session_id) AS sessions,\n          COUNT(DISTINCT engine_id) AS apps,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(answer_state = 'SUCCEEDED'), COUNTIF(method = 'StreamAssist')), 1) AS answer_success_pct,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(method = 'StreamAssist' AND reference_count > 0), COUNTIF(method = 'StreamAssist')), 1) AS grounded_answer_pct,\n          COUNTIF(method = 'StreamAssist' AND (answer_state IS DISTINCT FROM 'SUCCEEDED' OR status_code IS NOT NULL)) AS failed_turns,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'LIKE') AS likes,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'DISLIKE') AS dislikes\n        FROM ua"
+              }
+            },
+            "dimensions": [
+              {
+                "column": "ts",
+                "columnType": "TIMESTAMP",
+                "timeBinSize": "31536000s",
+                "sortColumn": "ts",
+                "sortOrder": "SORT_ORDER_ASCENDING"
+              }
+            ],
+            "measures": [
+              {
+                "column": "dislikes",
+                "aggregationFunction": {
+                  "type": "sum"
+                }
+              }
+            ],
+            "thresholds": [
+              {
+                "value": 1,
+                "color": "YELLOW",
+                "direction": "ABOVE"
+              },
+              {
+                "value": 5,
+                "color": "RED",
+                "direction": "ABOVE"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 9,
+        "width": 8,
+        "height": 4,
+        "widget": {
+          "title": "Discovery Engine API errors",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "opsAnalyticsQuery": {
+                "sql": "WITH err AS (\n  SELECT\n    timestamp,\n    JSON_VALUE(resource.labels.method) AS method,\n    JSON_VALUE(resource.labels.service) AS service,\n    http_request.status AS http_status,\n    JSON_VALUE(json_payload.status.code) AS rpc_code,\n    JSON_VALUE(json_payload.message) AS message,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.message), r'/dataStores/([^/ ]+)') AS data_store\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/api_errors' AND resource.type = 'consumed_api'\n)\n        SELECT IFNULL(MAX(timestamp), CURRENT_TIMESTAMP()) AS ts, COUNT(1) AS api_errors FROM err"
+              }
+            },
+            "dimensions": [
+              {
+                "column": "ts",
+                "columnType": "TIMESTAMP",
+                "timeBinSize": "31536000s",
+                "sortColumn": "ts",
+                "sortOrder": "SORT_ORDER_ASCENDING"
+              }
+            ],
+            "measures": [
+              {
+                "column": "api_errors",
+                "aggregationFunction": {
+                  "type": "sum"
+                }
+              }
+            ],
+            "thresholds": [
+              {
+                "value": 1,
+                "color": "YELLOW",
+                "direction": "ABOVE"
+              },
+              {
+                "value": 20,
+                "color": "RED",
+                "direction": "ABOVE"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "xPos": 32,
+        "yPos": 9,
+        "width": 8,
+        "height": 4,
+        "widget": {
+          "title": "Model inferences",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "opsAnalyticsQuery": {
+                "sql": "WITH inf_all AS (\n  SELECT\n    timestamp,\n    JSON_VALUE(resource.labels.engine_id) AS engine_id,\n    JSON_VALUE(resource.labels.agent_id) AS agent_id,\n    JSON_VALUE(json_payload, '$.\"gen_ai.agent.name\"') AS agent_name,\n    JSON_VALUE(json_payload, '$.\"gen_ai.conversation.id\"') AS turn_id,\n    trace,\n    SAFE_CAST(JSON_VALUE(json_payload, '$.\"gen_ai.usage.input_tokens\"') AS INT64) AS input_tokens,\n    SAFE_CAST(JSON_VALUE(json_payload, '$.\"gen_ai.usage.output_tokens\"') AS INT64) AS output_tokens,\n    SAFE_CAST(JSON_VALUE(json_payload, '$.\"gen_ai.usage.cache_read.input_tokens\"') AS INT64) AS cached_input_tokens,\n    SAFE_CAST(JSON_VALUE(json_payload, '$.\"gen_ai.usage.reasoning.output_tokens\"') AS INT64) AS reasoning_tokens,\n    JSON_QUERY(json_payload, '$.\"gen_ai.output.messages\"') AS output_messages\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gen_ai.client.inference.operation.details' AND resource.type = 'discoveryengine.googleapis.com/Agent'\n),\ninf AS (\n  SELECT * FROM inf_all WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n)\n        SELECT\n          IFNULL(MAX(timestamp), CURRENT_TIMESTAMP()) AS ts,\n          COUNT(1) AS inferences,\n          IFNULL(SUM(input_tokens), 0) AS input_tokens,\n          IFNULL(SUM(output_tokens), 0) AS output_tokens,\n          IFNULL(SUM(cached_input_tokens), 0) AS cached_input_tokens,\n          IFNULL(SUM(input_tokens), 0) + IFNULL(SUM(output_tokens), 0) AS total_tokens\n        FROM inf"
+              }
+            },
+            "dimensions": [
+              {
+                "column": "ts",
+                "columnType": "TIMESTAMP",
+                "timeBinSize": "31536000s",
+                "sortColumn": "ts",
+                "sortOrder": "SORT_ORDER_ASCENDING"
+              }
+            ],
+            "measures": [
+              {
+                "column": "inferences",
+                "aggregationFunction": {
+                  "type": "sum"
+                }
+              }
+            ],
+            "blankView": {}
+          }
+        }
+      },
+      {
+        "xPos": 40,
+        "yPos": 9,
+        "width": 8,
+        "height": 4,
+        "widget": {
+          "title": "Tokens (input + output)",
+          "scorecard": {
+            "timeSeriesQuery": {
+              "opsAnalyticsQuery": {
+                "sql": "WITH inf_all AS (\n  SELECT\n    timestamp,\n    JSON_VALUE(resource.labels.engine_id) AS engine_id,\n    JSON_VALUE(resource.labels.agent_id) AS agent_id,\n    JSON_VALUE(json_payload, '$.\"gen_ai.agent.name\"') AS agent_name,\n    JSON_VALUE(json_payload, '$.\"gen_ai.conversation.id\"') AS turn_id,\n    trace,\n    SAFE_CAST(JSON_VALUE(json_payload, '$.\"gen_ai.usage.input_tokens\"') AS INT64) AS input_tokens,\n    SAFE_CAST(JSON_VALUE(json_payload, '$.\"gen_ai.usage.output_tokens\"') AS INT64) AS output_tokens,\n    SAFE_CAST(JSON_VALUE(json_payload, '$.\"gen_ai.usage.cache_read.input_tokens\"') AS INT64) AS cached_input_tokens,\n    SAFE_CAST(JSON_VALUE(json_payload, '$.\"gen_ai.usage.reasoning.output_tokens\"') AS INT64) AS reasoning_tokens,\n    JSON_QUERY(json_payload, '$.\"gen_ai.output.messages\"') AS output_messages\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gen_ai.client.inference.operation.details' AND resource.type = 'discoveryengine.googleapis.com/Agent'\n),\ninf AS (\n  SELECT * FROM inf_all WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n)\n        SELECT\n          IFNULL(MAX(timestamp), CURRENT_TIMESTAMP()) AS ts,\n          COUNT(1) AS inferences,\n          IFNULL(SUM(input_tokens), 0) AS input_tokens,\n          IFNULL(SUM(output_tokens), 0) AS output_tokens,\n          IFNULL(SUM(cached_input_tokens), 0) AS cached_input_tokens,\n          IFNULL(SUM(input_tokens), 0) + IFNULL(SUM(output_tokens), 0) AS total_tokens\n        FROM inf"
+              }
+            },
+            "dimensions": [
+              {
+                "column": "ts",
+                "columnType": "TIMESTAMP",
+                "timeBinSize": "31536000s",
+                "sortColumn": "ts",
+                "sortOrder": "SORT_ORDER_ASCENDING"
+              }
+            ],
+            "measures": [
+              {
+                "column": "total_tokens",
+                "aggregationFunction": {
+                  "type": "sum"
+                }
+              }
+            ],
+            "blankView": {}
+          }
+        }
+      },
+      {
+        "yPos": 13,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Usage trends",
+          "sectionHeader": {
+            "subtitle": "Who is using Gemini Enterprise, how often and through which app, agent and surface",
+            "dividerBelow": true
+          }
+        }
+      },
+      {
+        "yPos": 17,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Activity by method",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT TIMESTAMP_TRUNC(timestamp, HOUR) AS hour, method, COUNT(1) AS calls\n        FROM ua\n        GROUP BY 1, 2"
+                  }
+                },
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "dimensions": [
+                  {
+                    "column": "hour",
+                    "columnType": "TIMESTAMP",
+                    "timeBinSize": "3600s",
+                    "sortColumn": "hour",
+                    "sortOrder": "SORT_ORDER_ASCENDING"
+                  }
+                ],
+                "measures": [
+                  {
+                    "column": "calls",
+                    "aggregationFunction": {
+                      "type": "sum"
+                    }
+                  }
+                ],
+                "breakdowns": [
+                  {
+                    "column": "method",
+                    "aggregationFunction": {
+                      "type": "count"
+                    },
+                    "limit": 12,
+                    "sortOrder": "SORT_ORDER_DESCENDING"
+                  }
+                ]
+              }
+            ],
+            "yAxis": {
+              "label": "calls",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "yPos": 17,
+        "width": 24,
+        "height": 16,
+        "widget": {
+          "title": "Assistant turns by app",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT TIMESTAMP_TRUNC(timestamp, HOUR) AS hour, IFNULL(engine_id, '(unknown)') AS app, COUNT(1) AS turns\n        FROM ua\n        WHERE method = 'StreamAssist'\n        GROUP BY 1, 2"
+                  }
+                },
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "dimensions": [
+                  {
+                    "column": "hour",
+                    "columnType": "TIMESTAMP",
+                    "timeBinSize": "3600s",
+                    "sortColumn": "hour",
+                    "sortOrder": "SORT_ORDER_ASCENDING"
+                  }
+                ],
+                "measures": [
+                  {
+                    "column": "turns",
+                    "aggregationFunction": {
+                      "type": "sum"
+                    }
+                  }
+                ],
+                "breakdowns": [
+                  {
+                    "column": "app",
+                    "aggregationFunction": {
+                      "type": "count"
+                    },
+                    "limit": 12,
+                    "sortOrder": "SORT_ORDER_DESCENDING"
+                  }
+                ]
+              }
+            ],
+            "yAxis": {
+              "label": "turns",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 33,
+        "width": 16,
+        "height": 16,
+        "widget": {
+          "title": "Daily active users",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          TIMESTAMP_TRUNC(timestamp, DAY) AS day,\n          COUNT(DISTINCT user_key) AS active_users,\n          COUNT(DISTINCT session_id) AS sessions\n        FROM ua\n        WHERE method IN ('StreamAssist', 'Search', 'WriteUserEvent')\n        GROUP BY 1"
+                  }
+                },
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "dimensions": [
+                  {
+                    "column": "day",
+                    "columnType": "TIMESTAMP",
+                    "timeBinSize": "86400s",
+                    "sortColumn": "day",
+                    "sortOrder": "SORT_ORDER_ASCENDING"
+                  }
+                ],
+                "measures": [
+                  {
+                    "column": "active_users",
+                    "aggregationFunction": {
+                      "type": "sum"
+                    }
+                  }
+                ]
+              }
+            ],
+            "yAxis": {
+              "label": "users",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 16,
+        "yPos": 33,
+        "width": 16,
+        "height": 16,
+        "widget": {
+          "title": "Daily sessions",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          TIMESTAMP_TRUNC(timestamp, DAY) AS day,\n          COUNT(DISTINCT user_key) AS active_users,\n          COUNT(DISTINCT session_id) AS sessions\n        FROM ua\n        WHERE method IN ('StreamAssist', 'Search', 'WriteUserEvent')\n        GROUP BY 1"
+                  }
+                },
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "dimensions": [
+                  {
+                    "column": "day",
+                    "columnType": "TIMESTAMP",
+                    "timeBinSize": "86400s",
+                    "sortColumn": "day",
+                    "sortOrder": "SORT_ORDER_ASCENDING"
+                  }
+                ],
+                "measures": [
+                  {
+                    "column": "sessions",
+                    "aggregationFunction": {
+                      "type": "sum"
+                    }
+                  }
+                ]
+              }
+            ],
+            "yAxis": {
+              "label": "sessions",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 32,
+        "yPos": 33,
+        "width": 16,
+        "height": 16,
+        "widget": {
+          "title": "Assistant turns by model",
+          "pieChart": {
+            "chartType": "DONUT",
+            "showLabels": true,
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT IFNULL(model, '(custom agent / not reported)') AS model, COUNT(1) AS turns\n        FROM ua\n        WHERE method = 'StreamAssist'\n        GROUP BY 1"
+                  }
+                },
+                "dimensions": [
+                  {
+                    "column": "model",
+                    "columnType": "STRING",
+                    "maxBinCount": 12,
+                    "sortColumn": "turns",
+                    "sortOrder": "SORT_ORDER_DESCENDING"
+                  }
+                ],
+                "measures": [
+                  {
+                    "column": "turns",
+                    "aggregationFunction": {
+                      "type": "sum"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "yPos": 49,
+        "width": 16,
+        "height": 16,
+        "widget": {
+          "title": "Assistant turns by agent",
+          "pieChart": {
+            "chartType": "DONUT",
+            "showLabels": true,
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT IFNULL(agent, '(unknown)') AS agent, COUNT(1) AS turns\n        FROM ua\n        WHERE method = 'StreamAssist'\n        GROUP BY 1"
+                  }
+                },
+                "dimensions": [
+                  {
+                    "column": "agent",
+                    "columnType": "STRING",
+                    "maxBinCount": 12,
+                    "sortColumn": "turns",
+                    "sortOrder": "SORT_ORDER_DESCENDING"
+                  }
+                ],
+                "measures": [
+                  {
+                    "column": "turns",
+                    "aggregationFunction": {
+                      "type": "sum"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "xPos": 16,
+        "yPos": 49,
+        "width": 16,
+        "height": 16,
+        "widget": {
+          "title": "Data source selection mode",
+          "pieChart": {
+            "chartType": "DONUT",
+            "showLabels": true,
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT IFNULL(selection_mode, '(not reported)') AS selection_mode, COUNT(1) AS turns\n        FROM ua\n        WHERE method = 'StreamAssist'\n        GROUP BY 1"
+                  }
+                },
+                "dimensions": [
+                  {
+                    "column": "selection_mode",
+                    "columnType": "STRING",
+                    "maxBinCount": 12,
+                    "sortColumn": "turns",
+                    "sortOrder": "SORT_ORDER_DESCENDING"
+                  }
+                ],
+                "measures": [
+                  {
+                    "column": "turns",
+                    "aggregationFunction": {
+                      "type": "sum"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "xPos": 32,
+        "yPos": 49,
+        "width": 16,
+        "height": 16,
+        "widget": {
+          "title": "UI events by type",
+          "pieChart": {
+            "chartType": "DONUT",
+            "showLabels": true,
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT IFNULL(event_type, '(unknown)') AS event_type, COUNT(1) AS events\n        FROM ua\n        WHERE method = 'WriteUserEvent'\n        GROUP BY 1"
+                  }
+                },
+                "dimensions": [
+                  {
+                    "column": "event_type",
+                    "columnType": "STRING",
+                    "maxBinCount": 12,
+                    "sortColumn": "events",
+                    "sortOrder": "SORT_ORDER_DESCENDING"
+                  }
+                ],
+                "measures": [
+                  {
+                    "column": "events",
+                    "aggregationFunction": {
+                      "type": "sum"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "yPos": 65,
+        "width": 48,
+        "height": 16,
+        "widget": {
+          "title": "UI page views by page type",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT TIMESTAMP_TRUNC(timestamp, HOUR) AS hour, COALESCE(page_type, event_type) AS page, COUNT(1) AS views\n        FROM ua\n        WHERE method = 'WriteUserEvent' AND event_type IN ('view-category-page', 'view-home-page', 'view-item')\n        GROUP BY 1, 2"
+                  }
+                },
+                "plotType": "STACKED_BAR",
+                "targetAxis": "Y1",
+                "dimensions": [
+                  {
+                    "column": "hour",
+                    "columnType": "TIMESTAMP",
+                    "timeBinSize": "3600s",
+                    "sortColumn": "hour",
+                    "sortOrder": "SORT_ORDER_ASCENDING"
+                  }
+                ],
+                "measures": [
+                  {
+                    "column": "views",
+                    "aggregationFunction": {
+                      "type": "sum"
+                    }
+                  }
+                ],
+                "breakdowns": [
+                  {
+                    "column": "page",
+                    "aggregationFunction": {
+                      "type": "count"
+                    },
+                    "limit": 12,
+                    "sortOrder": "SORT_ORDER_DESCENDING"
+                  }
+                ]
+              }
+            ],
+            "yAxis": {
+              "label": "views",
+              "scale": "LINEAR"
+            },
+            "chartOptions": {
+              "mode": "COLOR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 81,
+        "width": 48,
+        "height": 12,
+        "widget": {
+          "title": "Apps (engines) summary",
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          IFNULL(engine_id, '(unknown)') AS app,\n          COUNTIF(method = 'StreamAssist') AS assistant_turns,\n          COUNTIF(method = 'Search') AS searches,\n          COUNTIF(method = 'WriteUserEvent') AS ui_events,\n          COUNTIF(service = 'AgentService') AS agent_admin_calls,\n          COUNT(DISTINCT user_key) AS identified_users,\n          COUNT(DISTINCT session_id) AS sessions,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(answer_state = 'SUCCEEDED'), COUNTIF(method = 'StreamAssist')), 1) AS answer_success_pct,\n          ROUND(100 * SAFE_DIVIDE(COUNTIF(principal = '<elided>'), COUNT(1)), 1) AS elided_identity_pct,\n          MIN(timestamp) AS first_activity,\n          MAX(timestamp) AS last_activity\n        FROM ua\n        GROUP BY 1\n        ORDER BY assistant_turns DESC, searches DESC"
+                  }
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER",
+            "columnSettings": [
+              {
+                "column": "app",
+                "displayName": "App / engine",
+                "visible": true
+              },
+              {
+                "column": "assistant_turns",
+                "displayName": "Assistant turns",
+                "visible": true
+              },
+              {
+                "column": "searches",
+                "displayName": "Searches",
+                "visible": true
+              },
+              {
+                "column": "ui_events",
+                "displayName": "UI events",
+                "visible": true
+              },
+              {
+                "column": "agent_admin_calls",
+                "displayName": "Agent admin calls",
+                "visible": true
+              },
+              {
+                "column": "identified_users",
+                "displayName": "Identified users",
+                "visible": true
+              },
+              {
+                "column": "sessions",
+                "displayName": "Sessions",
+                "visible": true
+              },
+              {
+                "column": "answer_success_pct",
+                "displayName": "Answer success %",
+                "visible": true
+              },
+              {
+                "column": "elided_identity_pct",
+                "displayName": "Entries with elided identity %",
+                "visible": true
+              },
+              {
+                "column": "first_activity",
+                "displayName": "First activity",
+                "visible": true
+              },
+              {
+                "column": "last_activity",
+                "displayName": "Last activity",
+                "visible": true
+              }
+            ]
+          }
+        }
+      },
+      {
+        "yPos": 93,
+        "width": 48,
+        "height": 4,
+        "widget": {
+          "title": "Users and conversations",
+          "sectionHeader": {
+            "subtitle": "Per-user activity, recent conversations, popular prompts and agent lifecycle events",
+            "dividerBelow": true
+          }
+        }
+      },
+      {
+        "yPos": 97,
+        "width": 48,
+        "height": 14,
+        "widget": {
+          "title": "Top users",
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          IFNULL(user_key, '(identity not logged)') AS user,\n          COUNTIF(method = 'StreamAssist') AS assistant_turns,\n          COUNTIF(method = 'Search') AS searches,\n          COUNTIF(method = 'WriteUserEvent') AS ui_events,\n          COUNT(DISTINCT session_id) AS sessions,\n          COUNT(DISTINCT engine_id) AS apps,\n          COUNT(DISTINCT agent) AS agents_used,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'LIKE') AS likes,\n          COUNTIF(event_type = 'add-feedback' AND feedback_type = 'DISLIKE') AS dislikes,\n          COUNTIF(method = 'StreamAssist' AND answer_state IS DISTINCT FROM 'SUCCEEDED') AS failed_turns,\n          MIN(timestamp) AS first_seen,\n          MAX(timestamp) AS last_seen\n        FROM ua\n        GROUP BY 1\n        ORDER BY assistant_turns DESC, searches DESC, ui_events DESC\n        LIMIT 100"
+                  }
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER",
+            "columnSettings": [
+              {
+                "column": "user",
+                "displayName": "User",
+                "visible": true
+              },
+              {
+                "column": "assistant_turns",
+                "displayName": "Assistant turns",
+                "visible": true
+              },
+              {
+                "column": "searches",
+                "displayName": "Searches",
+                "visible": true
+              },
+              {
+                "column": "ui_events",
+                "displayName": "UI events",
+                "visible": true
+              },
+              {
+                "column": "sessions",
+                "displayName": "Sessions",
+                "visible": true
+              },
+              {
+                "column": "apps",
+                "displayName": "Apps",
+                "visible": true
+              },
+              {
+                "column": "agents_used",
+                "displayName": "Agents used",
+                "visible": true
+              },
+              {
+                "column": "likes",
+                "displayName": "Likes",
+                "visible": true
+              },
+              {
+                "column": "dislikes",
+                "displayName": "Dislikes",
+                "visible": true
+              },
+              {
+                "column": "failed_turns",
+                "displayName": "Failed turns",
+                "visible": true
+              },
+              {
+                "column": "first_seen",
+                "displayName": "First seen",
+                "visible": true
+              },
+              {
+                "column": "last_seen",
+                "displayName": "Last seen",
+                "visible": true
+              }
+            ]
+          }
+        }
+      },
+      {
+        "yPos": 111,
+        "width": 48,
+        "height": 16,
+        "widget": {
+          "title": "Recent assistant conversations",
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          timestamp,\n          IFNULL(user_key, '(identity not logged)') AS user,\n          IFNULL(engine_id, '(unknown)') AS app,\n          IFNULL(agent, '(unknown)') AS agent,\n          SUBSTR(IFNULL(query_text, ''), 1, 200) AS prompt,\n          IFNULL(answer_state, IFNULL(status_message, '(no answer state)')) AS outcome,\n          selection_mode,\n          model,\n          reference_count AS citations,\n          session_id\n        FROM ua\n        WHERE method = 'StreamAssist'\n        ORDER BY timestamp DESC\n        LIMIT 200"
+                  }
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER",
+            "columnSettings": [
+              {
+                "column": "timestamp",
+                "displayName": "Time",
+                "visible": true
+              },
+              {
+                "column": "user",
+                "displayName": "User",
+                "visible": true
+              },
+              {
+                "column": "app",
+                "displayName": "App",
+                "visible": true
+              },
+              {
+                "column": "agent",
+                "displayName": "Agent",
+                "visible": true
+              },
+              {
+                "column": "prompt",
+                "displayName": "Prompt",
+                "visible": true
+              },
+              {
+                "column": "outcome",
+                "displayName": "Outcome",
+                "visible": true
+              },
+              {
+                "column": "selection_mode",
+                "displayName": "Data sources",
+                "visible": true
+              },
+              {
+                "column": "model",
+                "displayName": "Model",
+                "visible": true
+              },
+              {
+                "column": "citations",
+                "displayName": "Citations",
+                "visible": true
+              },
+              {
+                "column": "session_id",
+                "displayName": "Session",
+                "visible": true
+              }
+            ]
+          }
+        }
+      },
+      {
+        "yPos": 127,
+        "width": 32,
+        "height": 14,
+        "widget": {
+          "title": "Top prompts and search queries",
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          SUBSTR(query_text, 1, 200) AS query,\n          COUNTIF(method = 'StreamAssist') AS assistant_turns,\n          COUNTIF(method = 'Search') AS searches,\n          COUNT(DISTINCT user_key) AS users,\n          COUNT(DISTINCT engine_id) AS apps,\n          MAX(timestamp) AS last_asked\n        FROM ua\n        WHERE method IN ('StreamAssist', 'Search')\n          AND query_text IS NOT NULL AND query_text NOT IN ('', '<elided>')\n        GROUP BY 1\n        ORDER BY assistant_turns + searches DESC, last_asked DESC\n        LIMIT 100"
+                  }
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER",
+            "columnSettings": [
+              {
+                "column": "query",
+                "displayName": "Query",
+                "visible": true
+              },
+              {
+                "column": "assistant_turns",
+                "displayName": "Assistant turns",
+                "visible": true
+              },
+              {
+                "column": "searches",
+                "displayName": "Searches",
+                "visible": true
+              },
+              {
+                "column": "users",
+                "displayName": "Users",
+                "visible": true
+              },
+              {
+                "column": "apps",
+                "displayName": "Apps",
+                "visible": true
+              },
+              {
+                "column": "last_asked",
+                "displayName": "Last asked",
+                "visible": true
+              }
+            ]
+          }
+        }
+      },
+      {
+        "xPos": 32,
+        "yPos": 127,
+        "width": 16,
+        "height": 14,
+        "widget": {
+          "title": "UI events by client platform",
+          "pieChart": {
+            "chartType": "DONUT",
+            "showLabels": true,
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          CASE\n            WHEN user_agent LIKE '%Mobile%' OR user_agent LIKE '%Android%' OR user_agent LIKE '%iPhone%' THEN 'Mobile browser'\n            WHEN user_agent LIKE '%Macintosh%' THEN 'macOS browser'\n            WHEN user_agent LIKE '%Windows%' THEN 'Windows browser'\n            WHEN user_agent LIKE '%X11%' OR user_agent LIKE '%Linux%' THEN 'Linux browser'\n            WHEN user_agent IS NULL THEN '(not reported)'\n            ELSE 'Other'\n          END AS client,\n          COUNT(1) AS events\n        FROM ua\n        WHERE method = 'WriteUserEvent'\n        GROUP BY 1"
+                  }
+                },
+                "dimensions": [
+                  {
+                    "column": "client",
+                    "columnType": "STRING",
+                    "maxBinCount": 12,
+                    "sortColumn": "events",
+                    "sortOrder": "SORT_ORDER_DESCENDING"
+                  }
+                ],
+                "measures": [
+                  {
+                    "column": "events",
+                    "aggregationFunction": {
+                      "type": "sum"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "yPos": 141,
+        "width": 48,
+        "height": 12,
+        "widget": {
+          "title": "Agent lifecycle (create / update / delete) by administrators",
+          "timeSeriesTable": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "opsAnalyticsQuery": {
+                    "sql": "WITH ua_all AS (\n  SELECT\n    timestamp,\n    json_payload AS payload,\n    resource.type AS resource_type,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.methodName), r'([A-Za-z]+)$'),\n      JSON_VALUE(resource.labels.method)\n    ) AS method,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.serviceName), r'([A-Za-z]+Service)$') AS service,\n    COALESCE(\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.logMetadata.name), r'/engines/([^/]+)'),\n      JSON_VALUE(resource.labels.engine_id),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.userEvent.engine), r'/engines/([^/]+)'),\n      REGEXP_EXTRACT(JSON_VALUE(json_payload.request.servingConfig), r'/engines/([^/]+)')\n    ) AS engine_id,\n    JSON_VALUE(json_payload.userIamPrincipal) AS principal,\n    COALESCE(\n      NULLIF(JSON_VALUE(json_payload.userIamPrincipal), '<elided>'),\n      JSON_VALUE(json_payload.request.userEvent.userPseudoId),\n      JSON_VALUE(json_payload.request.userInfo.userId)\n    ) AS user_key,\n    JSON_VALUE(json_payload.response.answer.state) AS answer_state,\n    REGEXP_EXTRACT(JSON_VALUE(json_payload.response.answer.name), r'/sessions/([^/]+)') AS session_id,\n    JSON_VALUE(json_payload.response.dataSourceInfo.selectionMode) AS selection_mode,\n    JSON_VALUE(json_payload.response.modelInfo.model) AS model,\n    CASE\n      WHEN JSON_VALUE(json_payload.response.agentInfo.coreAssistant) = 'true' THEN 'core_assistant'\n      WHEN NULLIF(JSON_VALUE(json_payload.response.agentInfo.displayName), '<elided>') IS NOT NULL\n        THEN JSON_VALUE(json_payload.response.agentInfo.displayName)\n      ELSE REGEXP_EXTRACT(JSON_VALUE(json_payload.response.agentInfo.agent), r'/agents/([^/]+)')\n    END AS agent,\n    COALESCE(\n      JSON_VALUE(json_payload.request.query.text),\n      JSON_VALUE(json_payload.request.query.parts[0].text),\n      JSON_VALUE(json_payload.request.query),\n      JSON_VALUE(json_payload.request.userEvent.searchInfo.searchQuery)\n    ) AS query_text,\n    JSON_VALUE(json_payload.request.userEvent.eventType) AS event_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentspacePageType) AS page_type,\n    JSON_VALUE(json_payload.request.userEvent.agentspaceInfo.agentInfo.name) AS page_agent_name,\n    JSON_VALUE(json_payload.request.userEvent.feedback.feedbackType) AS feedback_type,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdict),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdict)\n    ) AS sanitization_verdict,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.filterMatchState),\n      JSON_VALUE(json_payload.sanitizationResult.filterMatchState)\n    ) AS filter_match_state,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.invocationResult),\n      JSON_VALUE(json_payload.sanitizationResult.invocationResult)\n    ) AS invocation_result,\n    COALESCE(\n      JSON_VALUE(json_payload.response.sanitizationResult.sanitizationVerdictReason),\n      JSON_VALUE(json_payload.sanitizationResult.sanitizationVerdictReason)\n    ) AS sanitization_reason,\n    JSON_VALUE(json_payload.status.code) AS status_code,\n    JSON_VALUE(json_payload.status.message) AS status_message,\n    (\n      SELECT COUNT(1)\n      FROM UNNEST(JSON_QUERY_ARRAY(json_payload.response.answer.replies)) AS reply,\n           UNNEST(JSON_QUERY_ARRAY(reply.groundedContent.textGroundingMetadata.references)) AS ref\n    ) AS reference_count,\n    JSON_VALUE(json_payload.request.userEvent.userInfo.userAgent) AS user_agent\n  FROM `@__project_id.global._Default._Default`\n  WHERE log_id = 'discoveryengine.googleapis.com/gemini_enterprise_user_activity' AND resource.type IN ('consumed_api', 'discoveryengine.googleapis.com/Agent')\n),\nua AS (\n  SELECT * FROM ua_all\n  WHERE IF(ARRAY_LENGTH(@app) = 0, TRUE, engine_id IN UNNEST(@app))\n    AND IF(ARRAY_LENGTH(@user) = 0, TRUE, user_key IN UNNEST(@user))\n)\n        SELECT\n          timestamp,\n          method,\n          IFNULL(user_key, '(identity not logged)') AS user,\n          IFNULL(engine_id, '(unknown)') AS app,\n          COALESCE(\n            REGEXP_EXTRACT(JSON_VALUE(payload.response.name), r'/agents/([^/]+)'),\n            REGEXP_EXTRACT(JSON_VALUE(payload.request.agent.name), r'/agents/([^/]+)'),\n            JSON_VALUE(payload.request.agentId)\n          ) AS agent_id,\n          NULLIF(IFNULL(JSON_VALUE(payload.response.displayName), JSON_VALUE(payload.request.agent.displayName)), '<elided>') AS display_name,\n          SUBSTR(NULLIF(IFNULL(JSON_VALUE(payload.response.description), JSON_VALUE(payload.request.agent.description)), '<elided>'), 1, 160) AS description,\n          status_code,\n          status_message\n        FROM ua\n        WHERE service = 'AgentService'\n        ORDER BY timestamp DESC\n        LIMIT 100"
+                  }
+                }
+              }
+            ],
+            "metricVisualization": "NUMBER",
+            "columnSettings": [
+              {
+                "column": "timestamp",
+                "displayName": "Time",
+                "visible": true
+              },
+              {
+                "column": "method",
+                "displayName": "Method",
+                "visible": true
+              },
+              {
+                "column": "user",
+                "displayName": "User",
+                "visible": true
+              },
+              {
+                "column": "app",
+                "displayName": "App",
+                "visible": true
+              },
+              {
+                "column": "agent_id",
+                "displayName": "Agent ID",
+                "visible": true
+              },
+              {
+                "column": "display_name",
+                "displayName": "Display name",
+                "visible": true
+              },
+              {
+                "column": "description",
+                "displayName": "Description",
+                "visible": true
+              },
+              {
+                "column": "status_code",
+                "displayName": "Status code",
+                "visible": true
+              },
+              {
+                "column": "status_message",
+                "displayName": "Status message",
+                "visible": true
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
