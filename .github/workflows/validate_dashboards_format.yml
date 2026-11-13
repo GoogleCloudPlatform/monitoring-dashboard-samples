@@ -13,6 +13,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -23,19 +26,18 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
+        with:
+          persist-credentials: false
       
       - name: Get changed files
         id: changed-files
-        uses: tj-actions/changed-files@v46
-
-      - name: checkout repo content
-        uses: actions/checkout@v2 # checkout the repository content to github runner.
+        uses: tj-actions/changed-files@ed68ef82c095e0d48ec87eccea555d944a631a4c # v46.0.5
         
       - name: setup python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
-          python-version: 3.8 #install the python needed
+          python-version: '3.13' #install the python needed
           
       - name: Install dependencies
         run: |
@@ -43,7 +45,9 @@ jobs:
           pip install --upgrade google-cloud-monitoring
             
       - name: execute py script # run file
+        env:
+          CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
         
-         echo "running validation on following files ${{ steps.changed-files.outputs.all_changed_files }}"
-         python3 scripts/dashboard/validate_dashboards_format.py ${{ steps.changed-files.outputs.all_changed_files }}
+         echo "running validation on following files ${CHANGED_FILES}"
+         python3 scripts/dashboard/validate_dashboards_format.py ${CHANGED_FILES}
