@@ -1,0 +1,821 @@
+{
+  "displayName": "Vertex AI Agent Engine ADK Agent Efficiency",
+  "dashboardFilters": [
+    {
+      "filterType": "RESOURCE_LABEL",
+      "labelKey": "job",
+      "templateVariable": "agent",
+      "valueType": "STRING"
+    }
+  ],
+  "labels": {},
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "height": 12,
+        "width": 48,
+        "widget": {
+          "text": {
+            "content": "**ADK agent efficiency.** Pick the agent with the **agent** filter (on Agent Engine, the reasoning engine ID). Scorecards and donuts cover the selected time range. Charts show a mean per time step unless the title says p95.\n\n**What a tile needs** (only ADK Python emits these metrics)\n- Unmarked: ADK 2.8.0+ exporting metrics to Cloud Monitoring, with telemetry schema v2 (the default from 2.13.0, and on Agent Engine before that).\n- Cache-read ratio, reasoning share and token type tiles: ADK 2.14.0+, or the opt-in below on older versions.\n- **(opt-in)**: experimental `adk.experimental.*` metrics. ADK 2.10.0+ with `ADK_EXPERIMENTAL_TELEMETRY=true`, then redeploy. Names may change.\n\nA **turn** is one user message through to the final response. An **agent invocation** is one run of one agent in a turn.",
+            "format": "MARKDOWN",
+            "style": {}
+          }
+        }
+      },
+      {
+        "height": 8,
+        "width": 8,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(rate({\"__name__\"=\"gen_ai.client.token.usage_sum\",\"job\"=~\"${agent.value}\"}[${__interval}])) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))",
+              "outputFullDuration": true,
+              "unitOverride": "1"
+            }
+          },
+          "title": "Tokens per turn"
+        },
+        "yPos": 12
+      },
+      {
+        "height": 8,
+        "width": 8,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "(sum(rate({\"__name__\"=\"gen_ai.client.inference.usage.cache_read.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(rate({\"__name__\"=\"adk.experimental.invoke_workflow.cache_read.input_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))) / (sum(rate({\"__name__\"=\"gen_ai.client.inference.usage.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(rate({\"__name__\"=\"adk.experimental.invoke_workflow.input_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])))",
+              "outputFullDuration": true,
+              "unitOverride": "10^2.%"
+            }
+          },
+          "title": "Cache-read ratio"
+        },
+        "xPos": 8,
+        "yPos": 12
+      },
+      {
+        "height": 8,
+        "width": 8,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "(sum(rate({\"__name__\"=\"gen_ai.client.inference.usage.reasoning.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(rate({\"__name__\"=\"adk.experimental.invoke_workflow.reasoning.output_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))) / (sum(rate({\"__name__\"=\"gen_ai.client.inference.usage.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(rate({\"__name__\"=\"adk.experimental.invoke_workflow.output_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])))",
+              "outputFullDuration": true,
+              "unitOverride": "10^2.%"
+            }
+          },
+          "title": "Reasoning share of output"
+        },
+        "xPos": 16,
+        "yPos": 12
+      },
+      {
+        "height": 8,
+        "width": 8,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(rate({\"__name__\"=\"gen_ai.client.operation.duration_count\",\"job\"=~\"${agent.value}\"}[${__interval}])) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))",
+              "outputFullDuration": true,
+              "unitOverride": "1"
+            }
+          },
+          "title": "Model calls per turn"
+        },
+        "xPos": 24,
+        "yPos": 12
+      },
+      {
+        "height": 8,
+        "width": 8,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "(sum(rate({\"__name__\"=\"gen_ai.execute_tool.duration_count\",\"job\"=~\"${agent.value}\"}[${__interval}])) or vector(0)) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))",
+              "outputFullDuration": true,
+              "unitOverride": "1"
+            }
+          },
+          "title": "Tool calls per turn"
+        },
+        "xPos": 32,
+        "yPos": 12
+      },
+      {
+        "height": 8,
+        "width": 8,
+        "widget": {
+          "scorecard": {
+            "timeSeriesQuery": {
+              "prometheusQuery": "sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))",
+              "outputFullDuration": true,
+              "unitOverride": "s"
+            }
+          },
+          "title": "Turn duration"
+        },
+        "xPos": 40,
+        "yPos": 12
+      },
+      {
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "pieChart": {
+            "chartType": "DONUT",
+            "showLabels": true,
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(round(((sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.input_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))) - (sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.cache_read.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.cache_read.input_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))))), \"token_type\", \"uncached input\", \"\", \"\") or label_replace(round((sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.cache_read.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.cache_read.input_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])))), \"token_type\", \"cached input\", \"\", \"\") or label_replace(round(((sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.output_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))) - (sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.reasoning.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.reasoning.output_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))))), \"token_type\", \"output\", \"\", \"\") or label_replace(round((sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.reasoning.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.reasoning.output_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])))), \"token_type\", \"reasoning\", \"\", \"\")",
+                  "outputFullDuration": true
+                }
+              }
+            ]
+          },
+          "title": "Tokens by type"
+        },
+        "yPos": 20
+      },
+      {
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "pieChart": {
+            "chartType": "DONUT",
+            "showLabels": true,
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"model\")(label_replace(sum by (\"gen_ai.request.model\")(increase({\"__name__\"=\"gen_ai.client.token.usage_sum\",\"job\"=~\"${agent.value}\"}[${__interval}])), \"model\", \"$1\", \"gen_ai.request.model\", \"(.*)\"))",
+                  "outputFullDuration": true
+                }
+              }
+            ]
+          },
+          "title": "Tokens by model"
+        },
+        "xPos": 16,
+        "yPos": 20
+      },
+      {
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "pieChart": {
+            "chartType": "DONUT",
+            "showLabels": true,
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"model\")(label_replace(sum by (\"gen_ai.request.model\")(increase({\"__name__\"=\"gen_ai.client.operation.duration_count\",\"job\"=~\"${agent.value}\"}[${__interval}])), \"model\", \"$1\", \"gen_ai.request.model\", \"(.*)\"))",
+                  "outputFullDuration": true
+                }
+              }
+            ]
+          },
+          "title": "Model calls by model"
+        },
+        "xPos": 32,
+        "yPos": 20
+      },
+      {
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "STACKED_AREA",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(((sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.input_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))) - (sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.cache_read.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.cache_read.input_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])))), \"token_type\", \"uncached input\", \"\", \"\") or label_replace((sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.cache_read.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.cache_read.input_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))), \"token_type\", \"cached input\", \"\", \"\") or label_replace(((sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.output_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))) - (sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.reasoning.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.reasoning.output_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])))), \"token_type\", \"output\", \"\", \"\") or label_replace((sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.reasoning.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.reasoning.output_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))), \"token_type\", \"reasoning\", \"\", \"\")",
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "tokens",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Tokens over time by type"
+        },
+        "yPos": 36
+      },
+      {
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "STACKED_AREA",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(sum_over_time((((sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.input_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))) - (sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.cache_read.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.cache_read.input_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])))) and on() (vector(time()) > scalar(max_over_time(vector(time())[${__interval}:${__interval}] @ start()))))[30d:${__interval}]), \"token_type\", \"uncached input\", \"\", \"\") or label_replace(sum_over_time(((sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.cache_read.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.cache_read.input_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))) and on() (vector(time()) > scalar(max_over_time(vector(time())[${__interval}:${__interval}] @ start()))))[30d:${__interval}]), \"token_type\", \"cached input\", \"\", \"\") or label_replace(sum_over_time((((sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.output_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))) - (sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.reasoning.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.reasoning.output_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])))) and on() (vector(time()) > scalar(max_over_time(vector(time())[${__interval}:${__interval}] @ start()))))[30d:${__interval}]), \"token_type\", \"output\", \"\", \"\") or label_replace(sum_over_time(((sum(increase({\"__name__\"=\"gen_ai.client.inference.usage.reasoning.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(increase({\"__name__\"=\"adk.experimental.invoke_workflow.reasoning.output_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))) and on() (vector(time()) > scalar(max_over_time(vector(time())[${__interval}:${__interval}] @ start()))))[30d:${__interval}]), \"token_type\", \"reasoning\", \"\", \"\")",
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "tokens",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Cumulative tokens by type"
+        },
+        "xPos": 16,
+        "yPos": 36
+      },
+      {
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "STACKED_AREA",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(sum(increase({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\",\"error.type\"=\"\"}[${__interval}])), \"result\", \"completed\", \"\", \"\") or label_replace(sum(increase({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\",\"error.type\"!=\"\"}[${__interval}])), \"result\", \"failed\", \"\", \"\")",
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "turns",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Turns over time"
+        },
+        "xPos": 32,
+        "yPos": 36
+      },
+      {
+        "yPos": 52,
+        "height": 32,
+        "width": 48,
+        "widget": {
+          "title": "Per turn",
+          "collapsibleGroup": {}
+        }
+      },
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "STACKED_AREA",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(((sum(rate({\"__name__\"=\"gen_ai.client.inference.usage.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(rate({\"__name__\"=\"adk.experimental.invoke_workflow.input_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))) - (sum(rate({\"__name__\"=\"gen_ai.client.inference.usage.cache_read.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(rate({\"__name__\"=\"adk.experimental.invoke_workflow.cache_read.input_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])))) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])), \"token_type\", \"uncached input\", \"\", \"\") or label_replace((sum(rate({\"__name__\"=\"gen_ai.client.inference.usage.cache_read.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(rate({\"__name__\"=\"adk.experimental.invoke_workflow.cache_read.input_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])), \"token_type\", \"cached input\", \"\", \"\") or label_replace(((sum(rate({\"__name__\"=\"gen_ai.client.inference.usage.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(rate({\"__name__\"=\"adk.experimental.invoke_workflow.output_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))) - (sum(rate({\"__name__\"=\"gen_ai.client.inference.usage.reasoning.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(rate({\"__name__\"=\"adk.experimental.invoke_workflow.reasoning.output_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])))) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])), \"token_type\", \"output\", \"\", \"\") or label_replace((sum(rate({\"__name__\"=\"gen_ai.client.inference.usage.reasoning.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(rate({\"__name__\"=\"adk.experimental.invoke_workflow.reasoning.output_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])), \"token_type\", \"reasoning\", \"\", \"\")",
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "tokens per turn",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Tokens per turn by type"
+        },
+        "yPos": 52
+      },
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "STACKED_AREA",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"agent\")(label_replace(sum by (\"gen_ai.agent.name\")(rate({\"__name__\"=\"gen_ai.client.token.usage_sum\",\"job\"=~\"${agent.value}\"}[${__interval}])) / scalar(sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))), \"agent\", \"$1\", \"gen_ai.agent.name\", \"(.*)\"))",
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "tokens per turn",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Tokens per turn by agent"
+        },
+        "xPos": 24,
+        "yPos": 52
+      },
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(sum(rate({\"__name__\"=\"gen_ai.client.operation.duration_count\",\"job\"=~\"${agent.value}\"}[${__interval}])) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])), \"series\", \"model calls\", \"\", \"\") or label_replace((sum(rate({\"__name__\"=\"gen_ai.execute_tool.duration_count\",\"job\"=~\"${agent.value}\"}[${__interval}])) or vector(0)) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])), \"series\", \"tool calls\", \"\", \"\")",
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "calls per turn",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Calls per turn: model and tool"
+        },
+        "yPos": 68
+      },
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "STACKED_AREA",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "label_replace(sum(rate({\"__name__\"=\"gen_ai.client.operation.duration_sum\",\"job\"=~\"${agent.value}\"}[${__interval}])) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])), \"series\", \"model calls\", \"\", \"\") or label_replace((sum(rate({\"__name__\"=\"gen_ai.execute_tool.duration_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.tool.type\"!~\".*AgentTool\"}[${__interval}])) or vector(0)) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])), \"series\", \"tools\", \"\", \"\") or label_replace(clamp_min(sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])) - sum(rate({\"__name__\"=\"gen_ai.client.operation.duration_sum\",\"job\"=~\"${agent.value}\"}[${__interval}])) - (sum(rate({\"__name__\"=\"gen_ai.execute_tool.duration_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.tool.type\"!~\".*AgentTool\"}[${__interval}])) or vector(0)), 0) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])), \"series\", \"other\", \"\", \"\")",
+                  "unitOverride": "s"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "seconds per turn",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Time per turn: model, tools, other"
+        },
+        "xPos": 24,
+        "yPos": 68
+      },
+      {
+        "yPos": 84,
+        "height": 48,
+        "width": 48,
+        "widget": {
+          "title": "By agent",
+          "collapsibleGroup": {}
+        }
+      },
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"agent\")(label_replace(sum by (\"gen_ai.agent.name\")(rate({\"__name__\"=\"gen_ai.invoke_agent.duration_count\",\"job\"=~\"${agent.value}\"}[${__interval}])) / scalar(sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))), \"agent\", \"$1\", \"gen_ai.agent.name\", \"(.*)\"))",
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "invocations per turn",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Agent invocations per turn by agent"
+        },
+        "yPos": 84
+      },
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"agent\")(label_replace(sum by (\"gen_ai.agent.name\")(rate({\"__name__\"=\"gen_ai.client.token.usage_sum\",\"job\"=~\"${agent.value}\"}[${__interval}])) / sum by (\"gen_ai.agent.name\")(rate({\"__name__\"=\"gen_ai.invoke_agent.duration_count\",\"job\"=~\"${agent.value}\"}[${__interval}])), \"agent\", \"$1\", \"gen_ai.agent.name\", \"(.*)\"))",
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "tokens per invocation",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Tokens per agent invocation by agent"
+        },
+        "xPos": 24,
+        "yPos": 84
+      },
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"agent\")(label_replace(sum by (\"gen_ai.agent.name\")(rate({\"__name__\"=\"gen_ai.invoke_agent.inference_calls_sum\",\"job\"=~\"${agent.value}\"}[${__interval}])) / sum by (\"gen_ai.agent.name\")(rate({\"__name__\"=\"gen_ai.invoke_agent.inference_calls_count\",\"job\"=~\"${agent.value}\"}[${__interval}])), \"agent\", \"$1\", \"gen_ai.agent.name\", \"(.*)\"))",
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "calls per invocation",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Model calls per agent invocation by agent"
+        },
+        "yPos": 100
+      },
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"agent\")(label_replace(histogram_quantile(0.95, sum by (\"le\", \"gen_ai.agent.name\")(rate({\"__name__\"=\"gen_ai.invoke_agent.duration_bucket\",\"job\"=~\"${agent.value}\"}[${__interval}]))), \"agent\", \"$1\", \"gen_ai.agent.name\", \"(.*)\"))",
+                  "unitOverride": "s"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "seconds",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Agent invocation duration p95 by agent"
+        },
+        "xPos": 24,
+        "yPos": 100
+      },
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"agent\")(label_replace(sum by (\"gen_ai.agent.name\")(rate({\"__name__\"=\"adk.experimental.invoke_agent.cache_read.input_tokens_sum\",\"job\"=~\"${agent.value}\"}[${__interval}])) / sum by (\"gen_ai.agent.name\")(rate({\"__name__\"=\"adk.experimental.invoke_agent.input_tokens_sum\",\"job\"=~\"${agent.value}\"}[${__interval}])), \"agent\", \"$1\", \"gen_ai.agent.name\", \"(.*)\"))",
+                  "unitOverride": "10^2.%"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "share of input tokens",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Cache-read ratio by agent (opt-in)"
+        },
+        "yPos": 116
+      },
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"agent\")(label_replace(sum by (\"gen_ai.agent.name\")(rate({\"__name__\"=\"adk.experimental.invoke_agent.reasoning.output_tokens_sum\",\"job\"=~\"${agent.value}\"}[${__interval}])) / sum by (\"gen_ai.agent.name\")(rate({\"__name__\"=\"adk.experimental.invoke_agent.output_tokens_sum\",\"job\"=~\"${agent.value}\"}[${__interval}])), \"agent\", \"$1\", \"gen_ai.agent.name\", \"(.*)\"))",
+                  "unitOverride": "10^2.%"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "share of output tokens",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Reasoning share of output by agent (opt-in)"
+        },
+        "xPos": 24,
+        "yPos": 116
+      },
+      {
+        "yPos": 132,
+        "height": 32,
+        "width": 48,
+        "widget": {
+          "title": "By model",
+          "collapsibleGroup": {}
+        }
+      },
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "STACKED_AREA",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"model\")(label_replace(sum by (\"gen_ai.request.model\")(rate({\"__name__\"=\"gen_ai.client.token.usage_sum\",\"job\"=~\"${agent.value}\"}[${__interval}])) / scalar(sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))), \"model\", \"$1\", \"gen_ai.request.model\", \"(.*)\"))",
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "tokens per turn",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Tokens per turn by model"
+        },
+        "yPos": 132
+      },
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"model\")(label_replace(sum by (\"gen_ai.request.model\")(rate({\"__name__\"=\"gen_ai.client.token.usage_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.token.type\"=\"input\"}[${__interval}])) / sum by (\"gen_ai.request.model\")(rate({\"__name__\"=\"gen_ai.client.token.usage_count\",\"job\"=~\"${agent.value}\",\"gen_ai.token.type\"=\"input\"}[${__interval}])), \"model\", \"$1\", \"gen_ai.request.model\", \"(.*)\"))",
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "input tokens per call",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Input tokens per model call by model"
+        },
+        "xPos": 24,
+        "yPos": 132
+      },
+      {
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"model\")(label_replace(sum by (\"gen_ai.request.model\")(rate({\"__name__\"=\"gen_ai.client.inference.usage.cache_read.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) / sum by (\"gen_ai.request.model\")(rate({\"__name__\"=\"gen_ai.client.inference.usage.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])), \"model\", \"$1\", \"gen_ai.request.model\", \"(.*)\"))",
+                  "unitOverride": "10^2.%"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "share of input tokens",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Cache-read ratio by model (ADK 2.14+)"
+        },
+        "yPos": 148
+      },
+      {
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"model\")(label_replace(sum by (\"gen_ai.request.model\")(rate({\"__name__\"=\"gen_ai.client.inference.usage.reasoning.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) / sum by (\"gen_ai.request.model\")(rate({\"__name__\"=\"gen_ai.client.inference.usage.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])), \"model\", \"$1\", \"gen_ai.request.model\", \"(.*)\"))",
+                  "unitOverride": "10^2.%"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "share of output tokens",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Reasoning share of output by model (ADK 2.14+)"
+        },
+        "xPos": 16,
+        "yPos": 148
+      },
+      {
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"model\")(label_replace(histogram_quantile(0.95, sum by (\"le\", \"gen_ai.request.model\")(rate({\"__name__\"=\"gen_ai.client.operation.duration_bucket\",\"job\"=~\"${agent.value}\"}[${__interval}]))), \"model\", \"$1\", \"gen_ai.request.model\", \"(.*)\"))",
+                  "unitOverride": "s"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "seconds",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Model call duration p95 by model"
+        },
+        "xPos": 32,
+        "yPos": 148
+      },
+      {
+        "yPos": 164,
+        "height": 16,
+        "width": 48,
+        "widget": {
+          "title": "Tools",
+          "collapsibleGroup": {}
+        }
+      },
+      {
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"tool\")(label_replace(sum by (\"gen_ai.tool.name\")(rate({\"__name__\"=\"gen_ai.execute_tool.duration_count\",\"job\"=~\"${agent.value}\"}[${__interval}])) / scalar(sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))), \"tool\", \"$1\", \"gen_ai.tool.name\", \"(.*)\"))",
+                  "unitOverride": "1"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "calls per turn",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Tool calls per turn by tool"
+        },
+        "yPos": 164
+      },
+      {
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"tool\")(label_replace(sum by (\"gen_ai.tool.name\")(rate({\"__name__\"=\"gen_ai.execute_tool.duration_sum\",\"job\"=~\"${agent.value}\"}[${__interval}])) / scalar(sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))), \"tool\", \"$1\", \"gen_ai.tool.name\", \"(.*)\"))",
+                  "unitOverride": "s"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "seconds per turn",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Tool seconds per turn by tool"
+        },
+        "xPos": 16,
+        "yPos": 164
+      },
+      {
+        "height": 16,
+        "width": 16,
+        "widget": {
+          "xyChart": {
+            "chartOptions": {
+              "mode": "COLOR"
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "300s",
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"tool\")(label_replace(histogram_quantile(0.95, sum by (\"le\", \"gen_ai.tool.name\")(rate({\"__name__\"=\"gen_ai.execute_tool.duration_bucket\",\"job\"=~\"${agent.value}\"}[${__interval}]))), \"tool\", \"$1\", \"gen_ai.tool.name\", \"(.*)\"))",
+                  "unitOverride": "s"
+                }
+              }
+            ],
+            "yAxis": {
+              "label": "seconds",
+              "scale": "LINEAR"
+            }
+          },
+          "title": "Tool duration p95 by tool"
+        },
+        "xPos": 32,
+        "yPos": 164
+      }
+    ]
+  }
+}
