@@ -17,7 +17,7 @@
         "width": 48,
         "widget": {
           "text": {
-            "content": "**ADK agent efficiency.** Pick the agent with the **agent** filter (on Agent Engine, the reasoning engine ID). Scorecards and donuts cover the selected time range. Charts show a mean per time step unless the title says p95.\n\n**What a tile needs** (only ADK Python emits these metrics)\n- Unmarked: ADK 2.8.0+ exporting metrics to Cloud Monitoring, with telemetry schema v2 (the default from 2.13.0, and on Agent Engine before that).\n- Cache-read ratio, reasoning share and token type tiles: ADK 2.14.0+, or the opt-in below on older versions.\n- **(opt-in)**: experimental `adk.experimental.*` metrics. ADK 2.10.0+ with `ADK_EXPERIMENTAL_TELEMETRY=true`, then redeploy. Names may change.\n\nA **turn** is one user message through to the final response. An **agent invocation** is one run of one agent in a turn.",
+            "content": "**ADK agent efficiency.** Pick the agent with the **agent** filter (on Agent Runtime, the reasoning engine ID). Scorecards and donuts cover the selected time range. Charts show a mean per time step unless the title says p95.\n\n**What a tile needs** (only ADK Python emits these metrics)\n- Unmarked: ADK 2.8.0+ exporting metrics to Cloud Monitoring, with telemetry schema v2 (the default from 2.13.0, and on Agent Runtime before that).\n- Cache-read ratio, reasoning share and token type tiles: ADK 2.14.0+, or the opt-in below on older versions.\n- **(opt-in)**: experimental `adk.experimental.*` metrics. ADK 2.10.0+ with `ADK_EXPERIMENTAL_TELEMETRY=true`, then redeploy. Names may change.\n\nA **turn** is one user message through to the final response. An **agent invocation** is one run of one agent in a turn.",
             "format": "MARKDOWN",
             "style": {}
           }
@@ -28,6 +28,7 @@
         "width": 8,
         "widget": {
           "scorecard": {
+            "blankView": {},
             "timeSeriesQuery": {
               "prometheusQuery": "sum(rate({\"__name__\"=\"gen_ai.client.token.usage_sum\",\"job\"=~\"${agent.value}\"}[${__interval}])) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))",
               "outputFullDuration": true,
@@ -43,6 +44,7 @@
         "width": 8,
         "widget": {
           "scorecard": {
+            "blankView": {},
             "timeSeriesQuery": {
               "prometheusQuery": "(sum(rate({\"__name__\"=\"gen_ai.client.inference.usage.cache_read.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(rate({\"__name__\"=\"adk.experimental.invoke_workflow.cache_read.input_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))) / (sum(rate({\"__name__\"=\"gen_ai.client.inference.usage.input_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(rate({\"__name__\"=\"adk.experimental.invoke_workflow.input_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])))",
               "outputFullDuration": true,
@@ -59,6 +61,7 @@
         "width": 8,
         "widget": {
           "scorecard": {
+            "blankView": {},
             "timeSeriesQuery": {
               "prometheusQuery": "(sum(rate({\"__name__\"=\"gen_ai.client.inference.usage.reasoning.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(rate({\"__name__\"=\"adk.experimental.invoke_workflow.reasoning.output_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))) / (sum(rate({\"__name__\"=\"gen_ai.client.inference.usage.output_tokens\",\"job\"=~\"${agent.value}\"}[${__interval}])) or sum(rate({\"__name__\"=\"adk.experimental.invoke_workflow.output_tokens_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])))",
               "outputFullDuration": true,
@@ -75,6 +78,7 @@
         "width": 8,
         "widget": {
           "scorecard": {
+            "blankView": {},
             "timeSeriesQuery": {
               "prometheusQuery": "sum(rate({\"__name__\"=\"gen_ai.client.operation.duration_count\",\"job\"=~\"${agent.value}\"}[${__interval}])) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))",
               "outputFullDuration": true,
@@ -91,6 +95,7 @@
         "width": 8,
         "widget": {
           "scorecard": {
+            "blankView": {},
             "timeSeriesQuery": {
               "prometheusQuery": "(sum(rate({\"__name__\"=\"gen_ai.execute_tool.duration_count\",\"job\"=~\"${agent.value}\"}[${__interval}])) or vector(0)) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))",
               "outputFullDuration": true,
@@ -107,6 +112,7 @@
         "width": 8,
         "widget": {
           "scorecard": {
+            "blankView": {},
             "timeSeriesQuery": {
               "prometheusQuery": "sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_sum\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}])) / sum(rate({\"__name__\"=\"gen_ai.invoke_workflow.duration_count\",\"job\"=~\"${agent.value}\",\"gen_ai.workflow.nested\"=\"\"}[${__interval}]))",
               "outputFullDuration": true,
