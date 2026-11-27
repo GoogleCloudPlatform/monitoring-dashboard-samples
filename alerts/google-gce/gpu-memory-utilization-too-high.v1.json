@@ -1,0 +1,25 @@
+{
+  "displayName": "VM Instance - High GPU Memory Utilization",
+  "documentation": {
+    "content": "This alert fires when the GPU memory utilization on any VM instance in the project rises above 90% for 5 minutes or more.",
+    "mimeType": "text/markdown"
+  },
+  "userLabels": {},
+  "conditions": [
+    {
+      "displayName": "VM Instance - High GPU memory utilization",
+      "conditionMonitoringQueryLanguage": {
+        "duration": "0s",
+        "trigger": {
+          "count": 1
+        },
+        "query": "{ fetch gce_instance\n  | metric 'agent.googleapis.com/gpu/memory/bytes_used'\n  | filter metric.memory_state == 'used'\n  | group_by 5m, [value_bytes_used_mean: mean(value.bytes_used)]\n  | every 5m\n  | group_by [metric.gpu_number, metric.model, metric.uuid, resource.instance_id, resource.project_id, resource.zone, metadata.system_labels.name], [value_bytes_used_mean_aggregate: aggregate(value_bytes_used_mean)]\n; fetch gce_instance\n  | metric 'agent.googleapis.com/gpu/memory/bytes_used' \n  | group_by 5m, [value_bytes_used_mean: mean(value.bytes_used)]\n  | every 5m\n  | group_by [metric.gpu_number, metric.model, metric.uuid, resource.instance_id, resource.project_id, resource.zone, metadata.system_labels.name], [value_bytes_used_mean_aggregate: aggregate(value_bytes_used_mean)] }\n| ratio\n| mul (100)\n| cast_units ('%')\n| every 5m\n| condition val() > 0.9 '10^2.%'"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true
+}
